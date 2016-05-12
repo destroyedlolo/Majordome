@@ -1,0 +1,13 @@
+#!/usr/local/bin/Selene
+-- Majordome, Smart home automation scripts
+--
+-- This tool is configured for my own usage and is matching my home configuration
+-- but it should be took as example to build your own dashboard
+
+assert( SELENE_VERSION >= 2.0300, "HDB requires at least Selene v2.03.00" )
+
+require (SELENE_SCRIPT_DIR .. "/StaticConfiguration")
+require (SELENE_SCRIPT_DIR .. "/helpers")
+
+
+
