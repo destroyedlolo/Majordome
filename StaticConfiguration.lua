@@ -6,10 +6,15 @@
 -- Internal
 VERBOSE=true
 
+BROKERHOST='tcp://bPI.chez.moi:1883'
+CLIENTID='Majordome-dev'
+
 -- Topics to look for
-local MODE='Majordome/Mode'
-local SAISON='Majordome/Saison'
-local HLEVER='Majordome/HLever'
+MODE='Majordome/Mode'
+MODEDEMAIN='Majordome/Mode/Demain'
+SAISON='Majordome/Saison'
+HLEVER='Majordome/HLever'
+TExterieur='maison/Temperature/Dehors'
 
 -- Default configuration
 SelShared.set( MODE, 'Manuel' )
