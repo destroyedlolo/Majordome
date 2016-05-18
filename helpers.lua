@@ -43,3 +43,51 @@ function TableMerge( t1, t2 )
 	return t1
 end
 
+--
+-- DMS
+--
+
+function DMS2DEC( val )
+	local i,d = math.modf( val )
+	return i + d/.6
+end
+
+function DEC2DMS( val )
+	local i,d = math.modf( val )
+	return i + d*.6
+end
+
+--
+-- Timers
+--
+-- Notez-bien : table *MUST* be ordered
+--
+
+function tmrNextTarget( tbl )
+	local dt = os.date("*t")
+	local cur = dt.hour + dt.min/100
+	local first
+
+	for k,v in pairs(tbl) do
+		if not first or k < first then
+			first = k
+		end
+
+		if k > cur then
+			return k
+		end
+	end
+
+	-- The 1st one is tomorrow
+	return first	
+end
+
+function tmrSubFunc( tbl )
+	local dt = os.date("*t")
+	local cur = dt.hour + dt.min/100
+
+	for _,t in ipairs( tbl[cur] ) do
+		SelShared.PushTask( t, SelShared.TaskOnceConst("MULTIPLE") )
+	end
+	SelShared.dump()
+end

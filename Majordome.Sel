@@ -34,9 +34,29 @@ end
 
 rotatelog()	-- Initial log creation
 
-local timerLogRotation, err = SelTimer.create { at= 0.0, ifunc=rotatelog } 
+---
+-- Timers
+---
+
+function bip()
+	print("bip");
+end
+
+local tbl_timers = {
+	[0.0] = { rotatelog },
+	[7.0] = { determineSaison },
+	[14.55] = { bip, bip }
+}
+
+function CronExec()
+	tmrSubFunc( tbl_timers )
+end
+
+print ("next", tmrNextTarget( tbl_timers ))
+
+local timerCron, err = SelTimer.create { at=tmrNextTarget( tbl_timers ), ifunc=CronExec } 
 if err then
-	err = "Log's rotation creation error :" .. err
+	err = "Cron's timer creation error :" .. err
 	SelLog.log(err)
 	print(err)
 	return
@@ -71,7 +91,7 @@ end
 ---
 
 while true do -- Main todo list handler
-	ret, err = Selene.WaitFor(timerLogRotation)
+	ret, err = Selene.WaitFor(timerCron)
 	if err then
 		print(err)
 		return
