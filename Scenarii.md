@@ -14,31 +14,6 @@ déterminé par la température extérieur à 7h du matin
 ----------
 Scenarii
 ========
-
-Chambres / bureau :
--------------------
-	Saison Hivers :
-		On laisse fermé
-		Si mode « Travail » et T° Ext > 10°C et si production photovoltaïque (le soleil brille),
-			ouverture des volets
-		Si la production s'arrête : fermeture des volets (peut être réouvert si la condition précédente est remplie)
-
-	Saison été ou Intersaison
-		Si mode « Travail »
-			Semi-ouverture (position « My » des volets Somfy) 10 minutes avant l'heure du levé, histoire d'avoir un réveil tranquille
-			Ouverture à l'heure du levé (« DEBOUT LA DEDANS ! »)
-		sinon mode « Vacances »
-			On ne fait rien (on se lève quand on veut)
-
-		Ensuite à partir de 9h (mode « Travail »), 10h30 mode « Vacances »
-			Si été
-				position « My »
-			Sinon (Intersaison)
-				Si production électrique et si T°Chambre > 18°C
-					Position « My » pour garder de la fraicheur
-				Sinon (pas de soleil, ou température trop basse)
-					on ouvre
-
 ----------
 Chambres / bureau
 -----------------
