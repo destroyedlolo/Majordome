@@ -6,8 +6,12 @@
 
 assert( SELENE_VERSION >= 2.0401, "HDB requires at least Selene v2.04.01, got " .. SELENE_VERSION ..'\n' )
 
+-- debug only
+require "tostring"
+
 -- Misc includes
 require (SELENE_SCRIPT_DIR .. "/StaticConfiguration")
+require (SELENE_SCRIPT_DIR .. "/Saison")
 require (SELENE_SCRIPT_DIR .. "/helpers")
 
 -- Stuffs to handle
@@ -44,8 +48,8 @@ end
 
 local tbl_timers = {
 	[0.0] = { rotatelog },
-	[7.0] = { determineSaison },
-	[14.55] = { bip, bip }
+	[7.0] = { launchDetermineSaison },
+	[22.28] = { launchDetermineSaison, bip }
 }
 
 function CronExec()

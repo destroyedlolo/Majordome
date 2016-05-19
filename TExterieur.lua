@@ -1,10 +1,13 @@
 -- This script handles stuffs related to "Temperature Exterieur"
 
-function hTExt()
+TExt_tasks = {}	-- Tasks to launch when a TExt is received
+
+function hTExt()	-- Handle tasks at T°Ext arrival
+	SubTasks( TExt_tasks )
 	print( SelShared.get( TExterieur ) )
 end
 
 -- Add related topics
-TableMerge( Topics, {
-	{ topic = TExterieur, trigger=hTExt, trigger_once=true },
-} )
+
+table.insert( Topics, { topic = TExterieur, trigger=hTExt, trigger_once=true } )
+

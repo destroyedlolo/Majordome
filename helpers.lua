@@ -10,7 +10,7 @@ function ColAddFunc( tbl, func )
 			ColAddFunc( tbl, f )
 		end
 	else
-		tbl:insert( func )
+		table.insert(tbl, func )
 	end
 end
 
@@ -21,7 +21,7 @@ function ColRemoveFunc( tbl, func )
 			t[f]=true
 		end
 		for k,f in pairs(tbl) do
-			if t[v] ~= nil then
+			if t[f] ~= nil then
 				tbl[k] = nil
 			end
 		end
@@ -86,8 +86,16 @@ function tmrSubFunc( tbl )
 	local dt = os.date("*t")
 	local cur = dt.hour + dt.min/100
 
-	for _,t in ipairs( tbl[cur] ) do
+	SubTasks( tbl[cur] )
+end
+
+function SubTasks( tbl )
+	-- submit all tasks listed in tbl table
+
+
+	for _,t in ipairs( tbl ) do
 		SelShared.PushTask( t, SelShared.TaskOnceConst("MULTIPLE") )
 	end
-	SelShared.dump()
 end
+
+
