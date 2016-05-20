@@ -65,8 +65,6 @@ end
 --
 -- Timers
 --
--- Notez-bien : table *MUST* be ordered
---
 
 function tmrRemoveEntry( tbl, func )
 	for i,f in pairs(tbl) do
@@ -84,20 +82,19 @@ end
 function tmrNextTarget( tbl )
 	local dt = os.date("*t")
 	local cur = dt.hour + dt.min/100
-	local first
+	local k = {}
 
-	for k,v in pairs(tbl) do
-		if not first or k < first then
-			first = k
-		end
+	for t in pairs(tbl) do table.insert(k, t) end
+	table.sort(k)
 
-		if k > cur then
-			return k
+	for _,t in ipairs(k) do
+		if t > cur then
+			return t
 		end
 	end
 
 	-- The 1st one is tomorrow
-	return first	
+	return k[1]
 end
 
 function tmrSubFunc( tbl )
@@ -116,4 +113,10 @@ function SubTasks( tbl )
 	end
 end
 
+function tmrRething( timer, tbl )
+	-- update the timer with the next value in its pipe
+	-- timer : timer to update
+	-- tbl : tasks for this timer
 
+	timer:Set { at=tmrNextTarget(tbl) }
+end

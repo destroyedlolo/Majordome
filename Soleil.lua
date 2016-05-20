@@ -1,13 +1,37 @@
 -- Everything related to sun's light
 
+-- Action
+
+function FermeVoletRDC()
+	SelLog.log("Fermeture des volets du Salon")
+
+	Brk:Publish( 'maison/Volet/Salon/Balcon', 'Down' )
+	Brk:Publish( 'maison/Volet/Salon/Fenetre', 'Down' )
+	Brk:Publish( 'maison/Volet/Salon/Cheminee', 'Down' )
+end
+
+function OuvreVoletRDC()
+	SelLog.log("Overture des volets du Salon")
+
+	if SelShared.get( SAISON ) == 'Ete' then
+		Brk:Publish( 'maison/Volet/Salon/Fenetre', 'Up' )
+		Brk:Publish( 'maison/Volet/Salon/Balcon', 'My' )
+		Brk:Publish( 'maison/Volet/Salon/Cheminee', 'My' )
+	elseif SelShared.get( SAISON ) == 'Intersaison' then
+		Brk:Publish( 'maison/Volet/Salon/Fenetre', 'Up' )
+		Brk:Publish( 'maison/Volet/Salon/Balcon', 'Up' )
+		Brk:Publish( 'maison/Volet/Salon/Cheminee', 'Up' )
+	end
+end
+
 --
 -- Couché de soleil
 --
 Sunset_tasks = { FermeVoletRDC }
 
 function SunSet()
-	SubTasks( Sunset_tasks )
 	SelLog.log("Le soleil se couche" )
+	SubTasks( Sunset_tasks )
 end
 
 function hSunset()
@@ -21,7 +45,7 @@ function hSunset()
 		table.insert( tbl_timers[t], SunSet )
 	end
 
-print(universal_tostring( tbl_timers ))
+	tmrRething( timerCron, tbl_timers );
 end
 
 table.insert( Topics, { topic = METEO .. '/sunset', trigger=hSunset, trigger_once=true } )
@@ -31,7 +55,7 @@ table.insert( Topics, { topic = METEO .. '/sunset', trigger=hSunset, trigger_onc
 -- Levé de soleil
 --
 
-Sunset_tasks = { OuvreVoletRDC }
+Sunrise_tasks = { OuvreVoletRDC }
 
 function SunRise()
 	SubTasks( Sunrise_tasks )
@@ -49,21 +73,8 @@ function hSunrise()
 		table.insert( tbl_timers[t], SunRise )
 	end
 
-print(universal_tostring( tbl_timers ))
+	tmrRething( timerCron, tbl_timers );
 end
 
 table.insert( Topics, { topic = METEO .. '/sunrise', trigger=hSunrise, trigger_once=true } )
 
--- Action
-
-function FermeVoletRDC()
-	Brk:Publish( 'maison/Volet/Salon/Balcon', 'Down' )
-	Brk:Publish( 'maison/Volet/Salon/Fenetre', 'Down' )
-	Brk:Publish( 'maison/Volet/Salon/Cheminee', 'Down' )
-end
-
-function OuvreVoletRDC()
-	Brk:Publish( 'maison/Volet/Salon/Balcon', 'Up' )
-	Brk:Publish( 'maison/Volet/Salon/Fenetre', 'Up' )
-	Brk:Publish( 'maison/Volet/Salon/Cheminee', 'Up' )
-end

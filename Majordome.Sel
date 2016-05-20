@@ -13,13 +13,6 @@ require "tostring"
 require (SELENE_SCRIPT_DIR .. "/StaticConfiguration")
 require (SELENE_SCRIPT_DIR .. "/helpers")
 
--- Stuffs to handle
-Topics = {}
-
-require (SELENE_SCRIPT_DIR .. "/TExterieur")
-require (SELENE_SCRIPT_DIR .. "/Saison")
-require (SELENE_SCRIPT_DIR .. "/Soleil")
-
 --
 -- Logging's stuffs
 --
@@ -39,6 +32,13 @@ end
 
 rotatelog()	-- Initial log creation
 
+-- Stuffs to handle
+Topics = {}
+
+require (SELENE_SCRIPT_DIR .. "/TExterieur")
+require (SELENE_SCRIPT_DIR .. "/Saison")
+require (SELENE_SCRIPT_DIR .. "/Soleil")
+
 ---
 -- Timers
 ---
@@ -54,11 +54,10 @@ tbl_timers = {
 
 function CronExec()
 	tmrSubFunc( tbl_timers )
+	tmrRething( timerCron, tbl_timers )
 end
 
-print ("next", tmrNextTarget( tbl_timers ))
-
-local timerCron, err = SelTimer.create { at=tmrNextTarget( tbl_timers ), ifunc=CronExec } 
+timerCron, err = SelTimer.create { at=tmrNextTarget( tbl_timers ), ifunc=CronExec } 
 if err then
 	err = "Cron's timer creation error :" .. err
 	SelLog.log(err)
