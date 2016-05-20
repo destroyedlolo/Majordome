@@ -57,11 +57,29 @@ function DEC2DMS( val )
 	return i + d*.6
 end
 
+function TXT2DMS( val )
+	local h,m = val:match("(%d+):(%d+)")
+	return tonumber(h) + tonumber(m)/100
+end
+
 --
 -- Timers
 --
 -- Notez-bien : table *MUST* be ordered
 --
+
+function tmrRemoveEntry( tbl, func )
+	for i,f in pairs(tbl) do
+		for k,v in ipairs(f) do
+			if v == func then
+				f[k] = nil
+			end
+		end
+		if #f == 0 then
+			tbl[i] = nil	
+		end
+	end
+end
 
 function tmrNextTarget( tbl )
 	local dt = os.date("*t")

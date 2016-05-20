@@ -11,13 +11,14 @@ require "tostring"
 
 -- Misc includes
 require (SELENE_SCRIPT_DIR .. "/StaticConfiguration")
-require (SELENE_SCRIPT_DIR .. "/Saison")
 require (SELENE_SCRIPT_DIR .. "/helpers")
 
 -- Stuffs to handle
 Topics = {}
 
 require (SELENE_SCRIPT_DIR .. "/TExterieur")
+require (SELENE_SCRIPT_DIR .. "/Saison")
+require (SELENE_SCRIPT_DIR .. "/Soleil")
 
 --
 -- Logging's stuffs
@@ -46,10 +47,9 @@ function bip()
 	print("bip");
 end
 
-local tbl_timers = {
+tbl_timers = {
 	[0.0] = { rotatelog },
 	[7.0] = { launchDetermineSaison },
-	[22.28] = { launchDetermineSaison, bip }
 }
 
 function CronExec()
@@ -84,6 +84,7 @@ if not Brk then
 	return
 end
 
+-- print(universal_tostring( Topics ))
 _, err = Brk:subscribe( Topics )
 if err then
 	print( "Subscribtion", err )

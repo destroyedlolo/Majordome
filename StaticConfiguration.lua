@@ -15,6 +15,7 @@ MODEDEMAIN='Majordome/Mode/Demain'
 SAISON='Majordome/Saison'
 HLEVER='Majordome/HLever'
 TExterieur='maison/Temperature/Dehors'
+METEO='Meteo/Nonglard'
 
 -- Default configuration
 SelShared.set( MODE, 'Manuel' )
