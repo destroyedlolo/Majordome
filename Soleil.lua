@@ -3,24 +3,32 @@
 -- Action
 
 function FermeVoletSalon()
-	SelLog.log("Fermeture des volets du Salon")
+	if SelShared.get(MODE) == "Manuel" then
+		SelLog.log("Mode Manuel : Fermeture des volets du Salon annulée")
+	else
+		SelLog.log("Fermeture des volets du Salon")
 
-	Brk:Publish( 'maison/Volet/Salon/Balcon', 'Down' )
-	Brk:Publish( 'maison/Volet/Salon/Fenetre', 'Down' )
-	Brk:Publish( 'maison/Volet/Salon/Cheminee', 'Down' )
+		Brk:Publish( 'maison/Volet/Salon/Balcon', 'Down' )
+		Brk:Publish( 'maison/Volet/Salon/Fenetre', 'Down' )
+		Brk:Publish( 'maison/Volet/Salon/Cheminee', 'Down' )
+	end
 end
 
 function OuvreVoletSalon()
-	SelLog.log("Overture des volets du Salon")
+	if SelShared.get(MODE) == "Manuel" then
+		SelLog.log("Mode Manuel : Ouverture des volets du Salon annulée")
+	else
+		SelLog.log("Ouverture des volets du Salon")
 
-	if SelShared.get( SAISON ) == 'Ete' then
-		Brk:Publish( 'maison/Volet/Salon/Fenetre', 'Up' )
-		Brk:Publish( 'maison/Volet/Salon/Balcon', 'My' )
-		Brk:Publish( 'maison/Volet/Salon/Cheminee', 'My' )
-	elseif SelShared.get( SAISON ) == 'Intersaison' then
-		Brk:Publish( 'maison/Volet/Salon/Fenetre', 'Up' )
-		Brk:Publish( 'maison/Volet/Salon/Balcon', 'Up' )
-		Brk:Publish( 'maison/Volet/Salon/Cheminee', 'Up' )
+		if SelShared.get( SAISON ) == 'Ete' then
+			Brk:Publish( 'maison/Volet/Salon/Fenetre', 'Up' )
+			Brk:Publish( 'maison/Volet/Salon/Balcon', 'My' )
+			Brk:Publish( 'maison/Volet/Salon/Cheminee', 'My' )
+		elseif SelShared.get( SAISON ) == 'Intersaison' then
+			Brk:Publish( 'maison/Volet/Salon/Fenetre', 'Up' )
+			Brk:Publish( 'maison/Volet/Salon/Balcon', 'Up' )
+			Brk:Publish( 'maison/Volet/Salon/Cheminee', 'Up' )
+		end
 	end
 end
 
