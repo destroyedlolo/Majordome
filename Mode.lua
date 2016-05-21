@@ -5,8 +5,10 @@
 --
 function updateMode()
 	if SelShared.get(MODEFORCE) == 'Auto' then
+		SelLog.log("Mode calculé")
 		Brk:Publish(MODE, SelShared.get(MODEAUJOURDHUI))
 	elseif SelShared.get(MODEFORCE) == 'Manuel' or SelShared.get(MODEFORCE) == 'Travail' or SelShared.get(MODEFORCE) == 'Vacances' then
+		SelLog.log("Mode forcé")
 		Brk:Publish(MODE, SelShared.get(MODEFORCE))
 	else	-- Unrecognized mode
 		Brk:Publish(MODE, 'Manuel')
