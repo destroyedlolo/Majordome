@@ -2,7 +2,7 @@
 
 -- Action
 
-function FermeVoletRDC()
+function FermeVoletSalon()
 	SelLog.log("Fermeture des volets du Salon")
 
 	Brk:Publish( 'maison/Volet/Salon/Balcon', 'Down' )
@@ -10,7 +10,7 @@ function FermeVoletRDC()
 	Brk:Publish( 'maison/Volet/Salon/Cheminee', 'Down' )
 end
 
-function OuvreVoletRDC()
+function OuvreVoletSalon()
 	SelLog.log("Overture des volets du Salon")
 
 	if SelShared.get( SAISON ) == 'Ete' then
@@ -27,7 +27,7 @@ end
 --
 -- Couché de soleil
 --
-Sunset_tasks = { FermeVoletRDC }
+Sunset_tasks = { FermeVoletSalon }
 
 function SunSet()
 	SelLog.log("Le soleil se couche" )
@@ -55,7 +55,7 @@ table.insert( Topics, { topic = METEO .. '/sunset', trigger=hSunset, trigger_onc
 -- Levé de soleil
 --
 
-Sunrise_tasks = { OuvreVoletRDC }
+Sunrise_tasks = { OuvreVoletSalon }
 
 function SunRise()
 	SubTasks( Sunrise_tasks )

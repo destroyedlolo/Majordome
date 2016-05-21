@@ -35,6 +35,7 @@ rotatelog()	-- Initial log creation
 -- Stuffs to handle
 Topics = {}
 
+require (SELENE_SCRIPT_DIR .. "/Mode")
 require (SELENE_SCRIPT_DIR .. "/TExterieur")
 require (SELENE_SCRIPT_DIR .. "/Saison")
 require (SELENE_SCRIPT_DIR .. "/Soleil")

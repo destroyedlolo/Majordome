@@ -12,6 +12,17 @@ déterminé par la température extérieur à 7h du matin
  - **Intersaison** : autre
 
 ----------
+Topics
+======
+Liste des topics de commandes :
+
+ - **Majordome/Mode/AujourdHui** : mode automatique déterminé par le calendrier
+ - **Majordome/Mode/Demain** : mode automatique pour demain déterminé par le calendrier
+ - **Majordome/Mode/Force** : mode manuel forcé
+ - **Majordome/Mode** : mode actif, calculé à partir des précédents
+ - **Majordome/Saison** : saison déterminée par la température à 7h
+
+----------
 Scenarii
 ========
 ----------
