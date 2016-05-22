@@ -18,13 +18,20 @@ require (SELENE_SCRIPT_DIR .. "/helpers")
 --
 
 function rotatelog()
+	local msg
+	if SelLog.status() then
+		msg = "Rotation des logs"
+	else
+		msg = "Lancement de Majordome; Selene v".. SELENE_VERSION
+	end
+
 	if VERBOSE then
 		local _,err = SelLog.init('/tmp/Majordome.log_' .. os.date('%Y%m%d'))
 		if err then
 			print("*E* Log creation", err)
 		end
 	end
-	local _,err = SelLog.log("Log file created")
+	local _,err = SelLog.log(msg)
 	if err then
 		print("*E* Log creation", err)
 	end
@@ -39,6 +46,7 @@ require (SELENE_SCRIPT_DIR .. "/Mode")
 require (SELENE_SCRIPT_DIR .. "/TExterieur")
 require (SELENE_SCRIPT_DIR .. "/Saison")
 require (SELENE_SCRIPT_DIR .. "/Soleil")
+require (SELENE_SCRIPT_DIR .. "/Salon")
 
 ---
 -- Timers

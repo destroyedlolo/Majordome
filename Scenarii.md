@@ -7,7 +7,7 @@ Mode :
 Saison :
 --------
 déterminé par la température extérieur à 7h du matin
- - **Hivers** : < 5° (si dans la journée > 20°, on passe en Intersaison)
+ - **Hiver** : < 5° (si dans la journée > 20°, on passe en Intersaison)
  - **Eté** : > 10° 	
  - **Intersaison** : autre
 
@@ -27,7 +27,7 @@ Scenarii
 ========
 ----------
 Chambres / bureau
------------------
+==========
 	Saison hiver :
 		On laisse fermé
 		Si mode « Travail » et T° Ext > 10°C et si production photovoltaïque (le soleil brille),
@@ -52,42 +52,35 @@ Chambres / bureau
 
 ----------
 Salon
------
-	Si Saison = « Hiver » à partir de l'heure de levé du soleil (météo)
-		on boucle sur
-			Si le soleil brille (photovoltaïque) et si la T exterieur > 10°C,
-				ouverture des volet.
-			Sinon
-				fermeture
-			On arrête dès que la production photovoltaïque s'arrete ou à l'heure de couché du soleil (météo)
-		Fermeture des volets
+=====
+Saison "Ete"
+----
 
-	Sinon, autre saison
-		Si mode « Travail »
-			Ouverture à l'heure du levé (« DEBOUT LA DEDANS ! »)
-			Ouverture porte fenêtre uniquement si saison hors « Eté »
-		Sinon
-			« My » a l'heure du lever du soleil : ça évite d'avoir les portes fenêtres ouvertes si personne n'est debout
+	A partir du couché du soleil -1h
+		my si T°Ext < T°Int
+		Sinon Fermé
+	Si Travail
+		A 7h15 My
+		Ouverture à 7h45
+	sinon
+		My a 8h
+	Jusqu'au coucher du soleil
+		My si T°Int > 22 si T°Ext > T°int 
 
-		Ensuite on boucle jusqu'à l'heure de coucher du soleil -1 h
-			Si T°Salon > 25
-				Volet en "My"
-			Si T°Salon comprise en 21 et 25 et si production photo voltaïque
-				Volet en « My »
-			Si T°Salon < 19
-				On ouvre les volets
+*Voir a partir de quel heure on re-ouvre les volets en été.*
 
-			A heure de coucher du soleil -1 h
-				Ouverture des volets
+Saison "Intersaison"
+--------------------
+	si Travail
+		Ouverture à 7h45
+	sinon
+		Ouverture 8h15
+	Fermeture au coucher du soleil
 
-			A heure de coucher du soleil + 1h
-			Si T°Salon > 25
-				Volets sauf porte fenêtre en « My » (les fenêtres sont sans doute ouverte)
-			Sinon
-				Fermeture des volets sauf porte fenêtre
-
-			si T°ext < 10° ou à 22h (mode «Travail ») ou 2h30 (mode « Vacances »)
-				Fermeture porte fenetre « My » T°Salon > 25 ou totale sinon
+Saison "Hiver"
+---------
+	Ouverture à 7h45 si soleil levé
+	Fermeture au coucher du soleil -1h
 
 
 ----------
@@ -120,3 +113,6 @@ Porte du chat
 	Sinon
 		« My » a 1h00 si Mode = « Travail »
 		« My » à 2h00 si Mode = « Vacances »
+
+---------
+> Written with [StackEdit](https://stackedit.io/).

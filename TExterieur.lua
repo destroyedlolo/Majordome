@@ -4,7 +4,6 @@ TExt_tasks = {}	-- Tasks to launch when a TExt is received
 
 function hTExt()	-- Handle tasks at T°Ext arrival
 	SubTasks( TExt_tasks )
-	print( SelShared.get( TExterieur ) )
 end
 
 -- Add related topics

@@ -22,3 +22,13 @@ end
 function launchDetermineSaison()
 	ColAddFunc( TExt_tasks, DetermineSaison )
 end
+
+-- Actions related to season change
+
+Saison_tasks = {}	-- Tasks to launch at Season change
+
+function hSaison()
+	SubTasks( Saison_tasks )
+end
+
+table.insert( Topics, { topic = SAISON, trigger=hSaison, trigger_once=true } )

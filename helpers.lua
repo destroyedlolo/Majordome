@@ -79,6 +79,15 @@ function tmrRemoveEntry( tbl, func )
 	end
 end
 
+function tmrAddEntry( tbl, t, func )
+	tmrRemoveEntry(tbl, func)
+	if not tbl[t] then
+		tbl[t] = { func }
+	else
+		table.insert( tbl[t], func )
+	end
+end
+
 function tmrNextTarget( tbl )
 	local dt = os.date("*t")
 	local cur = dt.hour + dt.min/100
