@@ -58,7 +58,7 @@ end
 
 tbl_timers = {
 	[0.0] = { rotatelog },
-	[7.0] = { launchDetermineSaison },
+	[5.0] = { launchDetermineSaison },
 }
 
 function CronExec()

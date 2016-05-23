@@ -4,7 +4,7 @@ function DetermineSaison()
 	local saison
 	local t = tonumber(SelShared.get( TExterieur )) 
 
-	if t < 5 then
+	if t < 2 then
 		saison = 'Hivers'
 	elseif t > 10 then
 		saison = 'Ete'
