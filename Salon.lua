@@ -32,7 +32,7 @@ function MyVoletSalon()
 	if SelShared.get(MODE) == "Manuel" then
 		SelLog.log("Mode Manuel : Ouverture 'My' des volets du Salon annulée")
 	else
-		SelLog.log("Ouverture des volets du Salon")
+		SelLog.log("Ouverture 'My' des volets du Salon")
 
 		Brk:Publish( 'maison/Volet/Salon/Fenetre', 'My' )
 		Brk:Publish( 'maison/Volet/Salon/Balcon', 'My' )

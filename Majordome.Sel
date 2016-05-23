@@ -47,6 +47,7 @@ require (SELENE_SCRIPT_DIR .. "/TExterieur")
 require (SELENE_SCRIPT_DIR .. "/Saison")
 require (SELENE_SCRIPT_DIR .. "/Soleil")
 require (SELENE_SCRIPT_DIR .. "/Salon")
+require (SELENE_SCRIPT_DIR .. "/Bureau")
 
 ---
 -- Timers
