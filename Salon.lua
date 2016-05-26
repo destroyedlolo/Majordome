@@ -50,8 +50,9 @@ function determinePlanningSalon()
 	elseif SelShared.get( SAISON ) == 'Intersaison' then
 		tmrRemoveEntry(tbl_timers, OuvreVoletSalon)
 		if SelShared.get(MODE) == 'Travail' then
-			tmrAddEntry( tbl_timers, 7.45, OuvreVoletSalon )
-			SelLog.log("Ouverture du salon à 7h45")
+			local h = DEC2DMS(SelShared.get( HLEVER ) - DMS2DEC(0.15))
+			tmrAddEntry( tbl_timers, h, OuvreVoletSalon )
+			SelLog.log("Ouverture du salon à " .. h)
 		else
 			tmrAddEntry( tbl_timers, 8.15, OuvreVoletSalon )
 			SelLog.log("Ouverture du salon à 8h15")
