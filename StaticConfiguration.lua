@@ -16,6 +16,7 @@ MODEDEMAIN='Majordome/Mode/Demain'
 MODEFORCE='Majordome/Mode/Force'
 SAISON='Majordome/Saison'
 HLEVER='Majordome/HLever'
+HCOUCHER='Majordome/HCoucher'
 TExterieur='maison/Temperature/Dehors'
 METEO='Meteo/Nonglard'
 
@@ -23,5 +24,6 @@ METEO='Meteo/Nonglard'
 SelShared.set( MODE, 'Manuel' )
 SelShared.set( MODEFORCE, 'Auto' )
 SelShared.set( SAISON, 'Intersaison' )
-SelShared.set( HLEVER, '8:00' )
+SelShared.set( HLEVER, 8.00 )	-- Ne doit pas être < a 1:00
+SelShared.set( HCOUCHER, 21.10 )	-- pour les enfants
 

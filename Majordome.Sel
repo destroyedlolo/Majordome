@@ -22,7 +22,7 @@ function rotatelog()
 	if SelLog.status() then
 		msg = "Rotation des logs"
 	else
-		msg = "Lancement de Majordome; Selene v".. SELENE_VERSION
+		msg = "\n\tLancement de Majordome; Selene v".. SELENE_VERSION
 	end
 
 	if VERBOSE then
@@ -40,6 +40,12 @@ end
 rotatelog()	-- Initial log creation
 
 -- Stuffs to handle
+function NormHTopic( t, v )
+	SelShared.set(t, tonumber(v))
+	return true
+end
+
+-- hSaison is launched in order to rething the planning
 Topics = {}
 
 require (SELENE_SCRIPT_DIR .. "/Mode")
@@ -48,14 +54,15 @@ require (SELENE_SCRIPT_DIR .. "/Saison")
 require (SELENE_SCRIPT_DIR .. "/Soleil")
 require (SELENE_SCRIPT_DIR .. "/Salon")
 require (SELENE_SCRIPT_DIR .. "/Bureau")
+require (SELENE_SCRIPT_DIR .. "/ChambresHaut")
 
+TableMerge( Topics, {
+	{ topic = HLEVER, func = NormHTopic, trigger=hSaison, trigger_once=true },
+	{ topic = HCOUCHER, func = NormHTopic, trigger=hSaison, trigger_once=true }
+} )
 ---
 -- Timers
 ---
-
-function bip()
-	print("bip");
-end
 
 tbl_timers = {
 	[0.0] = { rotatelog },
