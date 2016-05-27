@@ -2,25 +2,17 @@
 
 function DetermineSaison()
 	local saison
-	local t = tonumber(SelShared.get( TExterieur )) 
 
-	if t < 2 then
+	if SelShared.get( TExterieur ) < 2 then
 		saison = 'Hivers'
-	elseif t > 10 then
+	elseif SelShared.get( TSalon ) > 21 then
 		saison = 'Ete'
 	else
 		saison = 'Intersaison'
 	end
 
-	SelLog.log("T°Ext = " .. t .. " => " .. saison)
+	SelLog.log("T°Ext = " .. SelShared.get( TExterieur ) .. " TSalon = " .. SelShared.get( TSalon ) .. " => " .. saison)
 	Brk:Publish( SAISON, saison )
-	SelShared.set( SAISON, saison )
-
-	ColRemoveFunc( TExt_tasks, DetermineSaison )	-- Not needed anymore
-end
-
-function launchDetermineSaison()
-	ColAddFunc( TExt_tasks, DetermineSaison )
 end
 
 -- Actions related to season change

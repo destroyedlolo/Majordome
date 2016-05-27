@@ -45,7 +45,7 @@ function determinePlanningBureau()
 	elseif SelShared.get( SAISON ) == 'Intersaison' then
 		tmrRemoveEntry(tbl_timers, OuvreVoletBureau)
 		if SelShared.get(MODE) == 'Travail' then
-			local h = DEC2DMS(DMS2DEC(SelShared.get( HLEVER )) - DMS2DEC(0.15))
+			local h = DEC2DMS(DMS2DEC(SelShared.get( HLEVE )) - DMS2DEC(0.15))
 			tmrAddEntry( tbl_timers, h, OuvreVoletBureau )
 			SelLog.log("Ouverture du bureau à " .. h)
 		else

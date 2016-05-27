@@ -6,9 +6,9 @@ Mode :
 
 Saison :
 --------
-déterminé par la température extérieur à 5h du matin
- - **Hiver** : < 2° (si dans la journée > 20°, on passe en Intersaison)
- - **Eté** : > 10° 	
+déterminé à 5h du matin
+ - **Hiver** : T°Extérieur < 2° (si dans la journée > 20°, on passe en Intersaison)
+ - **Eté** : T°Salon > 21° 	
  - **Intersaison** : autre
 
 ----------

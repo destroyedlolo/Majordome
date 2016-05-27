@@ -51,8 +51,8 @@ require (SELENE_SCRIPT_DIR .. "/Bureau")
 require (SELENE_SCRIPT_DIR .. "/ChambresHaut")
 
 TableMerge( Topics, {
-	{ topic = HLEVE, ifunc = Topic2Number, trigger=hSaison, trigger_once=true },
-	{ topic = HCOUCHE, ifunc = Topic2Number, trigger=hSaison, trigger_once=true }
+	{ topic = HLEVE, func = Topic2Number, trigger=hSaison, trigger_once=true },
+	{ topic = HCOUCHE, func = Topic2Number, trigger=hSaison, trigger_once=true }
 } )
 ---
 -- Timers
@@ -60,7 +60,7 @@ TableMerge( Topics, {
 
 tbl_timers = {
 	[0.0] = { rotatelog },
-	[5.0] = { launchDetermineSaison },
+	[5.0] = { DetermineSaison },
 }
 
 function CronExec()
