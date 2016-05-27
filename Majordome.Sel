@@ -49,7 +49,7 @@ end
 Topics = {}
 
 require (SELENE_SCRIPT_DIR .. "/Mode")
-require (SELENE_SCRIPT_DIR .. "/TExterieur")
+require (SELENE_SCRIPT_DIR .. "/Temperature")
 require (SELENE_SCRIPT_DIR .. "/Saison")
 require (SELENE_SCRIPT_DIR .. "/Soleil")
 require (SELENE_SCRIPT_DIR .. "/Salon")

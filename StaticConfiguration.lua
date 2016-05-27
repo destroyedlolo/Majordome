@@ -18,6 +18,7 @@ SAISON='Majordome/Saison'
 HLEVER='Majordome/HLever'
 HCOUCHER='Majordome/HCoucher'
 TExterieur='maison/Temperature/Dehors'
+TSalon='maison/Temperature/Salon'
 METEO='Meteo/Nonglard'
 
 -- Default configuration
