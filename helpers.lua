@@ -31,6 +31,15 @@ function ColRemoveFunc( tbl, func )
 end
 
 --
+-- MQTT's
+--
+
+function Topic2Number( t, v )
+	SelShared.set(t, tonumber(v))
+	return true
+end
+
+--
 -- Tables
 --
 
