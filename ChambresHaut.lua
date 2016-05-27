@@ -104,29 +104,29 @@ function determinePlanning1er()
 		-- Chambres des enfants
 		local h
 		if SelShared.get(MODE) == 'Travail' then
-			h = DEC2DMS(DMS2DEC(SelShared.get( HLEVER )) - DMS2DEC(0.15))
+			h = DEC2DMS(DMS2DEC(SelShared.get( HLEVE )) - DMS2DEC(0.15))
 			tmrAddEntry( tbl_timers, h, MyVoletChJoris )
 			tmrAddEntry( tbl_timers, h, MyVoletChOceane )
 			SelLog.log("Ouverture 'My' des chambres des enfants à " .. h)
 		
-			tmrAddEntry( tbl_timers, SelShared.get( HLEVER ), OuvreVoletChJoris )
-			tmrAddEntry( tbl_timers, SelShared.get( HLEVER ), OuvreVoletChOceane )
-			SelLog.log("Ouverture des chambres des enfants à " .. SelShared.get( HLEVER ))
+			tmrAddEntry( tbl_timers, SelShared.get( HLEVE ), OuvreVoletChJoris )
+			tmrAddEntry( tbl_timers, SelShared.get( HLEVE ), OuvreVoletChOceane )
+			SelLog.log("Ouverture des chambres des enfants à " .. SelShared.get( HLEVE ))
 
-			tmrAddEntry( tbl_timers, SelShared.get( HLEVER ), MyVoletChParents )
-			h = DEC2DMS(DMS2DEC(SelShared.get( HLEVER )) + DMS2DEC(0.05))
-			tmrAddEntry( tbl_timers, SelShared.get( HLEVER ), OuvreVoletChParents )
+			tmrAddEntry( tbl_timers, SelShared.get( HLEVE ), MyVoletChParents )
+			h = DEC2DMS(DMS2DEC(SelShared.get( HLEVE )) + DMS2DEC(0.05))
+			tmrAddEntry( tbl_timers, SelShared.get( HLEVE ), OuvreVoletChParents )
 			SelLog.log("Ouverture de la chambre des parents à " .. h)
 		end
 
 		local t = TXT2DMS( SelShared.get(METEO .. '/sunset') )
-		h = DEC2DMS(DMS2DEC(SelShared.get( HCOUCHER )) - DMS2DEC(0.15))
+		h = DEC2DMS(DMS2DEC(SelShared.get( HCOUCHE )) - DMS2DEC(0.15))
 		if t > h then
 			tmrAddEntry( tbl_timers, h, MyVoletChJoris )
 			tmrAddEntry( tbl_timers, h, MyVoletChOceane )
 			SelLog.log("Fermeture 'My' des chambres des enfants à " .. h)
 
-			h = SelShared.get( HCOUCHER )
+			h = SelShared.get( HCOUCHE )
 			tmrAddEntry( tbl_timers, h, FermeVoletChJoris )
 			tmrAddEntry( tbl_timers, h, FermeVoletChOceane )
 			tmrAddEntry( tbl_timers, h, FermeVoletChParents )

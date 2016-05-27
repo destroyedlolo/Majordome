@@ -57,8 +57,8 @@ require (SELENE_SCRIPT_DIR .. "/Bureau")
 require (SELENE_SCRIPT_DIR .. "/ChambresHaut")
 
 TableMerge( Topics, {
-	{ topic = HLEVER, func = NormHTopic, trigger=hSaison, trigger_once=true },
-	{ topic = HCOUCHER, func = NormHTopic, trigger=hSaison, trigger_once=true }
+	{ topic = HLEVE, ifunc = NormHTopic, trigger=hSaison, trigger_once=true },
+	{ topic = HCOUCHE, ifunc = NormHTopic, trigger=hSaison, trigger_once=true }
 } )
 ---
 -- Timers
