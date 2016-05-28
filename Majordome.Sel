@@ -49,6 +49,7 @@ require (SELENE_SCRIPT_DIR .. "/Soleil")
 require (SELENE_SCRIPT_DIR .. "/Salon")
 require (SELENE_SCRIPT_DIR .. "/Bureau")
 require (SELENE_SCRIPT_DIR .. "/ChambresHaut")
+require (SELENE_SCRIPT_DIR .. "/Chat")
 
 TableMerge( Topics, {
 	{ topic = HLEVE, func = Topic2Number, trigger=hSaison, trigger_once=true },
