@@ -111,8 +111,8 @@ Porte du chat
 	Si saison = hiver
 		« My » à 21h
 	Sinon
-		« My » a 1h00 si Mode = « Travail »
-		« My » à 2h00 si Mode = « Vacances »
+		« My » a 1h00 si ModeDemain = « Travail »
+		« My » à 2h00 si ModeDemain = « Vacances »
 
 ---------
 > Written with [StackEdit](https://stackedit.io/).

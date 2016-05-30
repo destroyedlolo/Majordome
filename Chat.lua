@@ -31,7 +31,7 @@ function determinePlanningChat()
 	if SelShared.get( SAISON ) == 'Hiver' then
 		SelLog.log("'My' du chat à 21h")
 		tmrAddEntry( tbl_timers, 21, MyTrappeChat )
-	elseif SelShared.get(MODE) == 'Travail' then
+	elseif SelShared.get(MODEDEMAIN) == 'Travail' then
 		SelLog.log("'My' du chat à 1h")
 		tmrAddEntry( tbl_timers, 1, MyTrappeChat )
 	else
