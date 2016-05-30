@@ -4,6 +4,11 @@
 -- Determine the mode to use
 --
 function updateMode()
+	if not SelShared.get(MODEAUJOURDHUI) then
+		SelLog.log("Détermination du mode annulée : MODEAUJOUD'HUI pas encore recu")
+		return
+	end
+
 	if SelShared.get(MODEFORCE) == 'Auto' then
 		SelLog.log("Mode calculé")
 		Brk:Publish(MODE, SelShared.get(MODEAUJOURDHUI))
