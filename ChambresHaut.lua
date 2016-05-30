@@ -104,7 +104,7 @@ function determinePlanning1er()
 		-- Chambres des enfants
 		local h
 		if SelShared.get(MODE) == 'Travail' then
-			h = DEC2DMS(DMS2DEC(SelShared.get( HLEVE )) - DMS2DEC(0.15))
+			h = DEC2DMS(DMS2DEC(SelShared.get( HLEVE )) - DMS2DEC(0.1))
 			tmrAddEntry( tbl_timers, h, MyVoletChJoris )
 			tmrAddEntry( tbl_timers, h, MyVoletChOceane )
 			SelLog.log("Ouverture 'My' des chambres des enfants à " .. h)
@@ -115,7 +115,7 @@ function determinePlanning1er()
 
 			tmrAddEntry( tbl_timers, SelShared.get( HLEVE ), MyVoletChParents )
 			h = DEC2DMS(DMS2DEC(SelShared.get( HLEVE )) + DMS2DEC(0.05))
-			tmrAddEntry( tbl_timers, SelShared.get( HLEVE ), OuvreVoletChParents )
+			tmrAddEntry( tbl_timers, h, OuvreVoletChParents )
 			SelLog.log("Ouverture de la chambre des parents à " .. h)
 		end
 

@@ -1,4 +1,4 @@
-#!../Selene/Selene
+#!/usr/local/bin/Selene
 -- Majordome, Smart home automation scripts
 --
 -- This tool is configured for my own usage and is matching my home configuration
@@ -7,7 +7,7 @@
 assert( SELENE_VERSION >= 2.0401, "HDB requires at least Selene v2.04.01, got " .. SELENE_VERSION ..'\n' )
 
 -- debug only
-require "tostring"
+-- require "tostring"
 
 -- Misc includes
 require (SELENE_SCRIPT_DIR .. "/StaticConfiguration")
@@ -87,7 +87,7 @@ function disconnected( cause )
 end
 
 -- Connection and subscription
-Brk, err = SelMQTT.connect( BROKERHOST, { reliable=false, OnDisconnect=disconnected  } )
+Brk, err = SelMQTT.connect( BROKERHOST, { clientID="Majordome.prod", reliable=false, OnDisconnect=disconnected  } )
 if not Brk then
 	err = 'Broker creation ' .. err
 	SelLog.log(err)
