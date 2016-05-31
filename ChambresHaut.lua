@@ -101,8 +101,18 @@ function determinePlanning1er()
 
 	if SelShared.get( SAISON ) == 'Ete' then
 	elseif SelShared.get( SAISON ) == 'Intersaison' then
-		-- Chambres des enfants
 		local h
+		-- cleaning
+		tmrRemoveEntry(tbl_timers, MyVoletChJoris)
+		tmrRemoveEntry(tbl_timers, MyVoletChOceane)
+		tmrRemoveEntry(tbl_timers, OuvreVoletChJoris)
+		tmrRemoveEntry(tbl_timers, OuvreVoletChOceane)
+		tmrRemoveEntry(tbl_timers, FermeVoletChJoris)
+		tmrRemoveEntry(tbl_timers, FermeVoletChOceane)
+		tmrRemoveEntry(tbl_timers, MyVoletChParents)
+		tmrRemoveEntry(tbl_timers, OuvreVoletChParents)
+		tmrRemoveEntry(tbl_timers, FermeVoletChParents)
+
 		if SelShared.get(MODE) == 'Travail' then
 			h = DEC2DMS(DMS2DEC(SelShared.get( HLEVE )) - DMS2DEC(0.1))
 			tmrAddEntry( tbl_timers, h, MyVoletChJoris )
@@ -114,6 +124,7 @@ function determinePlanning1er()
 			SelLog.log("Ouverture des chambres des enfants à " .. SelShared.get( HLEVE ))
 
 			tmrAddEntry( tbl_timers, SelShared.get( HLEVE ), MyVoletChParents )
+			SelLog.log("Ouverture 'My' de la chambre des parents à " .. SelShared.get( HLEVE ))
 			h = DEC2DMS(DMS2DEC(SelShared.get( HLEVE )) + DMS2DEC(0.05))
 			tmrAddEntry( tbl_timers, h, OuvreVoletChParents )
 			SelLog.log("Ouverture de la chambre des parents à " .. h)
@@ -135,6 +146,8 @@ function determinePlanning1er()
 		end
 	else	-- Hiver
 	end
+
+--	print(universal_tostring(tbl_timers))
 end
 
 table.insert( Saison_tasks, determinePlanning1er )
