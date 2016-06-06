@@ -38,6 +38,8 @@ function determinePlanningChat()
 		SelLog.log("'My' du chat à 2h")
 		tmrAddEntry( tbl_timers, 2, MyTrappeChat )
 	end
+
+	tmrRethink( timerCron, tbl_timers );
 end
 
 table.insert( Mode_tasks, determinePlanningChat )

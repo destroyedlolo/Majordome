@@ -62,6 +62,7 @@ function determinePlanningSalon()
 		SelLog.log("Fermeture du salon au coucher du soleil")
 	else	-- Hiver
 	end
+	tmrRethink( timerCron, tbl_timers );
 end
 
 table.insert( Saison_tasks, determinePlanningSalon )

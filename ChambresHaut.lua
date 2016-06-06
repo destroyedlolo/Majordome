@@ -146,8 +146,8 @@ function determinePlanning1er()
 		end
 	else	-- Hiver
 	end
+	tmrRethink( timerCron, tbl_timers );
 
---	print(universal_tostring(tbl_timers))
 end
 
 table.insert( Saison_tasks, determinePlanning1er )

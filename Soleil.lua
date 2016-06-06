@@ -21,7 +21,7 @@ function hSunset()
 		table.insert( tbl_timers[t], SunSet )
 	end
 
-	tmrRething( timerCron, tbl_timers );
+	tmrRethink( timerCron, tbl_timers );
 end
 
 table.insert( Topics, { topic = METEO .. '/sunset', trigger=hSunset, trigger_once=true } )
@@ -43,7 +43,7 @@ function hSunrise()
 	SelLog.log("Levé du soleil = " .. t)
 
 	tmrAddEntry( tbl_timers, t, SunRise )
-	tmrRething( timerCron, tbl_timers );
+	tmrRethink( timerCron, tbl_timers );
 end
 
 table.insert( Topics, { topic = METEO .. '/sunrise', trigger=hSunrise, trigger_once=true } )

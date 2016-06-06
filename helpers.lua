@@ -115,6 +115,15 @@ function tmrNextTarget( tbl )
 	return k[1]
 end
 
+--[[
+function tmrNextTarget( tbl )
+	local res = _tmrNextTarget( tbl )
+	SelLog.log( "tbl timer =" .. universal_tostring(tbl) )
+	SelLog.log( "res = " .. res )
+	return res
+end
+]]
+
 function tmrSubFunc( tbl )
 	local dt = os.date("*t")
 	local cur = dt.hour + dt.min/100
@@ -131,7 +140,7 @@ function SubTasks( tbl )
 	end
 end
 
-function tmrRething( timer, tbl )
+function tmrRethink( timer, tbl )
 	-- update the timer with the next value in its pipe
 	-- timer : timer to update
 	-- tbl : tasks for this timer

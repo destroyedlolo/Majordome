@@ -1,4 +1,4 @@
-#!/usr/local/bin/Selene
+#!../Selene//Selene
 -- Majordome, Smart home automation scripts
 --
 -- This tool is configured for my own usage and is matching my home configuration
@@ -66,7 +66,7 @@ tbl_timers = {
 
 function CronExec()
 	tmrSubFunc( tbl_timers )
-	tmrRething( timerCron, tbl_timers )
+	tmrRethink( timerCron, tbl_timers )
 end
 
 timerCron, err = SelTimer.create { at=tmrNextTarget( tbl_timers ), ifunc=CronExec } 
@@ -87,7 +87,7 @@ function disconnected( cause )
 end
 
 -- Connection and subscription
-Brk, err = SelMQTT.connect( BROKERHOST, { clientID="Majordome.prod", reliable=false, OnDisconnect=disconnected  } )
+Brk, err = SelMQTT.connect( BROKERHOST, { clientID=CLIENTID, reliable=false, OnDisconnect=disconnected  } )
 if not Brk then
 	err = 'Broker creation ' .. err
 	SelLog.log(err)
