@@ -12,7 +12,7 @@ function DetermineSaison()
 	end
 
 	SelLog.log("T°Ext = " .. SelShared.get( TExterieur ) .. " TSalon = " .. SelShared.get( TSalon ) .. " => " .. saison)
-	Brk:Publish( SAISON, saison )
+	Brk:Publish( SAISON, saison, true )
 end
 
 -- Actions related to season change
