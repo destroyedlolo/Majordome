@@ -97,7 +97,7 @@ function tmrAddEntry( tbl, t, func )
 	end
 end
 
-function tmrNextTarget( tbl )
+function _tmrNextTarget( tbl )
 	local dt = os.date("*t")
 	local cur = dt.hour + dt.min/100
 	local k = {}
@@ -115,29 +115,29 @@ function tmrNextTarget( tbl )
 	return k[1]
 end
 
---[[
 function tmrNextTarget( tbl )
 	local res = _tmrNextTarget( tbl )
-	SelLog.log( "tbl timer =" .. universal_tostring(tbl) )
-	SelLog.log( "res = " .. res )
 	return res
 end
-]]
+
+function SubTasks( tbl )
+	-- submit all tasks listed in tbl table
+	for _,t in ipairs( tbl ) do
+		if type(t) == 'table' then
+			for i,j in ipairs(t) do
+				SelShared.PushTask( j, SelShared.TaskOnceConst("MULTIPLE") )
+			end
+		else
+			SelShared.PushTask( t, SelShared.TaskOnceConst("MULTIPLE") )
+		end
+	end
+end
 
 function tmrSubFunc( tbl )
 	local dt = os.date("*t")
 	local cur = dt.hour + dt.min/100
 
 	SubTasks( tbl[cur] )
-end
-
-function SubTasks( tbl )
-	-- submit all tasks listed in tbl table
-
-
-	for _,t in ipairs( tbl ) do
-		SelShared.PushTask( t, SelShared.TaskOnceConst("MULTIPLE") )
-	end
 end
 
 function tmrRethink( timer, tbl )
