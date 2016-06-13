@@ -64,6 +64,7 @@ tbl_timers = {
 }
 
 function CronExec()
+	SelLog.log('CronExec')
 	tmrSubFunc( tbl_timers )
 	tmrRethink( timerCron, tbl_timers )
 end

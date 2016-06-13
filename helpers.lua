@@ -117,6 +117,7 @@ end
 
 function tmrNextTarget( tbl )
 	local res = _tmrNextTarget( tbl )
+SelLog.log('Suivant :' .. res)
 	return res
 end
 
@@ -125,9 +126,11 @@ function SubTasks( tbl )
 	for _,t in ipairs( tbl ) do
 		if type(t) == 'table' then
 			for i,j in ipairs(t) do
+				SelLog.log('subtsk' .. i .. ' t:'.. type(j))
 				SelShared.PushTask( j, SelShared.TaskOnceConst("MULTIPLE") )
 			end
 		else
+			SelLog.log('subtsk : une seule fonction t:'.. type(t))
 			SelShared.PushTask( t, SelShared.TaskOnceConst("MULTIPLE") )
 		end
 	end
