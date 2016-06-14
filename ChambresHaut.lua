@@ -68,7 +68,7 @@ function MyVoletChOceane()
 	else
 		SelLog.log("Ouverture 'My' du volet de la chambre d'Océane")
 
-		Brk:Publish( 'maison/Volet/chOceane', 'Up' )
+		Brk:Publish( 'maison/Volet/chOceane', 'My' )
 	end
 end
 
@@ -78,7 +78,7 @@ function MyVoletChJoris()
 	else
 		SelLog.log("Ouverture 'My' du volet de la chambre de Joris")
 
-		Brk:Publish( 'maison/Volet/chJoris', 'Up' )
+		Brk:Publish( 'maison/Volet/chJoris', 'My' )
 	end
 end
 
@@ -88,7 +88,7 @@ function MyVoletChParents()
 	else
 		SelLog.log("Ouverture 'My' du volet de la chambre des Parents")
 
-		Brk:Publish( 'maison/Volet/chParents', 'Up' )
+		Brk:Publish( 'maison/Volet/chParents', 'My' )
 	end
 end
 
