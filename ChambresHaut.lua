@@ -99,8 +99,8 @@ end
 function determinePlanning1er()
 	SelLog.log("Détermination du planning pour les chambres du 1er")
 
-	if SelShared.get( SAISON ) == 'Ete' then
-	elseif SelShared.get( SAISON ) == 'Intersaison' then
+	if SelShared.get( SAISON ) == 'Hiver' then
+	else
 		local h
 		-- cleaning
 		tmrRemoveEntry(tbl_timers, MyVoletChJoris)
@@ -148,6 +148,7 @@ function determinePlanning1er()
 	end
 	tmrRethink( timerCron, tbl_timers );
 
+SelLog.log("Le planing done :" .. universal_tostring( tbl_timers ))
 end
 
 table.insert( Saison_tasks, determinePlanning1er )
