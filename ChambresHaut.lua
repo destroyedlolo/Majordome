@@ -148,6 +148,7 @@ function determinePlanning1er()
 	end
 	tmrRethink( timerCron, tbl_timers );
 
+SelLog.log("Le planing done :" .. universal_tostring( tbl_timers ))
 end
 
 table.insert( Saison_tasks, determinePlanning1er )

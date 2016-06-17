@@ -7,7 +7,7 @@
 assert( SELENE_VERSION >= 2.0401, "HDB requires at least Selene v2.04.01, got " .. SELENE_VERSION ..'\n' )
 
 -- debug only
--- require "tostring"
+require "tostring"
 
 -- Misc includes
 require (SELENE_SCRIPT_DIR .. "/StaticConfiguration")
