@@ -36,6 +36,13 @@ end
 
 function Topic2Number( t, v )
 	SelShared.set(t, tonumber(v))
+SelLog.log('*d* Topic2Number(' .. t ..','.. SelShared.get(t) ..' ('.. v ..')' )
+	return true
+end
+
+function TopicDate2Number( t, v )
+	SelShared.set(t, TXT2DMS(v))
+SelLog.log('*d* TopicDate2Number(' .. t ..','.. SelShared.get(t) ..' ('.. v ..')' )
 	return true
 end
 
@@ -67,7 +74,7 @@ function DEC2DMS( val )
 end
 
 function TXT2DMS( val )
-	local h,m = val:match("(%d+):(%d+)")
+	local h,m = string.match(val, "(%d+):(%d+)")
 	return tonumber(h) + tonumber(m)/100
 end
 
@@ -117,21 +124,22 @@ end
 
 function tmrNextTarget( tbl )
 	local res = _tmrNextTarget( tbl )
-SelLog.log('Suivant :' .. res)
+SelLog.log('*d* Timer Suivant :' .. res)
 	return res
 end
 
 function SubTasks( tbl )
 	-- submit all tasks listed in tbl table
-	for _,t in ipairs( tbl ) do
-SelLog.log('subtsk table ' .. universal_tostring(t) )
+SelLog.log('*d* subtsk type ' .. universal_tostring(t) )
+	for z,t in ipairs( tbl ) do
+SelLog.log('*d* subtsk '.. z ..' type ' .. universal_tostring(t) )
 		if type(t) == 'table' then
 			for i,j in ipairs(t) do
-SelLog.log('subtsk' .. i .. ' t:'.. type(j))
+SelLog.log('*d* subtsk' .. i .. ' t:'.. type(j))
 				SelShared.PushTask( j, SelShared.TaskOnceConst("MULTIPLE") )
 			end
 		else
-	SelLog.log('subtsk : une seule fonction t:'.. type(t))
+SelLog.log('*d* subtsk : une seule fonction t:'.. type(t))
 			SelShared.PushTask( t, SelShared.TaskOnceConst("MULTIPLE") )
 		end
 	end
@@ -141,8 +149,8 @@ function tmrSubFunc( tbl )
 	local dt = os.date("*t")
 	local cur = dt.hour + dt.min/100
 
-SelLog.log('tmrSubFunc('.. cur ..')')
-SelLog.log('->' .. universal_tostring(tbl[cur]) )
+SelLog.log('*d* tmrSubFunc('.. cur ..') ' .. universal_tostring(tbl) )
+SelLog.log('*d* ->' .. universal_tostring(tbl[cur]) )
 
 	SubTasks( tbl[cur] )
 end
