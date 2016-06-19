@@ -125,7 +125,7 @@ function determinePlanning1er()
 
 			tmrAddEntry( tbl_timers, SelShared.get( HLEVE ), MyVoletChParents )
 			SelLog.log("Ouverture 'My' de la chambre des parents à " .. SelShared.get( HLEVE ))
-			h = DEC2DMS(DMS2DEC(SelShared.get( HLEVE )) + DMS2DEC(0.01))
+			h = DEC2DMS(DMS2DEC(SelShared.get( HLEVE )) + DMS2DEC(0.05))
 			tmrAddEntry( tbl_timers, h, OuvreVoletChParents )
 			SelLog.log("Ouverture de la chambre des parents à " .. h)
 		end
