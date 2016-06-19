@@ -52,8 +52,8 @@ require (SELENE_SCRIPT_DIR .. "/ChambresHaut")
 require (SELENE_SCRIPT_DIR .. "/Chat")
 
 TableMerge( Topics, {
-	{ topic = HLEVE, func = Topic2Number, trigger=hSaison, trigger_once=true },
-	{ topic = HCOUCHE, func = Topic2Number, trigger=hSaison, trigger_once=true }
+	{ topic = HLEVE, func = TopicDate2Number, trigger=hSaison, trigger_once=true },
+	{ topic = HCOUCHE, func = TopicDate2Number, trigger=hSaison, trigger_once=true }
 } )
 ---
 -- Timers
@@ -64,7 +64,7 @@ tbl_timers = {
 }
 
 function CronExec()
-	SelLog.log('CronExec')
+SelLog.log('*d* CronExec')
 	tmrSubFunc( tbl_timers )
 	tmrRethink( timerCron, tbl_timers )
 end
