@@ -109,7 +109,7 @@ function determinePlanning1er()
 		tmrRemoveEntry(tbl_timers, OuvreVoletChOceane)
 		tmrRemoveEntry(tbl_timers, FermeVoletChJoris)
 		tmrRemoveEntry(tbl_timers, FermeVoletChOceane)
-		d_tmrRemoveEntry(tbl_timers, MyVoletChParents)
+		tmrRemoveEntry(tbl_timers, MyVoletChParents)
 		tmrRemoveEntry(tbl_timers, OuvreVoletChParents)
 		tmrRemoveEntry(tbl_timers, FermeVoletChParents)
 
