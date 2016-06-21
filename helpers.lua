@@ -36,13 +36,11 @@ end
 
 function Topic2Number( t, v )
 	SelShared.set(t, tonumber(v))
-SelLog.log('*d* Topic2Number(' .. t ..','.. SelShared.get(t) ..' ('.. v ..')' )
 	return true
 end
 
 function TopicDate2Number( t, v )
 	SelShared.set(t, TXT2DMS(v))
-SelLog.log('*d* TopicDate2Number(' .. t ..','.. SelShared.get(t) ..' ('.. v ..')' )
 	return true
 end
 
@@ -86,7 +84,7 @@ function tmrRemoveEntry( tbl, func )
 	for i,f in pairs(tbl) do
 		for k,v in ipairs(f) do
 			if v == func then
-				f[k] = nil
+				table.remove(f, k)
 			end
 		end
 		if #f == 0 then
@@ -130,7 +128,7 @@ end
 
 function SubTasks( tbl )
 	-- submit all tasks listed in tbl table
-SelLog.log('*d* subtsk type ' .. universal_tostring(t) )
+SelLog.log('*d* subtsk type ' .. type(tbl) )
 	for z,t in ipairs( tbl ) do
 SelLog.log('*d* subtsk '.. z ..' type ' .. universal_tostring(t) )
 		if type(t) == 'table' then
@@ -149,7 +147,7 @@ function tmrSubFunc( tbl )
 	local dt = os.date("*t")
 	local cur = dt.hour + dt.min/100
 
-SelLog.log('*d* tmrSubFunc('.. cur ..') ' .. universal_tostring(tbl) )
+SelLog.log('*d* tmrSubFunc('.. cur ..') ' )
 SelLog.log('*d* ->' .. universal_tostring(tbl[cur]) )
 
 	SubTasks( tbl[cur] )

@@ -109,7 +109,7 @@ function determinePlanning1er()
 		tmrRemoveEntry(tbl_timers, OuvreVoletChOceane)
 		tmrRemoveEntry(tbl_timers, FermeVoletChJoris)
 		tmrRemoveEntry(tbl_timers, FermeVoletChOceane)
-		tmrRemoveEntry(tbl_timers, MyVoletChParents)
+		d_tmrRemoveEntry(tbl_timers, MyVoletChParents)
 		tmrRemoveEntry(tbl_timers, OuvreVoletChParents)
 		tmrRemoveEntry(tbl_timers, FermeVoletChParents)
 
@@ -147,7 +147,7 @@ function determinePlanning1er()
 	end
 	tmrRethink( timerCron, tbl_timers );
 
-SelLog.log("Le planing done :" .. universal_tostring( tbl_timers ))
+-- SelLog.log("Le planing done :" .. universal_tostring( tbl_timers ))
 end
 
 table.insert( Saison_tasks, determinePlanning1er )
