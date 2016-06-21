@@ -46,21 +46,25 @@ end
 function determinePlanningSalon()
 	SelLog.log("Détermination du planning pour le salon")
 
-	if SelShared.get( SAISON ) == 'Ete' then
-	elseif SelShared.get( SAISON ) == 'Intersaison' then
+	if SelShared.get( SAISON ) == 'Hiver' then
+	else
+		local f = OuvreVoletSalon
+		if SelShared.get( SAISON ) == 'Ete' then
+			f = MyVoletSalon
+		end
 		tmrRemoveEntry(tbl_timers, OuvreVoletSalon)
+		tmrRemoveEntry(tbl_timers, MyVoletSalon)
 		if SelShared.get(MODE) == 'Travail' then
 			local h = DEC2DMS(DMS2DEC(SelShared.get( HLEVE )) - DMS2DEC(0.15))
-			tmrAddEntry( tbl_timers, h, OuvreVoletSalon )
+			tmrAddEntry( tbl_timers, h, f)
 			SelLog.log("Ouverture du salon à " .. h)
 		else
-			tmrAddEntry( tbl_timers, 8.15, OuvreVoletSalon )
+			tmrAddEntry( tbl_timers, 8.15, f)
 			SelLog.log("Ouverture du salon à 8h15")
 		end
 		ColRemoveFunc( Sunset_tasks, FermeVoletSalon )
 		ColAddFunc( Sunset_tasks, FermeVoletSalon )
 		SelLog.log("Fermeture du salon au coucher du soleil")
-	else	-- Hiver
 	end
 	tmrRethink( timerCron, tbl_timers );
 end

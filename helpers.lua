@@ -128,16 +128,16 @@ end
 
 function SubTasks( tbl )
 	-- submit all tasks listed in tbl table
-SelLog.log('*d* subtsk type ' .. type(tbl) )
+-- SelLog.log('*d* subtsk type ' .. type(tbl) )
 	for z,t in ipairs( tbl ) do
-SelLog.log('*d* subtsk '.. z ..' type ' .. universal_tostring(t) )
+-- SelLog.log('*d* subtsk '.. z ..' type ' .. universal_tostring(t) )
 		if type(t) == 'table' then
 			for i,j in ipairs(t) do
-SelLog.log('*d* subtsk' .. i .. ' t:'.. type(j))
+-- SelLog.log('*d* subtsk' .. i .. ' t:'.. type(j))
 				SelShared.PushTask( j, SelShared.TaskOnceConst("MULTIPLE") )
 			end
 		else
-SelLog.log('*d* subtsk : une seule fonction t:'.. type(t))
+-- SelLog.log('*d* subtsk : une seule fonction t:'.. type(t))
 			SelShared.PushTask( t, SelShared.TaskOnceConst("MULTIPLE") )
 		end
 	end
@@ -147,8 +147,8 @@ function tmrSubFunc( tbl )
 	local dt = os.date("*t")
 	local cur = dt.hour + dt.min/100
 
-SelLog.log('*d* tmrSubFunc('.. cur ..') ' )
-SelLog.log('*d* ->' .. universal_tostring(tbl[cur]) )
+-- SelLog.log('*d* tmrSubFunc('.. cur ..') ' )
+-- SelLog.log('*d* ->' .. universal_tostring(tbl[cur]) )
 
 	SubTasks( tbl[cur] )
 end
