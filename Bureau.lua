@@ -41,8 +41,8 @@ end
 function determinePlanningBureau()
 	SelLog.log("Détermination du planning pour le Bureau")
 
-	if SelShared.get( SAISON ) == 'Ete' then
-	elseif SelShared.get( SAISON ) == 'Intersaison' then
+	if SelShared.get( SAISON ) == 'Hiver' then
+	else	-- Other seasons
 		tmrRemoveEntry(tbl_timers, OuvreVoletBureau)
 		if SelShared.get(MODE) == 'Travail' then
 			local h = DEC2DMS(DMS2DEC(SelShared.get( HLEVE )) - DMS2DEC(0.15))
@@ -55,7 +55,6 @@ function determinePlanningBureau()
 		ColRemoveFunc( Sunset_tasks, FermeVoletBureau )
 		ColAddFunc( Sunset_tasks, FermeVoletBureau )
 		SelLog.log("Fermeture du bureau au coucher du soleil")
-	else	-- Hiver
 	end
 	tmrRethink( timerCron, tbl_timers );
 end
