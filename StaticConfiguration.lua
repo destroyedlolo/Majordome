@@ -6,9 +6,9 @@
 -- Internal
 VERBOSE=true
 
-BROKERHOST='tcp://bPI.chez.moi:1883'
--- BROKERHOST='tcp://localhost:1883'
-CLIENTID='Majordome-prod'
+-- BROKERHOST='tcp://bPI.chez.moi:1883'
+BROKERHOST='tcp://localhost:1883'
+CLIENTID='Majordome-dev'
 
 -- Topics to look for
 MODE='Majordome/Mode'
@@ -20,6 +20,7 @@ HLEVE='Majordome/HLever'
 HCOUCHE='Majordome/HCoucher'
 TExterieur='maison/Temperature/Dehors'
 TSalon='maison/Temperature/Salon'
+TChOceane='maison/Temperature/Chambre Oceane'
 METEO='Meteo/Nonglard'
 
 -- Default configuration

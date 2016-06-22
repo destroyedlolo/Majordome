@@ -12,11 +12,21 @@ table.insert( Topics, { topic=TExterieur, func=Topic2Number, trigger=hTExt, trig
 
 -- "Temperature Salon"
 
-TSalon_tasks = {}	-- Tasks to launch when a TExt is received
+TSalon_tasks = {}	-- Tasks to launch when a T Kitchen is received
 
-function hTSalon()	-- Handle tasks at T°Ext arrival
+function hTSalon()	-- Handle tasks at T°kitchen arrival
 	SubTasks( TSalon_tasks )
 end
 
 table.insert( Topics, { topic=TSalon, func=Topic2Number, trigger=hTSalon, trigger_once=true } )
+
+-- "Temperature Chambre Océane"
+
+TChO_tasks = {}	-- Tasks to launch when a TChOceane is received
+
+function hTChO()	-- Handle tasks at T°ChOceane arrival
+	SubTasks( TSalon_tasks )
+end
+
+table.insert( Topics, { topic=TChOceane, func=Topic2Number, trigger=hTChO, trigger_once=true } )
 
