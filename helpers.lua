@@ -1,6 +1,37 @@
 -- This script defiles some helpers
 
 --
+-- Actions
+--
+
+function VoletMy( topic, nom )
+	if SelShared.get(MODE) == "Manuel" then
+		SelLog.log("Mode Manuel : Fermeture 'My' de '".. nom .."' annulée")
+	else
+		SelLog.log("Fermeture 'My' de '".. nom .."'")
+		Brk:Publish(topic, 'My')
+	end
+end
+
+function VoletOuvre( topic, nom )
+	if SelShared.get(MODE) == "Manuel" then
+		SelLog.log("Mode Manuel : Ouverture de '".. nom .."' annulée")
+	else
+		SelLog.log("Ouverture de '".. nom .."'")
+		Brk:Publish(topic, 'Up')
+	end
+end
+
+function VoletFerme( topic, nom )
+	if SelShared.get(MODE) == "Manuel" then
+		SelLog.log("Mode Manuel : Fermeture de '".. nom .."' annulée")
+	else
+		SelLog.log("Fermeture de '".. nom .."'")
+		Brk:Publish(topic, 'Down')
+	end
+end
+
+--
 -- Collection management
 --
 
