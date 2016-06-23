@@ -120,6 +120,11 @@ end
 
 function SubTasks( tbl )
 	-- submit all tasks listed in tbl table
+
+	if type(tbl) ~= 'table' then
+		return
+	end
+
 -- SelLog.log('*d* subtsk type ' .. type(tbl) )
 	for z,t in ipairs( tbl ) do
 -- SelLog.log('*d* subtsk '.. z ..' type ' .. universal_tostring(t) )

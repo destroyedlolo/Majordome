@@ -19,9 +19,10 @@ require "logs"
 --
 -- Initializing
 --
-rotatelog( '1.00.00' )	-- Initial log creation
+rotatelog( '1.00.00' )	-- Création du log initial
 
-Topics = {}				-- Topics to look for
+Topics = {}				-- List des topics à surveiller
+Tasks = {}				-- Taches associées aux evenements
 tbl_timers = {			-- Timer's planning
 	[0.0] = { rotatelog }
 }
@@ -30,6 +31,7 @@ tbl_timers = {			-- Timer's planning
 -- Loading sub stuffs
 --
 
+require "Mode"
 
 --
 -- Timer's stuffs
