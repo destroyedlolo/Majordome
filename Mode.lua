@@ -64,4 +64,5 @@ function chgMode()
 	SubTasks( Tasks['Mode'] )
 end
 
+Tasks['Mode']={}
 table.insert( Topics, { topic = MODE, trigger=chgMode, trigger_once=true } )
