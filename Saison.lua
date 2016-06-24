@@ -37,6 +37,9 @@ function DetermineSaison()
 	Brk:Publish( SAISON, saison, true )
 end
 
+tmrAddEntry( tbl_timers, 5.0, DetermineSaison )
+
+
 function chgSaison()
 	SelLog.log("La Saison est maintenant : " .. SelShared.get(SAISON))
 

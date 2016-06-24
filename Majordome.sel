@@ -50,6 +50,9 @@ if err then
 	return
 end
 
+print( "Table du timer", universal_tostring(tbl_timers) ) -- *d* Debug only
+tmrRethink( timerCron, tbl_timers )
+
 --
 -- Broker's stuffs
 --
