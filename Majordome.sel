@@ -33,6 +33,7 @@ tbl_timers = {			-- Timer's planning
 
 require "Mode"
 require "Saison"
+require "Temperatures"
 
 --
 -- Timer's stuffs
