@@ -38,7 +38,7 @@ require "Consignes"
 require "Soleil"
 
 require "Chat"
--- require "Chambre1er"
+require "Chambre1er"
 
 --
 -- Timer's stuffs
