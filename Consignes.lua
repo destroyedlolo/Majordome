@@ -26,5 +26,5 @@ function chgConsignes()
 end
 
 Tasks['Consignes']={}
-table.insert( Topics, { topic = HLEVE, trigger=chgConsignes, trigger_once=true } )
-table.insert( Topics, { topic = HCOUCHE, trigger=chgConsignes, trigger_once=true } )
+table.insert( Topics, { topic = HLEVE, func=TopicDate2Number, trigger=chgConsignes, trigger_once=true } )
+table.insert( Topics, { topic = HCOUCHE, func=TopicDate2Number, trigger=chgConsignes, trigger_once=true } )
