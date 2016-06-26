@@ -34,7 +34,10 @@ tbl_timers = {			-- Timer's planning
 require "Mode"
 require "Saison"
 require "Temperatures"
+require "Consignes"
+
 require "Chat"
+-- require "Chambre1er"
 
 --
 -- Timer's stuffs
@@ -81,8 +84,6 @@ if err then
 	print( "Subscribtion", err )
 	return
 end
-
-determinePlanningChat()
 
 --
 -- Let's go
