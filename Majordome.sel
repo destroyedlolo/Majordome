@@ -35,6 +35,7 @@ require "Mode"
 require "Saison"
 require "Temperatures"
 require "Consignes"
+require "Soleil"
 
 require "Chat"
 -- require "Chambre1er"
@@ -59,7 +60,6 @@ if err then
 	return
 end
 
-print( "Table du timer", universal_tostring(tbl_timers) ) -- *d* Debug only
 tmrRethink( timerCron, tbl_timers )
 
 --
@@ -97,5 +97,6 @@ while true do -- Main todo list handler
 
 	if type(ret) == 'function' then
 		ret()
+print( "Table du timer", universal_tostring(tbl_timers) ) -- *d* Debug only
 	end
 end
