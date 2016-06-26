@@ -20,7 +20,7 @@ function SLeve()
 end
 
 function chgSLeve()
-	local t = TXT2DMS( SelShared.get( TSunRise ) )
+	local t = SelShared.get( TSunRise )
 	SelLog.log("Levé du soleil = " .. t)
 
 	tmrRemoveEntry(tbl_timers, SLeve)
@@ -30,7 +30,7 @@ function chgSLeve()
 end
 
 Tasks['SLeve']={}
-table.insert( Topics, { topic = TSunRise, trigger=chgSLeve, trigger_once=true } )
+table.insert( Topics, { topic = TSunRise, func=TopicDate2Number, trigger=chgSLeve, trigger_once=true } )
 
 -- Couché du soleil
 
@@ -40,7 +40,7 @@ function SCouche()
 end
 
 function chgSCouche()
-	local t = TXT2DMS( SelShared.get( TSunSet ) )
+	local t = SelShared.get( TSunSet )
 	SelLog.log("Couché du soleil = " .. t)
 
 	tmrRemoveEntry(tbl_timers, SCouche)
@@ -50,5 +50,5 @@ function chgSCouche()
 end
 
 Tasks['SCouche']={}
-table.insert( Topics, { topic = TSunSet, trigger=chgSCouche, trigger_once=true } )
+table.insert( Topics, { topic = TSunSet, func=TopicDate2Number, trigger=chgSCouche, trigger_once=true } )
 
