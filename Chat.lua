@@ -7,7 +7,7 @@
 local TCHAT='maison/Volet/Cuisine/Chat'
 
 --
--- Drivers
+-- Actions
 --
 
 function MyTrappeChat()
