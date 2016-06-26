@@ -34,6 +34,7 @@ tbl_timers = {			-- Timer's planning
 require "Mode"
 require "Saison"
 require "Temperatures"
+require "Chat"
 
 --
 -- Timer's stuffs
@@ -41,6 +42,10 @@ require "Temperatures"
 function CronExec()
 	tmrSubFunc( tbl_timers )
 	tmrRethink( timerCron, tbl_timers )
+end
+
+function rethingTimerCron()
+	tmrRethink( timerCron, tbl_timers );
 end
 
 timerCron, err = SelTimer.create { at=tmrNextTarget( tbl_timers ), ifunc=CronExec } 
@@ -76,6 +81,8 @@ if err then
 	print( "Subscribtion", err )
 	return
 end
+
+determinePlanningChat()
 
 --
 -- Let's go

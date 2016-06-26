@@ -1,0 +1,40 @@
+-- Manages Cat flap
+
+--
+-- Topics
+--
+
+local TCHAT='maison/Volet/Cuisine/Chat'
+
+--
+-- Drivers
+--
+
+function MyTrappeChat()
+	VoletMy( TCHAT, 'Trappe du chat' )
+end
+
+--
+-- Triggers
+--
+
+function determinePlanningChat()
+	SelLog.log("Détermination du planning pour la trappe du chat")
+
+	tmrRemoveEntry(tbl_timers, MyTrappeChat)
+	if SelShared.get( SAISON ) == 'Hiver' then
+		SelLog.log("'My' du chat à 21h")
+		tmrAddEntry( tbl_timers, 21, MyTrappeChat )
+	elseif SelShared.get(MODEDEMAIN) == 'Travail' then
+		SelLog.log("'My' du chat à 1h")
+		tmrAddEntry( tbl_timers, 1, MyTrappeChat )
+	elseif SelShared.get(MODEDEMAIN) == 'Vacances' then
+		SelLog.log("'My' du chat à 2h")
+		tmrAddEntry( tbl_timers, 2, MyTrappeChat )
+	end	-- Sinon, c'est du manuel et on ne fait rien
+
+	SelShared.PushTask( rethingTimerCron, SelShared.TaskOnceConst("LAST"))
+end
+
+table.insert( Tasks['Saison'], determinePlanningChat )
+table.insert( Tasks['Mode'], determinePlanningChat )

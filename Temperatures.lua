@@ -13,7 +13,6 @@ TChOceane='maison/Temperature/Chambre Oceane'
 --
 
 function chgTExt()
-print("TExt", SelShared.get( TExterieur ))
 	SubTasks( Tasks['TExterieur'] )
 end
 
@@ -25,7 +24,6 @@ table.insert( Topics, { topic = TExterieur, func=Topic2Number, trigger=chgTExt, 
 --
 
 function chgTSalon()
-print("TSalon", SelShared.get( TSalon ))
 	SubTasks( Tasks['TSalon'] )
 end
 
@@ -37,7 +35,6 @@ table.insert( Topics, { topic = TSalon, func=Topic2Number, trigger=chgTSalon, tr
 --
 
 function chgTChO()
-print("TChOceane", SelShared.get( TChOceane ))
 	SubTasks( Tasks['TChOceane'] )
 end
 
