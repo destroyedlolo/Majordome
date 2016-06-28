@@ -38,9 +38,10 @@ require "Consignes"
 require "Soleil"
 
 require "Chat"
+require "Cuisine"
 require "Chambre1er"
 require "BureauEtChambreAmis"
-require "Cuisine"
+require "Salon"
 
 --
 -- Timer's stuffs
