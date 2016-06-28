@@ -36,11 +36,21 @@ end
 --
 
 function ColAddFunc( tbl, func )
+	if not func then
+		SelLog.log("*D**E* ColAddFunc( NULL )")
+		return
+	end
+
 	if type(func) == 'table' then
-		for _,f in pairs(func) do
+		for _,f in ipairs(func) do
 			ColAddFunc( tbl, f )
 		end
 	else
+		for _,f in ipairs( tbl ) do	-- Evite de soumettre plusieurs fois la même fonction
+			if f == func then
+				return
+			end
+		end
 		table.insert(tbl, func )
 	end
 end
