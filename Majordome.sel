@@ -10,22 +10,22 @@ assert( SELENE_VERSION >= 2.0401, "HDB requires at least Selene v2.04.01, got " 
 require "tostring"
 
 --
+-- Initializing
+--
+
+Topics = {}				-- List des topics à surveiller
+Tasks = {}				-- Taches associées aux evenements
+tbl_timers = {}			-- Timer's planning
+
+--
 -- Helpers
 --
 require "LocalConfiguration"
 require "helpers"
 require "logs"
 
---
--- Initializing
---
 rotatelog( '1.00.00' )	-- Création du log initial
-
-Topics = {}				-- List des topics à surveiller
-Tasks = {}				-- Taches associées aux evenements
-tbl_timers = {			-- Timer's planning
-	[0.0] = { rotatelog }
-}
+tbl_timers[0.0] = { rotatelog }
 
 --
 -- Loading sub stuffs
@@ -97,6 +97,6 @@ while true do -- Main todo list handler
 
 	if type(ret) == 'function' then
 		ret()
-print( "Table du timer", universal_tostring(tbl_timers) ) -- *d* Debug only
+-- print( "Table du timer", universal_tostring(tbl_timers) ) -- *d* Debug only
 	end
 end

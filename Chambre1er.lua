@@ -57,56 +57,46 @@ function determinePlanning1er()
 
 	if SelShared.get( SAISON ) == 'Hiver' then
 	else
-print("*** D *** ok")
-		-- cleaning
-		tmrRemoveEntry(tbl_timers, MyVoletChJoris)
-		tmrRemoveEntry(tbl_timers, MyVoletChOceane)
-		tmrRemoveEntry(tbl_timers, OuvreVoletChJoris)
-		tmrRemoveEntry(tbl_timers, OuvreVoletChOceane)
-		tmrRemoveEntry(tbl_timers, FermeVoletChJoris)
-		tmrRemoveEntry(tbl_timers, FermeVoletChOceane)
-		tmrRemoveEntry(tbl_timers, MyVoletChParents)
-		tmrRemoveEntry(tbl_timers, OuvreVoletChParents)
-		tmrRemoveEntry(tbl_timers, FermeVoletChParents)
-
 		local h
 			-- Ouverture seulement si on bosse
 		if SelShared.get(MODE) == 'Travail' then
 			h = DEC2DMS(DMS2DEC(SelShared.get( HLEVE )) - DMS2DEC(0.1))
-			tmrAddEntry( tbl_timers, h, MyVoletChJoris )
-			tmrAddEntry( tbl_timers, h, MyVoletChOceane )
+			tmrAddEntry( tbl_timers, h, MyChOceane )
+			tmrAddEntry( tbl_timers, h, MyChJoris )
 			SelLog.log("Ouverture 'My' des chambres des enfants à " .. h)
 		
-			tmrAddEntry( tbl_timers, SelShared.get( HLEVE ), OuvreVoletChJoris )
-			tmrAddEntry( tbl_timers, SelShared.get( HLEVE ), OuvreVoletChOceane )
+			tmrAddEntry( tbl_timers, SelShared.get( HLEVE ), OuvreChJoris )
+			tmrAddEntry( tbl_timers, SelShared.get( HLEVE ), OuvreChOceane )
 			SelLog.log("Ouverture des chambres des enfants à " .. SelShared.get( HLEVE ))
 
-			tmrAddEntry( tbl_timers, SelShared.get( HLEVE ), MyVoletChParents )
+			tmrAddEntry( tbl_timers, SelShared.get( HLEVE ), MyChParents )
 			SelLog.log("Ouverture 'My' de la chambre des parents à " .. SelShared.get( HLEVE ))
 			h = DEC2DMS(DMS2DEC(SelShared.get( HLEVE )) + DMS2DEC(0.05))
-			tmrAddEntry( tbl_timers, h, OuvreVoletChParents )
+			tmrAddEntry( tbl_timers, h, OuvreChParents )
 			SelLog.log("Ouverture de la chambre des parents à " .. h)
 		end
 
 		local t = SelShared.get(TSunSet)
 		h = DEC2DMS(DMS2DEC(SelShared.get( HCOUCHE )) - DMS2DEC(0.15))
 		if t > h then
-			tmrAddEntry( tbl_timers, h, MyVoletChJoris )
-			tmrAddEntry( tbl_timers, h, MyVoletChOceane )
+			tmrAddEntry( tbl_timers, h, MyChJoris )
+			tmrAddEntry( tbl_timers, h, MyChOceane )
 			SelLog.log("Fermeture 'My' des chambres des enfants à " .. h)
 
 			h = SelShared.get( HCOUCHE )
-			tmrAddEntry( tbl_timers, h, FermeVoletChJoris )
-			tmrAddEntry( tbl_timers, h, FermeVoletChOceane )
-			tmrAddEntry( tbl_timers, h, FermeVoletChParents )
+			tmrAddEntry( tbl_timers, h, FermeChJoris )
+			tmrAddEntry( tbl_timers, h, FermeChOceane )
+			tmrAddEntry( tbl_timers, h, FermeChParents )
 			SelLog.log("Fermeture des chambres du haut à " .. h)
 		else
-			tmrAddEntry( tbl_timers, t, FermeVoletChJoris )
-			tmrAddEntry( tbl_timers, t, FermeVoletChOceane )
-			tmrAddEntry( tbl_timers, t, FermeVoletChParents )
+			tmrAddEntry( tbl_timers, t, FermeChJoris )
+			tmrAddEntry( tbl_timers, t, FermeChOceane )
+			tmrAddEntry( tbl_timers, t, FermeChParents )
 			SelLog.log("Fermeture des chambres du haut à " .. h)
 		end
 	end
+
+	SelShared.PushTask( rethingTimerCron, SelShared.TaskOnceConst("LAST"))
 end
 
 table.insert( Tasks['Saison'], determinePlanning1er )

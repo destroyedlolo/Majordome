@@ -117,6 +117,11 @@ function tmrRemoveEntry( tbl, func )
 end
 
 function tmrAddEntry( tbl, t, func )
+	if not func then
+		SelLog.log("*D**E* tmrAddEntry( NULL )")
+		return
+	end
+
 	tmrRemoveEntry(tbl, func)
 	if not tbl[t] then
 		tbl[t] = { func }
