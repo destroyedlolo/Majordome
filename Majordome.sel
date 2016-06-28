@@ -40,6 +40,7 @@ require "Soleil"
 require "Chat"
 require "Chambre1er"
 require "BureauEtChambreAmis"
+require "Cuisine"
 
 --
 -- Timer's stuffs
