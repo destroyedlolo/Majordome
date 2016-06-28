@@ -62,5 +62,4 @@ end
 
 table.insert( Tasks['Saison'], determinePlanningRdC )
 table.insert( Tasks['Mode'], determinePlanningRdC )
-table.insert( Tasks['SCouche'], determinePlanningRdC )
 

@@ -55,5 +55,4 @@ end
 
 table.insert( Tasks['Saison'], determineSalon )
 table.insert( Tasks['Mode'], determineSalon )
-table.insert( Tasks['SCouche'], determineSalon )
 
