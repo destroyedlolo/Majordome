@@ -39,6 +39,7 @@ require "Soleil"
 
 require "Chat"
 require "Chambre1er"
+require "BureauEtChambreAmis"
 
 --
 -- Timer's stuffs
