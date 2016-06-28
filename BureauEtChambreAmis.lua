@@ -44,14 +44,6 @@ function determinePlanningRdC()
 
 	if SelShared.get( SAISON ) == 'Hiver' then
 	else
-		-- Ménage
-		tmrRemoveEntry(tbl_timers, OuvreBuro)
-		tmrRemoveEntry(tbl_timers, FermeBuro)
-		tmrRemoveEntry(tbl_timers, MyBuro)
-		tmrRemoveEntry(tbl_timers, OuvreChAmis)
-		tmrRemoveEntry(tbl_timers, FermeChAmis)
-		tmrRemoveEntry(tbl_timers, MyChAmis)
-
 		if SelShared.get(MODE) == 'Travail' then
 			h = DEC2DMS(DMS2DEC(SelShared.get( HLEVE )) - DMS2DEC(0.15))
 			tmrAddEntry( tbl_timers, h, OuvreBuro)

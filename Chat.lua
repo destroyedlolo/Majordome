@@ -21,7 +21,6 @@ end
 function determinePlanningChat()
 	SelLog.log("Détermination du planning pour la trappe du chat")
 
-	tmrRemoveEntry(tbl_timers, MyTrappeChat)
 	if SelShared.get( SAISON ) == 'Hiver' then
 		SelLog.log("'My' du chat à 21h")
 		tmrAddEntry( tbl_timers, 21, MyTrappeChat )
