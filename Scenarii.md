@@ -34,7 +34,12 @@ Chambres / bureau
 ----------
 Salon
 =====
-Saison "Ete" & "Intersaison"
+Saison "Ete"
+----
+	Pas d'ouverture le matin (les fenêtres sont peut-être ouvertes)
+	Fermeture 'My' au couché du soleil
+
+Saison "Intersaison"
 ----
 	Ouverture à l'heure du levé - 15m sauf si mode = Vacances où l'ouverture est à 8h15
 	Fermeture au couché du soleil
