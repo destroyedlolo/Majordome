@@ -23,7 +23,7 @@ function DetermineSaison()
 
 	if SelShared.get( TExterieur ) < 2 then
 		saison = 'Hiver'
-	elseif SelShared.get( TSalon ) > 21 then
+	elseif SelShared.get( TSalon ) > 23 then
 		saison = 'Ete'
 	else
 		saison = 'Intersaison'
@@ -58,4 +58,4 @@ end
 
 Tasks['Saison']={}
 table.insert( Topics, { topic = SAISON, trigger=chgSaison, trigger_once=true } )
-table.insert( Topics, { topic = SAISONHIER, trigger=chgSaison, trigger_once=true } )
+table.insert( Topics, { topic = SAISONHIER, trigger=chgSaisonHier, trigger_once=true } )

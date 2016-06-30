@@ -42,24 +42,32 @@ function determineSalon()
 	ColRemoveFunc(Tasks['SCouche'], FermeSalon)
 
 	if SelShared.get( SAISON ) == 'Hiver' then
-	elseif SelShared.get( SAISON ) == 'Ete' then
-			-- En mode été, il est possible que les fenêtres soient restées
-			-- ouverte en My : il ne faut donc pas les ouvrir en plein.
-		tmrRemoveEntry(tbl_timers, OuvreSalon)
-		SelLog.log("Pas d'ouverture du salon car nous sommes en été")
-
-		ColAddFunc( Tasks['SCouche'], MySalon)
-		SelLog.log("Fermeture My du Salon au couché du soleil")
 	else
-		local h = 8.15	-- Ouverture par defaut
-		if SelShared.get(MODE) == 'Travail' then
-			h = DEC2DMS(DMS2DEC(SelShared.get( HLEVE )) - DMS2DEC(0.15))
+			-- Ouverture le matin
+		if SelShared.get( SAISONHIER ) == 'Ete' then
+				-- En mode été, il est possible que les fenêtres soient restées
+				-- ouverte en My : il ne faut donc pas les ouvrir en plein.
+			tmrRemoveEntry(tbl_timers, OuvreSalon)
+			SelLog.log("Pas d'ouverture du salon car nous sommes en été")
+		else
+			local h = 8.15	-- Ouverture par defaut
+			if SelShared.get(MODE) == 'Travail' then
+				h = DEC2DMS(DMS2DEC(SelShared.get( HLEVE )) - DMS2DEC(0.15))
+			end
+			tmrAddEntry( tbl_timers, h, OuvreSalon)
+			SelLog.log("Ouverture du Salon à " .. h)
 		end
-		tmrAddEntry( tbl_timers, h, OuvreSalon)
-		SelLog.log("Ouverture du Salon à " .. h)
 
-		ColAddFunc( Tasks['SCouche'], FermeSalon)
-		SelLog.log("Fermeture du Salon au couché du soleil")
+			-- Fermeture le soir
+		if SelShared.get( SAISONHIER ) == 'Ete' then
+			ColRemoveFunc( Tasks['SCouche'], FermeSalon )
+			ColAddFunc( Tasks['SCouche'], MySalon)
+			SelLog.log("Fermeture My du Salon au couché du soleil")
+		else
+			ColRemoveFunc( Tasks['SCouche'], MySalon )
+			ColAddFunc( Tasks['SCouche'], FermeSalon)
+			SelLog.log("Fermeture du Salon au couché du soleil")
+		end
 	end
 
 	SelShared.PushTask( rethingTimerCron, SelShared.TaskOnceConst("LAST"))
@@ -68,4 +76,9 @@ end
 table.insert( Tasks['Saison'], determineSalon )
 table.insert( Tasks['Mode'], determineSalon )
 
+--
+-- Gestion des températures
+-- 
 
+function FraicheurSalon()
+end
