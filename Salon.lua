@@ -11,8 +11,7 @@ local TCheminee='maison/Volet/Salon/Cheminee'
 -- Plage durant laquelle les volets peuvent se baisser
 -- automatiquement pour conserver de la fraîcheur
 -- Format hh.mm
--- local HDebFraicheurSalonAuto=10
-local HDebFraicheurSalonAuto=0.05
+local HDebFraicheurSalonAuto=10
 local HFinFraicheurSalonAuto=17.3
 -- Température à partir de laquelle les volets se fermeront
 local LimitTemperature=22
