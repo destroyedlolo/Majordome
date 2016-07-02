@@ -74,6 +74,14 @@ function determinePlanning1er()
 			h = DEC2DMS(DMS2DEC(SelShared.get( HLEVE )) + DMS2DEC(0.05))
 			tmrAddEntry( tbl_timers, h, OuvreChParents )
 			SelLog.log("Ouverture de la chambre des parents à " .. h)
+		else
+			tmrRemoveEntry(tbl_timers, MyChOceane)
+			tmrRemoveEntry(tbl_timers, MyChJoris)
+			tmrRemoveEntry(tbl_timers, MyChParents)
+
+			tmrRemoveEntry(tbl_timers, OuvreChJoris)
+			tmrRemoveEntry(tbl_timers, OuvreChOceane)
+			tmrRemoveEntry(tbl_timers, OuvreChParents)
 		end
 
 		local t = SelShared.get(TSunSet)

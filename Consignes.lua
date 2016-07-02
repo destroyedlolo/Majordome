@@ -12,7 +12,7 @@ HCOUCHE='Majordome/HCoucher'
 --
 
 SelShared.set( HLEVE, 8.00 )	-- Ne doit pas être < a 1:00
-SelShared.set( HCOUCHE, 21.10 )	-- pour les enfants
+SelShared.set( HCOUCHE, 21.30 )	-- pour les enfants
 
 --
 -- Actions
