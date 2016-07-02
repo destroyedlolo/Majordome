@@ -8,6 +8,15 @@ local TBalcon='maison/Volet/Salon/Balcon'
 local TFenetre='maison/Volet/Salon/Fenetre'
 local TCheminee='maison/Volet/Salon/Cheminee'
 
+-- Plage durant laquelle les volets peuvent se baisser
+-- automatiquement pour conserver de la fraîcheur
+-- Format hh.mm
+-- local HDebFraicheurSalonAuto=10
+local HDebFraicheurSalonAuto=0.05
+local HFinFraicheurSalonAuto=17.3
+-- Température à partir de laquelle les volets se fermeront
+local LimitTemperature=22
+
 --
 -- Actions
 --
@@ -35,6 +44,7 @@ end
 --
 
 function determineSalon()
+	local h
 	SelLog.log("Détermination du planning pour le salon")
 
 		-- Ménage nécessaire car peut-être avons changé de saison
@@ -50,7 +60,7 @@ function determineSalon()
 			tmrRemoveEntry(tbl_timers, OuvreSalon)
 			SelLog.log("Pas d'ouverture du salon car nous sommes en été")
 		else
-			local h = 8.15	-- Ouverture par defaut
+			h = 8.15	-- Ouverture par defaut
 			if SelShared.get(MODE) == 'Travail' then
 				h = DEC2DMS(DMS2DEC(SelShared.get( HLEVE )) - DMS2DEC(0.15))
 			end
@@ -70,6 +80,25 @@ function determineSalon()
 		end
 	end
 
+		-- Conservation de la fraîcheur
+	local dt = os.date("*t")
+	local cur = dt.hour + dt.min/100
+
+	if cur < HDebFraicheurSalonAuto then	-- avant la période de détermination
+		SelLog.log("La température du salon sera surveillée à partir de ".. HDebFraicheurSalonAuto)
+		SelLog.log("La surveillance se terminera à ".. HFinFraicheurSalonAuto)
+
+		tmrAddEntry( tbl_timers, HDebFraicheurSalonAuto, LanceFraicheurSalonAuto)
+		tmrAddEntry( tbl_timers, HFinFraicheurSalonAuto, FinFraicheurSalonAuto)
+		ColRemoveFunc( Tasks['TSalon'], FraicheurSalonAuto)
+	elseif cur < HFinFraicheurSalonAuto then -- pendant
+		LanceFraicheurSalonAuto()
+		tmrAddEntry( tbl_timers, HFinFraicheurSalonAuto, FinFraicheurSalonAuto)
+		SelLog.log("La surveillance se terminera à ".. HFinFraicheurSalonAuto)
+	else	-- après
+		FinFraicheurSalonAuto()
+	end
+
 	SelShared.PushTask( rethingTimerCron, SelShared.TaskOnceConst("LAST"))
 end
 
@@ -80,5 +109,26 @@ table.insert( Tasks['Mode'], determineSalon )
 -- Gestion des températures
 -- 
 
-function FraicheurSalon()
+function FraicheurSalonAuto()
+	if SelShared.get( TSalon ) > LimitTemperature then
+		SelLog.log("TSalon : " .. SelShared.get( TSalon ) .. ", les volets se ferment")
+		MySalon()
+		FinFraicheurSalonAuto()
+	end
 end
+
+function LanceFraicheurSalonAuto()
+	SelLog.log("Début de la surveillance de la température du salon")
+	
+	tmrRemoveEntry(tbl_timers, LanceFraicheurSalonAuto)
+	ColAddFunc( Tasks['TSalon'], FraicheurSalonAuto)
+end
+
+function FinFraicheurSalonAuto()
+	SelLog.log("Fin de la surveillance de la température du salon")
+
+	tmrRemoveEntry(tbl_timers, LanceFraicheurSalonAuto)
+	tmrRemoveEntry(tbl_timers, FinFraicheurSalonAuto)
+	ColRemoveFunc( Tasks['TSalon'], FraicheurSalonAuto)
+end
+
