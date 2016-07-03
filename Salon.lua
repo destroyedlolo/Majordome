@@ -77,25 +77,25 @@ function determineSalon()
 			ColAddFunc( Tasks['SCouche'], FermeSalon)
 			SelLog.log("Fermeture du Salon au couché du soleil")
 		end
-	end
 
-		-- Conservation de la fraîcheur
-	local dt = os.date("*t")
-	local cur = dt.hour + dt.min/100
+			-- Conservation de la fraîcheur
+		local dt = os.date("*t")
+		local cur = dt.hour + dt.min/100
 
-	if cur < HDebFraicheurSalonAuto then	-- avant la période de détermination
-		SelLog.log("La température du salon sera surveillée à partir de ".. HDebFraicheurSalonAuto)
-		SelLog.log("La surveillance se terminera à ".. HFinFraicheurSalonAuto)
+		if cur < HDebFraicheurSalonAuto then	-- avant la période de détermination
+			SelLog.log("La température du salon sera surveillée à partir de ".. HDebFraicheurSalonAuto)
+			SelLog.log("La surveillance se terminera à ".. HFinFraicheurSalonAuto)
 
-		tmrAddEntry( tbl_timers, HDebFraicheurSalonAuto, LanceFraicheurSalonAuto)
-		tmrAddEntry( tbl_timers, HFinFraicheurSalonAuto, FinFraicheurSalonAuto)
-		ColRemoveFunc( Tasks['TSalon'], FraicheurSalonAuto)
-	elseif cur < HFinFraicheurSalonAuto then -- pendant
-		LanceFraicheurSalonAuto()
-		tmrAddEntry( tbl_timers, HFinFraicheurSalonAuto, FinFraicheurSalonAuto)
-		SelLog.log("La surveillance se terminera à ".. HFinFraicheurSalonAuto)
-	else	-- après
-		FinFraicheurSalonAuto()
+			tmrAddEntry( tbl_timers, HDebFraicheurSalonAuto, LanceFraicheurSalonAuto)
+			tmrAddEntry( tbl_timers, HFinFraicheurSalonAuto, FinFraicheurSalonAuto)
+			ColRemoveFunc( Tasks['TSalon'], FraicheurSalonAuto)
+		elseif cur < HFinFraicheurSalonAuto then -- pendant
+			LanceFraicheurSalonAuto()
+			tmrAddEntry( tbl_timers, HFinFraicheurSalonAuto, FinFraicheurSalonAuto)
+			SelLog.log("La surveillance se terminera à ".. HFinFraicheurSalonAuto)
+		else	-- après
+			FinFraicheurSalonAuto()
+		end
 	end
 
 	SelShared.PushTask( rethingTimerCron, SelShared.TaskOnceConst("LAST"))
