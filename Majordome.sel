@@ -24,7 +24,7 @@ require "LocalConfiguration"
 require "helpers"
 require "logs"
 
-rotatelog( '1.00.01' )	-- Création du log initial
+rotatelog( '1.00.02' )	-- Création du log initial
 tbl_timers[0.0] = { rotatelog }
 
 --
