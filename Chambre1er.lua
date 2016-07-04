@@ -129,15 +129,24 @@ function determinePlanning1er()
 			ColRemoveFunc( Tasks['TChOceane'], FraicheurChOJAuto)
 		elseif cur < HFinFraicheur1erAuto then	-- pendant
 			LanceFraicheurChOJAuto()
-			SelLog.log("La surveillance se terminera à ".. HFinFraicheur1erAuto)
 			tmrAddEntry( tbl_timers, HFinFraicheur1erAuto, FinFraicheurChOJAuto)
+			SelLog.log("La surveillance se terminera à ".. HFinFraicheur1erAuto)
 		else -- apres
 			FinFraicheurChOJAuto()
 		end
 
 		local hdebut = (SelShared.get(MODE) == 'Travail') and HDebFraicheurParentT or HDebFraicheurAutoV
 		if cur < hdebut then	-- avant
+			SelLog.log("La température de la chambre des parents sera surveillée à partir de ".. hdebut)
+			SelLog.log("La surveillance se terminera à ".. HFinFraicheur1erAuto)
+
+			tmrAddEntry( tbl_timers, hdebut, LanceFraicheurChPAuto)
+			tmrAddEntry( tbl_timers, HFinFraicheur1erAuto, FinFraicheurChPAuto)
+			ColRemoveFunc( Tasks['TChOceane'], FraicheurChPAuto)
 		elseif cur < HFinFraicheur1erAuto then	-- pendant
+			LanceFraicheurChPAuto()
+			tmrAddEntry( tbl_timers, HFinFraicheur1erAuto, FinFraicheurChPAuto)
+			SelLog.log("La surveillance se terminera à ".. HFinFraicheur1erAuto)
 		else -- apres
 		end
 	end
@@ -175,5 +184,28 @@ function FinFraicheurChOJAuto()
 	tmrRemoveEntry(tbl_timers, LanceFraicheurChOJAuto)
 	tmrRemoveEntry(tbl_timers, FinFraicheurChOJAuto)
 	ColRemoveFunc( Tasks['TChOceane'], FraicheurChOJAuto)
+end
+
+function FraicheurChPAuto()
+	if SelShared.get( TChOceane ) > LimiteTemperature then
+		SelLog.log("TChOceane : " .. SelShared.get( TChOceane ) .. ", les volets se ferment")
+		MyChParents()
+		FinFraicheurChPAuto()
+	end
+end
+
+function LanceFraicheurChPAuto()
+	SelLog.log("Début de la surveillance de la température de la chambres des parents")
+	
+	tmrRemoveEntry(tbl_timers, LanceFraicheurChPAuto)
+	ColAddFunc( Tasks['TChOceane'], FraicheurChPAuto)
+end
+
+function FinFraicheurChPAuto()
+	SelLog.log("Fin de la surveillance de la température de la chambre des parents")
+
+	tmrRemoveEntry(tbl_timers, LanceFraicheurChPAuto)
+	tmrRemoveEntry(tbl_timers, FinFraicheurChPAuto)
+	ColRemoveFunc( Tasks['TChOceane'], FraicheurChPAuto)
 end
 
