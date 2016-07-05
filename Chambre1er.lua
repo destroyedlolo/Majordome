@@ -127,7 +127,7 @@ function determinePlanning1er()
 		local dt = os.date("*t")
 		local cur = dt.hour + dt.min/100
 
-		local hdebut = (SelShared.get(MODE) == 'Travail') and HDebFraicheurOJAutoT or HDebFraicheurAutoV
+		local hdebut = (SelShared.get(MODE) == 'Travail' and SelShared.get(MODEENFANTS) ~= 'Vacances') and HDebFraicheurOJAutoT or HDebFraicheurAutoV
 		if cur < hdebut then	-- avant
 			SelLog.log("La température des chambres des enfants sera surveillée à partir de ".. hdebut)
 			SelLog.log("La surveillance se terminera à ".. HFinFraicheur1erAuto)
