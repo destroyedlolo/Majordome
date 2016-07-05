@@ -71,14 +71,22 @@ function determinePlanning1er()
 		local h
 			-- Ouverture seulement si on bosse
 		if SelShared.get(MODE) == 'Travail' then
-			h = DEC2DMS(DMS2DEC(SelShared.get( HLEVE )) - DMS2DEC(0.1))
-			tmrAddEntry( tbl_timers, h, MyChOceane )
-			tmrAddEntry( tbl_timers, h, MyChJoris )
-			SelLog.log("Ouverture 'My' des chambres des enfants à " .. h)
+			if SelShared.get(MODEENFANTS) == 'Vacances' then
+				SelLog.log("Les enfants sont en mode vacances ... pas d'ouverture")
+				tmrRemoveEntry(tbl_timers, MyChOceane)
+				tmrRemoveEntry(tbl_timers, MyChJoris)
+				tmrRemoveEntry(tbl_timers, OuvreChJoris)
+				tmrRemoveEntry(tbl_timers, OuvreChOceane)
+			else
+				h = DEC2DMS(DMS2DEC(SelShared.get( HLEVE )) - DMS2DEC(0.1))
+				tmrAddEntry( tbl_timers, h, MyChOceane )
+				tmrAddEntry( tbl_timers, h, MyChJoris )
+				SelLog.log("Ouverture 'My' des chambres des enfants à " .. h)
 		
-			tmrAddEntry( tbl_timers, SelShared.get( HLEVE ), OuvreChJoris )
-			tmrAddEntry( tbl_timers, SelShared.get( HLEVE ), OuvreChOceane )
-			SelLog.log("Ouverture des chambres des enfants à " .. SelShared.get( HLEVE ))
+				tmrAddEntry( tbl_timers, SelShared.get( HLEVE ), OuvreChJoris )
+				tmrAddEntry( tbl_timers, SelShared.get( HLEVE ), OuvreChOceane )
+				SelLog.log("Ouverture des chambres des enfants à " .. SelShared.get( HLEVE ))
+			end
 
 			tmrAddEntry( tbl_timers, SelShared.get( HLEVE ), MyChParents )
 			SelLog.log("Ouverture 'My' de la chambre des parents à " .. SelShared.get( HLEVE ))
@@ -156,6 +164,7 @@ end
 
 table.insert( Tasks['Saison'], determinePlanning1er )
 table.insert( Tasks['Mode'], determinePlanning1er )
+table.insert( Tasks['ModeEnfants'], determinePlanning1er )
 table.insert( Tasks['Consignes'], determinePlanning1er )
 
 --

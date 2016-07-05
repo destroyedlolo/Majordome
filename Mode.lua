@@ -9,6 +9,10 @@ MODEAUJOURDHUI='Majordome/Mode/AujourdHui'
 MODEDEMAIN='Majordome/Mode/Demain'
 MODEFORCE='Majordome/Mode/Force'
 
+-- mode forcé pour la chambre des enfants
+-- pour le moment, ne peut forcer que "Vacances" lorsque le mode global est "Travail"
+MODEENFANTS='Majordome/Mode/Enfants'
+
 --
 -- Valeurs par défaut
 --
@@ -16,6 +20,7 @@ MODEFORCE='Majordome/Mode/Force'
 SelShared.set( MODE, 'Manuel' )
 SelShared.set( MODEDEMAIN, 'Manuel' )
 SelShared.set( MODEFORCE, 'Auto' )
+SelShared.set( MODEENFANTS, 'Auto' )
 
 --
 -- Changement des modes temporels
@@ -66,3 +71,15 @@ end
 
 Tasks['Mode']={}
 table.insert( Topics, { topic = MODE, trigger=chgMode, trigger_once=true } )
+
+--
+-- Changement du mode de la chambre des enfants
+--
+
+function chgModeEnfants()
+	SelLog.log("Le mode de la chambre des enfants est maintenant : " .. SelShared.get(MODEENFANTS))
+	SubTasks( Tasks['ModeEnfants'] )
+end
+
+Tasks['ModeEnfants']={}
+table.insert( Topics, { topic = MODEENFANTS, trigger=chgModeEnfants, trigger_once=true } )
