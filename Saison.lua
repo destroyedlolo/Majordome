@@ -23,7 +23,7 @@ function DetermineSaison()
 
 	if SelShared.get( TExterieur ) < 2 then
 		saison = 'Hiver'
-	elseif SelShared.get( TSalon ) > 23 then
+	elseif SelShared.get( TSalon ) > 22 then
 		saison = 'Ete'
 	else
 		saison = 'Intersaison'
