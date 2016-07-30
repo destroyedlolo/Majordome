@@ -119,7 +119,7 @@ function LanceFraicheurBureauAuto()
 	ColAddFunc( Tasks['TBureau'], FraicheurBureauAuto)
 end
 
-function FinFraicheurChPAuto()
+function FinFraicheurBureauAuto()
 	SelLog.log("Fin de la surveillance de la température du bureau")
 
 	tmrRemoveEntry(tbl_timers, LanceFraicheurBureauAuto)
