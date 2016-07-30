@@ -3,12 +3,13 @@ Mode :
  - **Manuel** : aucune automatisation
  - **Travail** : personne en journée, levé automatique
  - **Vacances** : présence toute la journée, levé manuel
+ - **Absent** : nous ne sommes pas là, simulation de présence
 
 Saison :
 --------
 déterminé à 5h du matin
  - **Hiver** : T°Extérieur < 2° (si dans la journée > 20°, on passe en Intersaison)
- - **Eté** : T°Salon > 21° 	
+ - **Eté** : T°Salon > 21.5° 	
  - **Intersaison** : autre
 
 ----------
