@@ -53,19 +53,27 @@ function determinePlanningRdC()
 
 	if SelShared.get( SAISON ) == 'Hiver' then
 	else
-		local h = 8.15	-- Ouverture par defaut
-		if SelShared.get(MODE) == 'Travail' then
-			h = DEC2DMS(DMS2DEC(SelShared.get( HLEVE )) - DMS2DEC(0.15))
-		end
-		tmrAddEntry( tbl_timers, h, OuvreBuro)
-		tmrAddEntry( tbl_timers, h, OuvreChAmis)
-		SelLog.log("Ouverture de la chambre d'amis et du bureau à " .. h)
+		if SelShared.get(MODE) == 'Absent' then
+			ColAddFunc( Tasks['SLeve'], OuvreBuro)
+			SelLog.log("Ouverture du bureau avec le soleil")
+		else
+			local h = 8.15	-- Ouverture par defaut
+			if SelShared.get(MODE) == 'Travail' then
+				h = DEC2DMS(DMS2DEC(SelShared.get( HLEVE )) - DMS2DEC(0.15))
+			end
+			tmrAddEntry( tbl_timers, h, OuvreBuro)
+			tmrAddEntry( tbl_timers, h, OuvreChAmis)
+			SelLog.log("Ouverture de la chambre d'amis et du bureau à " .. h)
 
-		if SelShared.get( SAISON ) == 'Ete' then
-			tmrAddEntry( tbl_timers, 9, MyChAmis)
-			SelLog.log("My de la chambre d'amis à 9.0")
-			tmrAddEntry( tbl_timers, 16, OuvreChAmis)
-			SelLog.log("Ouverture de la chambre d'amis à 16.0")
+			if SelShared.get( SAISON ) == 'Ete' then
+				tmrAddEntry( tbl_timers, 9, MyChAmis)
+				SelLog.log("My de la chambre d'amis à 9.0")
+				tmrAddEntry( tbl_timers, 16, OuvreChAmis)
+				SelLog.log("Ouverture de la chambre d'amis à 16.0")
+			end
+
+			ColAddFunc( Tasks['SCouche'], FermeChAmis)	-- La chambre d'Amis ne s'ouvre que lorsqu'on est là
+			SelLog.log("Fermeture de la chambre d'amis au couché du soleil")
 		end
 
 			-- Conservation de la fraîcheur
@@ -78,7 +86,7 @@ function determinePlanningRdC()
 
 			tmrAddEntry( tbl_timers, HDebFraicheurAuto, LanceFraicheurBureauAuto)
 			tmrAddEntry( tbl_timers, HFinFraicheurAuto, FinFraicheurBureauAuto)
-			ColRemoveFunc( Tasks['TChOceane'], FraicheurBureauAuto)
+			ColRemoveFunc( Tasks['TBureau'], FraicheurBureauAuto)
 		elseif cur < HDebFraicheurAuto then	-- pendant
 			LanceFraicheurBureauAuto()
 			tmrAddEntry( tbl_timers, HFinFraicheurAuto, FinFraicheurBureauAuto)
@@ -90,8 +98,7 @@ function determinePlanningRdC()
 	end
 
 	ColAddFunc( Tasks['SCouche'], FermeBuro)
-	ColAddFunc( Tasks['SCouche'], FermeChAmis)
-	SelLog.log("Fermeture de la chambre d'amis et du bureau au couché du soleil")
+	SelLog.log("Fermeture du bureau au couché du soleil")
 
 
 	SelShared.PushTask( rethingTimerCron, SelShared.TaskOnceConst("LAST"))
@@ -99,6 +106,14 @@ end
 
 table.insert( Tasks['Saison'], determinePlanningRdC )
 table.insert( Tasks['Mode'], determinePlanningRdC )
+
+function FermeChAmisSiAbsent()
+	if SelShared.get(MODEFORCE) == 'Absent' then
+		FermeChAmis()
+	end
+end
+
+table.insert( Tasks['ModeForce'], FermeChAmisSiAbsent)
 
 --
 -- Gestion des températures
@@ -109,6 +124,8 @@ function FraicheurBureauAuto()
 		SelLog.log("TBureau : " .. SelShared.get( TBureau ) .. ", les volets se ferment")
 		MyBuro()
 		FinFraicheurBureauAuto()
+		tmrAddEntry( tbl_timers, HFinFraicheurAuto, OuvreBuro)
+		SelLog.log("Le volet du bureau s'ouvrira à : ".. HFinFraicheurAuto)
 	end
 end
 

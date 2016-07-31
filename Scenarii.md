@@ -66,6 +66,7 @@ Porte du chat
 	Sinon
 		« My » a 1h00 si ModeDemain = « Travail »
 		« My » à 2h00 si ModeDemain = « Vacances »
+		Rien si ModeDemain = « Absent »
 
 ---------
 > Written with [StackEdit](https://stackedit.io/).
