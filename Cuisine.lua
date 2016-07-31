@@ -39,12 +39,17 @@ function determineCuisine()
 
 	if SelShared.get( SAISON ) == 'Hiver' then
 	else
-		local h = 8.15	-- Ouverture par defaut
-		if SelShared.get(MODE) == 'Travail' then
-			h = DEC2DMS(DMS2DEC(SelShared.get( HLEVE )) - DMS2DEC(0.15))
+		if SelShared.get(MODE) == 'Absent' then
+			ColAddFunc( Tasks['SLeve'], OuvreCuisine)
+			SelLog.log("Ouverture de la cuisine avec le soleil")
+		else
+			local h = 8.15	-- Ouverture par defaut
+			if SelShared.get(MODE) == 'Travail' then
+				h = DEC2DMS(DMS2DEC(SelShared.get( HLEVE )) - DMS2DEC(0.15))
+			end
+			tmrAddEntry( tbl_timers, h, OuvreCuisine)
+			SelLog.log("Ouverture de la Cuisine à " .. h)
 		end
-		tmrAddEntry( tbl_timers, h, OuvreCuisine)
-		SelLog.log("Ouverture de la Cuisine à " .. h)
 
 			-- Conservation de la fraîcheur
 		local dt = os.date("*t")
@@ -84,6 +89,8 @@ function FraicheurCuisineAuto()
 		SelLog.log("TSalon : " .. SelShared.get( TSalon ) .. ", les volets se ferment")
 		MyCuisine()
 		FinFraicheurCuisineAuto()
+		tmrAddEntry( tbl_timers, HFinFraicheurCuisineAuto, OuvreCuisine)
+		SelLog.log("Le volet de la cuisine s'ouvrira à : ".. HFinFraicheurCuisineAuto)
 	end
 end
 
