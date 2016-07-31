@@ -66,6 +66,11 @@ end
 function determinePlanning1er()
 	SelLog.log("Détermination du planning pour les chambres du 1er")
 
+	if SelShared.get(MODE) == 'Absent' then
+		SelLog.log("Rien à faire : nous ne sommes pas là")
+		return
+	end
+
 	if SelShared.get( SAISON ) == 'Hiver' then
 	else
 		local h
