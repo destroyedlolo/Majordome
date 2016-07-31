@@ -52,30 +52,37 @@ function determineSalon()
 
 	if SelShared.get( SAISON ) == 'Hiver' then
 	else
-			-- Ouverture le matin
-		if SelShared.get( SAISONHIER ) == 'Ete' then
-				-- En mode été, il est possible que les fenêtres soient restées
-				-- ouverte en My : il ne faut donc pas les ouvrir en plein.
-			tmrRemoveEntry(tbl_timers, OuvreSalon)
-			SelLog.log("Pas d'ouverture du salon car nous sommes en été")
-		else
-			h = 8.15	-- Ouverture par defaut
-			if SelShared.get(MODE) == 'Travail' then
-				h = DEC2DMS(DMS2DEC(SelShared.get( HLEVE )) - DMS2DEC(0.15))
-			end
-			tmrAddEntry( tbl_timers, h, OuvreSalon)
-			SelLog.log("Ouverture du Salon à " .. h)
-		end
-
-			-- Fermeture le soir
-		if SelShared.get( SAISONHIER ) == 'Ete' then
-			ColRemoveFunc( Tasks['SCouche'], FermeSalon )
-			ColAddFunc( Tasks['SCouche'], MySalon)
-			SelLog.log("Fermeture My du Salon au couché du soleil")
-		else
-			ColRemoveFunc( Tasks['SCouche'], MySalon )
+		if SelShared.get(MODE) == 'Absent' then
+			ColAddFunc( Tasks['SLeve'], OuvreSalon)
+			SelLog.log("Ouverture du salon avec le soleil")
 			ColAddFunc( Tasks['SCouche'], FermeSalon)
 			SelLog.log("Fermeture du Salon au couché du soleil")
+		else
+				-- Ouverture le matin
+			if SelShared.get( SAISONHIER ) == 'Ete' then
+					-- En mode été, il est possible que les fenêtres soient restées
+					-- ouverte en My : il ne faut donc pas les ouvrir en plein.
+				tmrRemoveEntry(tbl_timers, OuvreSalon)
+				SelLog.log("Pas d'ouverture du salon car nous sommes en été")
+			else
+				h = 8.15	-- Ouverture par defaut
+				if SelShared.get(MODE) == 'Travail' then
+					h = DEC2DMS(DMS2DEC(SelShared.get( HLEVE )) - DMS2DEC(0.15))
+				end
+				tmrAddEntry( tbl_timers, h, OuvreSalon)
+				SelLog.log("Ouverture du Salon à " .. h)
+			end
+
+				-- Fermeture le soir
+			if SelShared.get( SAISONHIER ) == 'Ete' then
+				ColRemoveFunc( Tasks['SCouche'], FermeSalon )
+				ColAddFunc( Tasks['SCouche'], MySalon)
+				SelLog.log("Fermeture My du Salon au couché du soleil")
+			else
+				ColRemoveFunc( Tasks['SCouche'], MySalon )
+				ColAddFunc( Tasks['SCouche'], FermeSalon)
+				SelLog.log("Fermeture du Salon au couché du soleil")
+			end
 		end
 
 			-- Conservation de la fraîcheur
@@ -113,6 +120,8 @@ function FraicheurSalonAuto()
 		SelLog.log("TSalon : " .. SelShared.get( TSalon ) .. ", les volets se ferment")
 		MySalon()
 		FinFraicheurSalonAuto()
+		tmrAddEntry( tbl_timers, HFinFraicheurSalonAuto, OuvreSalon)
+		SelLog.log("Le volet du salon s'ouvrira à : ".. HFinFraicheurSalonAuto)
 	end
 end
 
