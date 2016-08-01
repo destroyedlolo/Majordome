@@ -22,6 +22,8 @@ Liste des topics de commandes :
  - **Majordome/Mode/Force** : mode manuel forcé
  - **Majordome/Mode** : mode actif, calculé à partir des précédents
  - **Majordome/Saison** : saison déterminée par la température à 7h
+ - **Majordome/HLever** : Heure de levé général
+ - **Majordome/HCoucher** : Heure de couché des enfants
 
 ----------
 Scenarii
