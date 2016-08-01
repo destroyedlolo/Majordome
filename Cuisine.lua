@@ -42,6 +42,7 @@ function determineCuisine()
 		if SelShared.get(MODE) == 'Absent' then
 			ColAddFunc( Tasks['SLeve'], OuvreCuisine)
 			SelLog.log("Ouverture de la cuisine avec le soleil")
+			tmrRemoveEntry(tbl_timers, OuvreCuisine)
 		else
 			local h = 8.15	-- Ouverture par defaut
 			if SelShared.get(MODE) == 'Travail' then

@@ -57,6 +57,8 @@ function determineSalon()
 			SelLog.log("Ouverture du salon avec le soleil")
 			ColAddFunc( Tasks['SCouche'], FermeSalon)
 			SelLog.log("Fermeture du Salon au couché du soleil")
+
+			tmrRemoveEntry(tbl_timers, OuvreSalon)
 		else
 				-- Ouverture le matin
 			if SelShared.get( SAISONHIER ) == 'Ete' then

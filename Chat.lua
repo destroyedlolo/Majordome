@@ -30,7 +30,9 @@ function determinePlanningChat()
 	elseif SelShared.get(MODEDEMAIN) == 'Vacances' then
 		SelLog.log("'My' du chat à 2h")
 		tmrAddEntry( tbl_timers, 2, MyTrappeChat )
-	end	-- Sinon, c'est du manuel et on ne fait rien
+	else -- Sinon, c'est du manuel et on ne fait rien
+		tmrRemoveEntry(tbl_timers, MyTrappeChat)
+	end
 
 	SelShared.PushTask( rethingTimerCron, SelShared.TaskOnceConst("LAST"))
 end

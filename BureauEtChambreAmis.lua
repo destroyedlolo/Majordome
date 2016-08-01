@@ -56,6 +56,8 @@ function determinePlanningRdC()
 		if SelShared.get(MODE) == 'Absent' then
 			ColAddFunc( Tasks['SLeve'], OuvreBuro)
 			SelLog.log("Ouverture du bureau avec le soleil")
+
+			tmrRemoveEntry(tbl_timers, OuvreBuro)
 		else
 			local h = 8.15	-- Ouverture par defaut
 			if SelShared.get(MODE) == 'Travail' then
