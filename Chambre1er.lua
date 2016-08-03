@@ -68,6 +68,13 @@ function determinePlanning1er()
 
 	if SelShared.get(MODE) == 'Absent' then
 		SelLog.log("Rien à faire : nous ne sommes pas là")
+		tmrRemoveEntry(tbl_timers, MyChOceane)
+		tmrRemoveEntry(tbl_timers, MyChJoris)
+		tmrRemoveEntry(tbl_timers, MyChParents)
+
+		tmrRemoveEntry(tbl_timers, OuvreChJoris)
+		tmrRemoveEntry(tbl_timers, OuvreChOceane)
+		tmrRemoveEntry(tbl_timers, OuvreChParents)
 		return
 	end
 

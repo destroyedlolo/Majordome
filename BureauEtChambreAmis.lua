@@ -58,6 +58,9 @@ function determinePlanningRdC()
 			SelLog.log("Ouverture du bureau avec le soleil")
 
 			tmrRemoveEntry(tbl_timers, OuvreBuro)
+			tmrRemoveEntry(tbl_timers, OuvreChAmis)
+			tmrRemoveEntry(tbl_timers, MyChAmis)
+			ColRemoveFunc( Tasks['SCouche'], FermeChAmis)
 		else
 			local h = 8.15	-- Ouverture par defaut
 			if SelShared.get(MODE) == 'Travail' then

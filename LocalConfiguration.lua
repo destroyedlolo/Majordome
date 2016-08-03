@@ -4,6 +4,6 @@
 VERBOSE=true
 
 -- BROKERHOST='tcp://bPI.chez.moi:1883'
-BROKERHOST='tcp://localhost:1883'
-CLIENTID='Majordome-dev'
+BROKERHOST='tcp://bpi.chez.moi:1883'
+CLIENTID='Majordome-prod'
 
