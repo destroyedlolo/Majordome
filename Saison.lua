@@ -23,7 +23,7 @@ function DetermineSaison()
 
 	if SelShared.get( TExterieur ) < 2 then
 		saison = 'Hiver'
-	elseif SelShared.get( TSalon ) > 21.5 then
+	elseif SelShared.get( TSalon ) > 21.5 and SelShared.get( TExterieur ) > 15 then
 		saison = 'Ete'
 	else
 		saison = 'Intersaison'
@@ -37,7 +37,7 @@ function DetermineSaison()
 	Brk:Publish( SAISON, saison, true )
 end
 
-tmrAddEntry( tbl_timers, 5.0, DetermineSaison )
+tmrAddEntry( tbl_timers, 22.0, DetermineSaison )
 
 
 function chgSaison()

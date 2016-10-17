@@ -7,9 +7,9 @@ Mode :
 
 Saison :
 --------
-déterminé à 5h du matin
+déterminé à 22h
  - **Hiver** : T°Extérieur < 2° (si dans la journée > 20°, on passe en Intersaison)
- - **Eté** : T°Salon > 21.5° 	
+ - **Eté** : T°Salon > 21.5° & T°Extérieur > 15
  - **Intersaison** : autre
 
 ----------
