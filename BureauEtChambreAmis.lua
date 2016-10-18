@@ -53,15 +53,25 @@ function determinePlanningRdC()
 
 	if SelShared.get( SAISON ) == 'Hiver' then
 	else
+		tmrRemoveEntry(tbl_timers, OuvreBuro)
+		tmrRemoveEntry(tbl_timers, OuvreChAmis)
+		tmrRemoveEntry(tbl_timers, MyChAmis)
+		ColRemoveFunc( Tasks['SCouche'], FermeBuro)
+		ColRemoveFunc( Tasks['SCouche'], FermeChAmis)
+
 		if SelShared.get(MODE) == 'Absent' then
 			ColAddFunc( Tasks['SLeve'], OuvreBuro)
 			SelLog.log("Ouverture du bureau avec le soleil")
-
-			tmrRemoveEntry(tbl_timers, OuvreBuro)
-			tmrRemoveEntry(tbl_timers, OuvreChAmis)
-			tmrRemoveEntry(tbl_timers, MyChAmis)
-			ColRemoveFunc( Tasks['SCouche'], FermeChAmis)
 		else
+			if SelShared.get( SAISON ) == 'Ete' then
+				tmrAddEntry( tbl_timers, 9, MyChAmis)
+				SelLog.log("My de la chambre d'amis à 9.0")
+--[[ Ne sert a rien car sera écrasé par l'ouverture matinale 
+				tmrAddEntry( tbl_timers, 16, OuvreChAmis)
+				SelLog.log("Ouverture de la chambre d'amis à 16.0")
+]]
+			end
+
 			local h = 8.15	-- Ouverture par defaut
 			if SelShared.get(MODE) == 'Travail' then
 				h = DEC2DMS(DMS2DEC(SelShared.get( HLEVE )) - DMS2DEC(0.15))
@@ -69,13 +79,6 @@ function determinePlanningRdC()
 			tmrAddEntry( tbl_timers, h, OuvreBuro)
 			tmrAddEntry( tbl_timers, h, OuvreChAmis)
 			SelLog.log("Ouverture de la chambre d'amis et du bureau à " .. h)
-
-			if SelShared.get( SAISON ) == 'Ete' then
-				tmrAddEntry( tbl_timers, 9, MyChAmis)
-				SelLog.log("My de la chambre d'amis à 9.0")
-				tmrAddEntry( tbl_timers, 16, OuvreChAmis)
-				SelLog.log("Ouverture de la chambre d'amis à 16.0")
-			end
 
 			ColAddFunc( Tasks['SCouche'], FermeChAmis)	-- La chambre d'Amis ne s'ouvre que lorsqu'on est là
 			SelLog.log("Fermeture de la chambre d'amis au couché du soleil")
