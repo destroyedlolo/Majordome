@@ -24,7 +24,7 @@ require "LocalConfiguration"
 require "helpers"
 require "logs"
 
-rotatelog( '1.02.02' )	-- Création du log initial
+rotatelog( '1.03.00' )	-- Création du log initial
 tbl_timers[0.0] = { rotatelog }
 
 --
@@ -35,6 +35,7 @@ require "Mode"
 require "Saison"
 require "Temperatures"
 require "Consignes"
+require "TeleInfo"
 require "Soleil"
 
 require "Chat"

@@ -28,6 +28,12 @@ Liste des topics de commandes :
 ----------
 Scenarii
 ========
+
+	L'heure du couché du soleil est déterminé comme suit :
+	- A partir de l'heure déterminé par le webservice météo (topic 'Meteo/?/suset'), on surveille s'il y a une production photovoltaique ('TeleInfo/Production/values/PAPP')
+	- si oui, on attend 2 minutes et on refait le tests
+	- si non, les volets sont a baisser
+
 ----------
 Chambres / bureau
 ==========

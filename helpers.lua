@@ -72,6 +72,12 @@ function Topic2Number( t, v )
 	return true
 end
 
+function Topic2NumberTTL( t, v, to )
+-- to : ttl de la variable, en seconde
+	SelShared.set(t, tonumber(v), to)
+	return true
+end
+
 function TopicDate2Number( t, v )
 	SelShared.set(t, TXT2DMS(v))
 	return true
