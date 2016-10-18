@@ -132,7 +132,7 @@ function determinePlanning1er()
 			tmrAddEntry( tbl_timers, t, FermeChJoris )
 			tmrAddEntry( tbl_timers, t, FermeChOceane )
 			tmrAddEntry( tbl_timers, t, FermeChParents )
-			SelLog.log("Fermeture des chambres du haut à " .. h)
+			SelLog.log("Fermeture des chambres du haut à " .. t)
 		end
 
 			-- Conservation de la fraîcheur
