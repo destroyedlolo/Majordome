@@ -51,7 +51,7 @@ function SurveillanceCoucheSoleil()
 	else
 		local dt = os.date("*t")
 		local cur = dt.hour + dt.min/100
-		local t = DEC2DMS(DMS2DEC(cur) + DMS2DEC(0.02))	-- On relance la fonction dans 2'
+		local t = DEC2DMS(DMS2DEC(cur) + DMS2DEC(0.01))	-- On relance la fonction dans 2'
 
 		SelLog.log("Le soleil brille toujours : nouveau test à ".. t)
 		tmrAddEntry( tbl_timers, t, SurveillanceCoucheSoleil)

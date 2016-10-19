@@ -118,6 +118,9 @@ end
 --
 -- Timers
 --
+function tmrSecureIdx( t )
+	return tonumber( string.format("%.2f",t) )
+end
 
 function tmrRemoveEntry( tbl, func )
 	for i,f in pairs(tbl) do
@@ -133,8 +136,10 @@ function tmrRemoveEntry( tbl, func )
 end
 
 function tmrAddEntry( tbl, t, func )
+	t = tmrSecureIdx(t)
+
 	if not func then
-		SelLog.log("*D**E* tmrAddEntry( NULL )")
+		SelLog.log("*E* tmrAddEntry( NULL )")
 		return
 	end
 
@@ -149,6 +154,7 @@ end
 function _tmrNextTarget( tbl )
 	local dt = os.date("*t")
 	local cur = dt.hour + dt.min/100
+	cur = tmrSecureIdx(cur)
 	local k = {}
 
 	for t in pairs(tbl) do table.insert(k, t) end
@@ -166,7 +172,7 @@ end
 
 function tmrNextTarget( tbl )
 	local res = _tmrNextTarget( tbl )
-SelLog.log('*d* Timer Suivant :' .. res)
+SelLog.log('*d* Timer Suivant : ' .. res .. ' / ' .. type(res))
 	return res
 end
 
@@ -195,9 +201,16 @@ end
 function tmrSubFunc( tbl )
 	local dt = os.date("*t")
 	local cur = dt.hour + dt.min/100
+	cur = tmrSecureIdx(cur)
 
--- SelLog.log('*d* tmrSubFunc('.. cur ..') ' )
--- SelLog.log('*d* ->' .. universal_tostring(tbl[cur]) )
+--[[
+SelLog.log('*d* tmrSubFunc('.. cur ..') ' )
+SelLog.log('*d* ->' .. universal_tostring(tbl[cur]) )
+if not tbl[cur] then
+SelLog.log('*d* arg : ' .. universal_tostring(cur) .. ' / ' .. type(cur))
+SelLog.log('*d* tbl :' .. universal_tostring(tbl) )
+end
+]]
 
 	SubTasks( tbl[cur] )
 end
