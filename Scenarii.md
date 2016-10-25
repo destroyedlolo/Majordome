@@ -5,6 +5,9 @@ Mode :
  - **Vacances** : présence toute la journée, levé manuel
  - **Absent** : nous ne sommes pas là, simulation de présence
 
+Et uniquement pour les modes forcés :
+ - **Auto** : Pas de forçage, mode *automatique*
+
 Saison :
 --------
 déterminé à 22h
@@ -20,11 +23,12 @@ Liste des topics de commandes :
  - **Majordome/Mode/AujourdHui** : mode automatique déterminé par le calendrier
  - **Majordome/Mode/Demain** : mode automatique pour demain déterminé par le calendrier
  - **Majordome/Mode/Force** : mode manuel forcé
+ - **Majordome/Mode/Enfants** : mode manuel forcé pour les chambres des enfants
  - **Majordome/Mode** : mode actif, calculé à partir des précédents
  - **Majordome/Saison** : saison déterminée par la température à 7h
  - **Majordome/HLever** : Heure de levé général
  - **Majordome/HCoucher** : Heure de couché des enfants
-
+ 
 ----------
 Scenarii
 ========
