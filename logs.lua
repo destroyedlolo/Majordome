@@ -9,7 +9,7 @@ function rotatelog( VERSION )
 	end
 
 	if VERBOSE then
-		local _,err = SelLog.init('/tmp/Majordome.log_' .. os.date('%Y%m%d'))
+		local _,err = SelLog.init('/tmp/Majordome.log_' .. os.date('%Y%m%d'), false)
 		if err then
 			print("*E* Log creation", err)
 		end
