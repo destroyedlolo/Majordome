@@ -78,84 +78,87 @@ function determinePlanning1er()
 		return
 	end
 
-	if SelShared.get( SAISON ) == 'Hiver' then
-	else
-		local h
-			-- Ouverture seulement si on bosse
-		if SelShared.get(MODE) == 'Travail' then
-			if SelShared.get(MODEENFANTS) == 'Vacances' then
-				SelLog.log("Les enfants sont en mode vacances ... pas d'ouverture")
-				tmrRemoveEntry(tbl_timers, MyChOceane)
-				tmrRemoveEntry(tbl_timers, MyChJoris)
-				tmrRemoveEntry(tbl_timers, OuvreChJoris)
-				tmrRemoveEntry(tbl_timers, OuvreChOceane)
-			else
-				h = DEC2DMS(DMS2DEC(SelShared.get( HLEVE )) - DMS2DEC(0.1))
-				tmrAddEntry( tbl_timers, h, MyChOceane )
-				tmrAddEntry( tbl_timers, h, MyChJoris )
-				SelLog.log("Ouverture 'My' des chambres des enfants à " .. h)
-		
-				tmrAddEntry( tbl_timers, SelShared.get( HLEVE ), OuvreChJoris )
-				tmrAddEntry( tbl_timers, SelShared.get( HLEVE ), OuvreChOceane )
-				SelLog.log("Ouverture des chambres des enfants à " .. SelShared.get( HLEVE ))
-			end
-
-			tmrAddEntry( tbl_timers, SelShared.get( HLEVE ), MyChParents )
-			SelLog.log("Ouverture 'My' de la chambre des parents à " .. SelShared.get( HLEVE ))
-			h = DEC2DMS(DMS2DEC(SelShared.get( HLEVE )) + DMS2DEC(0.05))
-			tmrAddEntry( tbl_timers, h, OuvreChParents )
-			SelLog.log("Ouverture de la chambre des parents à " .. h)
-		else
+	local h
+		-- Ouverture seulement si on bosse
+	if SelShared.get(MODE) == 'Travail' then
+		if SelShared.get(MODEENFANTS) == 'Vacances' then
+			SelLog.log("Les enfants sont en mode vacances ... pas d'ouverture")
 			tmrRemoveEntry(tbl_timers, MyChOceane)
 			tmrRemoveEntry(tbl_timers, MyChJoris)
-			tmrRemoveEntry(tbl_timers, MyChParents)
-
 			tmrRemoveEntry(tbl_timers, OuvreChJoris)
 			tmrRemoveEntry(tbl_timers, OuvreChOceane)
-			tmrRemoveEntry(tbl_timers, OuvreChParents)
+		else
+			h = DEC2DMS(DMS2DEC(SelShared.get( HLEVE )) - DMS2DEC(0.1))
+			tmrAddEntry( tbl_timers, h, MyChOceane )
+			tmrAddEntry( tbl_timers, h, MyChJoris )
+			SelLog.log("Ouverture 'My' des chambres des enfants à " .. h)
+		
+			tmrAddEntry( tbl_timers, SelShared.get( HLEVE ), OuvreChJoris )
+			tmrAddEntry( tbl_timers, SelShared.get( HLEVE ), OuvreChOceane )
+			SelLog.log("Ouverture des chambres des enfants à " .. SelShared.get( HLEVE ))
 		end
+
+		tmrAddEntry( tbl_timers, SelShared.get( HLEVE ), MyChParents )
+		SelLog.log("Ouverture 'My' de la chambre des parents à " .. SelShared.get( HLEVE ))
+		h = DEC2DMS(DMS2DEC(SelShared.get( HLEVE )) + DMS2DEC(0.05))
+		tmrAddEntry( tbl_timers, h, OuvreChParents )
+		SelLog.log("Ouverture de la chambre des parents à " .. h)
+	else
+		tmrRemoveEntry(tbl_timers, MyChOceane)
+		tmrRemoveEntry(tbl_timers, MyChJoris)
+		tmrRemoveEntry(tbl_timers, MyChParents)
+
+		tmrRemoveEntry(tbl_timers, OuvreChJoris)
+		tmrRemoveEntry(tbl_timers, OuvreChOceane)
+		tmrRemoveEntry(tbl_timers, OuvreChParents)
+	end
 
 			-- Fermeture le soir
-		local t = SelShared.get(TSunSet)
-		h = DEC2DMS(DMS2DEC(SelShared.get( HCOUCHE )) - DMS2DEC(0.15))
-		if t > h then
-			tmrAddEntry( tbl_timers, h, MyChJoris )
-			tmrAddEntry( tbl_timers, h, MyChOceane )
-			SelLog.log("Fermeture 'My' des chambres des enfants à " .. h)
+	local t = SelShared.get(TSunSet) or 18.0
+	h = DEC2DMS(DMS2DEC(SelShared.get( HCOUCHE )) - DMS2DEC(0.15))
+	if t > h then
+		tmrAddEntry( tbl_timers, h, MyChJoris )
+		tmrAddEntry( tbl_timers, h, MyChOceane )
+		SelLog.log("Fermeture 'My' des chambres des enfants à " .. h)
 
-			h = SelShared.get( HCOUCHE )
-			tmrAddEntry( tbl_timers, h, FermeChJoris )
-			tmrAddEntry( tbl_timers, h, FermeChOceane )
-			tmrAddEntry( tbl_timers, h, FermeChParents )
-			SelLog.log("Fermeture des chambres du haut à " .. h)
-		else
-			tmrAddEntry( tbl_timers, t, FermeChJoris )
-			tmrAddEntry( tbl_timers, t, FermeChOceane )
-			tmrAddEntry( tbl_timers, t, FermeChParents )
-			SelLog.log("Fermeture des chambres du haut à " .. t)
-		end
+		h = SelShared.get( HCOUCHE )
+		tmrAddEntry( tbl_timers, h, FermeChJoris )
+		tmrAddEntry( tbl_timers, h, FermeChOceane )
+		tmrAddEntry( tbl_timers, h, FermeChParents )
+		SelLog.log("Fermeture des chambres du haut à " .. h)
+	else
+		tmrAddEntry( tbl_timers, t, FermeChJoris )
+		tmrAddEntry( tbl_timers, t, FermeChOceane )
+		tmrAddEntry( tbl_timers, t, FermeChParents )
+		SelLog.log("Fermeture des chambres du haut à " .. t)
+	end
 
 			-- Conservation de la fraîcheur
-		local dt = os.date("*t")
-		local cur = dt.hour + dt.min/100
+	local dt = os.date("*t")
+	local cur = dt.hour + dt.min/100
 
-		local hdebut = (SelShared.get(MODE) == 'Travail' and SelShared.get(MODEENFANTS) ~= 'Vacances') and HDebFraicheurOJAutoT or HDebFraicheurAutoV
-		if cur < hdebut then	-- avant
-			SelLog.log("La température des chambres des enfants sera surveillée à partir de ".. hdebut)
-			SelLog.log("La surveillance se terminera à ".. HFinFraicheur1erAuto)
+	local hdebut = (SelShared.get(MODE) == 'Travail' and SelShared.get(MODEENFANTS) ~= 'Vacances') and HDebFraicheurOJAutoT or HDebFraicheurAutoV
+	if cur < hdebut then	-- avant
+		SelLog.log("La température des chambres des enfants sera surveillée à partir de ".. hdebut)
+		SelLog.log("La surveillance se terminera à ".. HFinFraicheur1erAuto)
 
-			tmrAddEntry( tbl_timers, hdebut, LanceFraicheurChOJAuto)
-			tmrAddEntry( tbl_timers, HFinFraicheur1erAuto, FinFraicheurChOJAuto)
-			ColRemoveFunc( Tasks['TChOceane'], FraicheurChOJAuto)
-		elseif cur < HFinFraicheur1erAuto then	-- pendant
-			LanceFraicheurChOJAuto()
-			tmrAddEntry( tbl_timers, HFinFraicheur1erAuto, FinFraicheurChOJAuto)
-			SelLog.log("La surveillance se terminera à ".. HFinFraicheur1erAuto)
-		else -- apres
-			FinFraicheurChOJAuto()
-		end
+		tmrAddEntry( tbl_timers, hdebut, LanceFraicheurChOJAuto)
+		tmrAddEntry( tbl_timers, HFinFraicheur1erAuto, FinFraicheurChOJAuto)
+		ColRemoveFunc( Tasks['TChOceane'], FraicheurChOJAuto)
+	elseif cur < HFinFraicheur1erAuto then	-- pendant
+		LanceFraicheurChOJAuto()
+		tmrAddEntry( tbl_timers, HFinFraicheur1erAuto, FinFraicheurChOJAuto)
+		SelLog.log("La surveillance se terminera à ".. HFinFraicheur1erAuto)
+	else -- apres
+		FinFraicheurChOJAuto()
+	end
 
-		local hdebut = (SelShared.get(MODE) == 'Travail') and HDebFraicheurParentT or HDebFraicheurAutoV
+	local hdebut = (SelShared.get(MODE) == 'Travail') and HDebFraicheurParentT or HDebFraicheurAutoV
+	if SelShared.get( SAISON ) == 'Hiver' then
+		tmrRemoveEntry(tbl_timers, LanceFraicheurChPAuto)
+		tmrRemoveEntry(tbl_timers, FinFraicheurChPAuto)
+		ColRemoveFunc( Tasks['TChOceane'], FraicheurChPAuto)
+	else
 		if cur < hdebut then	-- avant
 			SelLog.log("La température de la chambre des parents sera surveillée à partir de ".. hdebut)
 			SelLog.log("La surveillance se terminera à ".. HFinFraicheur1erAuto)
@@ -168,6 +171,7 @@ function determinePlanning1er()
 			tmrAddEntry( tbl_timers, HFinFraicheur1erAuto, FinFraicheurChPAuto)
 			SelLog.log("La surveillance se terminera à ".. HFinFraicheur1erAuto)
 		else -- apres
+			FinFraicheurChOJAuto()
 		end
 	end
 
