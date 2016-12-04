@@ -7,6 +7,7 @@
 TExterieur='maison/Temperature/Dehors'
 TSalon='maison/Temperature/Salon'
 TChOceane='maison/Temperature/Chambre Oceane'
+TChParents='maison/Temperature/Chambre Parents'
 TBureau='maison/Temperature/Bureau'
 
 --
@@ -41,6 +42,17 @@ end
 
 Tasks['TChOceane']={}
 table.insert( Topics, { topic = TChOceane, func=Topic2Number, trigger=chgTChO, trigger_once=true } )
+
+--
+-- Température chambre Parents
+--
+
+function chgTChP()
+	SubTasks( Tasks['TChParents'] )
+end
+
+Tasks['TChParents']={}
+table.insert( Topics, { topic = TChParents, func=Topic2Number, trigger=chgTChP, trigger_once=true } )
 
 --
 -- Température Bureau
