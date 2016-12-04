@@ -83,14 +83,14 @@ function determinePlanningRdC()
 	end
 
 			-- Conservation de la fraîcheur
-	local dt = os.date("*t")
-	local cur = dt.hour + dt.min/100
 
 	if SelShared.get( SAISON ) == 'Hiver' then
 		tmrRemoveEntry(tbl_timers, LanceFraicheurBureauAuto)
-		tmrRemoveEntry(tbl_timers, FinFraicheurChPAuto)
 		ColRemoveFunc( Tasks['TBureau'], FraicheurBureauAuto)
 	else
+		local dt = os.date("*t")
+		local cur = dt.hour + dt.min/100
+
 		if cur < HDebFraicheurAuto then	-- avant
 			SelLog.log("La température du bureau sera surveillée à partir de ".. HDebFraicheurAuto);
 			SelLog.log("La surveillance se terminera à ".. HFinFraicheurAuto);
@@ -151,7 +151,6 @@ function FinFraicheurBureauAuto()
 	SelLog.log("Fin de la surveillance de la température du bureau")
 
 	tmrRemoveEntry(tbl_timers, LanceFraicheurBureauAuto)
-	tmrRemoveEntry(tbl_timers, FinFraicheurChPAuto)
 	ColRemoveFunc( Tasks['TBureau'], FraicheurBureauAuto)
 end
 

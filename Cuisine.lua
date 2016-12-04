@@ -37,22 +37,25 @@ end
 function determineCuisine()
 	SelLog.log("Détermination du planning pour la cuisine")
 
-	if SelShared.get( SAISON ) == 'Hiver' then
+	if SelShared.get(MODE) == 'Absent' then
+		ColAddFunc( Tasks['SLeve'], OuvreCuisine)
+		SelLog.log("Ouverture de la cuisine avec le soleil")
+		tmrRemoveEntry(tbl_timers, OuvreCuisine)
 	else
-		if SelShared.get(MODE) == 'Absent' then
-			ColAddFunc( Tasks['SLeve'], OuvreCuisine)
-			SelLog.log("Ouverture de la cuisine avec le soleil")
-			tmrRemoveEntry(tbl_timers, OuvreCuisine)
-		else
-			local h = 8.15	-- Ouverture par defaut
-			if SelShared.get(MODE) == 'Travail' then
-				h = DEC2DMS(DMS2DEC(SelShared.get( HLEVE )) - DMS2DEC(0.15))
-			end
-			tmrAddEntry( tbl_timers, h, OuvreCuisine)
-			SelLog.log("Ouverture de la Cuisine à " .. h)
+		local h = 8.15	-- Ouverture par defaut
+		if SelShared.get(MODE) == 'Travail' then
+			h = DEC2DMS(DMS2DEC(SelShared.get( HLEVE )) - DMS2DEC(0.15))
 		end
+		tmrAddEntry( tbl_timers, h, OuvreCuisine)
+		SelLog.log("Ouverture de la Cuisine à " .. h)
+	end
 
 			-- Conservation de la fraîcheur
+	if SelShared.get( SAISON ) == 'Hiver' then
+		tmrRemoveEntry(tbl_timers, LanceFraicheurCuisineAuto)
+		tmrRemoveEntry(tbl_timers, FinFraicheurCuisineAuto)
+		ColRemoveFunc( Tasks['TSalon'], FraicheurCuisineAuto)
+	else
 		local dt = os.date("*t")
 		local cur = dt.hour + dt.min/100
 

@@ -134,31 +134,37 @@ function determinePlanning1er()
 	end
 
 			-- Conservation de la fraîcheur
-	local dt = os.date("*t")
-	local cur = dt.hour + dt.min/100
-
-	local hdebut = (SelShared.get(MODE) == 'Travail' and SelShared.get(MODEENFANTS) ~= 'Vacances') and HDebFraicheurOJAutoT or HDebFraicheurAutoV
-	if cur < hdebut then	-- avant
-		SelLog.log("La température des chambres des enfants sera surveillée à partir de ".. hdebut)
-		SelLog.log("La surveillance se terminera à ".. HFinFraicheur1erAuto)
-
-		tmrAddEntry( tbl_timers, hdebut, LanceFraicheurChOJAuto)
-		tmrAddEntry( tbl_timers, HFinFraicheur1erAuto, FinFraicheurChOJAuto)
-		ColRemoveFunc( Tasks['TChOceane'], FraicheurChOJAuto)
-	elseif cur < HFinFraicheur1erAuto then	-- pendant
-		LanceFraicheurChOJAuto()
-		tmrAddEntry( tbl_timers, HFinFraicheur1erAuto, FinFraicheurChOJAuto)
-		SelLog.log("La surveillance se terminera à ".. HFinFraicheur1erAuto)
-	else -- apres
-		FinFraicheurChOJAuto()
-	end
-
-	local hdebut = (SelShared.get(MODE) == 'Travail') and HDebFraicheurParentT or HDebFraicheurAutoV
 	if SelShared.get( SAISON ) == 'Hiver' then
+		tmrRemoveEntry(tbl_timers, LanceFraicheurChOJAuto)
+		tmrRemoveEntry(tbl_timers, FinFraicheurChOJAuto)
+		ColRemoveFunc( Tasks['TChOceane'], FraicheurChOJAuto)
+
 		tmrRemoveEntry(tbl_timers, LanceFraicheurChPAuto)
 		tmrRemoveEntry(tbl_timers, FinFraicheurChPAuto)
 		ColRemoveFunc( Tasks['TChOceane'], FraicheurChPAuto)
 	else
+		local dt = os.date("*t")
+		local cur = dt.hour + dt.min/100
+
+			-- Pour les enfants
+		local hdebut = (SelShared.get(MODE) == 'Travail' and SelShared.get(MODEENFANTS) ~= 'Vacances') and HDebFraicheurOJAutoT or HDebFraicheurAutoV
+		if cur < hdebut then	-- avant
+			SelLog.log("La température des chambres des enfants sera surveillée à partir de ".. hdebut)
+			SelLog.log("La surveillance se terminera à ".. HFinFraicheur1erAuto)
+
+			tmrAddEntry( tbl_timers, hdebut, LanceFraicheurChOJAuto)
+			tmrAddEntry( tbl_timers, HFinFraicheur1erAuto, FinFraicheurChOJAuto)
+			ColRemoveFunc( Tasks['TChOceane'], FraicheurChOJAuto)
+		elseif cur < HFinFraicheur1erAuto then	-- pendant
+			LanceFraicheurChOJAuto()
+			tmrAddEntry( tbl_timers, HFinFraicheur1erAuto, FinFraicheurChOJAuto)
+			SelLog.log("La surveillance se terminera à ".. HFinFraicheur1erAuto)
+		else -- apres
+			FinFraicheurChOJAuto()
+		end
+
+			-- Pour les parents
+		local hdebut = (SelShared.get(MODE) == 'Travail') and HDebFraicheurParentT or HDebFraicheurAutoV
 		if cur < hdebut then	-- avant
 			SelLog.log("La température de la chambre des parents sera surveillée à partir de ".. hdebut)
 			SelLog.log("La surveillance se terminera à ".. HFinFraicheur1erAuto)
