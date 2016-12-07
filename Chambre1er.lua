@@ -68,25 +68,20 @@ function determinePlanning1er()
 
 	if SelShared.get(MODE) == 'Absent' then
 		SelLog.log("Rien à faire : nous ne sommes pas là")
-		tmrRemoveEntry(tbl_timers, MyChOceane)
-		tmrRemoveEntry(tbl_timers, MyChJoris)
-		tmrRemoveEntry(tbl_timers, MyChParents)
-
-		tmrRemoveEntry(tbl_timers, OuvreChJoris)
-		tmrRemoveEntry(tbl_timers, OuvreChOceane)
-		tmrRemoveEntry(tbl_timers, OuvreChParents)
+		menageChOJ()
+		menageChP()
 		return
 	end
 
+		--[[ Il est important que l'ouverture soit décidée avant 
+		-- la fermeture et la surveillance de la température
+		-- car elle peut faire les ménages dans toutes les consignes
+		--]]
 	local h
-		-- Ouverture seulement si on bosse
-	if SelShared.get(MODE) == 'Travail' then
+	if SelShared.get(MODE) == 'Travail' then -- Ouverture seulement si on bosse
 		if SelShared.get(MODEENFANTS) == 'Vacances' then
 			SelLog.log("Les enfants sont en mode vacances ... pas d'ouverture")
-			tmrRemoveEntry(tbl_timers, MyChOceane)
-			tmrRemoveEntry(tbl_timers, MyChJoris)
-			tmrRemoveEntry(tbl_timers, OuvreChJoris)
-			tmrRemoveEntry(tbl_timers, OuvreChOceane)
+			menageChOJ()
 		else
 			h = DEC2DMS(DMS2DEC(SelShared.get( HLEVE )) - DMS2DEC(0.1))
 			tmrAddEntry( tbl_timers, h, MyChOceane )
@@ -103,14 +98,9 @@ function determinePlanning1er()
 		h = DEC2DMS(DMS2DEC(SelShared.get( HLEVE )) + DMS2DEC(0.05))
 		tmrAddEntry( tbl_timers, h, OuvreChParents )
 		SelLog.log("Ouverture de la chambre des parents à " .. h)
-	else
-		tmrRemoveEntry(tbl_timers, MyChOceane)
-		tmrRemoveEntry(tbl_timers, MyChJoris)
-		tmrRemoveEntry(tbl_timers, MyChParents)
-
-		tmrRemoveEntry(tbl_timers, OuvreChJoris)
-		tmrRemoveEntry(tbl_timers, OuvreChOceane)
-		tmrRemoveEntry(tbl_timers, OuvreChParents)
+	else	-- vacances
+		menageChOJ()
+		menageChP()
 	end
 
 			-- Fermeture le soir
@@ -141,7 +131,7 @@ function determinePlanning1er()
 
 		tmrRemoveEntry(tbl_timers, LanceFraicheurChPAuto)
 		tmrRemoveEntry(tbl_timers, FinFraicheurChPAuto)
-		ColRemoveFunc( Tasks['TChOceane'], FraicheurChPAuto)
+		ColRemoveFunc( Tasks['TChParents'], FraicheurChPAuto)
 	else
 		local dt = os.date("*t")
 		local cur = dt.hour + dt.min/100
@@ -193,6 +183,19 @@ table.insert( Tasks['Consignes'], determinePlanning1er )
 -- Gestion des températures
 -- 
 
+-- Chambres Océane et Joris
+
+function menageChOJ()
+	tmrRemoveEntry(tbl_timers, MyChOceane)
+	tmrRemoveEntry(tbl_timers, MyChJoris)
+	tmrRemoveEntry(tbl_timers, OuvreChJoris)
+	tmrRemoveEntry(tbl_timers, OuvreChOceane)
+
+	tmrRemoveEntry(tbl_timers, LanceFraicheurChOJAuto)
+	tmrRemoveEntry(tbl_timers, FinFraicheurChOJAuto)
+	ColRemoveFunc( Tasks['TChOceane'], FraicheurChOJAuto)
+end
+
 function FraicheurChOJAuto()
 	if SelShared.get( TChOceane ) > LimiteTemperature then
 		SelLog.log("TChOceane : " .. SelShared.get( TChOceane ) .. ", les volets se ferment")
@@ -217,9 +220,20 @@ function FinFraicheurChOJAuto()
 	ColRemoveFunc( Tasks['TChOceane'], FraicheurChOJAuto)
 end
 
+-- Chambre Parents
+
+function menageChP()
+	tmrRemoveEntry(tbl_timers, MyChParents)
+	tmrRemoveEntry(tbl_timers, OuvreChParents)
+
+	tmrRemoveEntry(tbl_timers, LanceFraicheurChPAuto)
+	tmrRemoveEntry(tbl_timers, FinFraicheurChPAuto)
+	ColRemoveFunc( Tasks['TChParents'], FraicheurChPAuto)
+end
+
 function FraicheurChPAuto()
-	if SelShared.get( TChOceane ) > LimiteTemperature then
-		SelLog.log("TChOceane : " .. SelShared.get( TChOceane ) .. ", les volets se ferment")
+	if SelShared.get( TChParents ) > LimiteTemperature then
+		SelLog.log("TChParents : " .. SelShared.get( TChParents ) .. ", les volets se ferment")
 		MyChParents()
 		FinFraicheurChPAuto()
 	end
@@ -227,9 +241,8 @@ end
 
 function LanceFraicheurChPAuto()
 	SelLog.log("Début de la surveillance de la température de la chambres des parents")
-	
 	tmrRemoveEntry(tbl_timers, LanceFraicheurChPAuto)
-	ColAddFunc( Tasks['TChOceane'], FraicheurChPAuto)
+	ColAddFunc( Tasks['TChParents'], FraicheurChPAuto)
 end
 
 function FinFraicheurChPAuto()
@@ -237,6 +250,6 @@ function FinFraicheurChPAuto()
 
 	tmrRemoveEntry(tbl_timers, LanceFraicheurChPAuto)
 	tmrRemoveEntry(tbl_timers, FinFraicheurChPAuto)
-	ColRemoveFunc( Tasks['TChOceane'], FraicheurChPAuto)
+	ColRemoveFunc( Tasks['TChParents'], FraicheurChPAuto)
 end
 
