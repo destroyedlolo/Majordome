@@ -13,6 +13,14 @@ function MQTTinputs(aname, atpc, afunc)
 		return SelShared.get( topic )
 	end
 
+	function self.set( v )
+		SelShared.set( topic, v )
+	end
+
+	function self.getName()
+		return name
+	end
+
 	function self.received()
 		self.TasksSubmit()
 	end
