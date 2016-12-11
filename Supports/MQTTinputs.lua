@@ -1,6 +1,6 @@
 -- Generic class to handle input coming from MQTT
 
-function MQTTinputs(aname, atpc, afunc, aonce)
+function MQTTinputs(aname, atpc, afunc)
 	local self = {}
 
 	-- Private fields
@@ -46,7 +46,7 @@ function MQTTinputs(aname, atpc, afunc, aonce)
 	end
 
 	-- initialiser
-	table.insert( Topics, { topic=atpc, func=afunc, trigger=self.received, trigger_once=aonce } )
+	table.insert( Topics, { topic=atpc, func=afunc, trigger=self.received, trigger_once=true } )
 
 	return self
 end

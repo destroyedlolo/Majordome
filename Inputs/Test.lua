@@ -1,5 +1,5 @@
 local function CTest()	-- Test call to test inheritance
-	local self = MQTTinputs('Test', 'Test', Topic2Number, true)
+	local self = MQTTinputs('Test', 'Test', Topic2Number)
 
 	-- methods
 	local function arrived() -- Tasks called when Test is updated
