@@ -18,3 +18,6 @@ end
 THLeve = IConsigns('Heure levé', 'Majordome/HLever', 8.00 )
 THCouche = IConsigns('Heure couché', 'Majordome/HCoucher', 21.30 )
 
+-- Sun management
+
+
