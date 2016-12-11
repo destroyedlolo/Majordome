@@ -13,58 +13,13 @@ require "tostring"
 -- Initializing
 --
 
-Topics = {}				-- List des topics à surveiller
-Tasks = {}				-- Taches associées aux evenements
-tbl_timers = {}			-- Timer's planning
-
 --
 -- Helpers
 --
 require "LocalConfiguration"
-require "helpers"
 require "logs"
 
-rotatelog( '1.04.02' )	-- Création du log initial
-tbl_timers[0.0] = { rotatelog }
-
---
--- Loading sub stuffs
---
-
-require "Mode"
-require "Saison"
-require "Temperatures"
-require "Consignes"
-require "TeleInfo"
-require "Soleil"
-
-require "Chat"
-require "Cuisine"
-require "Chambre1er"
-require "BureauEtChambreAmis"
-require "Salon"
-
---
--- Timer's stuffs
---
-function CronExec()
-	tmrSubFunc( tbl_timers )
-	tmrRethink( timerCron, tbl_timers )
-end
-
-function rethingTimerCron()
-	tmrRethink( timerCron, tbl_timers );
-end
-
-timerCron, err = SelTimer.create { at=tmrNextTarget( tbl_timers ), ifunc=CronExec } 
-if err then
-	err = "Cron's timer creation error :" .. err
-	SelLog.log(err)
-	print(err)
-	return
-end
-
-tmrRethink( timerCron, tbl_timers )
+rotatelog( '2.00.00' )	-- Log creation
 
 --
 -- Broker's stuffs
