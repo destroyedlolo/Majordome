@@ -6,8 +6,9 @@
 
 assert( SELENE_VERSION >= 3.0200, "HDB requires at least Selene v3.01.02, got " .. SELENE_VERSION ..'\n' )
 
--- debug only
-require "tostring"
+lfs = require "lfs" -- LuaFileSystem
+
+require "tostring"	-- debug only
 
 --
 -- Initializing
@@ -24,11 +25,25 @@ require "logs"
 rotatelog( '2.00.01' )	-- Log creation
 
 --
--- Topics
+-- Support classes
 --
 require "Supports/MQTTinputs"
 
-require "Inputs/Test"
+--
+-- Load user configured modules
+--
+function loaddir( dir )
+	for f in lfs.dir(dir) do
+		local attr = lfs.attributes( dir ..'/'.. f )
+		local found, len, res = f:find("^(.*)%.[^%.]*$")
+		if found and attr.mode == 'file' and res:sub(1,1) ~= '.' then
+			require(dir ..'/'.. res)
+			SelLog.log("*I* " .. dir ..'/'.. res .. ' loaded')
+		end
+	end
+end
+
+loaddir( 'Inputs' )
 
 --
 -- Broker's stuffs
