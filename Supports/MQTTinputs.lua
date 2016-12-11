@@ -5,11 +5,15 @@ function MQTTinputs(aname, atpc, afunc)
 
 	-- Private fields
 	local name = aname
+	local topic = atpc
 	local tasks = {}
 
 	-- methods
+	function self.get()
+		return SelShared.get( topic )
+	end
+
 	function self.received()
-		print( 'received', SelShared.get( name ) )
 		self.TasksSubmit()
 	end
 
