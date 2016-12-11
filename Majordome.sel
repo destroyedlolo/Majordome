@@ -62,7 +62,6 @@ if not Brk then
 	return
 end
 
-print( universal_tostring( Topics ) )
 _, err = Brk:subscribe( Topics )
 if err then
 	print( "Subscribtion", err )

@@ -1,4 +1,4 @@
-local function CTest()	-- Test call to test inheritance
+local function ITest()	-- Test call to test inheritance
 	local self = MQTTinputs('Test', 'Test', Topic2Number)
 
 	-- methods
@@ -16,4 +16,4 @@ local function CTest()	-- Test call to test inheritance
 	TExterieur.TasksAdd( tempchanged )
 end
 
-tst = CTest()
+tst = ITest()
