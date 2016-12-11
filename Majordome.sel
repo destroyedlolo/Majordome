@@ -13,6 +13,8 @@ require "tostring"
 -- Initializing
 --
 
+Topics = {}	-- Topics we are looking for
+
 --
 -- Helpers
 --
@@ -20,6 +22,13 @@ require "LocalConfiguration"
 require "logs"
 
 rotatelog( '2.00.00' )	-- Log creation
+
+--
+-- Topics
+--
+require "MQTTinputs"
+
+require "Inputs/Test"
 
 --
 -- Broker's stuffs
@@ -38,6 +47,7 @@ if not Brk then
 	return
 end
 
+print( universal_tostring( Topics ) )
 _, err = Brk:subscribe( Topics )
 if err then
 	print( "Subscribtion", err )
@@ -48,7 +58,7 @@ end
 -- Let's go
 --
 while true do -- Main todo list handler
-	ret, err = Selene.WaitFor(timerCron)
+	ret, err = Selene.WaitFor()
 	if err then
 		print(err)
 		return
