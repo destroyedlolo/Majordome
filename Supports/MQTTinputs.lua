@@ -27,7 +27,7 @@ function MQTTinputs(aname, atpc, afunc)
 
 	function self.TasksAdd( func )
 		if not func then
-			SelLog.log("*D**E* MQTTinputs.TasksAdd( NULL )")
+			SelLog.log("*E* MQTTinputs.TasksAdd( NULL )")
 			return
 		end
 
