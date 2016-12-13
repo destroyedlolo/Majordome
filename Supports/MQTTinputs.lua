@@ -22,18 +22,18 @@ function MQTTinputs(aname, atpc, afunc)
 	end
 
 	function self.received()
-		self.TasksSubmit()
+		self.TaskSubmit()
 	end
 
-	function self.TasksAdd( func )
+	function self.TaskAdd( func )
 		if not func then
-			SelLog.log("*E* MQTTinputs.TasksAdd( NULL )")
+			SelLog.log("*E* MQTTinputs.TaskAdd( NULL )")
 			return
 		end
 
 		if type(func) == 'table' then
 			for _,f in ipairs(func) do
-				self.TasksAdd( f )
+				self.TaskAdd( f )
 			end
 		else
 			for _,f in ipairs( tasks ) do	-- Avoid duplicate submission
@@ -45,7 +45,15 @@ function MQTTinputs(aname, atpc, afunc)
 		end
 	end
 
-	function self.TasksSubmit()
+	function self.TaskRemove( func )
+		for i,v in ipairs( tasks ) do
+			if v == func then
+				table.remove( tasks, i )
+			end
+		end
+	end
+
+	function self.TaskSubmit()
 		for z,t in ipairs( tasks ) do
 			if type(t) == 'table' then
 				for i,j in ipairs(t) do
@@ -62,6 +70,22 @@ function MQTTinputs(aname, atpc, afunc)
 
 	return self
 end
+
+function MQTTinputsDefLog(aname, atpc, afunc, adefault )
+	local self = MQTTinputs( aname, atpc, TopicDate2Number )
+
+	-- methods
+	function self.log()
+		SelLog.log( self.getName() ..' : '..  self.get() )
+	end
+
+	-- initialiser
+	self.set( adefault )
+	self.TaskAdd( self.log )	-- log incoming value
+
+	return self
+end
+
 
 --
 -- Helpers

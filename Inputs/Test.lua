@@ -12,8 +12,8 @@ local function ITest()	-- Test call to test inheritance
 	end
 
 	-- initialiser
-	self.TasksAdd( arrived )
-	TExterieur.TasksAdd( tempchanged )
+	self.TaskAdd( arrived )
+	TExterieur.TaskAdd( tempchanged )
 end
 
 tst = ITest()
