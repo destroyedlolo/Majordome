@@ -22,27 +22,27 @@ Topics = {}	-- Topics we are looking for
 require "LocalConfiguration"
 require "logs"
 
-rotatelog( '2.00.01' )	-- Log creation
+rotatelog( '2.00.02' )	-- Log creation
 
---
--- Support classes
---
-require "Supports/MQTTinputs"
-
---
--- Load user configured modules
---
 function loaddir( dir )
 	for f in lfs.dir(dir) do
 		local attr = lfs.attributes( dir ..'/'.. f )
 		local found, len, res = f:find("^(.*)%.[^%.]*$")
-		if found and attr.mode == 'file' and res:sub(1,1) ~= '.' then
+		if found and attr.mode == 'file' and res:sub(1,1) ~= '.' and f:match("^.+(%..+)$") ~= '.md' then
 			require(dir ..'/'.. res)
 			SelLog.log("*I* " .. dir ..'/'.. res .. ' loaded')
 		end
 	end
 end
 
+--
+-- Support classes
+--
+loaddir( 'Supports' )
+
+--
+-- Load user configured modules
+--
 loaddir( 'Inputs' )
 
 --
