@@ -17,3 +17,28 @@ local function ITest()	-- Test call to test inheritance
 end
 
 tst = ITest()
+
+
+	-- Timer test
+function bip1()
+	print 'bip 1'
+end
+
+function bip2()
+	print 'bip 2'
+end
+
+function bip3()
+	print 'bip 3'
+end
+
+local dt = os.date("*t")
+local cur = dt.hour + dt.min/100
+local t = DEC2DMS(DMS2DEC(cur) + DMS2DEC(0.01))	-- Dans 1'
+
+Timer.TaskAdd( t, bip1 );
+	
+t = DEC2DMS(DMS2DEC(cur) + DMS2DEC(0.02))	-- Dans 2'
+
+Timer.TaskAdd( t, bip2 );
+Timer.TaskAdd( t, bip3 );

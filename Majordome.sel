@@ -16,13 +16,10 @@ require "tostring"	-- debug only
 
 Topics = {}	-- Topics we are looking for
 
---
--- Helpers
---
 require "LocalConfiguration"
 require "logs"
 
-rotatelog( '2.00.04' )	-- Log creation
+rotatelog( '2.00.05' )	-- Log creation
 
 function loaddir( dir )
 	local t={}
@@ -47,6 +44,15 @@ end
 -- Support classes
 --
 loaddir( 'Supports' )
+
+--
+-- Timer initialisation
+--
+Timer = STimer()	-- Main timer
+if not Timer then
+	return
+end
+Timer.TaskAdd( 0.0, rotatelog )
 
 --
 -- Load user configured modules
@@ -78,15 +84,12 @@ end
 --
 -- Let's go
 --
-Timer = STimer()	-- Main timer
-if not Timer then
-	return
-end
-Timer.TaskAdd( 0.0, rotatelog )
+Timer.Rethink()
 
 while true do -- Main todo list handler
 local t = Timer.getTimer()
-print( t:Get() )
+print( 'next timer', t:Get() )
+Timer.dump()
 	ret, err = Selene.WaitFor( Timer.getTimer() )
 	if err then
 		print(err)
