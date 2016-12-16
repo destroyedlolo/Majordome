@@ -102,6 +102,5 @@ while true do -- Main todo list handler
 
 	if type(ret) == 'function' then
 		ret()
--- print( "Table du timer", universal_tostring(tbl_timers) ) -- *d* Debug only
 	end
 end
