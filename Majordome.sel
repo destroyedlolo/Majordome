@@ -4,11 +4,9 @@
 -- This tool is configured for my own usage and is matching my home configuration
 -- but it should be took as example to build your own dashboard
 
-assert( SELENE_VERSION >= 3.0300, "HDB requires at least Selene v3.03.03, got " .. SELENE_VERSION ..'\n' )
+assert( SELENE_VERSION >= 3.0300, "HDB requires at least Selene v3.03.00, got " .. SELENE_VERSION ..'\n' )
 
 lfs = require "lfs" -- LuaFileSystem
-
-require "tostring"	-- debug only
 
 --
 -- Initializing
@@ -17,9 +15,12 @@ require "tostring"	-- debug only
 Topics = {}	-- Topics we are looking for
 
 require "LocalConfiguration"
+if DEBUG then
+	require "tostring"	-- debug only
+end
 require "logs"
 
-rotatelog( '2.00.05' )	-- Log creation
+rotatelog( '2.00.06' )	-- Log creation
 
 function loaddir( dir )
 	local t={}
@@ -87,9 +88,12 @@ end
 Timer.Rethink()
 
 while true do -- Main todo list handler
-local t = Timer.getTimer()
-print( 'next timer', t:Get() )
-Timer.dump()
+	if DEBUG then
+		local t = Timer.getTimer()
+		print( 'next timer', t:Get() )
+		Timer.dump()
+	end
+
 	ret, err = Selene.WaitFor( Timer.getTimer() )
 	if err then
 		print(err)
