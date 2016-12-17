@@ -64,7 +64,7 @@ function MQTTinputs(aname, atpc, afunc)
 end
 
 function MQTTinputsDefLog(aname, atpc, afunc, adefault )
-	local self = MQTTinputs( aname, atpc, TopicDate2Number )
+	local self = MQTTinputs( aname, atpc, afunc )
 
 	-- methods
 	function self.log()
