@@ -2,7 +2,7 @@
 
 function rotatelog( VERSION )
 	local msg
-	if SelLog.status() then
+	if SelLog.status() or not VERSION then
 		msg = "Rotation des logs"
 	else
 		msg = "\n\tLancement de Majordome v".. VERSION .."; Selene v".. SELENE_VERSION
