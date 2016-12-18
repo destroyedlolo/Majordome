@@ -8,3 +8,6 @@ DEBUG=false		-- if true, include debug and test messages
 BROKERHOST='tcp://torchwood.chez.moi:1883'
 CLIENTID='Majordome-dev'
 
+-- Topics
+
+TOPIC_METEO='Meteo/Nonglard'	-- root of meteo forcast

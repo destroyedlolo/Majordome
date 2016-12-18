@@ -20,7 +20,7 @@ if DEBUG then
 end
 require "logs"
 
-rotatelog( '2.00.06' )	-- Log creation
+rotatelog( '2.00.07' )	-- Log creation
 
 function loaddir( dir )
 	local t={}
