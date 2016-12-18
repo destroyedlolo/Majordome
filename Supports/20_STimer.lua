@@ -28,6 +28,8 @@ function STimer()
 				tasks[i] = nil	
 			end
 		end
+
+		SelShared.PushTask( self.Rethink, SelShared.TaskOnceConst("LAST"))
 	end
 
 	function self.TaskAdd( when, func )
@@ -45,6 +47,8 @@ function STimer()
 		else
 			table.insert( tasks[ when ], func )
 		end
+
+		SelShared.PushTask( self.Rethink, SelShared.TaskOnceConst("LAST"))
 	end
 	
 		-- Determine next candidate

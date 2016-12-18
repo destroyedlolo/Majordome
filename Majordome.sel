@@ -53,7 +53,7 @@ Timer = STimer()	-- Main timer
 if not Timer then
 	return
 end
-Timer.TaskAdd( 0.07, rotatelog )
+Timer.TaskAdd( 0.0, rotatelog )
 
 --
 -- Load user configured modules
