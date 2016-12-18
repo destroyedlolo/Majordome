@@ -1,4 +1,4 @@
-if DEBUG then
+if TEST then
 
 	local function ITest()	-- Test call to test inheritance
 		local self = MQTTinput('Test', 'Test', Topic2Number)
