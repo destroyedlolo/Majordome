@@ -34,6 +34,33 @@ function TopicDate2Number( t, v )
 end
 
 -- Tasks submition
+function TableTasksAdd(tbl, func )
+	if not func then
+		return false
+	end
+
+	if type(func) == 'table' then
+		for _,f in ipairs(func) do
+			TableTasksAdd(tbl, f)
+		end
+	else
+		for _,f in ipairs(tbl) do	-- Avoid duplicate submission
+			if f == func then
+				return true
+			end
+		end
+		table.insert(tbl, func )
+	end
+	return true
+end
+
+function TableTaskRemove( tbl, func )
+	for i,v in ipairs( tbl ) do
+		if v == func then
+			table.remove( tbl, i )
+		end
+	end
+end
 
 function SubTasks( tasks )
 	if type(tasks) ~= 'table' then

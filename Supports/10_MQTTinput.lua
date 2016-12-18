@@ -30,31 +30,14 @@ function MQTTinput(aname, atpc, afunc)
 	end
 
 	function self.TaskAdd( func )
-		if not func then
+		if TableTasksAdd( tasks, func ) == false then
 			SelLog.log("*E* MQTTinput.TaskAdd( NULL )")
 			return
-		end
-
-		if type(func) == 'table' then
-			for _,f in ipairs(func) do
-				self.TaskAdd( f )
-			end
-		else
-			for _,f in ipairs( tasks ) do	-- Avoid duplicate submission
-				if f == func then
-					return
-				end
-			end
-			table.insert(tasks, func )
 		end
 	end
 
 	function self.TaskRemove( func )
-		for i,v in ipairs( tasks ) do
-			if v == func then
-				table.remove( tasks, i )
-			end
-		end
+		TableTaskRemove( tasks, func )
 	end
 
 	function self.TaskSubmit()
