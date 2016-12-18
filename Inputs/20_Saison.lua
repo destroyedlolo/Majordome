@@ -1,7 +1,7 @@
 -- Seasons
 
-Saison = MQTTinputsDefLog('Saison', 'Majordome/Saison', nil, 'Intersaison')
-SaisonHier = MQTTinputsDefLog('Saison Hier', 'Majordome/Saison/Hier', nil, 'Intersaison')
+Saison = MQTTinputDefLog('Saison', 'Majordome/Saison', nil, 'Intersaison')
+SaisonHier = MQTTinputDefLog('Saison Hier', 'Majordome/Saison/Hier', nil, 'Intersaison')
 
 --
 -- Actions

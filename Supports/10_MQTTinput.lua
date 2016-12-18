@@ -1,6 +1,6 @@
 -- Generic class to handle input coming from MQTT
 
-function MQTTinputs(aname, atpc, afunc)
+function MQTTinput(aname, atpc, afunc)
 	local self = {}
 
 	-- Private fields
@@ -31,7 +31,7 @@ function MQTTinputs(aname, atpc, afunc)
 
 	function self.TaskAdd( func )
 		if not func then
-			SelLog.log("*E* MQTTinputs.TaskAdd( NULL )")
+			SelLog.log("*E* MQTTinput.TaskAdd( NULL )")
 			return
 		end
 
@@ -63,21 +63,6 @@ function MQTTinputs(aname, atpc, afunc)
 
 	-- initialiser
 	table.insert( Topics, { topic=atpc, func=afunc, trigger=self.received, trigger_once=true } )
-
-	return self
-end
-
-function MQTTinputsDefLog(aname, atpc, afunc, adefault )
-	local self = MQTTinputs( aname, atpc, afunc )
-
-	-- methods
-	function self.log()
-		SelLog.log( '*>* "' .. self.getName() ..'" : '..  self.get() )
-	end
-
-	-- initialiser
-	self.set( adefault )
-	self.TaskAdd( self.log )	-- log incoming value
 
 	return self
 end

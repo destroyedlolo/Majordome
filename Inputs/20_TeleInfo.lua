@@ -9,7 +9,7 @@ local function ITeleInfo(aname, atpc)
 		return true
 	end
 
-	local self = MQTTinputs( aname, atpc, rcvTProd )
+	local self = MQTTinput( aname, atpc, rcvTProd )
 
 	return self
 end

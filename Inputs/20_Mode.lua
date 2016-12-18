@@ -2,15 +2,15 @@
 --
 
 -- Calendar determined modes
-ModeAujourdHui = MQTTinputsDefLog('Mode AujourdHui', 'Majordome/Mode/AujourdHui', nil, 'Manuel')
-ModeDemain = MQTTinputsDefLog('Mode Demain', 'Majordome/Mode/Demain', nil, 'Manuel')
+ModeAujourdHui = MQTTinputDefLog('Mode AujourdHui', 'Majordome/Mode/AujourdHui', nil, 'Manuel')
+ModeDemain = MQTTinputDefLog('Mode Demain', 'Majordome/Mode/Demain', nil, 'Manuel')
 
 -- Forced modes
-ModeForce = MQTTinputsDefLog('Mode Force', 'Majordome/Mode/Force', nil, 'Auto')
-ModeEnfants = MQTTinputsDefLog('Mode Force Enfants', 'Majordome/Mode/Enfants', nil, 'Auto')
+ModeForce = MQTTinputDefLog('Mode Force', 'Majordome/Mode/Force', nil, 'Auto')
+ModeEnfants = MQTTinputDefLog('Mode Force Enfants', 'Majordome/Mode/Enfants', nil, 'Auto')
 
 -- Actual mode
-Mode = MQTTinputsDefLog('Mode', 'Majordome/Mode', nil, 'Manuel')
+Mode = MQTTinputDefLog('Mode', 'Majordome/Mode', nil, 'Manuel')
 
 --
 -- Actions
