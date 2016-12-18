@@ -21,6 +21,10 @@ function MQTTinputs(aname, atpc, afunc)
 		return name
 	end
 
+	function self.getTopic()
+		return topic
+	end
+
 	function self.received()
 		self.TaskSubmit()
 	end
@@ -68,7 +72,7 @@ function MQTTinputsDefLog(aname, atpc, afunc, adefault )
 
 	-- methods
 	function self.log()
-		SelLog.log( self.getName() ..' : '..  self.get() )
+		SelLog.log( '*>* "' .. self.getName() ..'" : '..  self.get() )
 	end
 
 	-- initialiser
