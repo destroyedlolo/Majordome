@@ -79,6 +79,17 @@ function STimer()
 		print(universal_tostring(tasks))
 	end
 
+		-- Current time
+	function self.Current()
+		local dt = os.date("*t")
+		return dt.hour + dt.min/100
+	end
+
+		-- which time it will be in x hh.mm
+	function self.WhichTimeIn(x)
+		return DEC2DMS(DMS2DEC( self.Current() ) + DMS2DEC(x))
+	end
+	
 	function CronExec()
 		local dt = os.date("*t")
 		local cur = SecureIdx(dt.hour + dt.min/100)
