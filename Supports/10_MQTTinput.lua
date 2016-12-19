@@ -1,28 +1,18 @@
 -- Generic class to handle input coming from MQTT
 
 function MQTTinput(aname, atpc, afunc)
-	local self = {}
+	local self = MQTTdata(aname, atpc)
 
 	-- Private fields
-	local name = aname
-	local topic = atpc
 	local tasks = {}
 
 	-- methods
 	function self.get()
-		return SelShared.get( topic )
+		return SelShared.get( self.getTopic() )
 	end
 
 	function self.set( v )
-		SelShared.set( topic, v )
-	end
-
-	function self.getName()
-		return name
-	end
-
-	function self.getTopic()
-		return topic
+		SelShared.set( self.getTopic(), v )
 	end
 
 	function self.received()

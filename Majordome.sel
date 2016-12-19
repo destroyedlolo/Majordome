@@ -20,7 +20,7 @@ if DEBUG then
 end
 require "logs"
 
-rotatelog( '2.00.07' )	-- Log creation
+rotatelog( '2.00.08' )	-- Log creation
 
 function loaddir( dir )
 	local t={}
@@ -37,7 +37,7 @@ function loaddir( dir )
 
 	for _,res in ipairs( t ) do
 		require(dir ..'/'.. res)
-		SelLog.log("*I* " .. dir ..'/'.. res .. ' loaded')
+		SelLog.log("*L* " .. dir ..'/'.. res .. ' loaded')
 	end
 end
 
@@ -59,6 +59,9 @@ Timer.TaskAdd( 0.0, rotatelog )
 -- Load user configured modules
 --
 loaddir( 'Inputs' )
+loaddir( 'Actions' )
+
+SelLog.log("Let's go ...")
 
 --
 -- Broker's stuffs
