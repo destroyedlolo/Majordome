@@ -62,7 +62,15 @@ function TableTaskRemove( tbl, func )
 	end
 end
 
-function SubTasks( tasks )
+function SubTasks( tasks, aonce )
+	local once
+	if aonce then
+		once = SelShared.TaskOnceConst("LAST")
+	else
+		once = SelShared.TaskOnceConst("MULTIPLE")
+	end
+	
+		
 	if type(tasks) ~= 'table' then
 		return
 	end
@@ -70,10 +78,10 @@ function SubTasks( tasks )
 	for z,t in ipairs( tasks ) do
 		if type(t) == 'table' then
 			for i,j in ipairs(t) do
-				SelShared.PushTask( j, SelShared.TaskOnceConst("MULTIPLE") )
+				SelShared.PushTask( j, once )
 			end
 		else
-			SelShared.PushTask( t, SelShared.TaskOnceConst("MULTIPLE") )
+			SelShared.PushTask( t, once )
 		end
 	end
 end

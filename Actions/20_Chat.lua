@@ -18,8 +18,8 @@ function AChat()
 			Timer.TaskRemove( self.My )
 		end
 	end
-	Saison.TaskAdd( determinePlaning )
-	Mode.TaskAdd( determinePlaning )
+	Saison.TaskOnceAdd( determinePlaning )
+	Mode.TaskOnceAdd( determinePlaning )
 	
 	return self
 end

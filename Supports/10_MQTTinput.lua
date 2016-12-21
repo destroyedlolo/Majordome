@@ -5,6 +5,7 @@ function MQTTinput(aname, atpc, afunc)
 
 	-- Private fields
 	local tasks = {}
+	local tasksonce = {}
 
 	-- methods
 	function self.get()
@@ -17,6 +18,7 @@ function MQTTinput(aname, atpc, afunc)
 
 	function self.received()
 		self.TaskSubmit()
+		self.TaskOnceSubmit()
 	end
 
 	function self.TaskAdd( func )
@@ -32,6 +34,21 @@ function MQTTinput(aname, atpc, afunc)
 
 	function self.TaskSubmit()
 		SubTasks( tasks )
+	end
+
+	function self.TaskOnceAdd( func )
+		if TableTasksAdd( tasksonce, func ) == false then
+			SelLog.log("*E* MQTTinput.TaskAdd( NULL )")
+			return
+		end
+	end
+
+	function self.TaskOnceRemove( func )
+		TableTaskRemove( tasksonce, func )
+	end
+
+	function self.TaskOnceSubmit()
+		SubTasks( tasksonce )
 	end
 
 	-- initialiser
