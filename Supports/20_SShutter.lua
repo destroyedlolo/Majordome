@@ -21,7 +21,7 @@ function SShutter(aname, atpc)
 		command('Up')
 	end
 
-	function self.My()
+	function self.Down()
 		command('Down')
 	end
 

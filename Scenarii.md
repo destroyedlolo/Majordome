@@ -27,6 +27,8 @@ Liste des topics de commandes :
  - **Majordome/Mode** : mode actif, calculé à partir des précédents
  - **Majordome/Saison** : saison déterminée par la température à 7h
  - **Majordome/HLever** : Heure de levé général
+ - **Majordome/HLever/Oceane** : Heure de levé d'Océane
+ - **Majordome/HLever/Joris** : Heure de levé de Joris
  - **Majordome/HCoucher** : Heure de couché des enfants
  
 ----------

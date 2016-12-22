@@ -35,6 +35,10 @@ function SShutterTempSurvey(aname, atpc, atimer, atemp, astart, astop, alimit)
 	end
 
 	function self.LaunchSurveyAt( time )
+		if not time then
+			time = HMonitoringStart
+		end
+
 		local cur = atimer.Current()
 
 		if cur < HMonitoringStart then		-- Before monitoring period
@@ -55,6 +59,10 @@ function SShutterTempSurvey(aname, atpc, atimer, atemp, astart, astop, alimit)
 		else								-- after
 			StopSurvey()
 		end
+	end
+
+	function self.getTimer()
+		return timer
 	end
 
 	return self

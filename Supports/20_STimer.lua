@@ -86,6 +86,10 @@ function STimer()
 	end
 
 		-- which time it will be in x hh.mm
+	function self.AddTime(t,x)
+		return DEC2DMS(DMS2DEC( t ) + DMS2DEC(x))
+	end
+
 	function self.WhichTimeIn(x)
 		return DEC2DMS(DMS2DEC( self.Current() ) + DMS2DEC(x))
 	end
