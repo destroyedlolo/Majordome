@@ -1,6 +1,6 @@
 -- default setting for shutters
 function DefShutter(aname, atpc, atimer, atemperature, astart, aend, alimit)
-	local self = SShutterTempSurvey(aname, atpc, atimer, atemperature, astart, aend, alimit)
+	local self = SShutterTempTracking(aname, atpc, atimer, atemperature, astart, aend, alimit)
 
 	-- methods
 	 local function determinePlaning()
@@ -8,7 +8,7 @@ function DefShutter(aname, atpc, atimer, atemperature, astart, aend, alimit)
 		SunSet.EvenTaskAdd( self.Down )
 		SelLog.log( self.getName() .. ": Ouverture et fermeture avec le soleil")
 
-		self.LaunchSurveyAt()
+		self.LaunchTrackingAt()
 	end
 	Mode.TaskOnceAdd( determinePlaning )
 

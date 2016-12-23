@@ -1,6 +1,6 @@
 -- Dad's office
 local function AChAmis()
-	local self = SShutterTempSurvey("Chambre d'Amis", 'maison/Volet/chAmis', Timer, TBureau, 9.0, 16.3, 21.5)
+	local self = SShutterTempTracking("Chambre d'Amis", 'maison/Volet/chAmis', Timer, TBureau, 9.0, 16.3, 21.5)
 
 	-- methods
 	 local function determinePlaning()
@@ -9,7 +9,7 @@ local function AChAmis()
 			SunSet.EvenTaskAdd( self.Down )
 			SelLog.log("Ouverture et fermeture de la chambre d'amis avec le soleil")
 
-			self.LaunchSurveyAt()
+			self.LaunchTrackingAt()
 		end
 	end
 	Mode.TaskOnceAdd( determinePlaning )
