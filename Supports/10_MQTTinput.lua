@@ -51,6 +51,10 @@ function MQTTinput(aname, atpc, afunc)
 		SubTasks( tasksonce )
 	end
 
+	function self.list()
+		SelLog.log('*d* '.. self.getName() .. " : Tasks " .. #tasks .. ' / ' .. #tasksonce)
+	end
+
 	-- initialiser
 	table.insert( Topics, { topic=atpc, func=afunc, trigger=self.received, trigger_once=true } )
 

@@ -17,6 +17,8 @@ local function AChAmis()
 	local function FermeSiAbsent()
 	 	if ModeForce.get() == 'Absent' then
 			self.Down()
+			SunRise.EvenTaskRemove( self.Up )
+			SunSet.EvenTaskRemove( self.Down )
 		end
 	end
 	ModeForce.TaskOnceAdd( FermeSiAbsent )

@@ -81,7 +81,7 @@ function STimer()
 
 	function self.listentries()
 		local lst = {}
-		local res = '*d* Timer content\n'
+		local res = 'Timer content\n'
 
 		for k,_ in pairs(tasks) do
 			table.insert( lst, k )

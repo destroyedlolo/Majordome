@@ -11,6 +11,13 @@ function SShutterTempSurvey(aname, atpc, atimer, atemp, astart, astop, alimit)
 	local TemperatureLimit = alimit	-- temperature triggering freshness saving
 
 	-- methods
+	local function StopSurvey()
+		SelLog.log(self.getName() .. " : Fin de la surveillance de la température")
+		timer.TaskRemove( LaunchSurvey )
+		timer.TaskRemove( StopSurvey )
+		probe.TaskRemove( surveyTemperature )
+	end
+
 	local function surveyTemperature()
 		if probe.get() > TemperatureLimit then
 			SelLog.log( self.getName() .. " : " .. probe.get() .. ", les volets se ferment")
@@ -19,26 +26,18 @@ function SShutterTempSurvey(aname, atpc, atimer, atemp, astart, astop, alimit)
 
 			timer.TaskAdd( HMonitoringStop, self.Up )
 			SelLog.log( self.getName() .. " : Les volets s'ouvriront à " .. HMonitoringStop )
+		elseif DEBUG then
+			SelLog.log( self.getName() .. " : " .. probe.get() .. ' -> trop basse' )
 		end
 	end
 
 	local function LaunchSurvey()
-		SelLog.log("Début de la surveillance de la température pour " .. self.getName() )
+		SelLog.log(self.getName() .." : Début de la surveillance de la température")
 		timer.TaskRemove( LaunchSurvey )
 		probe.TaskAdd( surveyTemperature )
 	end
 
-	local function StopSurvey()
-		SelLog.log("Fin de la surveillance de la température pour " .. self.getName() )
-		timer.TaskRemove( LaunchSurvey )
-		probe.TaskRemove( surveyTemperature )
-	end
-
-	function self.LaunchSurveyAt( time )
-		if not time then
-			time = HMonitoringStart
-		end
-
+	function self.LaunchSurveyAt()
 		local cur = atimer.Current()
 
 		if cur < HMonitoringStart then		-- Before monitoring period
@@ -46,16 +45,14 @@ function SShutterTempSurvey(aname, atpc, atimer, atemp, astart, astop, alimit)
 			timer.TaskAdd( HMonitoringStart, LaunchSurvey )
 
 			SelLog.log( "Et se terminera à " .. HMonitoringStop )
-			timer.TaskAdd( HMonitoringStart, StopSurvey )
+			timer.TaskAdd( HMonitoringStop, StopSurvey )
 
 			probe.TaskRemove( surveyTemperature )
 		elseif cur < HMonitoringStop then	-- during
 			LaunchSurvey()
 
 			SelLog.log( self.getName() .. " : La surveillance se terminera à " .. HMonitoringStop )
-			timer.TaskAdd( HMonitoringStart, StopSurvey )
-
-			probe.TaskRemove( surveyTemperature )
+			timer.TaskAdd( HMonitoringStop, StopSurvey )
 		else								-- after
 			StopSurvey()
 		end
