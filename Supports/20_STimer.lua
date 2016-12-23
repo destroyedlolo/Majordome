@@ -76,19 +76,23 @@ function STimer()
 
 		-- debug
 	function self.dump()
-		print(universal_tostring(tasks))
+		SelLog.log('*d* ' .. universal_tostring(tasks))
 	end
 
 	function self.listentries()
 		local lst = {}
+		local res = '*d* Timer content\n'
+
 		for k,_ in pairs(tasks) do
 			table.insert( lst, k )
 		end
 		table.sort(lst)
 
 		for _,k in ipairs(lst) do
-				print( k, #tasks[k] .. ' func(s)' )
+			res = res .. '\t' .. k ..'\t' .. #tasks[k] .. ' func(s)\n'
 		end
+		
+		SelLog.log('*d* ' .. res)
 	end
 
 		-- Current time

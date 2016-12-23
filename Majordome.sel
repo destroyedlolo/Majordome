@@ -93,7 +93,7 @@ Timer.Rethink()
 while true do -- Main todo list handler
 	if DEBUG then
 		local t = Timer.getTimer()
-		print( 'next timer', Timer.Next(), t:Get() )
+		SelLog.log( '*d* next timer : '.. Timer.Next() .. ' ('.. t:Get() ..')' )
 --		Timer.dump()
 		Timer.listentries()
 	end
