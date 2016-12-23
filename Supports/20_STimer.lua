@@ -79,6 +79,18 @@ function STimer()
 		print(universal_tostring(tasks))
 	end
 
+	function self.listentries()
+		local lst = {}
+		for k,_ in pairs(tasks) do
+			table.insert( lst, k )
+		end
+		table.sort(lst)
+
+		for _,k in ipairs(lst) do
+				print( k, #tasks[k] .. ' func(s)' )
+		end
+	end
+
 		-- Current time
 	function self.Current()
 		local dt = os.date("*t")

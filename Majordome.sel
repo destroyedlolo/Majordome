@@ -93,8 +93,9 @@ Timer.Rethink()
 while true do -- Main todo list handler
 	if DEBUG then
 		local t = Timer.getTimer()
-		print( 'next timer', t:Get() )
-		Timer.dump()
+		print( 'next timer', Timer.Next(), t:Get() )
+--		Timer.dump()
+		Timer.listentries()
 	end
 
 	ret, err = Selene.WaitFor( Timer.getTimer() )
