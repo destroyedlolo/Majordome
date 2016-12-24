@@ -2,7 +2,7 @@
 
 -- Internal
 VERBOSE=true	-- if true, log is generated
-DEBUG=true		-- if true, include debug 
+DEBUG=false		-- if true, include debug 
 TEST=false		-- enable Tests
 
 -- BROKERHOST='tcp://bPI.chez.moi:1883'

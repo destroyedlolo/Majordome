@@ -6,7 +6,7 @@ function DefShutter(aname, atpc, atimer, atemperature, astart, aend, alimit)
 	 local function determinePlaning()
 		SunRise.EvenTaskAdd( self.Up )
 		SunSet.EvenTaskAdd( self.Down )
-		SelLog.log( self.getName() .. ": Ouverture et fermeture avec le soleil")
+		SelLog.log( self.getName() .. " : Ouverture et fermeture avec le soleil")
 
 		self.LaunchTrackingAt()
 	end

@@ -37,14 +37,18 @@ function SShutterTempTracking(aname, atpc, atimer, atemp, astart, astop, alimit)
 		probe.TaskAdd( TemperatureTracking )
 	end
 
-	function self.LaunchTrackingAt()
+	function self.LaunchTrackingAt( atime )
 		local cur = atimer.Current()
 
-		if cur < HMonitoringStart then		-- Before monitoring period
-			SelLog.log( self.getName() .. " : La surveillance commencera à " .. HMonitoringStart )
-			timer.TaskAdd( HMonitoringStart, LaunchTracking )
+		if not atime then
+			atime = HMonitoringStart
+		end
 
-			SelLog.log( "Et se terminera à " .. HMonitoringStop )
+		if cur < atime then		-- Before monitoring period
+			SelLog.log( self.getName() .. " : La surveillance commencera à " .. atime )
+			timer.TaskAdd( atime, LaunchTracking )
+
+			SelLog.log( self.getName() .. " : Et se terminera à " .. HMonitoringStop )
 			timer.TaskAdd( HMonitoringStop, StopTracking )
 
 			probe.TaskRemove( TemperatureTracking )
