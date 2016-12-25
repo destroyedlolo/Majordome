@@ -17,7 +17,7 @@ local function DetermineSaison()
 	elseif TSalon.get() > 21.5 and TExterieur.get() > 15 then
 		Brk:Publish( Saison.getTopic(), 'Ete', true )
 	else
-		Brk:Publish( Saison.getTopic(), 'Ete', true )
+		Brk:Publish( Saison.getTopic(), 'Intersaison', true )
 	end
 end
 Timer.TaskAdd( 22.00, DetermineSaison )	-- Season is calculated at 22:00
