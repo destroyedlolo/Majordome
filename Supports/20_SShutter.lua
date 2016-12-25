@@ -8,7 +8,11 @@ function SShutter(aname, atpc)
 		if Mode.get() == 'Manuel' then
 			SelLog.log("Mode Manuel : Fermeture '".. cmd .."' de '".. self.getName() .."' annulée")
 		else
-			SelLog.log("Fermeture '".. cmd .."' de '".. self.getName() .."'")
+			if cmd == 'Up' then
+				SelLog.log("Ouverture '".. cmd .."' de '".. self.getName() .."'")
+			else
+				SelLog.log("Fermeture '".. cmd .."' de '".. self.getName() .."'")
+			end
 			Brk:Publish(self.getTopic(), cmd)
 		end
 	end
