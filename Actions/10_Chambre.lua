@@ -5,7 +5,7 @@ function AChambre( aname, atpc, atimer, atemp, astart, astop, alimit, amode, ahl
 	-- private fields
 	local hleve = ahleve
 	local mode = amode
-	local couche = aMyChouche
+	local smoothcouche = aMyChouche
 
 	-- methods
 	local function determinePlaning()
@@ -31,12 +31,14 @@ function AChambre( aname, atpc, atimer, atemp, astart, astop, alimit, amode, ahl
 		end
 
 		if SunSet.get() < HCouche.get() then -- Sunset before consign
-			SunSet.TaskAdd( self.Down )
+			SunSet.EvenTaskAdd( self.Down )
 			SelLog.log( self.getName() .. " : Fermeture en fonction du soleil" )
 		else
-			local h = self.getTimer().AddTime( HCouche.get(), -.05 )
-			SelLog.log( self.getName() .. " : Fermeture 'My' à " .. h )
-			SunSet.TaskRemove( self.Down )
+			if smoothcouche then
+				local h = self.getTimer().AddTime( HCouche.get(), -.05 )
+				SelLog.log( self.getName() .. " : Fermeture 'My' à " .. h )
+			end
+			SunSet.EvenTaskRemove( self.Down )
 			self.getTimer().TaskAdd( HCouche.get(),  self.Down )
 			SelLog.log( self.getName() .. " : Fermeture à " .. HCouche.get() )
 		end

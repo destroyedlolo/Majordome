@@ -1,5 +1,4 @@
 -- Parent's room
-ChParent = AChambre( "Chambre Parents", 'maison/Volet/chParents', Timer, TChParents, 8.40, 17.30, 21, Mode, HLeve )
 ChParent = AChambre( 
 	"Chambre Parents", 			-- Name
 	'maison/Volet/chParents', 	-- Topic
