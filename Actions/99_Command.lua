@@ -1,6 +1,5 @@
 -- Controle Majordom
-
-function AMajordomCtrl()
+local function AMajordomCtrl()
 	local self = {}
 
 	-- private fields
@@ -18,8 +17,13 @@ function AMajordomCtrl()
 		SelLog.log( '*d* ' .. Timer.listentries() )
 	end
 
+	local function det_seas()
+		Saison.DetermineSaison()
+	end
+
 	cmds.help = { func=help, desc='List known commands' }
 	cmds.dump_timer = { func=dump_timer, desc="Dump timer's entries" }
+	cmds.determine_season = { func=det_seas, desc="Launch season determination" }
 
 	local function ExecCmd()
 		local cmd = SelShared.get( 'Majordome/'.. CLIENTID )
