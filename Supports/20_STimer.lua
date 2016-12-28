@@ -92,7 +92,7 @@ function STimer()
 			res = res .. '\t' .. k ..'\t' .. #tasks[k] .. ' func(s)\n'
 		end
 		
-		SelLog.log('*d* ' .. res)
+		return res
 	end
 
 		-- Current time

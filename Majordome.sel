@@ -20,7 +20,7 @@ if DEBUG then
 end
 require "logs"
 
-rotatelog( '2.00.08' )	-- Log creation
+rotatelog( '2.00.09' )	-- Log creation
 
 function loaddir( dir )
 	local t={}
@@ -95,7 +95,7 @@ while true do -- Main todo list handler
 		local t = Timer.getTimer()
 		SelLog.log( '*d* next timer : '.. Timer.Next() .. ' ('.. t:Get() ..')' )
 --		Timer.dump()
-		Timer.listentries()
+		SelLog.log( '*d*' .. Timer.listentries() )
 	end
 
 	ret, err = Selene.WaitFor( Timer.getTimer() )
