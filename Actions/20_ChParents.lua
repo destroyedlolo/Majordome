@@ -4,7 +4,7 @@ ChParent = AChambre(
 	'maison/Volet/chParents', 	-- Topic
 	Timer, TChParents, 			-- Timer and temperature probe
 	8.40, 17.30, 21,			-- Temperature tracking times and limit
-	ModeEnfants, HLeveOceane,	-- Mode and wakeup consign
+	Mode, HLeve,	-- Mode and wakeup consign
 	false						-- true if shutter goes My before Down
 )
 
