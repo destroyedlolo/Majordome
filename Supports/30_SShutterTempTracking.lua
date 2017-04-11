@@ -11,6 +11,8 @@ function SShutterTempTracking(aname, atpc, atimer, atemp, astart, astop, alimit)
 	local TemperatureLimit = alimit	-- temperature triggering freshness saving
 
 	-- methods
+	local TemperatureTracking	-- forward declaration
+
 	local function StopTracking()
 		SelLog.log(self.getName() .. " : Fin de la surveillance de la température")
 		timer.TaskRemove( LaunchTracking )
@@ -18,7 +20,7 @@ function SShutterTempTracking(aname, atpc, atimer, atemp, astart, astop, alimit)
 		probe.TaskRemove( TemperatureTracking )
 	end
 
-	local function TemperatureTracking()
+	TemperatureTracking = function ()
 		if probe.get() > TemperatureLimit then
 			SelLog.log( self.getName() .. " : " .. probe.get() .. ", les volets se ferment")
 			self.My()
