@@ -55,6 +55,10 @@ function TableTasksAdd(tbl, func )
 end
 
 function TableTaskRemove( tbl, func )
+	if not func then
+		print("*E* TableTaskRemove(NULL)") -- Probably a missing forward definition
+	end
+	
 	for i,v in ipairs( tbl ) do
 		if v == func then
 			table.remove( tbl, i )
