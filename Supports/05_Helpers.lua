@@ -11,7 +11,9 @@ function DEC2DMS( val )
 end
 
 function TXT2DMS( val )
-	local h,m = string.match(val, "(%d+):(%d+)")
+print(val, string.gsub(val, '%.', ':'))
+	local h,m = string.match(string.gsub(val, '%.', ':'), "(%d+):(%d+)")
+print (h,m)
 	return tonumber(h) + tonumber(m)/100
 end
 
