@@ -21,9 +21,16 @@ local function AMajordomCtrl()
 		Saison.DetermineSaison()
 	end
 
+	local function pubdefault()
+		for _,v in ipairs( lstPubDefault ) do
+			v.pubdefault()
+		end
+	end
+
 	cmds.help = { func=help, desc='List known commands' }
 	cmds.dump_timer = { func=dump_timer, desc="Dump timer's entries" }
 	cmds.determine_season = { func=det_seas, desc="Launch season determination" }
+	cmds.default = { func=pubdefault, desc="Publish default values" }
 
 	local function ExecCmd()
 		local cmd = SelShared.get( 'Majordome/'.. CLIENTID )
