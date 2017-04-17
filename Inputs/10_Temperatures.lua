@@ -1,4 +1,4 @@
--- Home temperatures to follow
+-- Température à suivre
 
 TExterieur = MQTTinput('TExterieur', 'maison/Temperature/Dehors', Topic2Number)
 TSalon = MQTTinput('TSalon', 'maison/Temperature/Salon', Topic2Number)
