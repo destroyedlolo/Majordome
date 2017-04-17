@@ -13,6 +13,7 @@ lfs = require "lfs" -- LuaFileSystem
 --
 
 Topics = {}	-- Topics we are looking for
+lstPubDefault = {} -- Topics that have to be published by INIT command
 
 require "LocalConfiguration"
 if DEBUG then
@@ -20,7 +21,7 @@ if DEBUG then
 end
 require "logs"
 
-rotatelog( '2.00.09' )	-- Log creation
+rotatelog( '2.01.00' )	-- Log creation
 
 function loaddir( dir )
 	local t={}

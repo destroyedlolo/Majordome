@@ -1,10 +1,11 @@
 -- Oceane's room
 ChOceane = AChambre( 
-	"Chambre d'Océane", 		-- Name
-	'maison/Volet/chOceane', 	-- Topic
-	Timer, TChOceane, 			-- Timer and temperature probe
-	9.00, 17.30, 21,			-- Temperature tracking times and limit
-	ModeEnfants, HLeveOceane,	-- Mode and wakeup consign
-	true						-- true if shutter goes My before Down
+	"Chambre d'Océane",
+	'maison/Volet/chOceane',
+	'Majordome/Mode/Oceane',
+	Timer, TChOceane,
+	9.00, 17.30, 21,
+	{ ModeFEnfants, ModeFOceane },	-- ModeForce is not needed as overwriting Mode
+	HLeverOceane,				-- wakeup consign
+	true
 )
-

@@ -7,10 +7,10 @@ ModeDemain = MQTTinputDefLog('Mode Demain', 'Majordome/Mode/Demain', nil, 'Manue
 
 -- Forced modes
 ModeForce = MQTTinputDefLog('Mode Force', 'Majordome/Mode/Force', nil, 'Auto', true)
-ModeEnfants = MQTTinputDefLog('Mode Force Enfants', 'Majordome/Mode/Enfants', nil, 'Auto', true)
-ModeParents = MQTTinputDefLog('Mode Force Parents', 'Majordome/Mode/Parents', nil, 'Auto', true)
-ModeOceane = MQTTinputDefLog('Mode Force Océane', 'Majordome/Mode/Oceane', nil, 'Auto', true)
-ModeJoris = MQTTinputDefLog('Mode Force Joris', 'Majordome/Mode/Joris', nil, 'Auto', true)
+ModeFEnfants = MQTTinputDefLog('Mode Force Enfants', 'Majordome/Mode/Force/Enfants', nil, 'Auto', true)
+ModeFParents = MQTTinputDefLog('Mode Force Parents', 'Majordome/Mode/Force/Parents', nil, 'Auto', true)
+ModeFOceane = MQTTinputDefLog('Mode Force Océane', 'Majordome/Mode/Force/Enfants/Oceane', nil, 'Auto', true)
+ModeFJoris = MQTTinputDefLog('Mode Force Joris', 'Majordome/Mode/Force/Enfants/Joris', nil, 'Auto', true)
 
 -- Actual mode
 Mode = MQTTinputDefLog('Mode', 'Majordome/Mode', nil, 'Manuel')
