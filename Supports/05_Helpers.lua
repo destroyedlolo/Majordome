@@ -11,9 +11,7 @@ function DEC2DMS( val )
 end
 
 function TXT2DMS( val )
-print(val, string.gsub(val, '%.', ':'))
 	local h,m = string.match(string.gsub(val, '%.', ':'), "(%d+):(%d+)")
-print (h,m)
 	return tonumber(h) + tonumber(m)/100
 end
 
