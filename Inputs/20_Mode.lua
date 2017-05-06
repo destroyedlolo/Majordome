@@ -41,8 +41,7 @@ local function updModeForce()
 -- Forced mode update
 	if ModeForce.get() == 'Auto' then
 		SelLog.log('Mode repassé à automatique')
-		ModeAujourdHui.set('Manuel')
-		-- 'Mode' will be updated by updModeAujourdhui()
+		updModeAujourdhui()	-- Rethink actuel mode
 	elseif ModeForce.get() == 'Manuel' or ModeForce.get() == 'Absent' 
 	or ModeForce.get() == 'Vacances' or ModeForce.get() == 'Travail' then
 		SelLog.log('Mode forcé')
