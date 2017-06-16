@@ -4,7 +4,7 @@ function ASalon()
 		"Salon", 				-- Name
 		'maison/Volet/Salon', 	-- Topic
 		Timer, TSalon, 			-- Timer and temperature probe
-		10.00, 17.30, 22		-- Temperature tracking times and limit
+		10.00, 18.30, 22		-- Temperature tracking times and limit
 	)
 
 	-- methods
