@@ -7,7 +7,7 @@ local function AChAmis()
 	 	if Mode.get() ~= 'Absent' then
 			SunRise.EvenTaskAdd( self.Up )
 			SunSet.EvenTaskAdd( self.Down )
-			SelLog.log("Ouverture et fermeture de la chambre d'amis avec le soleil")
+			pubLog("Ouverture et fermeture de la chambre d'amis avec le soleil")
 
 			self.LaunchTrackingAt()
 		end

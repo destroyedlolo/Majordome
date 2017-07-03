@@ -20,3 +20,13 @@ function rotatelog( VERSION )
 	end
 end
 
+function pubLog( msg, cat )
+	SelLog.log(msg)
+
+	local topic = CLIENTID ..'/Log'
+	if cat then
+		topic = topic .. '/' .. cat
+	end
+	msg = os.date('[%H:%M:%S] ') .. msg
+	Brk:Publish( topic, msg )
+end

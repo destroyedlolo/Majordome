@@ -5,9 +5,9 @@ local function ASaison()
 	-- Methods
 
 	function self.DetermineSaison()
-		SelLog.log("Détermination de la saison")
+		pubLog("Détermination de la saison", 'Mode')
 
-		SelLog.log("T°Ext = " .. TExterieur.get() .. " TSalon = " .. TSalon.get())
+		pubLog("T°Ext = " .. TExterieur.get() .. " TSalon = " .. TSalon.get(), 'Mode')
 		Brk:Publish( SaisonHier.getTopic(), Saison.get(), true )
 
 		if TExterieur.get() < 5 then

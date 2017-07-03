@@ -44,32 +44,32 @@ function AChambre(
 			-- Determine planning
 		if mymode.get() == 'Travail' then
 			local h = self.getTimer().AddTime( hlever.get() , -0.05 )
-			SelLog.log( self.getName() .. ' : Ouverture "My" à ' .. h )
+			pubLog( self.getName() .. ' : Ouverture "My" à ' .. h )
 			self.getTimer().TaskAdd( h, self.My )
-			SelLog.log( self.getName() .. ' : Ouverture à ' .. hlever.get() )
+			pubLog( self.getName() .. ' : Ouverture à ' .. hlever.get() )
 			self.getTimer().TaskAdd( hlever.get(), self.Up )
 			self.LaunchTrackingAt()
 		elseif mymode.get() == 'Vacances' then
-			SelLog.log( self.getName() .. " : vacances, les volets restent fermés" )
+			pubLog( self.getName() .. " : vacances, les volets restent fermés" )
 			self.LaunchTrackingAt( 12 )
 		elseif mymode.get() == 'Absent' then
 			SunRise.EvenTaskAdd( self.Up )
-			SelLog.log( self.getName() .. " : Ouverture en fonction du soleil" )
+			pubLog( self.getName() .. " : Ouverture en fonction du soleil" )
 			self.LaunchTrackingAt()
 		end
 
 		if mymode.get() ~= 'Manuel' then
 			if SunSet.get() < HCoucher.get() then -- Sunset before consign
 				SunSet.EvenTaskAdd( self.Down )
-				SelLog.log( self.getName() .. " : Fermeture en fonction du soleil" )
+				pubLog( self.getName() .. " : Fermeture en fonction du soleil" )
 			else
 				if MyChoucher then
 					local h = self.getTimer().AddTime( HCoucher.get(), -.05 )
-					SelLog.log( self.getName() .. " : Fermeture 'My' à " .. h )
+					pubLog( self.getName() .. " : Fermeture 'My' à " .. h )
 				end
 				SunSet.EvenTaskRemove( self.Down )
 				self.getTimer().TaskAdd( HCoucher.get(),  self.Down )
-				SelLog.log( self.getName() .. " : Fermeture à " .. HCoucher.get() )
+				pubLog( self.getName() .. " : Fermeture à " .. HCoucher.get() )
 			end
 		end
 	end

@@ -8,6 +8,7 @@ assert( SELENE_VERSION >= 3.0300, "HDB requires at least Selene v3.03.00, got " 
 
 lfs = require "lfs" -- LuaFileSystem
 
+local VERSION = '2.02.00'
 --
 -- Initializing
 --
@@ -21,7 +22,7 @@ if DEBUG then
 end
 require "logs"
 
-rotatelog( '2.01.00' )	-- Log creation
+rotatelog( VERSION )	-- Log creation
 
 function loaddir( dir )
 	local t={}
@@ -85,6 +86,8 @@ if err then
 	print( "Subscribtion", err )
 	return
 end
+
+pubLog( "Majordome v".. VERSION .."; Selene v".. SELENE_VERSION )
 
 --
 -- Let's go

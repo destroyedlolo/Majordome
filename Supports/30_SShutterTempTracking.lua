@@ -14,7 +14,7 @@ function SShutterTempTracking(aname, atpc, atimer, atemp, astart, astop, alimit)
 	local TemperatureTracking	-- forward declaration
 
 	local function StopTracking()
-		SelLog.log(self.getName() .. " : Fin de la surveillance de la température")
+		pubLog(self.getName() .. " : Fin de la surveillance de la température")
 		timer.TaskRemove( LaunchTracking )
 		timer.TaskRemove( StopTracking )
 		probe.TaskRemove( TemperatureTracking )
@@ -22,19 +22,19 @@ function SShutterTempTracking(aname, atpc, atimer, atemp, astart, astop, alimit)
 
 	TemperatureTracking = function ()
 		if probe.get() > TemperatureLimit then
-			SelLog.log( self.getName() .. " : " .. probe.get() .. ", les volets se ferment")
+			pubLog( self.getName() .. " : " .. probe.get() .. ", les volets se ferment")
 			self.My()
 			StopTracking()
 
 			timer.TaskAdd( HMonitoringStop, self.Up )
-			SelLog.log( self.getName() .. " : Les volets s'ouvriront à " .. HMonitoringStop )
+			pubLog( self.getName() .. " : Les volets s'ouvriront à " .. HMonitoringStop )
 		elseif DEBUG then
 			SelLog.log( self.getName() .. " : " .. probe.get() .. ' -> trop basse' )
 		end
 	end
 
 	local function LaunchTracking()
-		SelLog.log(self.getName() .." : Début de la surveillance de la température")
+		pubLog(self.getName() .." : Début de la surveillance de la température")
 		timer.TaskRemove( LaunchTracking )
 		probe.TaskAdd( TemperatureTracking )
 	end
@@ -46,13 +46,13 @@ function SShutterTempTracking(aname, atpc, atimer, atemp, astart, astop, alimit)
 			atime = HMonitoringStart
 		end
 		if cur < atime then		-- Before monitoring period
-			SelLog.log( self.getName() .. " : La surveillance commencera à " .. atime )
+			pubLog( self.getName() .. " : La surveillance commencera à " .. atime )
 			timer.TaskAdd( atime, LaunchTracking )
 
 			if SunSet.get() <= HMonitoringStop then
-				SelLog.log( self.getName() .. " : Les volets se fermeront avant la fin de la surveillance" )
+				pubLog( self.getName() .. " : Les volets se fermeront avant la fin de la surveillance" )
 			else
-				SelLog.log( self.getName() .. " : Et se terminera à " .. HMonitoringStop )
+				pubLog( self.getName() .. " : Et se terminera à " .. HMonitoringStop )
 				timer.TaskAdd( HMonitoringStop, StopTracking )
 			end
 
@@ -61,9 +61,9 @@ function SShutterTempTracking(aname, atpc, atimer, atemp, astart, astop, alimit)
 			LaunchTracking()
 
 			if SunSet.get() <= HMonitoringStop then
-				SelLog.log( self.getName() .. " : Les volets se fermeront avant la fin de la surveillance" )
+				pubLog( self.getName() .. " : Les volets se fermeront avant la fin de la surveillance" )
 			else
-				SelLog.log( self.getName() .. " : La surveillance se terminera à " .. HMonitoringStop )
+				pubLog( self.getName() .. " : La surveillance se terminera à " .. HMonitoringStop )
 				timer.TaskAdd( HMonitoringStop, StopTracking )
 			end
 		else								-- after

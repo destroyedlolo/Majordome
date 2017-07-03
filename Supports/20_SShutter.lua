@@ -16,12 +16,12 @@ function SShutter(aname, atpc)
 		end
 
 		if Mode.get() == 'Manuel' then
-			SelLog.log("Mode Manuel : Fermeture '".. cmd .."' de '".. self.getName() .. aname .."' annulée")
+			pubLog("Mode Manuel : Fermeture '".. cmd .."' de '".. self.getName() .. aname .."' annulée")
 		else
 			if cmd == 'Up' then
-				SelLog.log("Ouverture '".. cmd .."' de '".. self.getName() .. aname .. "'")
+				pubLog("Ouverture '".. cmd .."' de '".. self.getName() .. aname .. "'")
 			else
-				SelLog.log("Fermeture '".. cmd .."' de '".. self.getName() .. aname .. "'")
+				pubLog("Fermeture '".. cmd .."' de '".. self.getName() .. aname .. "'")
 			end
 
 			Brk:Publish(atpc, cmd)

@@ -33,19 +33,19 @@ function ASalon()
 
 			-- Opening
 		if Saison.get() == 'Ete' then	-- should stayed My for the night
-			SelLog.log( self.getName() .. " : Pas d'ouverture car nous sommes en été")
+			pubLog( self.getName() .. " : Pas d'ouverture car nous sommes en été")
 		else
 			SunRise.EvenTaskAdd( self.Up )
-			SelLog.log( self.getName() .. " : Ouverture en fonction du soleil" )
+			pubLog( self.getName() .. " : Ouverture en fonction du soleil" )
 		end
 
 			-- Closing
 		if Saison.get() == 'Ete' and Mode.get() ~= 'Absent' then
 			SunSet.EvenTaskAdd( self.My )
-			SelLog.log( self.getName() .. " : Fermeture 'My' en fonction du soleil" )
+			pubLog( self.getName() .. " : Fermeture 'My' en fonction du soleil" )
 		else
 			SunSet.EvenTaskAdd( self.Down )
-			SelLog.log( self.getName() .. " : Fermeture en fonction du soleil" )
+			pubLog( self.getName() .. " : Fermeture en fonction du soleil" )
 		end
 		
 		self.LaunchTrackingAt()

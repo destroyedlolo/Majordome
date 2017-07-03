@@ -5,7 +5,7 @@ local function ISunRise( aname, atpc, afunc, adefault, atimer )
 
 	-- methods
 	function log()
-		SelLog.log("*I* Le soleil se leve")
+		pubLog("*I* Le soleil se leve")
 	end
 	self.EvenTaskAdd( log )
 
@@ -26,7 +26,7 @@ local function ISunSet( aname, atpc, afunc, adefault, atimer )
 
 	-- methods
 	function log()
-		SelLog.log("*I* Le soleil se couche")
+		pubLog("*I* Le soleil se couche")
 	end
 	self.EvenTaskAdd( log )
 
