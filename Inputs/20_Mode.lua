@@ -48,7 +48,7 @@ local function updModeForce()
 		Brk:Publish( Mode.getTopic(), ModeForce.get() )
 		-- 'Mode Demain' will be updated by updModeDemain()
 	else
-		pubLog("Mode forcé '".. ModeForce.get() .."' non reconnu", 'Mode')
+		pubLog("Mode forcé '".. ModeForce.get() .."' non reconnu", 'Erreur')
 		Brk:Publish( Mode.getTopic(), 'Manuel' )
 		ModeForce.set( 'Manuel' )
 		-- 'Mode Demain' will be updated by updModeDemain()

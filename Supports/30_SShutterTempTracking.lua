@@ -14,7 +14,7 @@ function SShutterTempTracking(aname, atpc, atimer, atemp, astart, astop, alimit)
 	local TemperatureTracking	-- forward declaration
 
 	local function StopTracking()
-		pubLog(self.getName() .. " : Fin de la surveillance de la température")
+		pubLog(self.getName() .. " : Fin de la surveillance de la température", 'Action')
 		timer.TaskRemove( LaunchTracking )
 		timer.TaskRemove( StopTracking )
 		probe.TaskRemove( TemperatureTracking )
@@ -22,7 +22,7 @@ function SShutterTempTracking(aname, atpc, atimer, atemp, astart, astop, alimit)
 
 	TemperatureTracking = function ()
 		if probe.get() > TemperatureLimit then
-			pubLog( self.getName() .. " : " .. probe.get() .. ", les volets se ferment")
+			pubLog( self.getName() .. " : " .. probe.get() .. ", les volets se ferment", 'Action')
 			self.My()
 			StopTracking()
 
@@ -34,7 +34,7 @@ function SShutterTempTracking(aname, atpc, atimer, atemp, astart, astop, alimit)
 	end
 
 	local function LaunchTracking()
-		pubLog(self.getName() .." : Début de la surveillance de la température")
+		pubLog(self.getName() .." : Début de la surveillance de la température", 'Action')
 		timer.TaskRemove( LaunchTracking )
 		probe.TaskAdd( TemperatureTracking )
 	end

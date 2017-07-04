@@ -19,9 +19,9 @@ function SShutter(aname, atpc)
 			pubLog("Mode Manuel : Fermeture '".. cmd .."' de '".. self.getName() .. aname .."' annulée")
 		else
 			if cmd == 'Up' then
-				pubLog("Ouverture '".. cmd .."' de '".. self.getName() .. aname .. "'")
+				pubLog("Ouverture '".. cmd .."' de '".. self.getName() .. aname .. "'", 'Action')
 			else
-				pubLog("Fermeture '".. cmd .."' de '".. self.getName() .. aname .. "'")
+				pubLog("Fermeture '".. cmd .."' de '".. self.getName() .. aname .. "'", 'Action')
 			end
 
 			Brk:Publish(atpc, cmd)
