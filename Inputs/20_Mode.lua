@@ -23,6 +23,7 @@ local function updModeAujourdhui()
 -- Update actual mode against computed one
 	if ModeForce.get() == 'Auto' then
 		pubLog("Mode calculé", 'Mode')
+		pubMessage("Mode calculé : " .. ModeAujourdHui.get() )
 		Brk:Publish( Mode.getTopic(), ModeAujourdHui.get() )
 	end
 end

@@ -20,7 +20,7 @@ function rotatelog( VERSION )
 	end
 end
 
-function pubLog( msg, cat )
+function pubLog( msg, cat )	-- Publish to MQTT '.../Log' topic
 	SelLog.log(msg)
 
 	local topic = CLIENTID ..'/Log'
@@ -28,5 +28,13 @@ function pubLog( msg, cat )
 		topic = topic .. '/' .. cat
 	end
 	msg = os.date('[%H:%M:%S] ') .. msg
+	Brk:Publish( topic, msg )
+end
+
+function pubMessage( msg, cat )	-- Publish to MQTT 'messages' topic
+	local topic = 'messages'
+	if cat then
+		topic = topic .. '/' .. cat
+	end
 	Brk:Publish( topic, msg )
 end

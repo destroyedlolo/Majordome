@@ -27,6 +27,7 @@ local function ISunSet( aname, atpc, afunc, adefault, atimer )
 	-- methods
 	function log()
 		pubLog("*I* Le soleil se couche")
+		pubMessage("Couché effectif du soleil : ".. os.date('%H:%M:%S'))
 	end
 	self.EvenTaskAdd( log )
 
