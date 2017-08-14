@@ -4,7 +4,10 @@ local function AChAmis()
 
 	-- methods
 	 local function determinePlaning()
-	 	if Mode.get() ~= 'Absent' then
+	 	if Mode.get() == 'Vacances' then -- it can be occupied by guest
+			pubLog( self.getName() .. " : vacances, les volets restent fermés" )
+			self.LaunchTrackingAt( 12 )
+	 	elseif Mode.get() ~= 'Absent' then
 			SunRise.EvenTaskAdd( self.Up )
 			SunSet.EvenTaskAdd( self.Down )
 			pubLog("Ouverture et fermeture de la chambre d'amis avec le soleil")
