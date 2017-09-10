@@ -8,7 +8,7 @@ assert( SELENE_VERSION >= 3.0300, "HDB requires at least Selene v3.03.00, got " 
 
 lfs = require "lfs" -- LuaFileSystem
 
-local VERSION = '2.03.00'
+local VERSION = '2.04.00'
 --
 -- Initializing
 --
