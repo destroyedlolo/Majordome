@@ -15,6 +15,9 @@ ModeFJoris = MQTTinputDefLog('Mode Force Joris', 'Majordome/Mode/Force/Enfants/J
 -- Actual mode
 Mode = MQTTinputDefLog('Mode', 'Majordome/Mode', nil, 'Manuel')
 
+-- Pool mode
+ModePiscine = MQTTinputDefLog('Mode Piscine', 'Majordome/Mode/Piscine', nil, 'Heure Creuse')
+
 --
 -- Actions
 --
