@@ -1,7 +1,7 @@
 -- Retrieve Electricity rate from TéléInfo
 local json = require "dkjson"
 
-local function ITarifEDF(restpc, atpc)
+local function ITarifTT(restpc, atpc)
 -- restpc : Internal topic containing the current rate
 -- atpc : root of the topic to listen to
 
@@ -32,5 +32,5 @@ local function ITarifEDF(restpc, atpc)
 	return self
 end
 
-TarifEDF = ITarifEDF('Majordome/TarifEDF', 'TeleInfo/Consommation/')
+TarifTeleInfo = ITarifTT('Majordome/TarifEDF', 'TeleInfo/Consommation/')
 
