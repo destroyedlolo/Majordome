@@ -32,5 +32,5 @@ local function ITarifTT(restpc, atpc)
 	return self
 end
 
-TarifTeleInfo = ITarifTT('Majordome/TarifEDF', 'TeleInfo/Consommation/')
+TarifTeleInfo = ITarifTT(TarifElectricite.getTopic() , 'TeleInfo/Consommation/')
 
