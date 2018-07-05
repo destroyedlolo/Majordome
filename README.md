@@ -1,3 +1,4 @@
-**Majordome** is basically a collection of Lua scripts that are managing my smart home automation and scenarii through MQTT messages.
+This is **N**ew **G**eneration of **Majordome**.
 
-It needs **Selene** as technical layer and communicates with **Marcel** to drive physical devices.
+**Majordome** is a lightweight Automation System.
+**Majordome** is event driven and use Lua as user script.
