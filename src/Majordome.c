@@ -36,6 +36,7 @@
 bool verbose = false;
 const char *Broker = "tcp://localhost:1883";		/* Broker's URL */
 const char *ClientID = NULL;	/* MQTT client id : must be unique among a broker's clients */
+const char *UserConfigRoot = "/usr/local/etc/Majordome";	/* Where to find user configuration */
 
 	/* local configuration */
 static bool configtest = false;
@@ -65,6 +66,10 @@ static void read_configuration( const char *fch){
 			assert(( ClientID = strdup( removeLF(arg) ) ));
 			if(verbose)
 				printf("MQTT Client ID : '%s'\n", ClientID);
+		} else if((arg = striKWcmp(l,"UserConfiguration="))){
+			assert(( UserConfigRoot = strdup( removeLF(arg) ) ));
+			if(verbose)
+				printf("User configuration directory : '%s'\n", UserConfigRoot);
 		}
 	}
 	fclose(f);
