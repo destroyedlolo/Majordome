@@ -19,99 +19,67 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdarg.h>
 #include <string.h>
 #include <assert.h>
 #include <unistd.h>
 #include <libgen.h>
-
 #include <stdbool.h>
+#include <errno.h>
+#include <limits.h>
 
-#define VERSION "0.1"
+#include "Helpers.h"
+
+#define VERSION 0.01
 #define DEFAULT_CONFIGURATION_FILE "/usr/local/etc/Majordome.conf"
 
-	/* Local configuration */
+	/* global configuration */
 bool verbose = false;
-bool configtest = false;
+const char *Broker = "tcp://localhost:1883";		/* Broker's URL */
+const char *ClientID = NULL;	/* MQTT client id : must be unique among a broker's clients */
 
-	/* Logging */
-void publishLog( char l, const char *msg, ...){
-	va_list args;
-	va_start(args, msg);
+	/* local configuration */
+static bool configtest = false;
 
-#if 0
-	if(verbose || l=='E' || l=='F'){
-		char t[ strlen(msg) + 7 ];
-		sprintf(t, "*%c* %s\n", l, msg);
-		vfprintf((l=='E' || l=='F')? stderr : stdout, t, args);
+static void read_configuration( const char *fch){
+	FILE *f;
+	char l[MAXLINE];
+	char *arg;
+
+	if(verbose)
+		printf("\nReading configuration file '%s'\n---------------------------\n", fch);
+
+	if(!(f=fopen(fch, "r"))){
+		publishLog('F', "%s : %s", fch, strerror( errno ));
+		exit(EXIT_FAILURE);
 	}
 
-	if(cfg.client){
-		char *sub;
-		switch(l){
-		case 'F':
-			sub = "/Log/Fatal";
-			break;
-		case 'E':
-			sub = "/Log/Error";
-			break;
-		case 'W':
-			sub = "/Log/Warning";
-			break;
-		default :
-			sub = "/Log/Information";
+	while(fgets(l, MAXLINE, f)){
+		if(*l == '#' || *l == '\n')
+			continue;
+	
+		if((arg = striKWcmp(l,"Broker="))){
+			assert(( Broker = strdup( removeLF(arg) ) ));
+			if(verbose)
+				printf("Broker : '%s'\n", Broker);
+		} else if((arg = striKWcmp(l,"ClientID="))){
+			assert(( ClientID = strdup( removeLF(arg) ) ));
+			if(verbose)
+				printf("MQTT Client ID : '%s'\n", ClientID);
 		}
-
-		char tmsg[1024];	/* No simple way here to know the message size */
-		char ttopic[ strlen(cfg.ClientID) + strlen(sub) + 1 ];
-		sprintf(ttopic, "%s%s", cfg.ClientID, sub);
-		vsnprintf(tmsg, sizeof(tmsg), msg, args);
-
-		mqttpublish( cfg.client, ttopic, strlen(tmsg), tmsg, 0);
 	}
-	va_end(args);
-#endif
-}
+	fclose(f);
 
-	/*
-	 * Helpers
-	 */
-char *removeLF(char *s){
-	size_t l=strlen(s);
-	if(l && s[--l] == '\n')
-		s[l] = 0;
-	return s;
-}
-
-char *striKWcmp( char *s, const char *kw ){
-/* compare string s against kw
- * Return :
- * 	- remaining string if the keyword matches
- * 	- NULL if the keyword is not found
- */
-	size_t klen = strlen(kw);
-	if( strncasecmp(s,kw,klen) )
-		return NULL;
-	else
-		return s+klen;
-}
-
-char *stradd(char *p, const char *s, bool addspace){
-	/* Enlarge string pointed by p to add s
-	 * if !p, start a new string
-	 *
-	 * if addspace == true, the 1st char is
-	 * skipped if !p
-	 */
-	if(!p)
-		return(strdup(s + (addspace ? 1:0)));
-
-	size_t asz = strlen(p);
-	char *np = (char *)realloc(p, strlen(p) + strlen(s) +1);
-	assert(np);
-	strcpy( np+asz, s );
-
-	return(np);
+	if(!ClientID){
+		char h[HOST_NAME_MAX];
+		if(gethostname( h, HOST_NAME_MAX )){
+			publishLog('F', "gethostname() : %s", strerror( errno ));
+			exit(EXIT_FAILURE);
+		}
+		sprintf(l, "Majordome-%s-%u", h, getpid());
+		assert(( ClientID = strdup( l ) ));
+		if(verbose)
+			printf("MQTT Client ID : '%s' (computed)\n", ClientID);
+	}
 }
 
 int main( int ac, char **av){
@@ -120,7 +88,7 @@ int main( int ac, char **av){
 
 	while((c = getopt(ac, av, "vhf:t")) != EOF) switch(c){
 	case 'h':
-		fprintf(stderr, "%s (%s)\n"
+		fprintf(stderr, "%s (%.04f)\n"
 			"A lightweight event based Automation System\n"
 			"Known options are :\n"
 			"\t-h : this online help\n"
@@ -134,7 +102,7 @@ int main( int ac, char **av){
 		break;
 	case 't':
 		configtest = true;
-		printf("%s v%s\n", basename(av[0]), VERSION);
+		printf("%s v%.04f\n", basename(av[0]), VERSION);
 	case 'v':
 		verbose = true;
 		break;
@@ -145,5 +113,5 @@ int main( int ac, char **av){
 		publishLog('F', "Unknown option '%c'\n%s -h\n\tfor some help\n", c, av[0]);
 		exit(EXIT_FAILURE);
 	}
-
+	read_configuration( conf_file );
 }

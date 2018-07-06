@@ -8,10 +8,13 @@ gotoall: all
 cc=gcc -Wall -O2 -DxDEBUG -lpthread -lpaho-mqtt3c `pkg-config --cflags lua` `pkg-config --libs lua`
 opts=
 
-Majordome.o : Majordome.c Makefile 
+Helpers.o : Helpers.c Helpers.h Makefile 
+	$(cc) -c -o Helpers.o Helpers.c $(opts) 
+
+Majordome.o : Majordome.c Helpers.h Makefile 
 	$(cc) -c -o Majordome.o Majordome.c $(opts) 
 
-../Majordome : Majordome.o Makefile 
-	 $(cc) -o ../Majordome Majordome.o $(opts) 
+../Majordome : Majordome.o Helpers.o Makefile 
+	 $(cc) -o ../Majordome Majordome.o Helpers.o $(opts) 
 
 all: ../Majordome 
