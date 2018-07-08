@@ -9,6 +9,8 @@
 
 #define MAXLINE 1024	/* Maximum length of a line to be read */
 extern bool verbose;
+extern MQTTClient MQTT_client;
+extern const char *ClientID;
 
 /* Removes the last character if it's an "\n" */
 extern char *removeLF(char *);
@@ -26,6 +28,6 @@ extern char *striKWcmp( char *s, const char *kw );
  * -> l : level of the message [F]atal, [E]rror, [W]arning or info
  * 	msg : the message to log + arguments
  */
-void publishLog( char l, const char *msg, ...);
+extern void publishLog( char l, const char *msg, ...);
 
 #endif

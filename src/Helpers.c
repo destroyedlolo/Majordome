@@ -5,6 +5,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 
+#include "MQTT_tools.h"
 #include "Helpers.h"
 
 char *removeLF(char *s){
@@ -32,8 +33,7 @@ void publishLog( char l, const char *msg, ...){
 		vfprintf((l=='E' || l=='F')? stderr : stdout, t, args);
 	}
 
-#if 0
-	if(cfg.client){
+	if(MQTT_client){
 		char *sub;
 		switch(l){
 		case 'F':
@@ -50,13 +50,12 @@ void publishLog( char l, const char *msg, ...){
 		}
 
 		char tmsg[1024];	/* No simple way here to know the message size */
-		char ttopic[ strlen(cfg.ClientID) + strlen(sub) + 1 ];
-		sprintf(ttopic, "%s%s", cfg.ClientID, sub);
+		char ttopic[ strlen(ClientID) + strlen(sub) + 1 ];
+		sprintf(ttopic, "%s%s",ClientID, sub);
 		vsnprintf(tmsg, sizeof(tmsg), msg, args);
 
-		mqttpublish( cfg.client, ttopic, strlen(tmsg), tmsg, 0);
+		mqttpublish( MQTT_client, ttopic, strlen(tmsg), tmsg, 0);
 	}
 	va_end(args);
-#endif
 }
 

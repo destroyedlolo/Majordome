@@ -27,6 +27,8 @@
 #include <errno.h>
 #include <limits.h>
 
+#include <MQTTClient.h> /* PAHO library needed */ 
+
 #include "Helpers.h"
 
 #define VERSION 0.01
@@ -34,17 +36,15 @@
 
 	/* global configuration */
 bool verbose = false;
-const char *Broker = "tcp://localhost:1883";		/* Broker's URL */
-const char *ClientID = NULL;	/* MQTT client id : must be unique among a broker's clients */
 const char *UserConfigRoot = "/usr/local/etc/Majordome";	/* Where to find user configuration */
 
 	/* local configuration */
 static bool configtest = false;
+static const char *Broker = "tcp://localhost:1883";		/* Broker's URL */
+const char *ClientID = NULL;	/* MQTT client id : must be unique among a broker's clients */
 
-static void read_configuration( const char *fch){
-	FILE *f;
-	char l[MAXLINE];
-	char *arg;
+static void read_configuration( const char *fch){ FILE *f; char l[MAXLINE];
+char *arg;
 
 	if(verbose)
 		printf("\nReading configuration file '%s'\n---------------------------\n", fch);
@@ -87,6 +87,25 @@ static void read_configuration( const char *fch){
 	}
 }
 
+	/* MQTT's */
+MQTTClient MQTT_client;
+
+static int msgarrived(void *actx, char *topic, int tlen, MQTTClient_message *msg){
+	MQTTClient_freeMessage(&msg);
+	MQTTClient_free(topic);
+	return 1;
+}
+
+static void connlost(void *ctx, char *cause){
+	publishLog('W', "Broker connection lost due to %s", cause);
+	exit(EXIT_FAILURE);
+}
+
+static void brkcleaning(void){	/* Clean broker stuffs */
+	MQTTClient_disconnect(MQTT_client, 10000);	/* 10s for the grace period */
+	MQTTClient_destroy(&MQTT_client);
+}
+
 int main( int ac, char **av){
 	const char *conf_file = DEFAULT_CONFIGURATION_FILE;
 	int c;
@@ -119,4 +138,36 @@ int main( int ac, char **av){
 		exit(EXIT_FAILURE);
 	}
 	read_configuration( conf_file );
+
+	if(configtest){
+		publishLog('W', "Testing only the configuration ... leaving.");
+		exit(EXIT_FAILURE);
+	}
+
+		/* Connecting to the broker */
+	MQTTClient_connectOptions conn_opts = MQTTClient_connectOptions_initializer;
+	conn_opts.reliable = 0;	/* Asynchronous sending */
+
+	MQTTClient_create( &MQTT_client, Broker, ClientID, MQTTCLIENT_PERSISTENCE_NONE, NULL);
+	MQTTClient_setCallbacks( MQTT_client, NULL, connlost, msgarrived, NULL);
+
+	switch( MQTTClient_connect( MQTT_client, &conn_opts) ){
+	case MQTTCLIENT_SUCCESS : 
+		break;
+	case 1 : publishLog('F', "Unable to connect : Unacceptable protocol version");
+		exit(EXIT_FAILURE);
+	case 2 : publishLog('F', "Unable to connect : Identifier rejected");
+		exit(EXIT_FAILURE);
+	case 3 : publishLog('F', "Unable to connect : Server unavailable");
+		exit(EXIT_FAILURE);
+	case 4 : publishLog('F', "Unable to connect : Bad user name or password");
+		exit(EXIT_FAILURE);
+	case 5 : publishLog('F', "Unable to connect : Not authorized");
+		exit(EXIT_FAILURE);
+	default :
+		publishLog('F', "Unable to connect");
+		exit(EXIT_FAILURE);
+	}
+	atexit(brkcleaning);
+
 }
