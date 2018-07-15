@@ -5,7 +5,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-#include "MQTT_tools.h"
+#include <libSelene.h>
 #include "Helpers.h"
 
 char *removeLF(char *s){
@@ -27,35 +27,11 @@ void publishLog( char l, const char *msg, ...){
 	va_list args;
 	va_start(args, msg);
 
-	if(verbose || l=='E' || l=='F'){
-		char t[ strlen(msg) + 7 ];
-		sprintf(t, "*%c* %s\n", l, msg);
-		vfprintf((l=='E' || l=='F')? stderr : stdout, t, args);
-	}
+	char tmsg[1024];	/* No simple way here to know the message size */
+	vsnprintf(tmsg, sizeof(tmsg), msg, args);
 
-	if(MQTT_client){
-		char *sub;
-		switch(l){
-		case 'F':
-			sub = "/Log/Fatal";
-			break;
-		case 'E':
-			sub = "/Log/Error";
-			break;
-		case 'W':
-			sub = "/Log/Warning";
-			break;
-		default :
-			sub = "/Log/Information";
-		}
+	slc_log( l, tmsg );
 
-		char tmsg[1024];	/* No simple way here to know the message size */
-		char ttopic[ strlen(ClientID) + strlen(sub) + 1 ];
-		sprintf(ttopic, "%s%s",ClientID, sub);
-		vsnprintf(tmsg, sizeof(tmsg), msg, args);
-
-		mqttpublish( MQTT_client, ttopic, strlen(tmsg), tmsg, 0);
-	}
 	va_end(args);
 }
 

@@ -28,6 +28,7 @@
 #include <limits.h>
 
 #include <MQTTClient.h> /* PAHO library needed */ 
+#include <libSelene.h>
 
 #include "Helpers.h"
 
@@ -40,8 +41,8 @@ const char *UserConfigRoot = "/usr/local/etc/Majordome";	/* Where to find user c
 
 	/* local configuration */
 static bool configtest = false;
-static const char *Broker = "tcp://localhost:1883";		/* Broker's URL */
-const char *ClientID = NULL;	/* MQTT client id : must be unique among a broker's clients */
+static const char *Broker_URL = "tcp://localhost:1883";		/* Broker's URL */
+const char *MQTT_ClientID = NULL;	/* MQTT client id : must be unique among a broker's clients */
 
 static void read_configuration( const char *fch){ FILE *f; char l[MAXLINE];
 char *arg;
@@ -58,14 +59,14 @@ char *arg;
 		if(*l == '#' || *l == '\n')
 			continue;
 	
-		if((arg = striKWcmp(l,"Broker="))){
-			assert(( Broker = strdup( removeLF(arg) ) ));
+		if((arg = striKWcmp(l,"Broker_URL="))){
+			assert(( Broker_URL = strdup( removeLF(arg) ) ));
 			if(verbose)
-				printf("Broker : '%s'\n", Broker);
+				printf("Broker_URL : '%s'\n", Broker_URL);
 		} else if((arg = striKWcmp(l,"ClientID="))){
-			assert(( ClientID = strdup( removeLF(arg) ) ));
+			assert(( MQTT_ClientID = strdup( removeLF(arg) ) ));
 			if(verbose)
-				printf("MQTT Client ID : '%s'\n", ClientID);
+				printf("MQTT Client ID : '%s'\n", MQTT_ClientID);
 		} else if((arg = striKWcmp(l,"UserConfiguration="))){
 			assert(( UserConfigRoot = strdup( removeLF(arg) ) ));
 			if(verbose)
@@ -74,16 +75,16 @@ char *arg;
 	}
 	fclose(f);
 
-	if(!ClientID){
+	if(!MQTT_ClientID){
 		char h[HOST_NAME_MAX];
 		if(gethostname( h, HOST_NAME_MAX )){
 			publishLog('F', "gethostname() : %s", strerror( errno ));
 			exit(EXIT_FAILURE);
 		}
 		sprintf(l, "Majordome-%s-%u", h, getpid());
-		assert(( ClientID = strdup( l ) ));
+		assert(( MQTT_ClientID = strdup( l ) ));
 		if(verbose)
-			printf("MQTT Client ID : '%s' (computed)\n", ClientID);
+			printf("MQTT Client ID : '%s' (computed)\n", MQTT_ClientID);
 	}
 }
 
@@ -97,7 +98,7 @@ static int msgarrived(void *actx, char *topic, int tlen, MQTTClient_message *msg
 }
 
 static void connlost(void *ctx, char *cause){
-	publishLog('W', "Broker connection lost due to %s", cause);
+	publishLog('W', "Broker_URL connection lost due to %s", cause);
 	exit(EXIT_FAILURE);
 }
 
@@ -109,6 +110,8 @@ static void brkcleaning(void){	/* Clean broker stuffs */
 int main( int ac, char **av){
 	const char *conf_file = DEFAULT_CONFIGURATION_FILE;
 	int c;
+
+	slc_init( NULL, LOG_STDOUT );	/* Early logging to STDOUT before broker initialisation*/
 
 	while((c = getopt(ac, av, "vhf:t")) != EOF) switch(c){
 	case 'h':
@@ -140,15 +143,20 @@ int main( int ac, char **av){
 	read_configuration( conf_file );
 
 	if(configtest){
-		publishLog('W', "Testing only the configuration ... leaving.");
+		publishLog('E', "Testing only the configuration ... leaving.");
 		exit(EXIT_FAILURE);
 	}
 
 		/* Connecting to the broker */
 	MQTTClient_connectOptions conn_opts = MQTTClient_connectOptions_initializer;
 	conn_opts.reliable = 0;	/* Asynchronous sending */
+	int err;
 
-	MQTTClient_create( &MQTT_client, Broker, ClientID, MQTTCLIENT_PERSISTENCE_NONE, NULL);
+	if( (err = MQTTClient_create( &MQTT_client, Broker_URL, MQTT_ClientID, MQTTCLIENT_PERSISTENCE_NONE, NULL)) != MQTTCLIENT_SUCCESS ){
+		fprintf(stderr, "*F* can't connect to broker due to error %d\n", err);
+		exit(EXIT_FAILURE);
+	}
+
 	MQTTClient_setCallbacks( MQTT_client, NULL, connlost, msgarrived, NULL);
 
 	switch( MQTTClient_connect( MQTT_client, &conn_opts) ){
@@ -170,4 +178,5 @@ int main( int ac, char **av){
 	}
 	atexit(brkcleaning);
 
+	slc_initMQTT( MQTT_client, MQTT_ClientID );
 }
