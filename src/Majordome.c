@@ -31,15 +31,24 @@
 #include <libSelene.h>
 
 #include "Helpers.h"
+#include "sortdir.h"
 
 #define VERSION 0.01
 #define DEFAULT_CONFIGURATION_FILE "/usr/local/etc/Majordome.conf"
 
-	/* global configuration */
+
+	/*****
+	 * global configuration
+	 *****/
+
 bool verbose = false;
 const char *UserConfigRoot = "/usr/local/etc/Majordome";	/* Where to find user configuration */
 
-	/* local configuration */
+
+	/******
+	 * local configuration
+	 *******/
+
 static bool configtest = false;
 static const char *Broker_URL = "tcp://localhost:1883";		/* Broker's URL */
 const char *MQTT_ClientID = NULL;	/* MQTT client id : must be unique among a broker's clients */
@@ -62,18 +71,21 @@ char *arg;
 		if((arg = striKWcmp(l,"Broker_URL="))){
 			assert(( Broker_URL = strdup( removeLF(arg) ) ));
 			if(verbose)
-				printf("Broker_URL : '%s'\n", Broker_URL);
+				printf("\tBroker_URL : '%s'\n", Broker_URL);
 		} else if((arg = striKWcmp(l,"ClientID="))){
 			assert(( MQTT_ClientID = strdup( removeLF(arg) ) ));
 			if(verbose)
-				printf("MQTT Client ID : '%s'\n", MQTT_ClientID);
+				printf("\tMQTT Client ID : '%s'\n", MQTT_ClientID);
 		} else if((arg = striKWcmp(l,"UserConfiguration="))){
 			assert(( UserConfigRoot = strdup( removeLF(arg) ) ));
 			if(verbose)
-				printf("User configuration directory : '%s'\n", UserConfigRoot);
+				printf("\tUser configuration directory : '%s'\n", UserConfigRoot);
 		}
 	}
 	fclose(f);
+
+	if(verbose)
+		puts("");
 
 	if(!MQTT_ClientID){
 		char h[HOST_NAME_MAX];
@@ -88,7 +100,11 @@ char *arg;
 	}
 }
 
-	/* MQTT's */
+
+	/******
+	 * MQTT's
+	 *******/
+
 MQTTClient MQTT_client;
 
 static int msgarrived(void *actx, char *topic, int tlen, MQTTClient_message *msg){
@@ -106,6 +122,11 @@ static void brkcleaning(void){	/* Clean broker stuffs */
 	MQTTClient_disconnect(MQTT_client, 10000);	/* 10s for the grace period */
 	MQTTClient_destroy(&MQTT_client);
 }
+
+
+	/******
+	 * Main loop
+	 *******/
 
 int main( int ac, char **av){
 	const char *conf_file = DEFAULT_CONFIGURATION_FILE;
@@ -147,7 +168,9 @@ int main( int ac, char **av){
 		exit(EXIT_FAILURE);
 	}
 
-		/* Connecting to the broker */
+		/***
+		 * Connecting to the broker
+		 ***/
 	MQTTClient_connectOptions conn_opts = MQTTClient_connectOptions_initializer;
 	conn_opts.reliable = 0;	/* Asynchronous sending */
 	int err;
@@ -179,4 +202,22 @@ int main( int ac, char **av){
 	atexit(brkcleaning);
 
 	slc_initMQTT( MQTT_client, MQTT_ClientID );
+
+	if(verbose)
+		publishLog('I', "Starting %s %f ...", basename(av[0]), VERSION);
+
+		/***
+		 * Reading user configuration 
+		 ****/
+	unsigned int nbredir;
+	char **userconfdir;
+	if(!(userconfdir = sortdir( UserConfigRoot, &nbredir, NULL ))){
+		perror( UserConfigRoot );
+		exit( EXIT_FAILURE );
+	}
+printf("*d* %u entries\n", nbredir);
+for(unsigned int i=0; i<nbredir; i++)
+	puts( userconfdir[i] );
+
+	freedir( userconfdir, nbredir );
 }
