@@ -10,7 +10,7 @@
  * -> directory : directory to list
  * -> how_many : number of entry
  * -> accept_function() : acceptance function (true if accepted)
- *  	If NULL, ignore item starting by '.'
+ *  	If NULL, ignore item starting by '.' as well as .md files
  * <- table of content or NULL in case of error (see errno)
  */
 extern char **sortdir( const char *directory, unsigned int *how_many, bool accept_func(const char *) );
