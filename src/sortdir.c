@@ -10,13 +10,27 @@
 
 #include "sortdir.h"
 
+const char *fileextention( const char *fch ){
+	return strrchr(fch, '.');
+}
+
 struct direntry {
 	struct direntry *next;
 	char *file;
 };
 
-static bool igndot(const char *fch){
-	return(*fch != '.');
+static bool acceptfile(const char *fch){
+	if(*fch == '.')
+		return false;
+
+	const char *ext = fileextention( fch );
+
+	if(ext){
+		if( !strcmp(ext, ".md") ) /* Markdown documentation */
+			return false;
+	}
+
+	return true;
 }
 
 static int compare (void const *a, void const *b){
@@ -30,7 +44,7 @@ char **sortdir( const char *where, unsigned int *nbre, bool accept_func(const ch
 	char **result;
 
 	if(!accept_func)
-		accept_func = igndot;
+		accept_func = acceptfile;
 
 	*nbre = 0;
 	if( !(dir = opendir(where)) )

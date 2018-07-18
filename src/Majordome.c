@@ -216,8 +216,7 @@ int main( int ac, char **av){
 		exit( EXIT_FAILURE );
 	}
 printf("*d* %u entries\n", nbredir);
-for(unsigned int i=0; i<nbredir; i++)
-	puts( userconfdir[i] );
+for(unsigned int i=0; i<nbredir; i++) puts( userconfdir[i] );
 
 	freedir( userconfdir, nbredir );
 }

@@ -21,4 +21,10 @@ extern char **sortdir( const char *directory, unsigned int *how_many, bool accep
  */
 extern void freedir( char **dirtable, unsigned int how_many );
 
+/* Return the extention of a given file
+ * -> filename
+ * <- pointer to the last '.' or NULL if not found
+ */
+extern const char *fileextention( const char *fch );
+
 #endif
