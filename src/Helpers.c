@@ -6,7 +6,7 @@
 #include <stdio.h>
 
 #include <libSelene.h>
-#include "Helpers.h"
+#include "Components.h"
 
 char *removeLF(char *s){
 	size_t l=strlen(s);

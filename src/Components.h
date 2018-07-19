@@ -1,16 +1,24 @@
-/* Helpers.h
- * 	Helpers functions
+/* Components.h
+ * 	functions spanned across sources files.
  *
  * 	06/07/2018 - LF - First version
  */
 
-#ifndef HELPERS_H
+#ifndef COMPONENTS_H
 #include <stdbool.h>
 
+	/****
+	 * Configuration's
+	 ****/
 #define MAXLINE 1024	/* Maximum length of a line to be read */
 extern bool verbose;
 extern MQTTClient MQTT_client;
 extern const char *ClientID;
+
+
+	/****
+	 * Helpers
+	 ****/
 
 /* Removes the last character if it's an "\n" */
 extern char *removeLF(char *);

@@ -32,7 +32,7 @@
 #include <MQTTClient.h> /* PAHO library needed */ 
 #include <libSelene.h>
 
-#include "Helpers.h"
+#include "Components.h"
 #include "sortdir.h"
 
 #define VERSION 0.01
@@ -44,16 +44,15 @@
 	 *****/
 
 bool verbose = false;
-const char *UserConfigRoot = "/usr/local/etc/Majordome";	/* Where to find user configuration */
-
+const char *MQTT_ClientID = NULL;	/* MQTT client id : must be unique among a broker's clients */
 
 	/******
 	 * local configuration
 	 *******/
 
 static bool configtest = false;
+static const char *UserConfigRoot = "/usr/local/etc/Majordome";	/* Where to find user configuration */
 static const char *Broker_URL = "tcp://localhost:1883";		/* Broker's URL */
-const char *MQTT_ClientID = NULL;	/* MQTT client id : must be unique among a broker's clients */
 
 static void read_configuration( const char *fch){ FILE *f; char l[MAXLINE];
 char *arg;
