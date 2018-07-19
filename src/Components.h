@@ -7,6 +7,8 @@
 #ifndef COMPONENTS_H
 #include <stdbool.h>
 
+#include <MQTTClient.h> /* PAHO library needed */
+
 	/****
 	 * Configuration's
 	 ****/
@@ -37,5 +39,14 @@ extern char *striKWcmp( char *s, const char *kw );
  * 	msg : the message to log + arguments
  */
 extern void publishLog( char l, const char *msg, ...);
+
+	/****
+	 * readUserConfig
+	 ****/
+/* Read user configuration directory tree
+ * -> dir : root of the configuration directory
+ * This function will exist in case of fatal error
+ */
+extern void readUserConfig( const char *dir );
 
 #endif

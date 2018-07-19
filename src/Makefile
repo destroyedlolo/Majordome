@@ -11,14 +11,18 @@ opts=
 Helpers.o : Helpers.c Components.h Makefile 
 	$(cc) -c -o Helpers.o Helpers.c $(opts) 
 
-Majordome.o : Majordome.c Components.h sortdir.h Makefile 
+Majordome.o : Majordome.c Components.h Makefile 
 	$(cc) -c -o Majordome.o Majordome.c $(opts) 
+
+readUserConfig.o : readUserConfig.c Components.h sortdir.h Makefile 
+	$(cc) -c -o readUserConfig.o readUserConfig.c $(opts) 
 
 sortdir.o : sortdir.c sortdir.h Makefile 
 	$(cc) -c -o sortdir.o sortdir.c $(opts) 
 
-../Majordome : sortdir.o Majordome.o Helpers.o Makefile 
-	 $(cc) -o ../Majordome sortdir.o Majordome.o Helpers.o $(opts) \
-  
+../Majordome : sortdir.o readUserConfig.o Majordome.o Helpers.o \
+  Makefile 
+	 $(cc) -o ../Majordome sortdir.o readUserConfig.o Majordome.o \
+  Helpers.o $(opts) 
 
 all: ../Majordome 
