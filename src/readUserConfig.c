@@ -39,8 +39,15 @@ void readUserConfig( const char *dir ){
 		publishLog('F', "%s : %s", dir, strerror(errno));
 		exit( EXIT_FAILURE );
 	}
-printf("*d* %u entries\n", nbredir);
-for(unsigned int i=0; i<nbredir; i++) puts( userconfdir[i] );
+
+	for(unsigned int i=0; i<nbredir; i++){
+		publishLog('I', "Loading '%s'", userconfdir[i]);
+		if( chdir(userconfdir[i]) ){
+			publishLog('F', "%s : %s", userconfdir[i], strerror(errno));
+			exit( EXIT_FAILURE );
+		}
+		assert( !chdir("..") );
+	}
 
 	freedir( userconfdir, nbredir );
 
