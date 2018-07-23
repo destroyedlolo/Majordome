@@ -41,7 +41,7 @@
 
 bool verbose = false;
 const char *MQTT_ClientID = NULL;	/* MQTT client id : must be unique among a broker's clients */
-void *luainitfunc = NULL;
+void *luainitfunc;
 
 	/******
 	 * local configuration
@@ -125,6 +125,15 @@ static void brkcleaning(void){	/* Clean broker stuffs */
 	/******
 	 * Main loop
 	 *******/
+static int setGlobalVar( lua_State *L ){
+	lua_pushnumber( L, VERSION );	/* Expose version to lua side */
+	lua_setglobal( L, "MAJORDOME_VERSION" );
+
+	lua_pushstring( L, MQTT_ClientID );	/* Expose ClientID to lua side */
+	lua_setglobal( L, "MAJORDOME_ClientID" );
+
+	return 0;
+}
 
 int main( int ac, char **av){
 	const char *conf_file = DEFAULT_CONFIGURATION_FILE;
@@ -173,9 +182,7 @@ int main( int ac, char **av){
 	luaL_openlibs(L);
 	initSeleneLibrary(L);
 
-	lua_pushnumber( L, VERSION );	/* Expose version to lua side */
-	lua_setglobal( L, "MAJORDOME_VERSION" );
-
+	luainitfunc = libSel_AddStartupFunc( NULL, setGlobalVar );
 	luainitfunc = libSel_AddStartupFunc( luainitfunc, initSelShared );
 	luainitfunc = libSel_AddStartupFunc( luainitfunc, initSelLog );
 
