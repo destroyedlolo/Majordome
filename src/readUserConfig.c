@@ -9,6 +9,8 @@
 #include <errno.h>
 #include <limits.h>
 
+#include <libSelene.h>
+
 #include "Components.h"
 #include "sortdir.h"
 
@@ -25,7 +27,18 @@ static bool onlydir( const char *fch ){
 	return( !!(buff.st_mode & S_IFDIR) );
 }
 
-void readUserConfig( const char *dir ){
+static bool configfiles( const char *fch ){
+	if( *fch == '.' )
+		return false;
+	
+	const char *ext = fileextention( fch );
+	if( !strcmp(ext,".lua") )
+		return true;
+	
+	return false;
+}
+
+void readUserConfig( const char *dir, lua_State *L ){
 	char cwd[PATH_MAX];		/* Keep current working directory */
 	assert( getcwd(cwd, PATH_MAX) );
 	if( chdir(dir) ){
@@ -41,11 +54,33 @@ void readUserConfig( const char *dir ){
 	}
 
 	for(unsigned int i=0; i<nbredir; i++){
-		publishLog('I', "Loading '%s'", userconfdir[i]);
+		publishLog('L', "Loading '%s'", userconfdir[i]);
 		if( chdir(userconfdir[i]) ){
 			publishLog('F', "%s : %s", userconfdir[i], strerror(errno));
 			exit( EXIT_FAILURE );
 		}
+
+		char **userconfdircontent;
+		unsigned int nbrefch;
+		if(!(userconfdircontent = sortdir( ".", &nbrefch, configfiles ))){
+			publishLog('F', "%s : %s", userconfdir[i], strerror(errno));
+			exit( EXIT_FAILURE );
+		}
+
+		for(unsigned int j=0; j<nbrefch; j++){
+			if( !strcmp(userconfdircontent[j], "Init.lua") ){
+				int err = luaL_loadfile(L, userconfdircontent[j]) || lua_pcall(L, 0, 0, 0);
+				if(err){
+					publishLog('F', "%s : %s", userconfdircontent[j], lua_tostring(L, -1));
+					lua_pop(L, 1);  /* pop error message from the stack */
+					exit(EXIT_FAILURE);
+				}
+			}
+else
+	printf("*d* ignoring %s\n", userconfdircontent[j] );
+		}
+
+		freedir( userconfdircontent, nbrefch );
 		assert( !chdir("..") );
 	}
 

@@ -8,6 +8,7 @@
 #include <stdbool.h>
 
 #include <MQTTClient.h> /* PAHO library needed */
+#include <lua.h>	/* Lua's state needed */
 
 	/****
 	 * Configuration's
@@ -47,6 +48,6 @@ extern void publishLog( char l, const char *msg, ...);
  * -> dir : root of the configuration directory
  * This function will exist in case of fatal error
  */
-extern void readUserConfig( const char *dir );
+extern void readUserConfig( const char *dir, lua_State *L );
 
 #endif

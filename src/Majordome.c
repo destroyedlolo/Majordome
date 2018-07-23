@@ -41,6 +41,7 @@
 
 bool verbose = false;
 const char *MQTT_ClientID = NULL;	/* MQTT client id : must be unique among a broker's clients */
+void *luainitfunc = NULL;
 
 	/******
 	 * local configuration
@@ -166,6 +167,21 @@ int main( int ac, char **av){
 	}
 
 		/***
+		 * Lua's stuffs
+		 ***/
+	lua_State *L = luaL_newstate();
+	luaL_openlibs(L);
+	initSeleneLibrary(L);
+
+	lua_pushnumber( L, VERSION );	/* Expose version to lua side */
+	lua_setglobal( L, "MAJORDOME_VERSION" );
+
+	luainitfunc = libSel_AddStartupFunc( luainitfunc, initSelShared );
+	luainitfunc = libSel_AddStartupFunc( luainitfunc, initSelLog );
+
+	libSel_ApplyStartupFunc( luainitfunc, L );
+
+		/***
 		 * Connecting to the broker
 		 ***/
 	MQTTClient_connectOptions conn_opts = MQTTClient_connectOptions_initializer;
@@ -206,5 +222,5 @@ int main( int ac, char **av){
 		/***
 		 * Reading user configuration 
 		 ****/
-	readUserConfig( UserConfigRoot );
+	readUserConfig( UserConfigRoot, L );
 }
