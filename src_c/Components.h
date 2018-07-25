@@ -2,10 +2,10 @@
  * 	functions spanned across sources files.
  *
  * 	06/07/2018 - LF - First version
- * 	25/07/2018 - LF - switch to C++
  */
 
 #ifndef COMPONENTS_H
+#include <stdbool.h>
 
 #include <MQTTClient.h> /* PAHO library needed */
 #include <lua.h>	/* Lua's state needed */

@@ -5,24 +5,16 @@ gotoall: all
 
 
 #The compiler (may be customized for compiler's options).
-cc=gcc -Wall -O2 -DxDEBUG -lpthread -lpaho-mqtt3c  -llua -lm -I/home/laurent/Projets/Selene.v4/src/SeleneLibrary -L/home/laurent/Projets/Selene.v4 -lSelene
+cc=g++ -Wall -O2 -DxDEBUG -lpthread -lpaho-mqtt3c  -llua -lm -I/home/laurent/Projets/Selene.v4/src/SeleneLibrary -L/home/laurent/Projets/Selene.v4 -lSelene
 opts=
 
-Helpers.o : Helpers.c Components.h Makefile 
-	$(cc) -c -o Helpers.o Helpers.c $(opts) 
+Helpers.o : Helpers.cpp Components.h Makefile 
+	$(cc) -c -o Helpers.o Helpers.cpp $(opts) 
 
-Majordome.o : Majordome.c Components.h Makefile 
-	$(cc) -c -o Majordome.o Majordome.c $(opts) 
+Majordome.o : Majordome.cpp Components.h Makefile 
+	$(cc) -c -o Majordome.o Majordome.cpp $(opts) 
 
-readUserConfig.o : readUserConfig.c Components.h sortdir.h Makefile 
-	$(cc) -c -o readUserConfig.o readUserConfig.c $(opts) 
-
-sortdir.o : sortdir.c sortdir.h Makefile 
-	$(cc) -c -o sortdir.o sortdir.c $(opts) 
-
-../Majordome : sortdir.o readUserConfig.o Majordome.o Helpers.o \
-  Makefile 
-	 $(cc) -o ../Majordome sortdir.o readUserConfig.o Majordome.o \
-  Helpers.o $(opts) 
+../Majordome : Majordome.o Helpers.o Makefile 
+	 $(cc) -o ../Majordome Majordome.o Helpers.o $(opts) 
 
 all: ../Majordome 
