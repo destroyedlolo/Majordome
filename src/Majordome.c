@@ -176,19 +176,6 @@ int main( int ac, char **av){
 	}
 
 		/***
-		 * Lua's stuffs
-		 ***/
-	lua_State *L = luaL_newstate();
-	luaL_openlibs(L);
-	initSeleneLibrary(L);
-
-	luainitfunc = libSel_AddStartupFunc( NULL, setGlobalVar );
-	luainitfunc = libSel_AddStartupFunc( luainitfunc, initSelShared );
-	luainitfunc = libSel_AddStartupFunc( luainitfunc, initSelLog );
-
-	libSel_ApplyStartupFunc( luainitfunc, L );
-
-		/***
 		 * Connecting to the broker
 		 ***/
 	MQTTClient_connectOptions conn_opts = MQTTClient_connectOptions_initializer;
@@ -221,7 +208,22 @@ int main( int ac, char **av){
 	}
 	atexit(brkcleaning);
 
-	slc_initMQTT( MQTT_client, MQTT_ClientID );
+		/***
+		 * Lua's stuffs
+		 ***/
+	lua_State *L = luaL_newstate();
+	luaL_openlibs(L);
+	initSeleneLibrary(L);
+
+	slc_initMQTT( MQTT_client, MQTT_ClientID );	/* Initialize MQTT logging */
+	semc_initializeSeleMQTT( MQTT_client, MQTT_ClientID );	/* Initialize SeleMQTT */
+
+	luainitfunc = libSel_AddStartupFunc( NULL, setGlobalVar );
+	luainitfunc = libSel_AddStartupFunc( luainitfunc, initSelShared );
+	luainitfunc = libSel_AddStartupFunc( luainitfunc, initSelLog );
+	luainitfunc = libSel_AddStartupFunc( luainitfunc, initSeleMQTT );
+
+	libSel_ApplyStartupFunc( luainitfunc, L );
 
 	if(verbose)
 		publishLog('I', "Starting %s %f ...", basename(av[0]), VERSION);
