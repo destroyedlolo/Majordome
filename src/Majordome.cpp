@@ -231,5 +231,10 @@ int main(int ac, char **av){
 
 	if(verbose)
 		publishLog('I', "Starting %s %f ...", basename(av[0]), VERSION);
+
+		/***
+		 * Reading user configuration 
+		 ****/
+	readUserConfig( UserConfigRoot, L );
 }
 

@@ -35,3 +35,7 @@ void publishLog( char l, const char *msg, ...){
 	va_end(args);
 }
 
+const char *fileextention( const char *fch ){
+	return strrchr(fch, '.');
+}
+
