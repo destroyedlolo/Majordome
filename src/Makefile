@@ -8,17 +8,26 @@ gotoall: all
 cc=g++ -Wall -O2 -DxDEBUG -lpthread -lpaho-mqtt3c  -llua -lm -I/home/laurent/Projets/Selene.v4/src/SeleneLibrary -L/home/laurent/Projets/Selene.v4 -lSelene
 opts=
 
+ConfigDir.o : ConfigDir.cpp Components.h ConfigDir.h SortDir.h \
+  Makefile 
+	$(cc) -c -o ConfigDir.o ConfigDir.cpp $(opts) 
+
 Helpers.o : Helpers.cpp Components.h Makefile 
 	$(cc) -c -o Helpers.o Helpers.cpp $(opts) 
 
 Majordome.o : Majordome.cpp Components.h Makefile 
 	$(cc) -c -o Majordome.o Majordome.cpp $(opts) 
 
-readUserConfig.o : readUserConfig.cpp Components.h SortDir.h Makefile 
+readUserConfig.o : readUserConfig.cpp Components.h ConfigDir.h \
+  SortDir.h Makefile 
 	$(cc) -c -o readUserConfig.o readUserConfig.cpp $(opts) 
 
-../Majordome : readUserConfig.o Majordome.o Helpers.o Makefile 
-	 $(cc) -o ../Majordome readUserConfig.o Majordome.o Helpers.o \
-  $(opts) 
+SortDir.o : SortDir.cpp SortDir.h Makefile 
+	$(cc) -c -o SortDir.o SortDir.cpp $(opts) 
+
+../Majordome : SortDir.o readUserConfig.o Majordome.o Helpers.o \
+  ConfigDir.o Makefile 
+	 $(cc) -o ../Majordome SortDir.o readUserConfig.o Majordome.o \
+  Helpers.o ConfigDir.o $(opts) 
 
 all: ../Majordome 

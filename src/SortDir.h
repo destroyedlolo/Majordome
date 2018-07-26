@@ -8,13 +8,8 @@
 #ifndef SORTDIR_H
 #define SORTDIR_H
 
-#include <dirent.h>
-#include <cerrno>
-
 #include <vector>
 #include <string>
-#include <system_error>
-#include <algorithm>
 
 using namespace std;
 
@@ -40,26 +35,7 @@ protected:
 		/* Can't be made directly in the constructor otherwise 
 		 * virtual are not assumed ... GGGGrrrrrrr !
 		 */
-	void readdircontent( const char *where ){
-		DIR *dir;
-		struct dirent *p;
-
-		if( !(dir = opendir(where)) )
-			throw std::system_error(errno, std::generic_category());
-
-		while((p = readdir(dir))){
-			if( this->accept( p->d_name, where ) )
-				entries.push_back(  p->d_name );
-		}
-
-		closedir(dir);
-
-		std::sort(entries.begin(), entries.end(), 
-			[](string const &a, string const &b) -> bool {
-			    return a < b;
-			}
-		);
-	}
+	void readdircontent( const char *where );
 
 public:
 	SortDir(const char *where){
