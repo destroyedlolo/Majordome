@@ -15,7 +15,7 @@
  *      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  *	05/07/2018 - LF - Start of development
- *	25/07/2018 - LF - Switch to C++
+ *	25/07/2018 - LF - Switch to C++ (when it's useful)
  */
 
 #include <cstdio>
@@ -38,6 +38,8 @@
 #define VERSION 0.02
 #define DEFAULT_CONFIGURATION_FILE "/usr/local/etc/Majordome.conf"
 
+using namespace std;
+
 	/*****
 	 * global configuration
 	 *****/
@@ -54,8 +56,14 @@ static bool configtest = false;
 static const char *UserConfigRoot = "/usr/local/etc/Majordome";	/* Where to find user configuration */
 static const char *Broker_URL = "tcp://localhost:1883";		/* Broker's URL */
 
-static void read_configuration( const char *fch){ FILE *f; char l[MAXLINE];
-char *arg;
+/* Note : C++ stream exception handling is really brain damaged.
+ * well, such simple task is done in the old C way !
+ * (will see latter if it can switch to a C++ without headaches)
+ */
+static void read_configuration( const char *fch){
+	FILE *f;
+	char l[MAXLINE];
+	char *arg;
 
 	if(verbose)
 		printf("\nReading configuration file '%s'\n---------------------------\n", fch);
@@ -100,7 +108,6 @@ char *arg;
 			printf("MQTT Client ID : '%s' (computed)\n", MQTT_ClientID);
 	}
 }
-
 
 	/******
 	 * MQTT's
@@ -219,7 +226,7 @@ int main(int ac, char **av){
 	luaL_openlibs(L);
 	initSeleneLibrary(L);
 
-	slc_initMQTT( &MQTT_client, MQTT_ClientID );	// Initialize MQTT logging
+	slc_initMQTT( MQTT_client, MQTT_ClientID );	// Initialize MQTT logging
 	semc_initializeSeleMQTT( &MQTT_client, MQTT_ClientID );	// Initialize SeleMQTT
 
 	luainitfunc = libSel_AddStartupFunc( NULL, setGlobalVar );

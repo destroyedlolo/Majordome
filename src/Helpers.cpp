@@ -1,9 +1,9 @@
 /* Helpers.c
  * 	Helper functions
  */
-#include <string.h>
-#include <stdarg.h>
-#include <stdio.h>
+#include <cstring>
+#include <cstdarg>
+#include <cstdio>
 
 #include <libSelene.h>
 #include "Components.h"

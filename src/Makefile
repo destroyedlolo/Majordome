@@ -14,7 +14,7 @@ Helpers.o : Helpers.cpp Components.h Makefile
 Majordome.o : Majordome.cpp Components.h Makefile 
 	$(cc) -c -o Majordome.o Majordome.cpp $(opts) 
 
-readUserConfig.o : readUserConfig.cpp Components.h Makefile 
+readUserConfig.o : readUserConfig.cpp Components.h SortDir.h Makefile 
 	$(cc) -c -o readUserConfig.o readUserConfig.cpp $(opts) 
 
 ../Majordome : readUserConfig.o Majordome.o Helpers.o Makefile 
