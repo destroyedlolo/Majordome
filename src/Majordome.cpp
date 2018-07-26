@@ -26,14 +26,10 @@
 #include <unistd.h> 	// getopt()
 #include <errno.h>
 
-#if 0
-#include <libgen.h>
-#include <stdbool.h>
-#endif
-
 #include <libSelene.h>
 
 #include "Components.h"
+#include "Config.h"
 
 #define VERSION 0.02
 #define DEFAULT_CONFIGURATION_FILE "/usr/local/etc/Majordome.conf"
@@ -242,6 +238,6 @@ int main(int ac, char **av){
 		/***
 		 * Reading user configuration 
 		 ****/
-	readUserConfig( UserConfigRoot, L );
+	Config config( UserConfigRoot, L );
 }
 

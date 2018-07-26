@@ -8,9 +8,9 @@
 #include <cstring>
 
 #include "Components.h"
-#include "ConfigDir.h"
+#include "Config.h"
 
-bool configDir::accept( const char *fch, const char *dir ){
+bool Config::accept( const char *fch, const char *dir ){
 	if( SortDir::accept( fch, dir ) ){
 		string p( dir );
 		p += '/';
@@ -27,3 +27,9 @@ bool configDir::accept( const char *fch, const char *dir ){
 		return false;
 }
 
+Config::Config(const char *where, lua_State *L){
+	this->readdircontent( where );
+
+	for( iterator i=this->begin(); i<this->end(); i++) 
+			puts((*i).c_str());
+}

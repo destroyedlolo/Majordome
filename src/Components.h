@@ -47,13 +47,4 @@ extern void publishLog( char l, const char *msg, ...);
  */
 extern const char *fileextention( const char *fch );
 
-	/****
-	 * readUserConfig
-	 ****/
-/* Read user configuration directory tree
- * -> dir : root of the configuration directory
- * This function will exist in case of fatal error
- */
-extern void readUserConfig( const char *dir, lua_State *L );
-
 #endif
