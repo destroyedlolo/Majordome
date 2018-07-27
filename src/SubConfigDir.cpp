@@ -25,6 +25,11 @@ SubConfigDir::SubConfigDir(string &where, lua_State *L){
 		string completpath = where + '/' + *i;
 
 		if( *i == "Init.lua" ){
+			lua_pushstring(L, where.c_str() );
+			lua_setglobal(L, "SELENE_SCRIPT_DIR");
+			lua_pushstring(L, (*i).c_str() );
+			lua_setglobal(L, "SELENE_SCRIPT_NAME");
+
 			int err = luaL_loadfile(L, completpath.c_str()) || lua_pcall(L, 0, 0, 0);
 			if(err){
 				publishLog('F', "%s : %s", completpath.c_str(), lua_tostring(L, -1));
