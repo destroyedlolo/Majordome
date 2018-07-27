@@ -13,7 +13,7 @@ protected :
 	virtual bool accept( const char *, string & );
 
 public:
-	SubConfigDir(const char *where, lua_State *L);
+	SubConfigDir(string &where, lua_State *L);
 };
 
 #endif

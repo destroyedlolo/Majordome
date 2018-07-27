@@ -223,7 +223,7 @@ int main(int ac, char **av){
 	initSeleneLibrary(L);
 
 	slc_initMQTT( MQTT_client, MQTT_ClientID );	// Initialize MQTT logging
-	semc_initializeSeleMQTT( &MQTT_client, MQTT_ClientID );	// Initialize SeleMQTT
+	semc_initializeSeleMQTT( MQTT_client, MQTT_ClientID );	// Initialize SeleMQTT
 
 	luainitfunc = libSel_AddStartupFunc( NULL, setGlobalVar );
 	luainitfunc = libSel_AddStartupFunc( luainitfunc, initSelShared );

@@ -4,6 +4,8 @@
  */
 #include <cstring>
 
+#include <libSelene.h>
+
 #include "Components.h"
 #include "SubConfigDir.h"
 
@@ -16,5 +18,21 @@ bool SubConfigDir::accept( const char *fch, string &full ){
 	return false;
 }
 
-SubConfigDir::SubConfigDir(const char *where, lua_State *L){
+SubConfigDir::SubConfigDir(string &where, lua_State *L){
+	this->readdircontent( where );
+
+	for( iterator i=this->begin(); i<this->end(); i++){
+		string completpath = where + '/' + *i;
+
+		if( *i == "Init.lua" ){
+			int err = luaL_loadfile(L, completpath.c_str()) || lua_pcall(L, 0, 0, 0);
+			if(err){
+				publishLog('F', "%s : %s", completpath.c_str(), lua_tostring(L, -1));
+				lua_pop(L, 1);  /* pop error message from the stack */
+				exit(EXIT_FAILURE);
+			}
+		} 
+else printf("*d* ignoring %s\n", (*i).c_str() );
+
+	}
 }

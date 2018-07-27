@@ -41,6 +41,7 @@ protected:
 		 * virtual are not assumed ... GGGGrrrrrrr !
 		 */
 	void readdircontent( const char *where );
+	void readdircontent( string &where){ this->readdircontent(where.c_str()); }
 
 public:
 	SortDir(const char *where){

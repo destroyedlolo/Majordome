@@ -28,6 +28,13 @@ bool Config::accept( const char *fch, string &full ){
 Config::Config(const char *where, lua_State *L){
 	this->readdircontent( where );
 
-	for( iterator i=this->begin(); i<this->end(); i++) 
-			puts((*i).c_str());
+	for( iterator i=this->begin(); i<this->end(); i++){
+		publishLog('L', "Loading '%s'", (*i).c_str());
+
+		string completpath = where;
+		completpath += '/';
+		completpath += *i;
+
+		SubConfigDir( completpath, L );
+	}
 }
