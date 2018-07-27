@@ -11,14 +11,11 @@
 #include "Config.h"
 #include "SubConfigDir.h"
 
-bool Config::accept( const char *fch, const char *dir ){
-	if( SortDir::accept( fch, dir ) ){
-		string p( dir );
-		p += '/';
-		p += fch;
+bool Config::accept( const char *fch, string &full ){
+	if( SortDir::accept( fch, full) ){
 
 		struct stat buff;
-		if( stat( p.c_str(), &buff )<0 ){
+		if( stat( full.c_str(), &buff )<0 ){
 			publishLog('E', "%s : %s", fch, strerror(errno));
 			return false;
 		}

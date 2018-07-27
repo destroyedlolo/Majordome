@@ -7,8 +7,8 @@
 #include "Components.h"
 #include "SubConfigDir.h"
 
-bool SubConfigDir::accept( const char *fch, const char *dir ){
-	if( SortDir::accept( fch, dir ) ){
+bool SubConfigDir::accept( const char *fch, string &full ){
+	if( SortDir::accept( fch, full ) ){
 		const char *ext = fileextention( fch );
 		if( !strcmp(ext,".lua") )
 			return true;
@@ -16,4 +16,5 @@ bool SubConfigDir::accept( const char *fch, const char *dir ){
 	return false;
 }
 
-
+SubConfigDir::SubConfigDir(const char *where, lua_State *L){
+}

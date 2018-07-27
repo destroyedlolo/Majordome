@@ -25,10 +25,15 @@ public :
 	iterator end() { return entries.end(); }
 	
 protected:
-		/* File acceptance : in this version, ignore everything starting by
-		 * a dot '.'
+		/* File acceptance :
+		 * -> fch : filename
+		 * -> full : full path of this file
+		 * <- boolean : accepted (true) or rejected (false)
+		 *
+		 * in this version, ignore everything starting by
+		 * a dot '.' and may be overload by derived classes
 		 */
-	virtual bool accept( const char *fch, const char *dir ){
+	virtual bool accept( const char *fch, string &full ){
 		return(*fch != '.');
 	}
 

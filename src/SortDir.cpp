@@ -20,7 +20,11 @@ void SortDir::readdircontent( const char *where ){
 		throw std::system_error(errno, std::generic_category());
 
 	while((p = readdir(dir))){
-		if( this->accept( p->d_name, where ) )
+		string full( where );
+		full += '/';
+		full += p->d_name;
+
+		if( this->accept( p->d_name, full ) )
 			entries.push_back(  p->d_name );
 	}
 
