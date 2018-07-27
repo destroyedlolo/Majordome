@@ -9,6 +9,7 @@
 
 #include "Components.h"
 #include "Config.h"
+#include "SubConfigDir.h"
 
 bool Config::accept( const char *fch, const char *dir ){
 	if( SortDir::accept( fch, dir ) ){
