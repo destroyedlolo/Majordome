@@ -6,11 +6,16 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include <map>
+
 #include <lua.h>	/* Lua's state needed */
 
 #include "SortDir.h"
+#include "MQTTTopic.h"
 
 class Config : virtual public SortDir {
+	std::map<std::string, MQTTTopic> TopicsList;
+
 protected :
 	virtual bool accept( const char *, string & );
 

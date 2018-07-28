@@ -35,6 +35,6 @@ Config::Config(const char *where, lua_State *L){
 		completpath += '/';
 		completpath += *i;
 
-		SubConfigDir( completpath, L );
+		SubConfigDir( *this, completpath, L );
 	}
 }

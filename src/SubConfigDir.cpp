@@ -12,17 +12,20 @@
 bool SubConfigDir::accept( const char *fch, string &full ){
 	if( SortDir::accept( fch, full ) ){
 		const char *ext = fileextention( fch );
-		if( !strcmp(ext,".lua") )
+		if( !strcmp(ext,".lua") ||
+			!strcmp(ext,".topic")
+		)
 			return true;
 	}
 	return false;
 }
 
-SubConfigDir::SubConfigDir(string &where, lua_State *L){
+SubConfigDir::SubConfigDir( Config &cfg, string &where, lua_State *L){
 	this->readdircontent( where );
 
 	for( iterator i=this->begin(); i<this->end(); i++){
 		string completpath = where + '/' + *i;
+		const char *ext = fileextention( (*i).c_str() );
 
 		if( *i == "Init.lua" ){
 			lua_pushstring(L, where.c_str() );
@@ -36,8 +39,10 @@ SubConfigDir::SubConfigDir(string &where, lua_State *L){
 				lua_pop(L, 1);  /* pop error message from the stack */
 				exit(EXIT_FAILURE);
 			}
-		} 
-else printf("*d* ignoring %s\n", (*i).c_str() );
+		} else if( !strcmp(ext,".topic") ){
+			MQTTTopic tpc( completpath );
+		}
+else printf("*d* ignoring %s (ext '%s')\n", (*i).c_str(), ext );
 
 	}
 }

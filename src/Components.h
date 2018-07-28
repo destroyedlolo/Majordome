@@ -10,6 +10,8 @@
 #include <MQTTClient.h> /* PAHO library needed */
 #include <lua.h>	/* Lua's state needed */
 
+#include "MayBeEmptyString.h"
+
 	/****
 	 * Configuration's
 	 ****/
@@ -32,6 +34,8 @@ extern char *removeLF(char *);
  * 	- NULL if the keyword is not found
  */
 extern char *striKWcmp( char *s, const char *kw );
+extern MayBeEmptyString striKWcmp( std::string s, const char *kw );
+extern MayBeEmptyString striKWcmp( std::string s, std::string &kw );
 
 /* Log messages (in printf() format) into both
  * stdout/err and in topics.
