@@ -18,6 +18,9 @@
  *	25/07/2018 - LF - Switch to C++ (when it's useful)
  */
 
+#include <iostream>
+#include <fstream>
+
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -52,42 +55,40 @@ static bool configtest = false;
 static const char *UserConfigRoot = "/usr/local/etc/Majordome";	/* Where to find user configuration */
 static const char *Broker_URL = "tcp://localhost:1883";		/* Broker's URL */
 
-/* Note : C++ stream exception handling is really brain damaged.
- * well, such simple task is done in the old C way !
- * (will see latter if it can switch to a C++ without headaches)
- */
 static void read_configuration( const char *fch){
-	FILE *f;
-	char l[MAXLINE];
-	char *arg;
+	std::ifstream file;
+	file.exceptions ( std::ios::eofbit | std::ios::failbit ); // No need to check failbit
+	try {
+		std::string l;
 
-	if(verbose)
-		printf("\nReading configuration file '%s'\n---------------------------\n", fch);
+		file.open(fch);
+		while( std::getline( file, l) ){
+			MayBeEmptyString arg;
 
-	if(!(f=fopen(fch, "r"))){
-		publishLog('F', "%s : %s", fch, strerror( errno ));
-		exit(EXIT_FAILURE);
-	}
-
-	while(fgets(l, MAXLINE, f)){
-		if(*l == '#' || *l == '\n')
-			continue;
-	
-		if((arg = striKWcmp(l,"Broker_URL="))){
-			assert(( Broker_URL = strdup( removeLF(arg) ) ));
-			if(verbose)
-				printf("\tBroker_URL : '%s'\n", Broker_URL);
-		} else if((arg = striKWcmp(l,"ClientID="))){
-			assert(( MQTT_ClientID = strdup( removeLF(arg) ) ));
-			if(verbose)
-				printf("\tMQTT Client ID : '%s'\n", MQTT_ClientID);
-		} else if((arg = striKWcmp(l,"UserConfiguration="))){
-			assert(( UserConfigRoot = strdup( removeLF(arg) ) ));
-			if(verbose)
-				printf("\tUser configuration directory : '%s'\n", UserConfigRoot);
+			if( l[0]=='#' )
+				continue;
+			else if( !!(arg = striKWcmp( l, "Broker_URL=" ))){
+				assert(( Broker_URL = strdup( arg.c_str() ) ));
+				if(verbose)
+					printf("\tBroker_URL : '%s'\n", Broker_URL);
+			} else if( !!(arg = striKWcmp( l, "ClientID=" ))){
+				assert(( MQTT_ClientID = strdup( arg.c_str() ) ));
+				if(verbose)
+					printf("\tClient ID : '%s'\n", MQTT_ClientID);
+			} else if( !!(arg = striKWcmp( l, "UserConfiguration=" ))){
+				assert(( UserConfigRoot = strdup( arg.c_str() ) ));
+				if(verbose)
+					printf("\tUser configuration directory : '%s'\n", UserConfigRoot);
+			} 
+		}
+	} catch(const std::ifstream::failure &e){
+		if(!file.eof()){
+			publishLog('F', "%s : %s", fch, strerror(errno) );
+			exit(EXIT_FAILURE);
 		}
 	}
-	fclose(f);
+
+	file.close();
 
 	if(verbose)
 		puts("");
@@ -98,6 +99,7 @@ static void read_configuration( const char *fch){
 			publishLog('F', "gethostname() : %s", strerror( errno ));
 			exit(EXIT_FAILURE);
 		}
+		char l[ strlen(h) + 20 ];
 		sprintf(l, "Majordome-%s-%u", h, getpid());
 		assert(( MQTT_ClientID = strdup( l ) ));
 		if(verbose)
