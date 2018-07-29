@@ -1,0 +1,15 @@
+# test topic
+
+# name of the topic
+# if not set, takes the filename
+name=toto
+
+# set the topic (mandatory)
+topic=ESPRouter_Domo/NoStations
+
+# QOS for this topic between 0 and 2
+# if outside this range, forced to 0
+qos=0
+
+# disable this topic
+disabled
