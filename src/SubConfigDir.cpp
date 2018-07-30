@@ -28,6 +28,9 @@ SubConfigDir::SubConfigDir( Config &cfg, string &where, lua_State *L){
 		const char *ext = fileextention( (*i).c_str() );
 
 		if( *i == "Init.lua" ){
+#ifdef DEBUG
+	publishLog('L', "\t'Init.lua'");
+#endif
 			lua_pushstring(L, where.c_str() );
 			lua_setglobal(L, "SELENE_SCRIPT_DIR");
 			lua_pushstring(L, (*i).c_str() );
@@ -42,7 +45,9 @@ SubConfigDir::SubConfigDir( Config &cfg, string &where, lua_State *L){
 		} else if( !strcmp(ext,".topic") ){
 			MQTTTopic tpc( completpath );
 		}
+#ifdef DEBUG
 else printf("*d* ignoring %s (ext '%s')\n", (*i).c_str(), ext );
+#endif
 
 	}
 }

@@ -6,13 +6,14 @@
 #ifndef MQTTTOPIC_H
 #define MQTTTOPIC_H
 
-#include <string>
+#include "MayBeEmptyString.h"
 
 #include "Object.h"
 
 class MQTTTopic : public Object {
-	std::string topic;	// Topic to look for
-	int qos;		// Associated QoS
+protected:
+	MayBeEmptyString topic;	// Topic to look for
+	unsigned int qos;		// Associated QoS
 
 public:
 	/* Constructor from a file */

@@ -5,8 +5,12 @@
 #include "Components.h"
 #include "MQTTTopic.h"
 
-MQTTTopic::MQTTTopic( std::string &fch ){
-	/* determine the name from the filename */
+MQTTTopic::MQTTTopic( std::string &fch ) : qos(0) {
+
+	/*
+	 * determine the name from the filename
+	 */
+
 	std::string name = fch;
 	const size_t last_slash_idx = name.find_last_of("/");	// Filename only
 	if(std::string::npos != last_slash_idx)
@@ -16,8 +20,14 @@ MQTTTopic::MQTTTopic( std::string &fch ){
 	if (std::string::npos != period_idx)
 		name.erase(period_idx);
 
-	/* Reading file's content */
-printf("*L* '%s'\n", fch.c_str());
+
+	/*
+	 * Reading file's content
+	 */
+
+#ifdef DEBUG
+	publishLog('L', "\t'%s'", fch.c_str());
+#endif
 
 	std::ifstream file;
 	file.exceptions ( std::ios::eofbit | std::ios::failbit ); // No need to check failbit
@@ -29,16 +39,49 @@ printf("*L* '%s'\n", fch.c_str());
 			MayBeEmptyString arg;
 
 			if( !!(arg = striKWcmp( l, "name=" ))){
-				printf(">> '%s'\n", arg.c_str());
-			} else
-				puts(l.c_str());
+				name = arg;
+#ifdef DEBUG
+				publishLog('D', "\t\tChanging name to '%s'", name.c_str());
+#endif
+			} else if( !!(arg = striKWcmp( l, "topic=" ))){
+				this->topic = arg;
+#ifdef DEBUG
+				publishLog('D', "\t\ttopic : '%s'", this->topic.c_str());
+#endif
+			} else if( !!(arg = striKWcmp( l, "qos=" ))){
+				if((this->qos = stoi(arg)) > 2)	// If invalid
+					this->qos = 0;
+#ifdef DEBUG
+				publishLog('D', "\t\tqos : '%d'", this->qos);
+#endif
+			} else if( l == "disabled" ){
+#ifdef DEBUG
+				publishLog('D', "\t\tDisabled");
+#endif
+				this->disable();
+			}
+#if 0
+else publishLog('D', "Ignore '%s'", l.c_str());
+#endif
 		}
 	} catch(const std::ifstream::failure &e){
 		if(!file.eof()){
 			publishLog('F', "%s : %s", fch.c_str(), strerror(errno) );
 			exit(EXIT_FAILURE);
 		}
+	} catch(const std::invalid_argument &e){
+		publishLog('F', "%s : invalid argument", fch.c_str() );
+		exit(EXIT_FAILURE);
 	}
 
 	file.close();
+
+	/*
+	 * Sanity checks
+	 */
+
+	if(!this->topic){
+		publishLog('F', "%s : No topic defined", fch.c_str() );
+		exit(EXIT_FAILURE);
+	}
 }
