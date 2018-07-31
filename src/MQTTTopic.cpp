@@ -5,13 +5,13 @@
 #include "Components.h"
 #include "MQTTTopic.h"
 
-MQTTTopic::MQTTTopic( std::string &fch ) : qos(0) {
+MQTTTopic::MQTTTopic( const std::string &fch, std::string &name ) : qos(0) {
 
 	/*
 	 * determine the name from the filename
 	 */
 
-	std::string name = fch;
+	name = fch;
 	const size_t last_slash_idx = name.find_last_of("/");	// Filename only
 	if(std::string::npos != last_slash_idx)
 		name.erase(0, last_slash_idx + 1);
@@ -80,8 +80,16 @@ else publishLog('D', "Ignore '%s'", l.c_str());
 	 * Sanity checks
 	 */
 
-	if(!this->topic){
+	if( !this->topic ){
 		publishLog('F', "%s : No topic defined", fch.c_str() );
 		exit(EXIT_FAILURE);
 	}
+	this->hasWildcard =
+		this->topic.find('#') != std::string::npos ||
+		this->topic.find('+') != std::string::npos;
+
+#ifdef DEBUG
+	if( this->hasWildcard )
+		publishLog('D', "\t\tHas Wildcard");
+#endif
 }

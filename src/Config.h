@@ -14,12 +14,13 @@
 #include "MQTTTopic.h"
 
 class Config : virtual public SortDir {
-	std::map<std::string, MQTTTopic> TopicsList;
-
 protected :
 	virtual bool accept( const char *, string & );
 
 public:
+	typedef std::map<std::string, MQTTTopic> TopicElements;
+	TopicElements TopicsList;
+
 	Config(const char *where, lua_State *L);
 };
 

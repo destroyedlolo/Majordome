@@ -43,7 +43,16 @@ SubConfigDir::SubConfigDir( Config &cfg, string &where, lua_State *L){
 				exit(EXIT_FAILURE);
 			}
 		} else if( !strcmp(ext,".topic") ){
-			MQTTTopic tpc( completpath );
+			std::string name;
+			MQTTTopic tpc( completpath, name );
+			Config::TopicElements::iterator prev;
+
+			if((prev = cfg.TopicsList.find(name)) != cfg.TopicsList.end()){
+				publishLog('F', "Topic '%s' is defined multiple times", name.c_str(), lua_tostring(L, -1));
+				exit(EXIT_FAILURE);
+			} else {
+				cfg.TopicsList.insert( std::make_pair(name, tpc) );
+			}
 		}
 #ifdef DEBUG
 else printf("*d* ignoring %s (ext '%s')\n", (*i).c_str(), ext );
