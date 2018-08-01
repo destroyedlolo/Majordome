@@ -5,7 +5,7 @@
 #include "Components.h"
 #include "MQTTTopic.h"
 
-MQTTTopic::MQTTTopic( const std::string &fch, std::string &name ) : qos(0) {
+MQTTTopic::MQTTTopic( const std::string &fch, std::string &where, std::string &name ) : qos(0) {
 
 	/*
 	 * determine the name from the filename
@@ -19,6 +19,9 @@ MQTTTopic::MQTTTopic( const std::string &fch, std::string &name ) : qos(0) {
 	const size_t period_idx = name.rfind('.');	// Remove extension if present.
 	if (std::string::npos != period_idx)
 		name.erase(period_idx);
+	
+	this->name = name;
+	this->where = where;
 
 
 	/*
@@ -84,12 +87,12 @@ else publishLog('D', "Ignore '%s'", l.c_str());
 		publishLog('F', "%s : No topic defined", fch.c_str() );
 		exit(EXIT_FAILURE);
 	}
-	this->hasWildcard =
+	this->Wildcard =
 		this->topic.find('#') != std::string::npos ||
 		this->topic.find('+') != std::string::npos;
 
 #ifdef DEBUG
-	if( this->hasWildcard )
+	if( this->Wildcard )
 		publishLog('D', "\t\tHas Wildcard");
 #endif
 }

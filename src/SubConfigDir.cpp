@@ -44,11 +44,11 @@ SubConfigDir::SubConfigDir( Config &cfg, string &where, lua_State *L){
 			}
 		} else if( !strcmp(ext,".topic") ){
 			std::string name;
-			MQTTTopic tpc( completpath, name );
+			MQTTTopic tpc( completpath, where, name );
 			Config::TopicElements::iterator prev;
 
 			if((prev = cfg.TopicsList.find(name)) != cfg.TopicsList.end()){
-				publishLog('F', "Topic '%s' is defined multiple times", name.c_str(), lua_tostring(L, -1));
+				publishLog('F', "Topic '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second.getWhere().c_str());
 				exit(EXIT_FAILURE);
 			} else {
 				cfg.TopicsList.insert( std::make_pair(name, tpc) );
@@ -57,6 +57,23 @@ SubConfigDir::SubConfigDir( Config &cfg, string &where, lua_State *L){
 #ifdef DEBUG
 else printf("*d* ignoring %s (ext '%s')\n", (*i).c_str(), ext );
 #endif
+	}
 
+	/* Sanity checks
+	 * Verify overlapping
+	 */
+	for(Config::TopicElements::iterator i = cfg.TopicsList.begin(); i != cfg.TopicsList.end(); i++){
+		Config::TopicElements::iterator j = i;
+		for(j++; j != cfg.TopicsList.end(); j++){
+			if( !(i->second.hasWildcard()) && !(j->second.hasWildcard()) ){ // No wildcard
+				publishLog('F', "Same MQTT topic used for topics '%s' from '%s' and '%s' from '%s'",
+					i->second.getName().c_str(), 
+					i->second.getWhere().c_str(), 
+					j->second.getName().c_str(),
+					j->second.getWhere().c_str()
+				);
+				exit(EXIT_FAILURE);
+			}
+		}
 	}
 }
