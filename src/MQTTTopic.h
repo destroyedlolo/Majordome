@@ -20,6 +20,7 @@ public:
 	/* Constructor from a file */
 	MQTTTopic( const std::string &, std::string &where, std::string &name  );
 
+	const char *getTopic( void ){ return this->topic.c_str(); };
 	bool hasWildcard( void ){ return this->Wildcard; };
 };
 

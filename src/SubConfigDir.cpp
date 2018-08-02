@@ -58,22 +58,4 @@ SubConfigDir::SubConfigDir( Config &cfg, string &where, lua_State *L){
 else printf("*d* ignoring %s (ext '%s')\n", (*i).c_str(), ext );
 #endif
 	}
-
-	/* Sanity checks
-	 * Verify overlapping
-	 */
-	for(Config::TopicElements::iterator i = cfg.TopicsList.begin(); i != cfg.TopicsList.end(); i++){
-		Config::TopicElements::iterator j = i;
-		for(j++; j != cfg.TopicsList.end(); j++){
-			if( !(i->second.hasWildcard()) && !(j->second.hasWildcard()) ){ // No wildcard
-				publishLog('F', "Same MQTT topic used for topics '%s' from '%s' and '%s' from '%s'",
-					i->second.getName().c_str(), 
-					i->second.getWhere().c_str(), 
-					j->second.getName().c_str(),
-					j->second.getWhere().c_str()
-				);
-				exit(EXIT_FAILURE);
-			}
-		}
-	}
 }

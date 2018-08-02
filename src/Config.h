@@ -22,6 +22,11 @@ public:
 	TopicElements TopicsList;
 
 	Config(const char *where, lua_State *L);
+
+	/* Check if data overlaps
+	 *	Notez-bien : in case of clash, the program exits
+	 */
+	void SanityChecks( void );
 };
 
 #endif
