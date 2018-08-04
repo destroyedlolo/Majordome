@@ -6,6 +6,8 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
+#include <string>
+
 class Object {
 	bool disabled;
 
@@ -22,6 +24,14 @@ public:
 
 	std::string &getName( void ){ return this->name; };
 	std::string &getWhere( void ){ return this->where; };
+
+	/*
+	 * determine the name from the filename
+	 * -> fch : filename (optionally including its path)
+	 * <- name : extracted name
+	 */
+	void extrName( const std::string &fch, std::string &name );
+
 };
 
 #endif

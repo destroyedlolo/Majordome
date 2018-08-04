@@ -53,6 +53,9 @@ SubConfigDir::SubConfigDir( Config &cfg, string &where, lua_State *L){
 			} else {
 				cfg.TopicsList.insert( std::make_pair(name, tpc) );
 			}
+		} else if( !strcmp(ext,".lua") ){
+			std::string name;
+			LuaTask tsk( completpath, where, name, L );
 		}
 #ifdef DEBUG
 else printf("*d* ignoring %s (ext '%s')\n", (*i).c_str(), ext );

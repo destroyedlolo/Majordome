@@ -12,6 +12,7 @@
 
 #include "SortDir.h"
 #include "MQTTTopic.h"
+#include "LuaTask.h"
 
 class Config : virtual public SortDir {
 protected :
