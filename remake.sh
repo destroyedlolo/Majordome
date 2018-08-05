@@ -2,7 +2,12 @@
 
 #this script is used to create a Makefile
 
-SELLIBDIR=~/Projets/Selene.v4
+if [ -d ~/Projets/Selene.v4 ]; then
+	SELLIBDIR=~/Projets/Selene.v4
+else
+	SELLIBDIR=~/Projets/Selene
+fi
+
 SELLIBHDIR=$SELLIBDIR/src/SeleneLibrary
 
 cd src
