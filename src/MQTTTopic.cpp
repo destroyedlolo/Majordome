@@ -74,12 +74,12 @@ else publishLog('D', "Ignore '%s'", l.c_str());
 		publishLog('F', "%s : No topic defined", fch.c_str() );
 		exit(EXIT_FAILURE);
 	}
-	this->Wildcard =
+	this->wildcard =
 		this->topic.find('#') != std::string::npos ||
 		this->topic.find('+') != std::string::npos;
 
 #ifdef DEBUG
-	if( this->Wildcard )
-		publishLog('D', "\t\tHas Wildcard");
+	if( this->wildcard )
+		publishLog('D', "\t\tHas wildcard");
 #endif
 }

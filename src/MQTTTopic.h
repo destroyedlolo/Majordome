@@ -13,7 +13,7 @@ class MQTTTopic : public Object {
 protected:
 	MayBeEmptyString topic;	// Topic to look for
 	unsigned int qos;		// Associated QoS
-	bool Wildcard;		// True if the topic contains wildcard
+	bool wildcard;		// True if the topic contains wildcard
 
 public:
 	/* Constructor from a file
@@ -24,7 +24,7 @@ public:
 	MQTTTopic( const std::string &file, std::string &where, std::string &name  );
 
 	const char *getTopic( void ){ return this->topic.c_str(); };
-	bool hasWildcard( void ){ return this->Wildcard; };
+	bool hasWildcard( void ){ return this->wildcard; };
 };
 
 #endif
