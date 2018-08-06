@@ -29,7 +29,7 @@ MQTTTopic::MQTTTopic( const std::string &fch, std::string &where, std::string &n
 			MayBeEmptyString arg;
 
 			if( !!(arg = striKWcmp( l, "name=" ))){
-				name = arg;
+				this->name = name = arg;
 #ifdef DEBUG
 				publishLog('D', "\t\tChanging name to '%s'", name.c_str());
 #endif
