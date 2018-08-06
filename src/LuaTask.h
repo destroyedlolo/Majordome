@@ -13,6 +13,7 @@
 
 class LuaTask : public Object {
 	struct elastic_storage func;	// Function to execute
+	bool once;	// can run only once
 
 public:
 	/* Constructor from a file
@@ -23,6 +24,8 @@ public:
 	 */
 	LuaTask( const std::string &file, std::string &where, std::string &name, lua_State *L );
 
+	void setOnce( bool v ){ this->once = v; }
+	bool getOnce( void ){ return this->once; }
 };
 
 #endif

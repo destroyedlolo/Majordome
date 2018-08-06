@@ -7,6 +7,9 @@
 -- if not set, takes the filename
 -->> name=Toto
 --
+-- If set, only one instance is allowed to run
+-->> once
+--
 -- Disable this script
 -->> disabled
 

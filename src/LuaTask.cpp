@@ -8,7 +8,7 @@
 #include "Components.h"
 #include "LuaTask.h"
 
-LuaTask::LuaTask( const std::string &fch, std::string &where, std::string &name, lua_State *L ) {
+LuaTask::LuaTask( const std::string &fch, std::string &where, std::string &name, lua_State *L ) : once( false ){
 #ifdef DEBUG
 	publishLog('L', "\t'%s'", fch.c_str());
 #endif
@@ -50,6 +50,11 @@ LuaTask::LuaTask( const std::string &fch, std::string &where, std::string &name,
 #ifdef DEBUG
 				publishLog('D', "\t\tChanging name to '%s'", name.c_str());
 #endif
+			} else if( l == "-->> once" ){
+#ifdef DEBUG
+				publishLog('D', "\t\tOnly one instance is allowed to run (once)");
+#endif
+				this->setOnce( true );
 			} else if( l == "-->> disabled" ){
 #ifdef DEBUG
 				publishLog('D', "\t\tDisabled");
