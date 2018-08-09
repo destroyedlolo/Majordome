@@ -8,7 +8,7 @@
 
 #include <map>
 
-#include <lua.h>	/* Lua's state needed */
+#include <lua.hpp>	/* Lua's state needed */
 
 #include "SortDir.h"
 #include "MQTTTopic.h"
