@@ -11,10 +11,10 @@
 
 class SubConfigDir : virtual public SortDir {
 protected :
-	virtual bool accept( const char *, string & );
+	virtual bool accept( const char *, std::string & );
 
 public:
-	SubConfigDir(Config &, string &, lua_State *);
+	SubConfigDir(Config &, std::string &, lua_State *);
 };
 
 #endif

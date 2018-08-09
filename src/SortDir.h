@@ -11,11 +11,9 @@
 #include <vector>
 #include <string>
 
-using namespace std;
-
 class SortDir {
 
-	typedef vector<string> DirEntries;
+	typedef std::vector<std::string> DirEntries;
 	DirEntries entries;
 
 public :
@@ -33,7 +31,7 @@ protected:
 		 * in this version, ignore everything starting by
 		 * a dot '.' and may be overload by derived classes
 		 */
-	virtual bool accept( const char *fch, string &full ){
+	virtual bool accept( const char *fch, std::string &full ){
 		return(*fch != '.');
 	}
 
@@ -41,7 +39,7 @@ protected:
 		 * virtual are not assumed ... GGGGrrrrrrr !
 		 */
 	void readdircontent( const char *where );
-	void readdircontent( string &where){ this->readdircontent(where.c_str()); }
+	void readdircontent( std::string &where){ this->readdircontent(where.c_str()); }
 
 public:
 	SortDir(const char *where){

@@ -20,7 +20,7 @@ void SortDir::readdircontent( const char *where ){
 		throw std::system_error(errno, std::generic_category());
 
 	while((p = readdir(dir))){
-		string full( where );
+		std::string full( where );
 		full += '/';
 		full += p->d_name;
 
@@ -31,7 +31,7 @@ void SortDir::readdircontent( const char *where ){
 	closedir(dir);
 
 	std::sort(entries.begin(), entries.end(), 
-		[](string const &a, string const &b) -> bool {
+		[](std::string const &a, std::string const &b) -> bool {
 		    return a < b;
 		}
 	);

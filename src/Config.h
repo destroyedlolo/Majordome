@@ -16,7 +16,7 @@
 
 class Config : virtual public SortDir {
 protected :
-	virtual bool accept( const char *, string & );
+	virtual bool accept( const char *, std::string & );
 
 public:
 	typedef std::map<std::string, MQTTTopic> TopicElements;

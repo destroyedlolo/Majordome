@@ -9,7 +9,7 @@
 #include "Components.h"
 #include "SubConfigDir.h"
 
-bool SubConfigDir::accept( const char *fch, string &full ){
+bool SubConfigDir::accept( const char *fch, std::string &full ){
 	if( SortDir::accept( fch, full ) ){
 		const char *ext = fileextention( fch );
 		if( !strcmp(ext,".lua") ||
@@ -20,11 +20,11 @@ bool SubConfigDir::accept( const char *fch, string &full ){
 	return false;
 }
 
-SubConfigDir::SubConfigDir( Config &cfg, string &where, lua_State *L){
+SubConfigDir::SubConfigDir( Config &cfg, std::string &where, lua_State *L){
 	this->readdircontent( where );
 
 	for( iterator i=this->begin(); i<this->end(); i++){
-		string completpath = where + '/' + *i;
+		std::string completpath = where + '/' + *i;
 		const char *ext = fileextention( (*i).c_str() );
 
 		if( *i == "Init.lua" ){

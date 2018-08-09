@@ -13,7 +13,7 @@
 #include "Config.h"
 #include "SubConfigDir.h"
 
-bool Config::accept( const char *fch, string &full ){
+bool Config::accept( const char *fch, std::string &full ){
 	if( SortDir::accept( fch, full) ){
 
 		struct stat buff;
@@ -33,7 +33,7 @@ Config::Config(const char *where, lua_State *L){
 	for( iterator i=this->begin(); i<this->end(); i++){
 		publishLog('L', "Loading '%s'", (*i).c_str());
 
-		string completpath = where;
+		std::string completpath = where;
 		completpath += '/';
 		completpath += *i;
 
