@@ -15,8 +15,8 @@ Config.o : Config.cpp Components.h MayBeEmptyString.h Config.h \
 Helpers.o : Helpers.cpp Components.h MayBeEmptyString.h Makefile 
 	$(cc) -c -o Helpers.o Helpers.cpp $(opts) 
 
-LuaTask.o : LuaTask.cpp Components.h MayBeEmptyString.h LuaTask.h \
-  Object.h Makefile 
+LuaTask.o : LuaTask.cpp Config.h SortDir.h MQTTTopic.h \
+  MayBeEmptyString.h Object.h LuaTask.h Components.h Makefile 
 	$(cc) -c -o LuaTask.o LuaTask.cpp $(opts) 
 
 Majordome.o : Majordome.cpp Components.h MayBeEmptyString.h Config.h \
@@ -24,7 +24,7 @@ Majordome.o : Majordome.cpp Components.h MayBeEmptyString.h Config.h \
 	$(cc) -c -o Majordome.o Majordome.cpp $(opts) 
 
 MQTTTopic.o : MQTTTopic.cpp Components.h MayBeEmptyString.h \
-  MQTTTopic.h Object.h Makefile 
+  MQTTTopic.h Object.h LuaTask.h Makefile 
 	$(cc) -c -o MQTTTopic.o MQTTTopic.cpp $(opts) 
 
 Object.o : Object.cpp Object.h Makefile 

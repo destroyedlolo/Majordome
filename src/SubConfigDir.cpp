@@ -45,8 +45,8 @@ SubConfigDir::SubConfigDir( Config &cfg, std::string &where, lua_State *L){
 		} else if( !strcmp(ext,".topic") ){
 			std::string name;
 			MQTTTopic tpc( completpath, where, name );
-			Config::TopicElements::iterator prev;
 
+			Config::TopicElements::iterator prev;
 			if((prev = cfg.TopicsList.find(name)) != cfg.TopicsList.end()){
 				publishLog('F', "Topic '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second.getWhere().c_str());
 				exit(EXIT_FAILURE);
@@ -55,7 +55,16 @@ SubConfigDir::SubConfigDir( Config &cfg, std::string &where, lua_State *L){
 			}
 		} else if( !strcmp(ext,".lua") ){
 			std::string name;
-			LuaTask tsk( completpath, where, name, L );
+			LuaTask tsk( cfg, completpath, where, name, L );
+	
+			Config::TaskElements::iterator prev;
+			if((prev = cfg.TasksList.find(name)) != cfg.TasksList.end()){
+				publishLog('F', "Task '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second.getWhere().c_str());
+				exit(EXIT_FAILURE);
+			} else {
+				cfg.TasksList.insert( std::make_pair(name, tsk) );
+			}
+
 		}
 #ifdef DEBUG
 else printf("*d* ignoring %s (ext '%s')\n", (*i).c_str(), ext );

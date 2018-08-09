@@ -22,6 +22,9 @@ public:
 	typedef std::map<std::string, MQTTTopic> TopicElements;
 	TopicElements TopicsList;
 
+	typedef std::map<std::string, LuaTask> TaskElements;
+	TaskElements TasksList;
+
 	Config(const char *where, lua_State *L);
 
 	/* Check if data overlaps

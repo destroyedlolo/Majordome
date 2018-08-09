@@ -5,7 +5,11 @@
 --
 -- Name of this script
 -- if not set, takes the filename
--->> name=Toto
+--->> name=Toto
+--
+-- Indicate topic to listen for
+-- (more than one "listen" can be present)
+-->> listen=NoStations
 --
 -- If set, only one instance is allowed to run
 -->> once

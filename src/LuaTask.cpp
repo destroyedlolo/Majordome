@@ -10,10 +10,11 @@ extern "C" {
     #include "lauxlib.h"
 };
 
+#include "Config.h"
 #include "Components.h"
 #include "LuaTask.h"
 
-LuaTask::LuaTask( const std::string &fch, std::string &where, std::string &name, lua_State *L ) : once( false ){
+LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::string &name, lua_State *L ) : once( false ){
 #ifdef DEBUG
 	publishLog('L', "\t'%s'", fch.c_str());
 #endif
@@ -55,6 +56,15 @@ LuaTask::LuaTask( const std::string &fch, std::string &where, std::string &name,
 #ifdef DEBUG
 				publishLog('D', "\t\tChanging name to '%s'", name.c_str());
 #endif
+			} else if( !!(arg = striKWcmp( l, "-->> listen=" ))){
+				Config::TopicElements::iterator topic;
+				if( (topic = cfg.TopicsList.find(arg)) != cfg.TopicsList.end()){
+	// Note, we don't care if the task registration can't complete afterward
+	// as every error is fatal until initialisation is finished
+				} else {
+					publishLog('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
+					exit(EXIT_FAILURE);
+				}
 			} else if( l == "-->> once" ){
 #ifdef DEBUG
 				publishLog('D', "\t\tOnly one instance is allowed to run (once)");
