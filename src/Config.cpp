@@ -27,9 +27,10 @@ bool Config::accept( const char *fch, std::string &full ){
 		return false;
 }
 
-Config::Config(const char *where, lua_State *L){
+void Config::init(const char *where, lua_State *L){
 	this->readdircontent( where );
 
+		/* Load packages */
 	for( iterator i=this->begin(); i<this->end(); i++){
 		publishLog('L', "Loading '%s'", (*i).c_str());
 
@@ -39,10 +40,35 @@ Config::Config(const char *where, lua_State *L){
 
 		SubConfigDir( *this, completpath, L );
 	}
+
+		/* Check if the configuration is usable */
 	this->SanityChecks();
+
+		/* Subscribing ... */
+	for(TopicElements::iterator i = TopicsList.begin(); i != TopicsList.end(); i++){
+		if( i->second.isEnabled() ){
+			int err;
+			if( (err = MQTTClient_subscribe(
+				MQTT_client, 
+				i->second.getTopic(),
+				i->second.getQOS()
+			)) != MQTTCLIENT_SUCCESS){
+				publishLog('D', "Can't subscribe to '%s' : error %d", i->second.getTopic(), err);
+				exit(EXIT_FAILURE);
+			}
+		}
+	}
+	
 }
 
 void Config::SanityChecks( void ){
+
+		/* May be removed future version if only dynamic topics are allowed */
+	if(TopicsList.empty()){
+		publishLog('F', "There is not topic defined");
+		exit(EXIT_FAILURE);
+	}
+
 	 /* 
 	  * Verify topics overlapping
 	  */

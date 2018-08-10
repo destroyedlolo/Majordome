@@ -20,7 +20,7 @@ public:
 
 	void enable( void ){ this->disabled = false; };
 	void disable( void ){ this->disabled = true; };
-	bool isEnabled( void ){ return this->disabled; };
+	bool isEnabled( void ){ return !this->disabled; };
 
 	std::string &getName( void ){ return this->name; };
 	std::string &getWhere( void ){ return this->where; };

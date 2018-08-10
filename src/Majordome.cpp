@@ -34,7 +34,7 @@
 #include "Components.h"
 #include "Config.h"
 
-#define VERSION 0.02
+#define VERSION 0.0201
 #define DEFAULT_CONFIGURATION_FILE "/usr/local/etc/Majordome.conf"
 
 using namespace std;
@@ -46,6 +46,8 @@ using namespace std;
 bool verbose = false;
 const char *MQTT_ClientID = NULL;	/* MQTT client id : must be unique among a broker's clients */
 void *luainitfunc;
+
+Config config;
 
 	/******
 	 * local configuration
@@ -198,7 +200,7 @@ int main(int ac, char **av){
 
 	MQTTClient_setCallbacks( MQTT_client, NULL, connlost, msgarrived, NULL);
 
-	switch( MQTTClient_connect( MQTT_client, &conn_opts) ){
+	switch( err = MQTTClient_connect( MQTT_client, &conn_opts) ){
 	case MQTTCLIENT_SUCCESS : 
 		break;
 	case 1 : publishLog('F', "Unable to connect : Unacceptable protocol version");
@@ -212,8 +214,11 @@ int main(int ac, char **av){
 	case 5 : publishLog('F', "Unable to connect : Not authorized");
 		exit(EXIT_FAILURE);
 	default :
-		publishLog('F', "Unable to connect");
-		exit(EXIT_FAILURE);
+		if( !MQTTClient_isConnected( MQTT_client ) ){
+			publishLog('F', "Unable to connect (unknown error : %d)", err);
+			exit(EXIT_FAILURE);
+		} else
+			publishLog('W', "Connected but got an unknown error : %d)", err);
 	}
 	atexit(brkcleaning);
 
@@ -240,6 +245,6 @@ int main(int ac, char **av){
 		/***
 		 * Reading user configuration 
 		 ****/
-	Config config( UserConfigRoot, L );
+	config.init( UserConfigRoot, L );
 }
 

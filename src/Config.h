@@ -25,7 +25,8 @@ public:
 	typedef std::map<std::string, LuaTask> TaskElements;
 	TaskElements TasksList;
 
-	Config(const char *where, lua_State *L);
+	/* Initialise this configuration against 'where' directory's content */
+	void init(const char *where, lua_State *L);
 
 	/* Check if data overlaps
 	 *	Notez-bien : in case of clash, the program exits

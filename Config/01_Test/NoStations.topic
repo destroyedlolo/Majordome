@@ -8,8 +8,8 @@
 topic=ESPRouter_Domo/NoStations
 
 # QOS for this topic between 0 and 2
-# if outside this range, forced to 0
+# if outside this range, forced to 0 (which is the default value)
 qos=0
 
 # disable this topic
-disabled
+# disabled
