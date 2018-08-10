@@ -9,19 +9,9 @@
 #include <vector>
 
 #include "MayBeEmptyString.h"
-#include "Object.h"
-#include "LuaTask.h"
+#include "Event.h"
 
-class MQTTTopic : public Object {
-	typedef std::vector<LuaTask *> TaskEntries;	// List of tasks to launch when a message arrives
-	TaskEntries tasks;
-
-public:
-	typedef TaskEntries::iterator iterator;
-	typedef TaskEntries::const_iterator const_iterator;
-	iterator begin() { return tasks.begin(); }
-	iterator end() { return tasks.end(); }
-
+class MQTTTopic : public Event {
 protected:
 	MayBeEmptyString topic;	// Topic to look for
 	unsigned int qos;		// Associated QoS
@@ -37,8 +27,6 @@ public:
 
 	const char *getTopic( void ){ return this->topic.c_str(); };
 	bool hasWildcard( void ){ return this->wildcard; };
-
-	void addTasks( LuaTask *t ){ this->tasks.push_back(t); }
 };
 
 #endif
