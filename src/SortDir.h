@@ -12,7 +12,7 @@
 #include <string>
 
 class SortDir {
-
+protected:
 	typedef std::vector<std::string> DirEntries;
 	DirEntries entries;
 
@@ -46,6 +46,8 @@ public:
 		this->readdircontent( where );
 	}
 	SortDir() {};
+
+	virtual void sort( void );
 };
 
 #endif

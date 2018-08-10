@@ -1,8 +1,10 @@
 /* Package configuration handling
  *
  * 27/07/2018 - LF - First version
+ * 10/08/2018 - LF - Force loading order
  */
 #include <cstring>
+#include <algorithm>
 
 #include <libSelene.h>
 
@@ -61,13 +63,26 @@ SubConfigDir::SubConfigDir( Config &cfg, std::string &where, lua_State *L){
 			if((prev = cfg.TasksList.find(name)) != cfg.TasksList.end()){
 				publishLog('F', "Task '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second.getWhere().c_str());
 				exit(EXIT_FAILURE);
-			} else {
+			} else
 				cfg.TasksList.insert( std::make_pair(name, tsk) );
-			}
-
 		}
 #ifdef DEBUG
 else printf("*d* ignoring %s (ext '%s')\n", (*i).c_str(), ext );
 #endif
 	}
+}
+
+void SubConfigDir::sort( void ){
+	std::sort(entries.begin(), entries.end(), 
+		[](std::string const &a, std::string const &b) -> bool {
+			const char *exta = fileextention( a.c_str() );
+			const char *extb = fileextention( b.c_str() );
+			int diff = strcmp(extb, exta); // as .topic > .lua but has to be loaded before
+
+			if(!diff)
+			    return a < b;
+			else
+				return diff<0;
+		}
+	);	
 }

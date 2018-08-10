@@ -30,10 +30,21 @@ void SortDir::readdircontent( const char *where ){
 
 	closedir(dir);
 
+#if 0
+	std::sort(entries.begin(), entries.end(), 
+		[](std::string const &a, std::string const &b) -> bool {
+		    return a < b;
+		}
+	);
+#else
+	this->sort();
+#endif
+}
+
+void SortDir::sort( void ){
 	std::sort(entries.begin(), entries.end(), 
 		[](std::string const &a, std::string const &b) -> bool {
 		    return a < b;
 		}
 	);
 }
-

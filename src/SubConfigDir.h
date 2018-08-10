@@ -15,6 +15,8 @@ protected :
 
 public:
 	SubConfigDir(Config &, std::string &, lua_State *);
+
+	virtual void sort( void );
 };
 
 #endif
