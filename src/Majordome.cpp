@@ -268,6 +268,7 @@ int main(int ac, char **av){
 		 ****/
 	config.init( UserConfigRoot, L );
 
+	publishLog('I', "Let's go ...");
 	pause();	// Waiting for events, nothing else to do
 }
 
