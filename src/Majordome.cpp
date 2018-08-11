@@ -115,7 +115,28 @@ static void read_configuration( const char *fch){
 
 MQTTClient MQTT_client;
 
+/* handle message arrival and call associated function.
+ * NOTE : up to now, only textual topics & messages are
+ * correctly handled (lengths are simply ignored)
+ *
+ * Take in account ONLY the first enabled topic matching 
+ * the receiving one, even if all tasks are disabled or
+ * already running.
+ */
 static int msgarrived(void *actx, char *topic, int tlen, MQTTClient_message *msg){
+#ifdef DEBUG
+	publishLog('D', "Receiving '%s'", topic);
+#endif
+
+	for(Config::TopicElements::iterator i = config.TopicsList.begin(); i != config.TopicsList.end(); i++){
+		if( i->second.match( topic ) ){
+#ifdef DEBUG
+			publishLog('D', "Accepted by '%s'", i->second.getNameC() );
+#endif
+			break;
+		}
+	}
+
 	MQTTClient_freeMessage(&msg);
 	MQTTClient_free(topic);
 	return 1;
@@ -246,5 +267,7 @@ int main(int ac, char **av){
 		 * Reading user configuration 
 		 ****/
 	config.init( UserConfigRoot, L );
+
+	pause();	// Waiting for events, nothing else to do
 }
 

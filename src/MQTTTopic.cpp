@@ -83,3 +83,10 @@ else publishLog('D', "Ignore '%s'", l.c_str());
 		publishLog('D', "\t\tHas wildcard");
 #endif
 }
+
+bool MQTTTopic::match( const char *intopic ){
+	if( this->isEnabled() )
+		return(!mqtttokcmp(this->getTopic(), intopic));
+
+	return false;
+}

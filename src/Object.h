@@ -23,6 +23,7 @@ public:
 	bool isEnabled( void ){ return !this->disabled; };
 
 	std::string &getName( void ){ return this->name; };
+	const char *getNameC( void ){ return this->name.c_str(); };
 	std::string &getWhere( void ){ return this->where; };
 
 	/*

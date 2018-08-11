@@ -28,6 +28,12 @@ public:
 	const char *getTopic( void ){ return this->topic.c_str(); };
 	unsigned int getQOS( void ){ return this->qos; };
 	bool hasWildcard( void ){ return this->wildcard; };
+
+	/* check if an incoming topic matches this one
+	 * -> intopic : incoming topic
+	 * <- matching (bool) or not (false)
+	 */
+	bool match( const char *intopic );
 };
 
 #endif
