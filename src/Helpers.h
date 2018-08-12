@@ -21,6 +21,12 @@ extern bool verbose;
 extern MQTTClient MQTT_client;
 extern const char *ClientID;
 
+extern void *luainitfunc;
+
+	/******
+	 * technical objects
+	 *******/
+extern pthread_attr_t thread_attr;
 
 	/****
 	 * Helpers

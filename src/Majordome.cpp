@@ -110,6 +110,11 @@ static void read_configuration( const char *fch){
 }
 
 	/******
+	 * technical objects
+	 *******/
+pthread_attr_t thread_attr;
+
+	/******
 	 * MQTT's
 	 *******/
 
@@ -130,9 +135,9 @@ static int msgarrived(void *actx, char *topic, int tlen, MQTTClient_message *msg
 	for(Config::TopicElements::iterator i = config.TopicsList.begin(); i != config.TopicsList.end(); i++){
 		if( i->second.match( topic ) ){
 #ifdef DEBUG
-			publishLog('D', "Accepted by '%s'", i->second.getNameC() );
+			publishLog('D', "Accepted by topic '%s'", i->second.getNameC() );
 #endif
-			i->second.execTasks( config );
+			i->second.execTasks( config, i->second.getNameC() );
 			break;
 		}
 	}
@@ -206,6 +211,15 @@ int main(int ac, char **av){
 		publishLog('E', "Testing only the configuration ... leaving.");
 		exit(EXIT_FAILURE);
 	}
+
+		/***
+		 * Initial technical objects
+		 ***/
+
+		// Creates threads as detached in order to save
+		// some resources when quiting
+	assert(!pthread_attr_init (&thread_attr));
+	assert(!pthread_attr_setdetachstate (&thread_attr, PTHREAD_CREATE_DETACHED));
 
 		/***
 		 * Connecting to the broker

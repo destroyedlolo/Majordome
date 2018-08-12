@@ -124,17 +124,81 @@ else printf("Ignore '%s'\n", l.c_str());
 		exit(EXIT_FAILURE);
 	}
 	lua_pop(L,1);	// remove the function from the stack
+
+printf("storage : %d\n", this->func.data_sz  );
 }
 
-bool LuaTask::exec(){
+
+	/***** 
+	 * Slave threads
+	 ****/
+
+struct launchargs {
+	lua_State *L;	// New thread Lua state
+	int nargs;		// Number of arguments for the function
+	LuaTask *task;	// task definition
+};
+
+static void *launchfunc(void *a){
+	struct launchargs *arg = (struct launchargs *)a;	// To avoid further casting
+
+	if(lua_pcall( arg->L, arg->nargs, 0, 0))
+		publishLog('E', "Unable to create task '%s' from '%s' : %s", arg->task->getNameC(), arg->task->getWhereC(), lua_tostring(arg->L, -1));
+
+	lua_close(arg->L);
+	free(arg);
+	return NULL;
+}
+
+bool LuaTask::exec( const char *name ){
+		/* Check if the task can be launched */
 	if(!this->isEnabled()){
 		if(verbose)
-			publishLog('I', "'%s' from '%s' is disabled", this->getNameC(), this->getWhereC() );
+			publishLog('I', "Task '%s' from '%s' is disabled", this->getNameC(), this->getWhereC() );
 		return false;
 	}
 
+		 /* Create the new thread */
+	struct launchargs *arg = new launchargs;
+	arg->task = this;
+#if 0	// Let the default handler working
+	if( !arg ){
+		publishLog('E', "Unable to create a new thread arguments for '%s' from '%s'", this->getNameC(), this->getWhereC() );
+		return false;
+	}
+#endif
+
+	arg->L = luaL_newstate();
+	if( !arg->L ){
+		publishLog('E', "Unable to create a new Lua State for '%s' from '%s'", this->getNameC(), this->getWhereC() );
+		free( arg );
+		return false;
+	}
+
+	libSel_ApplyStartupFunc( luainitfunc, arg->L );
+	lua_pushstring( arg->L, name );	// Push the name of the trigger
+	arg->nargs = 1;
+
+	int err;
+printf("exec / storage : %d\n", this->func.data_sz );
+	if( (err = loadsharedfunction( arg->L, &(this->func) )) ){
+		publishLog('E', "Unable to create task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), (err == LUA_ERRSYNTAX) ? "Syntax error" : "Memory error" );
+		lua_close( arg->L );
+		free( arg );
+		return false;
+	}
+
+printf("Func : '%s'\n", luaL_typename(arg->L, -1));
+
 	if(verbose)
-		publishLog('I', "running '%s' from '%s'", this->getNameC(), this->getWhereC() );
+		publishLog('I', "running Task '%s' from '%s'", this->getNameC(), this->getWhereC() );
+
+	pthread_t tid;	// No need to be kept
+	if(pthread_create( &tid, &thread_attr, launchfunc,  arg) < 0){
+		publishLog('E', "Unable to create task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), strerror(errno));
+		lua_close( arg->L );
+		free( arg );
+	}
 
 	return true;
 }

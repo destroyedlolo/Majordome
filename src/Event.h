@@ -29,7 +29,11 @@ public:
 	iterator end() { return tasks.end(); }
 
 	void addTasks( std::string t ){ this->tasks.push_back(t); }
-	void execTasks( Config & );
+
+	/* launch tasks associated to this event
+	 * -> name of the object that triggers the tasks
+	 */
+	void execTasks( Config &, const char * );
 };
 
 #endif

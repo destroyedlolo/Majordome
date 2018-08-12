@@ -30,9 +30,10 @@ public:
 	bool getOnce( void ){ return this->once; }
 
 	/* Launch this tasks if possible
+	 * -> name : topic that triggers this task
 	 * <- true if it has been launched, false otherwise
 	 */
-	bool exec();
+	bool exec( const char *name );
 };
 
 #endif
