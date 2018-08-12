@@ -28,6 +28,11 @@ public:
 
 	void setOnce( bool v ){ this->once = v; }
 	bool getOnce( void ){ return this->once; }
+
+	/* Launch this tasks if possible
+	 * <- true if it has been launched, false otherwise
+	 */
+	bool exec();
 };
 
 #endif

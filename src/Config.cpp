@@ -9,7 +9,7 @@
 
 #include <libSelene.h>
 
-#include "Components.h"
+#include "Helpers.h"
 #include "Config.h"
 #include "SubConfigDir.h"
 
@@ -108,3 +108,11 @@ void Config::SanityChecks( void ){
 	}
 }
 
+LuaTask &Config::findTask( std::string &n ) throw(int) {
+	Config::TaskElements::iterator tsk;
+
+	if( (tsk = this->TasksList.find( n )) == this->TasksList.end() )
+		throw 1;
+	else
+		return (*tsk).second;
+}

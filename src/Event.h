@@ -9,8 +9,17 @@
 #include "Object.h"
 #include "LuaTask.h"
 
+class Config;
+
 class Event : public Object {
-	typedef std::vector<LuaTask *> TaskEntries;	// List of tasks to launch when a message arrives
+
+	// Note : 
+	// creating a vector of reference is note widely allowed
+	// using pointers will crash as the task object used during configuration reading
+	// will not survive to the said reading
+	// Consequently, we are stored here only the name of the task.
+
+	typedef std::vector<std::string> TaskEntries;	// List of tasks'name to launch when a message arrives
 	TaskEntries tasks;
 
 public:
@@ -19,8 +28,8 @@ public:
 	iterator begin() { return tasks.begin(); }
 	iterator end() { return tasks.end(); }
 
-	void addTasks( LuaTask *t ){ this->tasks.push_back(t); }
-
+	void addTasks( std::string t ){ this->tasks.push_back(t); }
+	void execTasks( Config & );
 };
 
 #endif

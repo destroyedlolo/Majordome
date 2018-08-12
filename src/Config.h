@@ -32,6 +32,11 @@ public:
 	 *	Notez-bien : in case of clash, the program exits
 	 */
 	void SanityChecks( void );
+
+	/* Find a task by its name 
+	 *	throw an exception if not found
+	 */
+	LuaTask &findTask( std::string & ) throw(int);
 };
 
 #endif

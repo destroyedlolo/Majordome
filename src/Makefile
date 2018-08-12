@@ -8,24 +8,27 @@ gotoall: all
 cc=g++ -Wall -O2 -DDEBUG -lpthread -lpaho-mqtt3c  -llua -lm -I/home/laurent/Projets/Selene/src/SeleneLibrary -L/home/laurent/Projets/Selene -lSelene
 opts=
 
-Config.o : Config.cpp Components.h MayBeEmptyString.h Config.h \
-  SortDir.h MQTTTopic.h Event.h Object.h LuaTask.h SubConfigDir.h \
-  Makefile 
+Config.o : Config.cpp Helpers.h MayBeEmptyString.h Config.h SortDir.h \
+  MQTTTopic.h Event.h Object.h LuaTask.h SubConfigDir.h Makefile 
 	$(cc) -c -o Config.o Config.cpp $(opts) 
 
-Helpers.o : Helpers.cpp Components.h MayBeEmptyString.h Makefile 
+Event.o : Event.cpp Helpers.h MayBeEmptyString.h Event.h Object.h \
+  LuaTask.h Config.h SortDir.h MQTTTopic.h Makefile 
+	$(cc) -c -o Event.o Event.cpp $(opts) 
+
+Helpers.o : Helpers.cpp Helpers.h MayBeEmptyString.h Makefile 
 	$(cc) -c -o Helpers.o Helpers.cpp $(opts) 
 
 LuaTask.o : LuaTask.cpp Config.h SortDir.h MQTTTopic.h \
-  MayBeEmptyString.h Event.h Object.h LuaTask.h Components.h Makefile 
+  MayBeEmptyString.h Event.h Object.h LuaTask.h Helpers.h Makefile 
 	$(cc) -c -o LuaTask.o LuaTask.cpp $(opts) 
 
-Majordome.o : Majordome.cpp Components.h MayBeEmptyString.h Config.h \
+Majordome.o : Majordome.cpp Helpers.h MayBeEmptyString.h Config.h \
   SortDir.h MQTTTopic.h Event.h Object.h LuaTask.h Makefile 
 	$(cc) -c -o Majordome.o Majordome.cpp $(opts) 
 
-MQTTTopic.o : MQTTTopic.cpp Components.h MayBeEmptyString.h \
-  MQTTTopic.h Event.h Object.h LuaTask.h Makefile 
+MQTTTopic.o : MQTTTopic.cpp Helpers.h MayBeEmptyString.h MQTTTopic.h \
+  Event.h Object.h LuaTask.h Makefile 
 	$(cc) -c -o MQTTTopic.o MQTTTopic.cpp $(opts) 
 
 Object.o : Object.cpp Object.h Makefile 
@@ -34,14 +37,15 @@ Object.o : Object.cpp Object.h Makefile
 SortDir.o : SortDir.cpp SortDir.h Makefile 
 	$(cc) -c -o SortDir.o SortDir.cpp $(opts) 
 
-SubConfigDir.o : SubConfigDir.cpp Components.h MayBeEmptyString.h \
+SubConfigDir.o : SubConfigDir.cpp Helpers.h MayBeEmptyString.h \
   SubConfigDir.h Config.h SortDir.h MQTTTopic.h Event.h Object.h \
   LuaTask.h Makefile 
 	$(cc) -c -o SubConfigDir.o SubConfigDir.cpp $(opts) 
 
 ../Majordome : SubConfigDir.o SortDir.o Object.o MQTTTopic.o \
-  Majordome.o LuaTask.o Helpers.o Config.o Makefile 
+  Majordome.o LuaTask.o Helpers.o Event.o Config.o Makefile 
 	 $(cc) -o ../Majordome SubConfigDir.o SortDir.o Object.o \
-  MQTTTopic.o Majordome.o LuaTask.o Helpers.o Config.o $(opts) 
+  MQTTTopic.o Majordome.o LuaTask.o Helpers.o Event.o Config.o $(opts) \
+  
 
 all: ../Majordome 

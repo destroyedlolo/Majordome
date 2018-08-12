@@ -11,13 +11,12 @@ extern "C" {
 };
 
 #include "Config.h"
-#include "Components.h"
+#include "Helpers.h"
 #include "LuaTask.h"
 
 LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::string &name, lua_State *L ) : once( false ){
-#ifdef DEBUG
-	publishLog('L', "\t'%s'", fch.c_str());
-#endif
+	if(verbose)
+		publishLog('L', "\t'%s'", fch.c_str());
 
 	assert( EStorage_init(&this->func) );
 
@@ -36,6 +35,8 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 		std::ifstream file(fch);
 		std::streampos pos;
 
+		bool nameused = false;	// if so, the name can't be changed anymore
+
 		/*
 		 * Reading header (Majordome's commands)
 		 */
@@ -52,28 +53,31 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 
 			MayBeEmptyString arg;
 			if( !!(arg = striKWcmp( l, "-->> name=" ))){
+				if( nameused ){
+					publishLog('F', "\t\tName can be changed only before listen directives");
+					exit(EXIT_FAILURE);
+				}
+
 				this->name = name = arg;
-#ifdef DEBUG
-				publishLog('D', "\t\tChanging name to '%s'", name.c_str());
-#endif
+				if(verbose)
+					publishLog('C', "\t\tChanging name to '%s'", name.c_str());
 			} else if( !!(arg = striKWcmp( l, "-->> listen=" ))){
 				Config::TopicElements::iterator topic;
 				if( (topic = cfg.TopicsList.find(arg)) != cfg.TopicsList.end()){
-	// Note, we don't care if the task registration can't complete afterward
-	// as every error is fatal until initialisation is finished
+					publishLog('C', "\t\tAdded to topic '%s'", arg.c_str());
+	 				topic->second.addTasks( this->getName() );
+					nameused = true;
 				} else {
 					publishLog('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
 					exit(EXIT_FAILURE);
 				}
 			} else if( l == "-->> once" ){
-#ifdef DEBUG
-				publishLog('D', "\t\tOnly one instance is allowed to run (once)");
-#endif
+				if(verbose)
+					publishLog('C', "\t\tOnly one instance is allowed to run (once)");
 				this->setOnce( true );
 			} else if( l == "-->> disabled" ){
-#ifdef DEBUG
-				publishLog('D', "\t\tDisabled");
-#endif
+				if(verbose)
+					publishLog('C', "\t\tDisabled");
 				this->disable();
 			}
 #if 0
@@ -120,4 +124,17 @@ else printf("Ignore '%s'\n", l.c_str());
 		exit(EXIT_FAILURE);
 	}
 	lua_pop(L,1);	// remove the function from the stack
+}
+
+bool LuaTask::exec(){
+	if(!this->isEnabled()){
+		if(verbose)
+			publishLog('I', "'%s' from '%s' is disabled", this->getNameC(), this->getWhereC() );
+		return false;
+	}
+
+	if(verbose)
+		publishLog('I', "running '%s' from '%s'", this->getNameC(), this->getWhereC() );
+
+	return true;
 }

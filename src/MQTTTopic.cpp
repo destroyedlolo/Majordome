@@ -2,7 +2,7 @@
 #include <fstream>
 #include <cstring>
 
-#include "Components.h"
+#include "Helpers.h"
 #include "MQTTTopic.h"
 
 MQTTTopic::MQTTTopic( const std::string &fch, std::string &where, std::string &name ) : qos(0) {
@@ -14,10 +14,8 @@ MQTTTopic::MQTTTopic( const std::string &fch, std::string &where, std::string &n
 	/*
 	 * Reading file's content
 	 */
-
-#ifdef DEBUG
-	publishLog('L', "\t'%s'", fch.c_str());
-#endif
+	if(verbose)
+		publishLog('L', "\t'%s'", fch.c_str());
 
 	std::ifstream file;
 	file.exceptions ( std::ios::eofbit | std::ios::failbit ); // No need to check failbit
@@ -30,24 +28,20 @@ MQTTTopic::MQTTTopic( const std::string &fch, std::string &where, std::string &n
 
 			if( !!(arg = striKWcmp( l, "name=" ))){
 				this->name = name = arg;
-#ifdef DEBUG
-				publishLog('D', "\t\tChanging name to '%s'", name.c_str());
-#endif
+				if(verbose)
+					publishLog('C', "\t\tChanging name to '%s'", name.c_str());
 			} else if( !!(arg = striKWcmp( l, "topic=" ))){
 				this->topic = arg;
-#ifdef DEBUG
-				publishLog('D', "\t\ttopic : '%s'", this->topic.c_str());
-#endif
+				if(verbose)
+					publishLog('C', "\t\ttopic : '%s'", this->topic.c_str());
 			} else if( !!(arg = striKWcmp( l, "qos=" ))){
 				if((this->qos = stoi(arg)) > 2)	// If invalid
 					this->qos = 0;
-#ifdef DEBUG
-				publishLog('D', "\t\tqos : '%d'", this->qos);
-#endif
+				if(verbose)
+					publishLog('C', "\t\tqos : '%d'", this->qos);
 			} else if( l == "disabled" ){
-#ifdef DEBUG
-				publishLog('D', "\t\tDisabled");
-#endif
+				if(verbose)
+					publishLog('C', "\t\tDisabled");
 				this->disable();
 			}
 #if 0

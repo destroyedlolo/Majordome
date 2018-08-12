@@ -31,7 +31,7 @@
 
 #include <libSelene.h>
 
-#include "Components.h"
+#include "Helpers.h"
 #include "Config.h"
 
 #define VERSION 0.0201
@@ -124,15 +124,15 @@ MQTTClient MQTT_client;
  * already running.
  */
 static int msgarrived(void *actx, char *topic, int tlen, MQTTClient_message *msg){
-#ifdef DEBUG
-	publishLog('D', "Receiving '%s'", topic);
-#endif
+	if(verbose)
+		publishLog('I', "Receiving '%s'", topic);
 
 	for(Config::TopicElements::iterator i = config.TopicsList.begin(); i != config.TopicsList.end(); i++){
 		if( i->second.match( topic ) ){
 #ifdef DEBUG
 			publishLog('D', "Accepted by '%s'", i->second.getNameC() );
 #endif
+			i->second.execTasks( config );
 			break;
 		}
 	}

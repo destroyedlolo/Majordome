@@ -1,11 +1,12 @@
-/* Components.h
- * 	functions spanned across sources files.
+/* Helpers.h
+ * 	helpers functions spanned across sources files.
  *
  * 	06/07/2018 - LF - First version
  * 	25/07/2018 - LF - switch to C++
  */
 
-#ifndef COMPONENTS_H
+#ifndef HELPERS_H
+#define HELPERS_H
 
 #include <MQTTClient.h> /* PAHO library needed */
 #include <lua.h>	/* Lua's state needed */

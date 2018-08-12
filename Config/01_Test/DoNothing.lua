@@ -5,6 +5,8 @@
 --
 -- Name of this script
 -- if not set, takes the filename
+-- Notez-bien : if used, this directive MUST be defined before any
+-- listen directive.
 --->> name=Toto
 --
 -- Indicate topic to listen for

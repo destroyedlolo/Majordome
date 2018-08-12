@@ -25,6 +25,7 @@ public:
 	std::string &getName( void ){ return this->name; };
 	const char *getNameC( void ){ return this->name.c_str(); };
 	std::string &getWhere( void ){ return this->where; };
+	const char *getWhereC( void ){ return this->where.c_str(); };
 
 	/*
 	 * determine the name from the filename
