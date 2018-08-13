@@ -124,8 +124,6 @@ else printf("Ignore '%s'\n", l.c_str());
 		exit(EXIT_FAILURE);
 	}
 	lua_pop(L,1);	// remove the function from the stack
-
-printf("storage : %d\n", this->func.data_sz  );
 }
 
 
@@ -175,20 +173,19 @@ bool LuaTask::exec( const char *name ){
 		return false;
 	}
 
+	luaL_openlibs(arg->L);
 	libSel_ApplyStartupFunc( luainitfunc, arg->L );
-	lua_pushstring( arg->L, name );	// Push the name of the trigger
-	arg->nargs = 1;
+//	lua_pushstring( arg->L, name );	// Push the name of the trigger
+//	arg->nargs = 1;
+	arg->nargs = 0;
 
 	int err;
-printf("exec / storage : %d\n", this->func.data_sz );
 	if( (err = loadsharedfunction( arg->L, &(this->func) )) ){
 		publishLog('E', "Unable to create task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), (err == LUA_ERRSYNTAX) ? "Syntax error" : "Memory error" );
 		lua_close( arg->L );
 		free( arg );
 		return false;
 	}
-
-printf("Func : '%s'\n", luaL_typename(arg->L, -1));
 
 	if(verbose)
 		publishLog('I', "running Task '%s' from '%s'", this->getNameC(), this->getWhereC() );
