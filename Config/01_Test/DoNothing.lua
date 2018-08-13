@@ -22,4 +22,9 @@
 -- NOTEZ-BIEN : This command will be ignored as not part of the header
 -->> Name : toto
 
-print "It's a very useful Lua's script"
+-- Here starts the lua's code.
+-- MAJORDOME_TRIGGER variable contains the "name" of the topic that
+-- triggered this task
+
+print("It's a very useful Lua's script, triggered by", MAJORDOME_TRIGGER)
+

@@ -133,16 +133,14 @@ else printf("Ignore '%s'\n", l.c_str());
 
 struct launchargs {
 	lua_State *L;	// New thread Lua state
-	int nargs;		// Number of arguments for the function
 	LuaTask *task;	// task definition
 };
 
 static void *launchfunc(void *a){
 	struct launchargs *arg = (struct launchargs *)a;	// To avoid further casting
 
-	if(lua_pcall( arg->L, arg->nargs, 0, 0))
+	if(lua_pcall( arg->L, 0, 0, 0))
 		publishLog('E', "Unable to create task '%s' from '%s' : %s", arg->task->getNameC(), arg->task->getWhereC(), lua_tostring(arg->L, -1));
-
 	lua_close(arg->L);
 	free(arg);
 	return NULL;
@@ -175,9 +173,6 @@ bool LuaTask::exec( const char *name ){
 
 	luaL_openlibs(arg->L);
 	libSel_ApplyStartupFunc( luainitfunc, arg->L );
-//	lua_pushstring( arg->L, name );	// Push the name of the trigger
-//	arg->nargs = 1;
-	arg->nargs = 0;
 
 	int err;
 	if( (err = loadsharedfunction( arg->L, &(this->func) )) ){
@@ -186,6 +181,9 @@ bool LuaTask::exec( const char *name ){
 		free( arg );
 		return false;
 	}
+
+	lua_pushstring( arg->L, name );	// Push the name of the trigger
+	lua_setglobal( arg->L, "MAJORDOME_TRIGGER" );
 
 	if(verbose)
 		publishLog('I', "running Task '%s' from '%s'", this->getNameC(), this->getWhereC() );
