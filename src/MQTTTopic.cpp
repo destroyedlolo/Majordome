@@ -5,7 +5,7 @@
 #include "Helpers.h"
 #include "MQTTTopic.h"
 
-MQTTTopic::MQTTTopic( const std::string &fch, std::string &where, std::string &name ) : qos(0) {
+MQTTTopic::MQTTTopic( const std::string &fch, std::string &where, std::string &name ) : qos(0), store(false) {
 
 	this->extrName( fch, name );
 	this->name = name;
@@ -39,6 +39,10 @@ MQTTTopic::MQTTTopic( const std::string &fch, std::string &where, std::string &n
 					this->qos = 0;
 				if(verbose)
 					publishLog('C', "\t\tqos : '%d'", this->qos);
+			} else if( l == "store" ){
+				if(verbose)
+					publishLog('C', "\t\tStore in a SelShared");
+				this->store = true;
 			} else if( l == "disabled" ){
 				if(verbose)
 					publishLog('C', "\t\tDisabled");

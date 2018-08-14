@@ -142,6 +142,10 @@ static int msgarrived(void *actx, char *topic, int tlen, MQTTClient_message *msg
 #ifdef DEBUG
 			publishLog('D', "Accepted by topic '%s'", i->second.getNameC() );
 #endif
+			if( i->second.toBeStored() ){	// Store it in a SharedVar
+				soc_sets( i->second.getNameC(), cpayload, 0 );
+			}
+
 			i->second.execTasks( config, i->second.getNameC(), topic, cpayload );
 			break;
 		}

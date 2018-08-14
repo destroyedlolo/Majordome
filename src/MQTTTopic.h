@@ -16,6 +16,7 @@ protected:
 	MayBeEmptyString topic;	// Topic to look for
 	unsigned int qos;		// Associated QoS
 	bool wildcard;		// True if the topic contains wildcard
+	bool store;			// Keep values in a SelShared variable
 
 public:
 	/* Constructor from a file
@@ -28,6 +29,7 @@ public:
 	const char *getTopic( void ){ return this->topic.c_str(); };
 	unsigned int getQOS( void ){ return this->qos; };
 	bool hasWildcard( void ){ return this->wildcard; };
+	bool toBeStored( void ){ return this->store; };
 
 	/* check if an incoming topic matches this one
 	 * -> intopic : incoming topic

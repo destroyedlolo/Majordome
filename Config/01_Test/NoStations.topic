@@ -11,5 +11,8 @@ topic=ESPRouter_Domo/NoStations
 # if outside this range, forced to 0 (which is the default value)
 qos=0
 
+# Store this topic's content in a SelShared variable with the name of this topic
+store
+
 # disable this topic
 # disabled
