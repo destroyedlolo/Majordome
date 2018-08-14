@@ -132,12 +132,17 @@ static int msgarrived(void *actx, char *topic, int tlen, MQTTClient_message *msg
 	if(verbose)
 		publishLog('I', "Receiving '%s'", topic);
 
+		// Convert the payload to a string
+	char cpayload[msg->payloadlen + 1];
+	memcpy(cpayload, msg->payload, msg->payloadlen);
+	cpayload[msg->payloadlen] = 0;
+
 	for(Config::TopicElements::iterator i = config.TopicsList.begin(); i != config.TopicsList.end(); i++){
 		if( i->second.match( topic ) ){
 #ifdef DEBUG
 			publishLog('D', "Accepted by topic '%s'", i->second.getNameC() );
 #endif
-			i->second.execTasks( config, i->second.getNameC() );
+			i->second.execTasks( config, i->second.getNameC(), topic, cpayload );
 			break;
 		}
 	}

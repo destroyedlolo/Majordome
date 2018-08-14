@@ -25,6 +25,8 @@
 -- Here starts the lua's code.
 -- MAJORDOME_TRIGGER variable contains the "name" of the topic that
 -- triggered this task
+-- MAJORDOME_TOPIC & MAJORDOME_PAYLOAD : the message
 
-print("It's a very useful Lua's script, triggered by", MAJORDOME_TRIGGER)
+print("It's a very useful Lua's script, triggered by Task", MAJORDOME_TRIGGER);
+print("Received information :", MAJORDOME_TOPIC, MAJORDOME_PAYLOAD)
 

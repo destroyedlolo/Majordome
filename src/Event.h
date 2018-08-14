@@ -31,9 +31,10 @@ public:
 	void addTasks( std::string t ){ this->tasks.push_back(t); }
 
 	/* launch tasks associated to this event
-	 * -> name of the object that triggers the tasks
+	 * -> name of the object that triggers the task
+	 * -> topic : the one that triggers the task
 	 */
-	void execTasks( Config &, const char * );
+	void execTasks( Config &, const char *name, const char *topic, const char *payload );
 };
 
 #endif

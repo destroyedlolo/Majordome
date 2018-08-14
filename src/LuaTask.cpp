@@ -146,7 +146,7 @@ static void *launchfunc(void *a){
 	return NULL;
 }
 
-bool LuaTask::exec( const char *name ){
+bool LuaTask::exec( const char *name, const char *topic, const char *payload ){
 		/* Check if the task can be launched */
 	if(!this->isEnabled()){
 		if(verbose)
@@ -184,6 +184,10 @@ bool LuaTask::exec( const char *name ){
 
 	lua_pushstring( arg->L, name );	// Push the name of the trigger
 	lua_setglobal( arg->L, "MAJORDOME_TRIGGER" );
+	lua_pushstring( arg->L, topic );	// Push the topic
+	lua_setglobal( arg->L, "MAJORDOME_TOPIC" );
+	lua_pushstring( arg->L, payload);	// and its payload
+	lua_setglobal( arg->L, "MAJORDOME_PAYLOAD" );
 
 	if(verbose)
 		publishLog('I', "running Task '%s' from '%s'", this->getNameC(), this->getWhereC() );
