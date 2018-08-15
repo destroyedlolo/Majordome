@@ -43,6 +43,10 @@ MQTTTopic::MQTTTopic( const std::string &fch, std::string &where, std::string &n
 				if(verbose)
 					publishLog('C', "\t\tStore in a SelShared");
 				this->store = true;
+			} else if( l == "numeric" ){
+				if(verbose)
+					publishLog('C', "\t\tStore as a numeric value");
+				this->numeric = true;
 			} else if( l == "disabled" ){
 				if(verbose)
 					publishLog('C', "\t\tDisabled");

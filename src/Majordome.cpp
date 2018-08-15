@@ -143,7 +143,16 @@ static int msgarrived(void *actx, char *topic, int tlen, MQTTClient_message *msg
 			publishLog('D', "Accepted by topic '%s'", i->second.getNameC() );
 #endif
 			if( i->second.toBeStored() ){	// Store it in a SharedVar
-				soc_sets( i->second.getNameC(), cpayload, 0 );
+				if( i->second.isNumeric() ){
+					try {
+						double val = std::stod( cpayload );
+						soc_setn( i->second.getNameC(), val, 0 );
+					} catch( ... ){
+						publishLog('E', "Topic '%s' is expecting a number : no convertion done ", i->second.getNameC() );
+						soc_clear( i->second.getNameC() );
+					}
+				} else
+					soc_sets( i->second.getNameC(), cpayload, 0 );
 			}
 
 			i->second.execTasks( config, i->second.getNameC(), topic, cpayload );

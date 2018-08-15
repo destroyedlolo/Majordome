@@ -14,5 +14,8 @@ qos=0
 # Store this topic's content in a SelShared variable with the name of this topic
 store
 
+# Store it as a numeric value
+numeric
+
 # disable this topic
 # disabled
