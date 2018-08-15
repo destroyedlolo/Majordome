@@ -146,13 +146,13 @@ static int msgarrived(void *actx, char *topic, int tlen, MQTTClient_message *msg
 				if( i->second.isNumeric() ){
 					try {
 						double val = std::stod( cpayload );
-						soc_setn( i->second.getNameC(), val, 0 );
+						soc_setn( i->second.getNameC(), val, i->second.getTTL() );
 					} catch( ... ){
 						publishLog('E', "Topic '%s' is expecting a number : no convertion done ", i->second.getNameC() );
 						soc_clear( i->second.getNameC() );
 					}
 				} else
-					soc_sets( i->second.getNameC(), cpayload, 0 );
+					soc_sets( i->second.getNameC(), cpayload, i->second.getTTL() );
 			}
 
 			i->second.execTasks( config, i->second.getNameC(), topic, cpayload );

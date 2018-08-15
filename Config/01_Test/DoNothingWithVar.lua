@@ -3,6 +3,10 @@
 --
 -->> listen=NoStations
 
-print("Variable content :", SelShared.Get("NoStations") )
+print("Variable initial content :", SelShared.Get("NoStations") )
+SelShared.dump()
 
+Selene.Sleep( 2 )
+
+print("Variable final content :", SelShared.Get("NoStations") )
 SelShared.dump()

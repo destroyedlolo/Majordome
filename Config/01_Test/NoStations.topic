@@ -17,5 +17,8 @@ store
 # Store it as a numeric value
 numeric
 
+# time to live of this variable (in Seconds)
+ttl=2
+
 # disable this topic
 # disabled

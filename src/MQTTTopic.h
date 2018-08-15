@@ -15,9 +15,10 @@ class MQTTTopic : public Event {
 protected:
 	MayBeEmptyString topic;	// Topic to look for
 	unsigned int qos;		// Associated QoS
-	bool wildcard;		// True if the topic contains wildcard
-	bool store;			// Keep values in a SelShared variable
-	bool numeric;		// it's a numeric value
+	bool wildcard;			// True if the topic contains wildcard
+	bool store;				// Keep values in a SelShared variable
+	bool numeric;			// it's a numeric value
+	unsigned long int ttl;	// time to live
 
 public:
 	/* Constructor from a file
@@ -32,6 +33,7 @@ public:
 	bool hasWildcard( void ){ return this->wildcard; };
 	bool toBeStored( void ){ return this->store; };
 	bool isNumeric( void ){ return this->numeric; };
+	unsigned long int getTTL( void ){ return this->ttl; };
 
 	/* check if an incoming topic matches this one
 	 * -> intopic : incoming topic

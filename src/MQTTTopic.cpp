@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstring>
+#include <cstdlib>
 
 #include "Helpers.h"
 #include "MQTTTopic.h"
@@ -26,11 +27,11 @@ MQTTTopic::MQTTTopic( const std::string &fch, std::string &where, std::string &n
 		while( std::getline( file, l) ){
 			MayBeEmptyString arg;
 
-			if( !!(arg = striKWcmp( l, "name=" ))){
+			if( !!(arg = striKWcmp( l, "name=" )) ){
 				this->name = name = arg;
 				if(verbose)
 					publishLog('C', "\t\tChanging name to '%s'", name.c_str());
-			} else if( !!(arg = striKWcmp( l, "topic=" ))){
+			} else if( !!(arg = striKWcmp( l, "topic=" )) ){
 				this->topic = arg;
 				if(verbose)
 					publishLog('C', "\t\ttopic : '%s'", this->topic.c_str());
@@ -47,6 +48,10 @@ MQTTTopic::MQTTTopic( const std::string &fch, std::string &where, std::string &n
 				if(verbose)
 					publishLog('C', "\t\tStore as a numeric value");
 				this->numeric = true;
+			} else if( !!(arg = striKWcmp( l, "ttl=" )) ){
+				this->ttl = strtoul( arg.c_str(), NULL, 0 );
+				if(verbose)
+					publishLog('C', "\t\tTTL = %lu", this->ttl);
 			} else if( l == "disabled" ){
 				if(verbose)
 					publishLog('C', "\t\tDisabled");
