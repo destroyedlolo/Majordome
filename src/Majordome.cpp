@@ -166,7 +166,7 @@ static int msgarrived(void *actx, char *topic, int tlen, MQTTClient_message *msg
 }
 
 static void connlost(void *ctx, char *cause){
-	publishLog('W', "Broker_URL connection lost due to %s", cause);
+	publishLog('W', "Broker connection lost due to %s", cause);
 	exit(EXIT_FAILURE);
 }
 
@@ -286,6 +286,7 @@ int main(int ac, char **av){
 	semc_initializeSeleMQTT( MQTT_client, MQTT_ClientID );	// Initialize SeleMQTT
 
 	luainitfunc = libSel_AddStartupFunc( NULL, setGlobalVar );
+	luainitfunc = libSel_AddStartupFunc( luainitfunc, initReducedSelene );
 	luainitfunc = libSel_AddStartupFunc( luainitfunc, initSelShared );
 	luainitfunc = libSel_AddStartupFunc( luainitfunc, initSelLog );
 	luainitfunc = libSel_AddStartupFunc( luainitfunc, initSeleMQTT );
