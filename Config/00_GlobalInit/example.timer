@@ -1,0 +1,21 @@
+# Timer example
+
+# name of the timer
+# if not set, takes the filename
+name=toto
+
+# This timer is set to an absolute time, 
+# format HHMM
+at=2256
+
+# repeating delay (in seconds)
+every=30
+
+# Launch tasks at startup
+immediate
+
+# Launch tasks if Majordome is starting after at= time (for the same day)
+runifover
+
+# disable this timer
+# disabled

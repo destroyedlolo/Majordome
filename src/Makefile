@@ -9,22 +9,24 @@ cc=g++ -Wall -O2 -DDEBUG -lpthread -lpaho-mqtt3c  -llua -lm -I/home/laurent/Proj
 opts=
 
 Config.o : Config.cpp Helpers.h MayBeEmptyString.h Config.h SortDir.h \
-  MQTTTopic.h Event.h Object.h LuaTask.h SubConfigDir.h Makefile 
+  MQTTTopic.h Event.h Object.h LuaTask.h Timer.h SubConfigDir.h \
+  Makefile 
 	$(cc) -c -o Config.o Config.cpp $(opts) 
 
 Event.o : Event.cpp Helpers.h MayBeEmptyString.h Event.h Object.h \
-  LuaTask.h Config.h SortDir.h MQTTTopic.h Makefile 
+  LuaTask.h Config.h SortDir.h MQTTTopic.h Timer.h Makefile 
 	$(cc) -c -o Event.o Event.cpp $(opts) 
 
 Helpers.o : Helpers.cpp Helpers.h MayBeEmptyString.h Makefile 
 	$(cc) -c -o Helpers.o Helpers.cpp $(opts) 
 
 LuaTask.o : LuaTask.cpp Config.h SortDir.h MQTTTopic.h \
-  MayBeEmptyString.h Event.h Object.h LuaTask.h Helpers.h Makefile 
+  MayBeEmptyString.h Event.h Object.h LuaTask.h Timer.h Helpers.h \
+  Makefile 
 	$(cc) -c -o LuaTask.o LuaTask.cpp $(opts) 
 
 Majordome.o : Majordome.cpp Helpers.h MayBeEmptyString.h Config.h \
-  SortDir.h MQTTTopic.h Event.h Object.h LuaTask.h Makefile 
+  SortDir.h MQTTTopic.h Event.h Object.h LuaTask.h Timer.h Makefile 
 	$(cc) -c -o Majordome.o Majordome.cpp $(opts) 
 
 MQTTTopic.o : MQTTTopic.cpp Helpers.h MayBeEmptyString.h MQTTTopic.h \
@@ -39,13 +41,17 @@ SortDir.o : SortDir.cpp SortDir.h Makefile
 
 SubConfigDir.o : SubConfigDir.cpp Helpers.h MayBeEmptyString.h \
   SubConfigDir.h Config.h SortDir.h MQTTTopic.h Event.h Object.h \
-  LuaTask.h Makefile 
+  LuaTask.h Timer.h Makefile 
 	$(cc) -c -o SubConfigDir.o SubConfigDir.cpp $(opts) 
 
-../Majordome : SubConfigDir.o SortDir.o Object.o MQTTTopic.o \
+Timer.o : Timer.cpp Helpers.h MayBeEmptyString.h Timer.h Event.h \
+  Object.h LuaTask.h Makefile 
+	$(cc) -c -o Timer.o Timer.cpp $(opts) 
+
+../Majordome : Timer.o SubConfigDir.o SortDir.o Object.o MQTTTopic.o \
   Majordome.o LuaTask.o Helpers.o Event.o Config.o Makefile 
-	 $(cc) -o ../Majordome SubConfigDir.o SortDir.o Object.o \
-  MQTTTopic.o Majordome.o LuaTask.o Helpers.o Event.o Config.o $(opts) \
-  
+	 $(cc) -o ../Majordome Timer.o SubConfigDir.o SortDir.o \
+  Object.o MQTTTopic.o Majordome.o LuaTask.o Helpers.o Event.o \
+  Config.o $(opts) 
 
 all: ../Majordome 

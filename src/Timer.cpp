@@ -6,7 +6,7 @@
 #include "Helpers.h"
 #include "Timer.h"
 
-Timer::Timer( const std::string &fch, std::string &where, std::string &name ) : sample(0), at(-1) {
+Timer::Timer( const std::string &fch, std::string &where, std::string &name ) : every(0), at((unsigned long)-1), immediate(false), runifover(false) {
 	this->extrName( fch, name );
 	this->name = name;
 	this->where = where;
@@ -30,6 +30,22 @@ std::ifstream file;
 				this->name = name = arg;
 				if(verbose)
 					publishLog('C', "\t\tChanging name to '%s'", name.c_str());
+			} else if( !!(arg = striKWcmp( l, "at=" )) ){
+				this->at = strtoul( arg.c_str(), NULL, 0 );
+				if(verbose)
+					publishLog('C', "\t\tRunning at %lu", this->at);
+			} else if( !!(arg = striKWcmp( l, "every=" )) ){
+				this->every = strtoul( arg.c_str(), NULL, 0 );
+				if(verbose)
+					publishLog('C', "\t\tRunning every %lu second%c", this->every, this->every > 1 ? 's':' ');
+			} else if( l == "immediate" ){
+				this->immediate = false;
+				if(verbose)
+					publishLog('C', "\t\tImmediate");
+			} else if( l == "runifover" ){
+				this->immediate = false;
+				if(verbose)
+					publishLog('C', "\t\tRun if over");
 			} else if( l == "disabled" ){
 				if(verbose)
 					publishLog('C', "\t\tDisabled");

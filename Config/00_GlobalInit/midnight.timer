@@ -1,6 +1,0 @@
-# Launch log rotation at midnight
-
-# name of the timer
-# if not set, takes the filename
-name=toto
-

@@ -10,9 +10,9 @@
 #include "Event.h"
 
 class Timer : public Event {
-	int sample;		// Delay b/w launches
-	int at;			// launch time
-	int min;		// At's minute (act as a flag as well)
+	unsigned long every;		// Delay b/w launches
+	unsigned long at;			// launch time
+	unsigned long min;		// At's minute (act as a flag as well)
 
 	bool immediate;	// Launch at startup
 	bool runifover;	// run immediately if the 'At' hour is already passed
