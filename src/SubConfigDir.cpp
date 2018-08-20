@@ -10,12 +10,14 @@
 
 #include "Helpers.h"
 #include "SubConfigDir.h"
+#include "Timer.h"
 
 bool SubConfigDir::accept( const char *fch, std::string &full ){
 	if( SortDir::accept( fch, full ) ){
 		const char *ext = fileextention( fch );
 		if( !strcmp(ext,".lua") ||
-			!strcmp(ext,".topic")
+			!strcmp(ext,".topic") ||
+			!strcmp(ext,".timer")
 		)
 			return true;
 	}
@@ -55,6 +57,9 @@ SubConfigDir::SubConfigDir( Config &cfg, std::string &where, lua_State *L){
 			} else {
 				cfg.TopicsList.insert( std::make_pair(name, tpc) );
 			}
+		} else if( !strcmp(ext,".timer") ){
+			std::string name;
+			Timer tmr( completpath, where, name );
 		} else if( !strcmp(ext,".lua") ){
 			std::string name;
 			LuaTask tsk( cfg, completpath, where, name, L );
@@ -77,7 +82,7 @@ void SubConfigDir::sort( void ){
 		[](std::string const &a, std::string const &b) -> bool {
 			const char *exta = fileextention( a.c_str() );
 			const char *extb = fileextention( b.c_str() );
-			int diff = strcmp(extb, exta); // as .topic > .lua but has to be loaded before
+			int diff = strcmp(extb, exta); // as .topic & .timer > .lua but has to be loaded before
 
 			if(!diff)
 			    return a < b;

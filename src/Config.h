@@ -12,6 +12,8 @@
 
 #include "SortDir.h"
 #include "MQTTTopic.h"
+#include "Timer.h"
+
 #include "LuaTask.h"
 
 class Config : virtual public SortDir {
@@ -21,6 +23,9 @@ protected :
 public:
 	typedef std::map<std::string, MQTTTopic> TopicElements;
 	TopicElements TopicsList;
+
+	typedef std::map<std::string, Timer> TimerElements;
+	TimerElements TimerList;
 
 	typedef std::map<std::string, LuaTask> TaskElements;
 	TaskElements TasksList;
