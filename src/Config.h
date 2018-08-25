@@ -25,7 +25,7 @@ public:
 	TopicElements TopicsList;
 
 	typedef std::map<std::string, Timer> TimerElements;
-	TimerElements TimerList;
+	TimerElements Timerslist;
 
 	typedef std::map<std::string, LuaTask> TaskElements;
 	TaskElements TasksList;

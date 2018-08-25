@@ -3,10 +3,12 @@
 #include <cstring>
 #include <cstdlib>
 
+#include <sys/timerfd.h>
+
 #include "Helpers.h"
 #include "Timer.h"
 
-Timer::Timer( const std::string &fch, std::string &where, std::string &name ) : every(0), at((unsigned long)-1), immediate(false), runifover(false) {
+Timer::Timer( const std::string &fch, std::string &where, std::string &name ) : every(0), at((unsigned long)-1), immediate(false), runifover(false), cond(PTHREAD_COND_INITIALIZER), mutex(PTHREAD_MUTEX_INITIALIZER) {
 	this->extrName( fch, name );
 	this->name = name;
 	this->where = where;

@@ -60,6 +60,14 @@ SubConfigDir::SubConfigDir( Config &cfg, std::string &where, lua_State *L){
 		} else if( !strcmp(ext,".timer") ){
 			std::string name;
 			Timer tmr( completpath, where, name );
+
+			Config::TimerElements::iterator prev;
+			if((prev = cfg.Timerslist.find(name)) != cfg.Timerslist.end()){
+				publishLog('F', "Timer '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second.getWhere().c_str());
+				exit(EXIT_FAILURE);
+			} else {
+				cfg.Timerslist.insert( std::make_pair(name, tmr) );
+			}
 		} else if( !strcmp(ext,".lua") ){
 			std::string name;
 			LuaTask tsk( cfg, completpath, where, name, L );
