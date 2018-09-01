@@ -302,6 +302,15 @@ int main(int ac, char **av){
 	config.init( UserConfigRoot, L );
 
 	publishLog('I', "Let's go ...");
+
+#if 1
 	pause();	// Waiting for events, nothing else to do
+#else
+	for(;;){
+		for( Config::TimerElements::iterator i=config.Timerslist.begin(); i != config.Timerslist.end(); i++)
+			printf("%p %s : %lu\n", &((*i).second), (*i).second.getNameC(), (*i).second.getEvery());
+		sleep(5);
+	}
+#endif
 }
 

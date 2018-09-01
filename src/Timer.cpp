@@ -19,7 +19,7 @@ Timer::Timer( const std::string &fch, std::string &where, std::string &name ) : 
 	if(verbose)
 		publishLog('L', "\t'%s'", fch.c_str());
 
-std::ifstream file;
+	std::ifstream file;
 	file.exceptions ( std::ios::eofbit | std::ios::failbit ); // No need to check failbit
 	try {
 		std::string l;
@@ -68,4 +68,53 @@ else publishLog('D', "Ignore '%s'", l.c_str());
 	}
 
 	file.close();
+}
+
+void Timer::launchThread( void ){
+	/*
+	 * Create a detached thread
+	 */
+	pthread_attr_t thread_attr;
+	if( pthread_attr_init(&thread_attr) ){
+		publishLog('F', "Can't initialise a new thread for '%s' : %s", this->getWhereC(), strerror(errno) );
+		exit(EXIT_FAILURE);
+	}
+	if( pthread_attr_setdetachstate(&thread_attr, PTHREAD_CREATE_DETACHED) ){
+		publishLog('F', "Can't setdetechstate for a new thread for '%s' : %s", this->getWhereC(), strerror(errno) );
+		exit(EXIT_FAILURE);
+	}
+	if(pthread_create( &(this->thread), &thread_attr, this->threadedslave, this )){
+		publishLog('F', "Can't create a new thread for '%s' : %s", this->getWhereC(), strerror(errno) );
+		exit(EXIT_FAILURE);
+	}
+}
+
+void *Timer::threadedslave(void *arg){
+	class Timer *me = (class Timer *)arg;	// 'this' in this thread
+
+	pthread_mutex_lock( &(me->mutex) );
+	for(;;){
+		struct timeval tv;
+		struct timespec ts;
+
+		gettimeofday(&tv, NULL);
+		ts.tv_sec  = tv.tv_sec;
+		ts.tv_nsec = tv.tv_usec * 1000;
+
+		if( me->every ){
+			ts.tv_sec += me->every;
+		}
+
+		int rc;
+		if( (rc = pthread_cond_timedwait(&(me->cond), &(me->mutex), &ts)) != ETIMEDOUT ){
+				/* AF : Handle command */
+			printf("Interrupted : %s", strerror(rc));
+			exit(0);
+		}
+
+time_t current_time = time(NULL);
+printf( ctime(&current_time) );
+
+	}
+	return NULL;
 }

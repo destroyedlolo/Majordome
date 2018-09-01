@@ -61,12 +61,13 @@ SubConfigDir::SubConfigDir( Config &cfg, std::string &where, lua_State *L){
 			std::string name;
 			Timer tmr( completpath, where, name );
 
-			Config::TimerElements::iterator prev;
-			if((prev = cfg.Timerslist.find(name)) != cfg.Timerslist.end()){
-				publishLog('F', "Timer '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second.getWhere().c_str());
+			Config::TimerElements::iterator p;
+			if((p = cfg.Timerslist.find(name)) != cfg.Timerslist.end()){
+				publishLog('F', "Timer '%s' is defined multiple times (previous one '%s')", name.c_str(), p->second.getWhere().c_str());
 				exit(EXIT_FAILURE);
 			} else {
-				cfg.Timerslist.insert( std::make_pair(name, tmr) );
+				p = cfg.Timerslist.insert( std::make_pair(name, tmr) ).first;
+				(*p).second.launchThread();
 			}
 		} else if( !strcmp(ext,".lua") ){
 			std::string name;

@@ -108,7 +108,7 @@ void Config::SanityChecks( void ){
 	}
 }
 
-LuaTask &Config::findTask( std::string &n ) throw(int) {
+LuaTask &Config::findTask( std::string &n ) {
 	Config::TaskElements::iterator tsk;
 
 	if( (tsk = this->TasksList.find( n )) == this->TasksList.end() )

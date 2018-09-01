@@ -2,14 +2,14 @@
 
 # name of the timer
 # if not set, takes the filename
-name=toto
+#name=toto
 
 # This timer is set to an absolute time, 
 # format HHMM
 at=2256
 
 # repeating delay (in seconds)
-every=30
+every=10
 
 # Launch tasks at startup
 immediate

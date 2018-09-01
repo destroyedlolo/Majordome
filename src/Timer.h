@@ -1,5 +1,7 @@
-
 /* Timer definition
+ *
+ * Note :
+ * Enable / Disable - only control if tasks have to be launched or not
  *
  * 15/08/2018 - LF - First version
  */
@@ -21,11 +23,17 @@ class Timer : public Event {
 	bool immediate;	// Launch at startup
 	bool runifover;	// run immediately if the 'At' hour is already passed
 
-	int tfd;		// Timer file descriptor
-	int efd;		// Even fd
-
+	pthread_t thread;
 	pthread_cond_t cond;
 	pthread_mutex_t mutex;
+
+	enum Commands {
+	NOW,	// Launch tasks now
+	CHANGE,	// Change consigns
+	RESET,	// Reset the timer (only useful if set in "Every" mode)
+	} cmd;
+
+	static void *threadedslave(void *);
 
 public:
 	/* Constructor from a file
@@ -34,6 +42,19 @@ public:
 	 * <- name : this object's name
 	 */
 	Timer( const std::string &file, std::string &where, std::string &name  );
+
+	/* The timer is handled through a dedicated thread ... a pointer
+	 * to this object has to be passed to the newly created thread
+	 * BUT as object are copied into maps, the pointer is only valid after
+	 * the said insertion.
+	 *
+	 */
+	void launchThread( void );
+
+	/*
+	 * Accessors
+	 */
+	unsigned long getEvery( void ){ return this->every; };
 };
 
 #endif
