@@ -17,8 +17,8 @@
 
 class Timer : public Event {
 	unsigned long every;		// Delay b/w launches
-	unsigned long at;			// launch time
-	unsigned long min;		// At's minute (act as a flag as well)
+	unsigned short at;			// launch time
+	unsigned short min;			// At's minute 
 
 	bool immediate;	// Launch at startup
 	bool runifover;	// run immediately if the 'At' hour is already passed

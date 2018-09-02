@@ -9,7 +9,7 @@
 #include "Timer.h"
 #include "Config.h"
 
-Timer::Timer( const std::string &fch, std::string &where, std::string &name ) : every(0), at((unsigned long)-1), immediate(false), runifover(false), cond(PTHREAD_COND_INITIALIZER), mutex(PTHREAD_MUTEX_INITIALIZER) {
+Timer::Timer( const std::string &fch, std::string &where, std::string &name ) : every(0), at((unsigned short)-1), immediate(false), runifover(false), cond(PTHREAD_COND_INITIALIZER), mutex(PTHREAD_MUTEX_INITIALIZER) {
 	this->extrName( fch, name );
 	this->name = name;
 	this->where = where;
@@ -34,9 +34,11 @@ Timer::Timer( const std::string &fch, std::string &where, std::string &name ) : 
 				if(verbose)
 					publishLog('C', "\t\tChanging name to '%s'", name.c_str());
 			} else if( !!(arg = striKWcmp( l, "at=" )) ){
-				this->at = strtoul( arg.c_str(), NULL, 0 );
+				unsigned long v = strtoul( arg.c_str(), NULL, 10 );
+				this->at = v / 100;
+				this->min = v % 100;
 				if(verbose)
-					publishLog('C', "\t\tRunning at %lu", this->at);
+					publishLog('C', "\t\tRunning at %u:%u", this->at, this->min);
 			} else if( !!(arg = striKWcmp( l, "every=" )) ){
 				this->every = strtoul( arg.c_str(), NULL, 0 );
 				if(verbose)
@@ -99,11 +101,31 @@ void *Timer::threadedslave(void *arg){
 		struct timespec ts;
 
 		gettimeofday(&tv, NULL);
-		ts.tv_sec  = tv.tv_sec;
-		ts.tv_nsec = tv.tv_usec * 1000;
+		TIMEVAL_TO_TIMESPEC( &tv, &ts );
 
-		if( me->every ){
+		if( me->every )
 			ts.tv_sec += me->every;
+		else if( me->at != (unsigned short)-1 ){
+			unsigned long sec;	// Seconds to add
+
+			struct tm now;
+			localtime_r( &ts.tv_sec, &now );
+			if(now.tm_hour < me->at){	// future
+				sec = ((me->at - now.tm_hour)*60 + me->min - now.tm_min) * 60 - now.tm_sec;
+			} else if(now.tm_hour > me->at){ // Past, switch to next day
+				sec = ((me->at - now.tm_hour + 24)*60 + me->min - now.tm_min) * 60 - now.tm_sec;
+			} else if(now.tm_min < me->min){ // Same hour or but future minute
+				sec = (me->min - now.tm_min) * 60 - now.tm_sec;
+			} else {	// Same hour but minute in the past
+				sec = ((me->at - now.tm_hour + 24)*60 + me->min - now.tm_min) * 60 - now.tm_sec;
+			}
+#ifdef DEBUG
+			publishLog('D', "Timer %s : %lu second(s) to wait", me->getNameC(), sec );
+#endif
+			ts.tv_sec += sec;
+		} else {
+			publishLog('F', "Timer '%s' : No time defined", me->getNameC());
+			exit(EXIT_FAILURE);
 		}
 
 		int rc;
