@@ -107,17 +107,23 @@ void *Timer::threadedslave(void *arg){
 			ts.tv_sec += me->every;
 		else if( me->at != (unsigned short)-1 ){
 			unsigned long sec;	// Seconds to add
-
-			struct tm now;
-			localtime_r( &ts.tv_sec, &now );
-			if(now.tm_hour < me->at){	// future
-				sec = ((me->at - now.tm_hour)*60 + me->min - now.tm_min) * 60 - now.tm_sec;
-			} else if(now.tm_hour > me->at){ // Past, switch to next day
-				sec = ((me->at - now.tm_hour + 24)*60 + me->min - now.tm_min) * 60 - now.tm_sec;
-			} else if(now.tm_min < me->min){ // Same hour or but future minute
-				sec = (me->min - now.tm_min) * 60 - now.tm_sec;
-			} else {	// Same hour but minute in the past
-				sec = ((me->at - now.tm_hour + 24)*60 + me->min - now.tm_min) * 60 - now.tm_sec;
+			for(;;) {
+				struct tm now;
+				localtime_r( &ts.tv_sec, &now );
+				if(now.tm_hour < me->at)	// future
+					sec = ((me->at - now.tm_hour)*60 + me->min - now.tm_min) * 60 - now.tm_sec;
+				else if(now.tm_hour > me->at) // Past, switch to next day
+					sec = ((me->at - now.tm_hour + 24)*60 + me->min - now.tm_min) * 60 - now.tm_sec;
+				else if(now.tm_min < me->min) // Same hour or but future minute
+					sec = (me->min - now.tm_min) * 60 - now.tm_sec;
+				else	// Same hour but minute in the past
+					sec = ((me->at - now.tm_hour + 24)*60 + me->min - now.tm_min) * 60 - now.tm_sec;
+				if( ts.tv_sec == time(NULL) )	// Done in the same second
+					break;
+				else {	// race condition, redo the test
+					gettimeofday(&tv, NULL);
+					TIMEVAL_TO_TIMESPEC( &tv, &ts );
+				}
 			}
 #ifdef DEBUG
 			publishLog('D', "Timer %s : %lu second(s) to wait", me->getNameC(), sec );
