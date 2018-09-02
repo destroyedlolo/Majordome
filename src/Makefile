@@ -45,7 +45,7 @@ SubConfigDir.o : SubConfigDir.cpp Helpers.h MayBeEmptyString.h \
 	$(cc) -c -o SubConfigDir.o SubConfigDir.cpp $(opts) 
 
 Timer.o : Timer.cpp Helpers.h MayBeEmptyString.h Timer.h Event.h \
-  Object.h LuaTask.h Makefile 
+  Object.h LuaTask.h Config.h SortDir.h MQTTTopic.h Makefile 
 	$(cc) -c -o Timer.o Timer.cpp $(opts) 
 
 ../Majordome : Timer.o SubConfigDir.o SortDir.o Object.o MQTTTopic.o \

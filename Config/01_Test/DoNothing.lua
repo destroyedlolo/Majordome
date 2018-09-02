@@ -9,9 +9,13 @@
 -- listen directive.
 --->> name=Toto
 --
--- Indicate topic to listen for
+-- Indicate MQTT topic(s) to listen to
 -- (more than one "listen" can be present)
 -->> listen=NoStations
+--
+-- Indicate the Timer(s) to wait for
+-- (more than one "waitfor" can be present)
+-->> waitfor=15s
 --
 -- If set, only one instance is allowed to run
 -->> once
@@ -23,10 +27,15 @@
 -->> Name : toto
 
 -- Here starts the lua's code.
+-- In case this task is launched by a MQTT trigger, following variables
+-- are defined :
 -- MAJORDOME_TRIGGER variable contains the "name" of the topic that
 -- triggered this task
 -- MAJORDOME_TOPIC & MAJORDOME_PAYLOAD : the message
 
-print("It's a very useful Lua's script, triggered by Task", MAJORDOME_TRIGGER);
-print("Received information :", MAJORDOME_TOPIC, MAJORDOME_PAYLOAD)
-
+if not MAJORDOME_TIMER then
+	print("It's a very useful Lua's script, triggered by Topic", MAJORDOME_TRIGGER);
+	print("Received information :", MAJORDOME_TOPIC, MAJORDOME_PAYLOAD)
+else
+	print("Launched by timer ", MAJORDOME_TIMER);
+end

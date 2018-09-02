@@ -44,4 +44,5 @@ public:
 	LuaTask &findTask( std::string & );
 };
 
+extern Config config;
 #endif

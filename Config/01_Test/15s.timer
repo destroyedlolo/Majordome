@@ -1,4 +1,4 @@
-# Timer example
+# Timier to launch tasks every 15 secondes
 
 # name of the timer
 # if not set, takes the filename
@@ -6,16 +6,16 @@
 
 # This timer is set to an absolute time, 
 # format HHMM
-at=2256
+#at=2256
 
 # repeating delay (in seconds)
-every=10
+every=15
 
 # Launch tasks at startup
 immediate
 
 # Launch tasks if Majordome is starting after at= time (for the same day)
-runifover
+#runifover
 
 # disable this timer
-# disabled
+#disabled

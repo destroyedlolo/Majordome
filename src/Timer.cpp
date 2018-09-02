@@ -7,6 +7,7 @@
 
 #include "Helpers.h"
 #include "Timer.h"
+#include "Config.h"
 
 Timer::Timer( const std::string &fch, std::string &where, std::string &name ) : every(0), at((unsigned long)-1), immediate(false), runifover(false), cond(PTHREAD_COND_INITIALIZER), mutex(PTHREAD_MUTEX_INITIALIZER) {
 	this->extrName( fch, name );
@@ -112,9 +113,17 @@ void *Timer::threadedslave(void *arg){
 			exit(0);
 		}
 
-time_t current_time = time(NULL);
-printf( ctime(&current_time) );
+#ifdef DEBUG
+	time_t current_time = time(NULL);
+	publishLog('D', "Timer %s : it's %s", me->getNameC(), ctime(&current_time) );
+#endif
 
+		if( me->isEnabled() )
+			me->execTasks( config, me->getNameC() );
+#ifdef DEBUG
+		else
+			publishLog('D', "Timer %s is disabled : no tasks launched", me->getNameC() );
+#endif
 	}
 	return NULL;
 }

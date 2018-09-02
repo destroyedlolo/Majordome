@@ -71,6 +71,16 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 					publishLog('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
 					exit(EXIT_FAILURE);
 				}
+			} else if( !!(arg = striKWcmp( l, "-->> waitfor=" ))){
+				Config::TimerElements::iterator timer;
+				if( (timer = cfg.Timerslist.find(arg)) != cfg.Timerslist.end()){
+					publishLog('C', "\t\tAdded to timer '%s'", arg.c_str());
+	 				timer->second.addTasks( this->getName() );
+					nameused = true;
+				} else {
+					publishLog('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
+					exit(EXIT_FAILURE);
+				}
 			} else if( l == "-->> once" ){
 				if(verbose)
 					publishLog('C', "\t\tOnly one instance is allowed to run (once)");
@@ -182,12 +192,17 @@ bool LuaTask::exec( const char *name, const char *topic, const char *payload ){
 		return false;
 	}
 
-	lua_pushstring( arg->L, name );	// Push the name of the trigger
-	lua_setglobal( arg->L, "MAJORDOME_TRIGGER" );
-	lua_pushstring( arg->L, topic );	// Push the topic
-	lua_setglobal( arg->L, "MAJORDOME_TOPIC" );
-	lua_pushstring( arg->L, payload);	// and its payload
-	lua_setglobal( arg->L, "MAJORDOME_PAYLOAD" );
+	if( payload ){	// Launched by a trigger
+		lua_pushstring( arg->L, name );	// Push the name of the trigger
+		lua_setglobal( arg->L, "MAJORDOME_TRIGGER" );
+		lua_pushstring( arg->L, topic );	// Push the topic
+		lua_setglobal( arg->L, "MAJORDOME_TOPIC" );
+		lua_pushstring( arg->L, payload);	// and its payload
+		lua_setglobal( arg->L, "MAJORDOME_PAYLOAD" );
+	} else {	// Launched by a timer
+		lua_pushstring( arg->L, name );	// Push the name of the trigger
+		lua_setglobal( arg->L, "MAJORDOME_TIMER" );
+	}
 
 	if(verbose)
 		publishLog('I', "running Task '%s' from '%s'", this->getNameC(), this->getWhereC() );
