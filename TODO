@@ -2,3 +2,9 @@ Implement :
 - LuaTask/Once
 - Enable/Disable Lua interfaces
 
+Timers:
+- immediate
+- runifover
+After all configuration are loaded :
+- run immediate and runifover tasks
+- move launchThread() from src/SubConfigDir.cpp and run it for all timers after configuration loaded

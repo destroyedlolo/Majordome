@@ -16,7 +16,7 @@ every=15
 # If both are present, only every is took in account
 
 # Launch tasks at startup
-immediate
+#immediate
 
 # Launch tasks if Majordome is starting after at= time (for the same day)
 #runifover
