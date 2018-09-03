@@ -105,6 +105,11 @@ void Config::SubscribeTopics( void ){
 	}
 }
 
+void Config::LaunchTimers( void ){
+	for( TimerElements::iterator i = this->Timerslist.begin(); i != config.Timerslist.end(); i++)
+		(*i).second.launchThread();
+}
+
 LuaTask &Config::findTask( std::string &n ) {
 	Config::TaskElements::iterator tsk;
 

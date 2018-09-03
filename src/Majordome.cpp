@@ -34,7 +34,7 @@
 #include "Helpers.h"
 #include "Config.h"
 
-#define VERSION 0.0405
+#define VERSION 0.0406
 #define DEFAULT_CONFIGURATION_FILE "/usr/local/etc/Majordome.conf"
 
 using namespace std;
@@ -297,23 +297,16 @@ int main(int ac, char **av){
 	config.init( UserConfigRoot, L );	// Read user's configuration files
 	config.SanityChecks();	// Ensure the configuration is usable
 
-	config.SubscribeTopics();	// MQTT : activate topics receiving
-
 	if(configtest){
 		publishLog('E', "Testing only the configuration ... leaving.");
 		exit(EXIT_FAILURE);
 	}
 
+	config.SubscribeTopics();	// MQTT : activate topics receiving
+	config.LaunchTimers();	// Launch slave timers
+
 	publishLog('I', "Let's go ...");
 
-#if 1
 	pause();	// Waiting for events, nothing else to do
-#else
-	for(;;){
-		for( Config::TimerElements::iterator i=config.Timerslist.begin(); i != config.Timerslist.end(); i++)
-			printf("%p %s : %lu\n", &((*i).second), (*i).second.getNameC(), (*i).second.getEvery());
-		sleep(5);
-	}
-#endif
 }
 

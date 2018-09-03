@@ -41,6 +41,9 @@ public:
 	/* Subscribe to defined MQTT topics */
 	void SubscribeTopics( void );
 
+	/* Launch timer slave threads */
+	void LaunchTimers( void );
+
 	/* Find a task by its name 
 	 *	throw an exception if not found
 	 */
