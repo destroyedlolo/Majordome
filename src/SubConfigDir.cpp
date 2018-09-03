@@ -32,9 +32,14 @@ SubConfigDir::SubConfigDir( Config &cfg, std::string &where, lua_State *L){
 		const char *ext = fileextention( (*i).c_str() );
 
 		if( *i == "Init.lua" ){
+			if(configtest){
+				publishLog('T', "\t'Init.lua' (Not launched : test mode)");
+				continue;
+			}
+
 			if(verbose)
 				publishLog('L', "\t'Init.lua'");
-
+				
 			lua_pushstring(L, where.c_str() );
 			lua_setglobal(L, "SELENE_SCRIPT_DIR");
 			lua_pushstring(L, (*i).c_str() );

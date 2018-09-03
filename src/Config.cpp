@@ -40,25 +40,6 @@ void Config::init(const char *where, lua_State *L){
 
 		SubConfigDir( *this, completpath, L );
 	}
-
-		/* Check if the configuration is usable */
-	this->SanityChecks();
-
-		/* Subscribing ... */
-	for(TopicElements::iterator i = TopicsList.begin(); i != TopicsList.end(); i++){
-		if( i->second.isEnabled() ){
-			int err;
-			if( (err = MQTTClient_subscribe(
-				MQTT_client, 
-				i->second.getTopic(),
-				i->second.getQOS()
-			)) != MQTTCLIENT_SUCCESS){
-				publishLog('D', "Can't subscribe to '%s' : error %d", i->second.getTopic(), err);
-				exit(EXIT_FAILURE);
-			}
-		}
-	}
-	
 }
 
 void Config::SanityChecks( void ){
@@ -103,6 +84,22 @@ void Config::SanityChecks( void ){
 						j->second.getWhere().c_str()
 					);
 				}
+			}
+		}
+	}
+}
+
+void Config::SubscribeTopics( void ){
+	for(TopicElements::iterator i = TopicsList.begin(); i != TopicsList.end(); i++){
+		if( i->second.isEnabled() ){
+			int err;
+			if( (err = MQTTClient_subscribe(
+				MQTT_client, 
+				i->second.getTopic(),
+				i->second.getQOS()
+			)) != MQTTCLIENT_SUCCESS){
+				publishLog('D', "Can't subscribe to '%s' : error %d", i->second.getTopic(), err);
+				exit(EXIT_FAILURE);
 			}
 		}
 	}

@@ -34,7 +34,7 @@
 #include "Helpers.h"
 #include "Config.h"
 
-#define VERSION 0.0404
+#define VERSION 0.0405
 #define DEFAULT_CONFIGURATION_FILE "/usr/local/etc/Majordome.conf"
 
 using namespace std;
@@ -44,6 +44,7 @@ using namespace std;
 	 *****/
 
 bool verbose = false;
+bool configtest = false;
 const char *MQTT_ClientID = NULL;	/* MQTT client id : must be unique among a broker's clients */
 void *luainitfunc;
 
@@ -53,7 +54,6 @@ Config config;
 	 * local configuration
 	 *******/
 
-static bool configtest = false;
 static const char *UserConfigRoot = "/usr/local/etc/Majordome";	/* Where to find user configuration */
 static const char *Broker_URL = "tcp://localhost:1883";		/* Broker's URL */
 
@@ -225,11 +225,6 @@ int main(int ac, char **av){
 	}
 	read_configuration( conf_file );
 
-	if(configtest){
-		publishLog('E', "Testing only the configuration ... leaving.");
-		exit(EXIT_FAILURE);
-	}
-
 		/***
 		 * Initial technical objects
 		 ***/
@@ -299,7 +294,15 @@ int main(int ac, char **av){
 		/***
 		 * Reading user configuration 
 		 ****/
-	config.init( UserConfigRoot, L );
+	config.init( UserConfigRoot, L );	// Read user's configuration files
+	config.SanityChecks();	// Ensure the configuration is usable
+
+	config.SubscribeTopics();	// MQTT : activate topics receiving
+
+	if(configtest){
+		publishLog('E', "Testing only the configuration ... leaving.");
+		exit(EXIT_FAILURE);
+	}
 
 	publishLog('I', "Let's go ...");
 

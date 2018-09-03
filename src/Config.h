@@ -38,6 +38,9 @@ public:
 	 */
 	void SanityChecks( void );
 
+	/* Subscribe to defined MQTT topics */
+	void SubscribeTopics( void );
+
 	/* Find a task by its name 
 	 *	throw an exception if not found
 	 */

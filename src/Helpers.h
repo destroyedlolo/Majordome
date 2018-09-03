@@ -16,8 +16,8 @@
 	/****
 	 * Configuration's
 	 ****/
-#define MAXLINE 1024	/* Maximum length of a line to be read */
 extern bool verbose;
+extern bool configtest;
 extern MQTTClient MQTT_client;
 extern const char *ClientID;
 
