@@ -51,10 +51,15 @@ public:
 	 */
 	void launchThread( void );
 
+	/* Launch tasks associated to this trigger */
+	void execTasks( void );
+
 	/*
 	 * Accessors
 	 */
 	unsigned long getEvery( void ){ return this->every; };
+	bool getImmediate( void ){ return this->immediate; };
+	bool getRunIfOver( void ){ return this->runifover; };
 };
 
 #endif

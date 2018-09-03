@@ -110,6 +110,13 @@ void Config::LaunchTimers( void ){
 		(*i).second.launchThread();
 }
 
+void Config::RunImmediates( void ){
+	for( TimerElements::iterator i = this->Timerslist.begin(); i != config.Timerslist.end(); i++){
+		if( (*i).second.getImmediate() )
+			(*i).second.execTasks();
+	}
+}
+
 LuaTask &Config::findTask( std::string &n ) {
 	Config::TaskElements::iterator tsk;
 

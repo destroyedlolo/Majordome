@@ -302,10 +302,11 @@ int main(int ac, char **av){
 		exit(EXIT_FAILURE);
 	}
 
+	publishLog('I', "Let's go ...");
+
 	config.SubscribeTopics();	// MQTT : activate topics receiving
 	config.LaunchTimers();	// Launch slave timers
-
-	publishLog('I', "Let's go ...");
+	config.RunImmediates();	// Run immediate & over timers tasks
 
 	pause();	// Waiting for events, nothing else to do
 }

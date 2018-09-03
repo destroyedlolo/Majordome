@@ -6,4 +6,4 @@ Timers:
 - immediate
 - runifover
 After all configuration are loaded :
-- run immediate and runifover tasks
+- run runifover tasks

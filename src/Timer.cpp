@@ -44,11 +44,11 @@ Timer::Timer( const std::string &fch, std::string &where, std::string &name ) : 
 				if(verbose)
 					publishLog('C', "\t\tRunning every %lu second%c", this->every, this->every > 1 ? 's':' ');
 			} else if( l == "immediate" ){
-				this->immediate = false;
+				this->immediate = true;
 				if(verbose)
 					publishLog('C', "\t\tImmediate");
 			} else if( l == "runifover" ){
-				this->immediate = false;
+				this->runifover = true;
 				if(verbose)
 					publishLog('C', "\t\tRun if over");
 			} else if( l == "disabled" ){
@@ -142,16 +142,19 @@ void *Timer::threadedslave(void *arg){
 		}
 
 #ifdef DEBUG
-	time_t current_time = time(NULL);
-	publishLog('D', "Timer %s : it's %s", me->getNameC(), ctime(&current_time) );
+		time_t current_time = time(NULL);
+		publishLog('D', "Timer %s : it's %s", me->getNameC(), ctime(&current_time) );
 #endif
-
-		if( me->isEnabled() )
-			me->execTasks( config, me->getNameC() );
-#ifdef DEBUG
-		else
-			publishLog('D', "Timer %s is disabled : no tasks launched", me->getNameC() );
-#endif
+		me->execTasks();
 	}
 	return NULL;
+}
+
+void Timer::execTasks( void ){
+	if( this->isEnabled() )
+		Event::execTasks( config, this->getNameC() );
+#ifdef DEBUG
+	else
+		publishLog('D', "Timer %s is disabled : no tasks launched", this->getNameC() );
+#endif
 }
