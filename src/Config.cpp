@@ -112,7 +112,7 @@ void Config::LaunchTimers( void ){
 
 void Config::RunImmediates( void ){
 	for( TimerElements::iterator i = this->Timerslist.begin(); i != config.Timerslist.end(); i++){
-		if( (*i).second.getImmediate() )
+		if( (*i).second.getImmediate() || (*i).second.isOver() )
 			(*i).second.execTasks();
 	}
 }

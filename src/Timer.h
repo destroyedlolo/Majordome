@@ -54,6 +54,11 @@ public:
 	/* Launch tasks associated to this trigger */
 	void execTasks( void );
 
+	/* Tell if this timer is passed and has runifover
+	 *	Return false if it's an 'every' timer
+	 */
+	bool isOver( void );
+
 	/*
 	 * Accessors
 	 */

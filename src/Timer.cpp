@@ -110,11 +110,11 @@ void *Timer::threadedslave(void *arg){
 			for(;;) {
 				struct tm now;
 				localtime_r( &ts.tv_sec, &now );
-				if(now.tm_hour < me->at)	// future
+				if( now.tm_hour < me->at )	// future
 					sec = ((me->at - now.tm_hour)*60 + me->min - now.tm_min) * 60 - now.tm_sec;
-				else if(now.tm_hour > me->at) // Past, switch to next day
+				else if( now.tm_hour > me->at ) // Past, switch to next day
 					sec = ((me->at - now.tm_hour + 24)*60 + me->min - now.tm_min) * 60 - now.tm_sec;
-				else if(now.tm_min < me->min) // Same hour or but future minute
+				else if( now.tm_min < me->min ) // Same hour or but future minute
 					sec = (me->min - now.tm_min) * 60 - now.tm_sec;
 				else	// Same hour but minute in the past
 					sec = ((me->at - now.tm_hour + 24)*60 + me->min - now.tm_min) * 60 - now.tm_sec;
@@ -148,6 +148,25 @@ void *Timer::threadedslave(void *arg){
 		me->execTasks();
 	}
 	return NULL;
+}
+
+bool Timer::isOver( void ){
+	if( this->every || !this->runifover )
+		return false;
+
+	time_t t;
+	struct tm now;
+	time(&t);
+	localtime_r( &t, &now );
+
+	if( now.tm_hour < this->at )
+		return false;
+	else if( now.tm_hour > this->at )
+		return true;
+	else if( now.tm_min < this->min )
+		return false;
+	else	// If it's exactly the same hh:mm, it's already over
+		return true;
 }
 
 void Timer::execTasks( void ){
