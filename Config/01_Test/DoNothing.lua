@@ -18,7 +18,7 @@
 -->> waitfor=15s
 --
 -- If set, only one instance is allowed to run
--->> once
+--->> once
 --
 -- Disable this script
 --->> disabled

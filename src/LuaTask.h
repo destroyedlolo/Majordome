@@ -17,6 +17,9 @@ class LuaTask : public Object {
 	struct elastic_storage func;	// Function to execute
 	bool once;	// can run only once
 
+	pthread_mutex_t running_access;	// we want an access to "running"
+	bool running;	// Is the task running
+
 public:
 	/* Constructor from a file
 	 * -> file : file to load
@@ -35,6 +38,11 @@ public:
 	 * <- true if it has been launched, false otherwise
 	 */
 	bool exec( const char *name, const char *topic=NULL, const char *payload=NULL );
-};
 
+	/* Check if this task can run */
+	bool canRun( void );
+
+	/* tell this task finished */
+	void finished( void );
+};
 #endif

@@ -14,7 +14,7 @@ extern "C" {
 #include "Helpers.h"
 #include "LuaTask.h"
 
-LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::string &name, lua_State *L ) : once( false ){
+LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::string &name, lua_State *L ) : once( false ), running_access(PTHREAD_MUTEX_INITIALIZER), running(false){
 	if(verbose)
 		publishLog('L', "\t'%s'", fch.c_str());
 
@@ -152,15 +152,22 @@ static void *launchfunc(void *a){
 	if(lua_pcall( arg->L, 0, 0, 0))
 		publishLog('E', "Unable to create task '%s' from '%s' : %s", arg->task->getNameC(), arg->task->getWhereC(), lua_tostring(arg->L, -1));
 	lua_close(arg->L);
+	arg->task->finished();
 	free(arg);
 	return NULL;
 }
 
 bool LuaTask::exec( const char *name, const char *topic, const char *payload ){
 		/* Check if the task can be launched */
-	if(!this->isEnabled()){
+	if( !this->isEnabled() ){
 		if(verbose)
 			publishLog('I', "Task '%s' from '%s' is disabled", this->getNameC(), this->getWhereC() );
+		return false;
+	}
+
+	if( !this->canRun() ){
+		if(verbose)
+			publishLog('I', "Task '%s' from '%s' is already running", this->getNameC(), this->getWhereC() );
 		return false;
 	}
 
@@ -170,6 +177,7 @@ bool LuaTask::exec( const char *name, const char *topic, const char *payload ){
 #if 0	// Let the default handler working
 	if( !arg ){
 		publishLog('E', "Unable to create a new thread arguments for '%s' from '%s'", this->getNameC(), this->getWhereC() );
+		this->finished();
 		return false;
 	}
 #endif
@@ -177,6 +185,7 @@ bool LuaTask::exec( const char *name, const char *topic, const char *payload ){
 	arg->L = luaL_newstate();
 	if( !arg->L ){
 		publishLog('E', "Unable to create a new Lua State for '%s' from '%s'", this->getNameC(), this->getWhereC() );
+		this->finished();
 		free( arg );
 		return false;
 	}
@@ -188,6 +197,7 @@ bool LuaTask::exec( const char *name, const char *topic, const char *payload ){
 	if( (err = loadsharedfunction( arg->L, &(this->func) )) ){
 		publishLog('E', "Unable to create task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), (err == LUA_ERRSYNTAX) ? "Syntax error" : "Memory error" );
 		lua_close( arg->L );
+		this->finished();
 		free( arg );
 		return false;
 	}
@@ -210,9 +220,33 @@ bool LuaTask::exec( const char *name, const char *topic, const char *payload ){
 	pthread_t tid;	// No need to be kept
 	if(pthread_create( &tid, &thread_attr, launchfunc,  arg) < 0){
 		publishLog('E', "Unable to create task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), strerror(errno));
+		this->finished();
 		lua_close( arg->L );
 		free( arg );
 	}
 
 	return true;
+}
+
+bool LuaTask::canRun( void ){
+	if( !this->once )
+		return true;
+
+	pthread_mutex_lock( &this->running_access );
+	if( this->running ){
+		pthread_mutex_unlock( &this->running_access );
+		return false;
+	}
+	this->running = true;
+	pthread_mutex_unlock( &this->running_access );
+
+	return true;
+}
+
+void LuaTask::finished( void ){
+	if( this->once ){
+		pthread_mutex_lock( &this->running_access );
+		this->running = false;
+		pthread_mutex_unlock( &this->running_access );
+	}
 }
