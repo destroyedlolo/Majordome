@@ -250,3 +250,26 @@ void LuaTask::finished( void ){
 		pthread_mutex_unlock( &this->running_access );
 	}
 }
+
+static int mtsk_find(lua_State *L){
+	const char *name = luaL_checkstring(L, 1);
+
+	Config::TaskElements::iterator tsk;
+	if((tsk = config.TasksList.find(name)) != config.TasksList.end()){
+		printf("Found in '%s'\n", tsk->second.getWhereC() );
+	} else
+		puts("not found");
+
+	return 0;
+}
+
+static const struct luaL_Reg MajTaskLib [] = {
+	{"find", mtsk_find},
+	{NULL, NULL}
+};
+
+int LuaTask::initLuaObject( lua_State *L ){
+	libSel_libFuncs( L, "MajordomeTask", MajTaskLib );
+
+	return 1;
+}

@@ -34,7 +34,7 @@
 #include "Helpers.h"
 #include "Config.h"
 
-#define VERSION 0.0408
+#define VERSION 0.0500
 #define DEFAULT_CONFIGURATION_FILE "/usr/local/etc/Majordome.conf"
 
 using namespace std;
@@ -285,6 +285,8 @@ int main(int ac, char **av){
 	luainitfunc = libSel_AddStartupFunc( luainitfunc, initSelShared );
 	luainitfunc = libSel_AddStartupFunc( luainitfunc, initSelLog );
 	luainitfunc = libSel_AddStartupFunc( luainitfunc, initSeleMQTT );
+
+	luainitfunc = libSel_AddStartupFunc( luainitfunc, LuaTask::initLuaObject );
 
 	libSel_ApplyStartupFunc( luainitfunc, L );
 
