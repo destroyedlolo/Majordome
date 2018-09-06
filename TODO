@@ -1,9 +1,2 @@
 Implement :
-- LuaTask/Once
 - Enable/Disable Lua interfaces
-
-Timers:
-- immediate
-- runifover
-After all configuration are loaded :
-- run runifover tasks
