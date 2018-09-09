@@ -6,7 +6,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#include <map>
+#include <unordered_map>
 
 #include <lua.hpp>	/* Lua's state needed */
 
@@ -21,13 +21,13 @@ protected :
 	virtual bool accept( const char *, std::string & );
 
 public:
-	typedef std::map<std::string, MQTTTopic> TopicElements;
+	typedef std::unordered_map<std::string, MQTTTopic> TopicElements;
 	TopicElements TopicsList;
 
-	typedef std::map<std::string, Timer> TimerElements;
+	typedef std::unordered_map<std::string, Timer> TimerElements;
 	TimerElements Timerslist;
 
-	typedef std::map<std::string, LuaTask> TaskElements;
+	typedef std::unordered_map<std::string, LuaTask> TaskElements;
 	TaskElements TasksList;
 
 	/* Initialise this configuration against 'where' directory's content */

@@ -251,16 +251,39 @@ void LuaTask::finished( void ){
 	}
 }
 
+	/*****
+	 * Lua exposed functions
+	 *****/
+
+static class LuaTask *checkMajordomeTask(lua_State *L){
+	class LuaTask **r = (class LuaTask **)luaL_testudata(L, 1, "MajordomeTask");
+	luaL_argcheck(L, r != NULL, 1, "'MajordomeTask' expected");
+	return *r;
+}
+
 static int mtsk_find(lua_State *L){
 	const char *name = luaL_checkstring(L, 1);
 
-	Config::TaskElements::iterator tsk;
-	if((tsk = config.TasksList.find(name)) != config.TasksList.end()){
-		printf("Found in '%s'\n", tsk->second.getWhereC() );
-	} else
-		puts("not found");
+	try {
+		LuaTask &tsk = config.TasksList.at( name );
+		class LuaTask **task = (class LuaTask **)lua_newuserdata(L, sizeof(class LuaTask *));
+		assert(task);
 
-	return 0;
+		*task = &tsk;
+		luaL_getmetatable(L, "MajordomeTask");
+		lua_setmetatable(L, -2);
+
+		return 1;
+	} catch( std::out_of_range &e ){	// Not found 
+		return 0;
+	}
+}
+
+static int mtsk_getContainer(lua_State *L){
+	class LuaTask *task = checkMajordomeTask(L);
+
+	lua_pushstring( L, task->getWhereC() );
+	return 1;
 }
 
 static const struct luaL_Reg MajTaskLib [] = {
@@ -268,7 +291,13 @@ static const struct luaL_Reg MajTaskLib [] = {
 	{NULL, NULL}
 };
 
+static const struct luaL_Reg MajTaskM [] = {
+	{"getContainer", mtsk_getContainer},
+	{NULL, NULL}
+};
+
 int LuaTask::initLuaObject( lua_State *L ){
+	libSel_objFuncs( L, "MajordomeTask", MajTaskM );
 	libSel_libFuncs( L, "MajordomeTask", MajTaskLib );
 
 	return 1;

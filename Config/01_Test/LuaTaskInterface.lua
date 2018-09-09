@@ -7,7 +7,18 @@
 --->> disabled
 
 io.write('NonExistantFunc :')
-MajordomeTask.find("NonExistantFunc")
+local task = MajordomeTask.find("NonExistantFunc")
+if not task then
+	print('Ok')
+else
+	print('Fail found in', task:getContainer() )
+end
 
 io.write('DoNothing :')
-MajordomeTask.find("DoNothing")
+task = MajordomeTask.find("DoNothing")
+if not task then
+	print('Fail', task)
+else
+	print('Ok found in', task:getContainer() )
+end
+
