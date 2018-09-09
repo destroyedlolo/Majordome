@@ -279,20 +279,40 @@ static int mtsk_find(lua_State *L){
 	}
 }
 
-static int mtsk_getContainer(lua_State *L){
-	class LuaTask *task = checkMajordomeTask(L);
-
-	lua_pushstring( L, task->getWhereC() );
-	return 1;
-}
-
 static const struct luaL_Reg MajTaskLib [] = {
 	{"find", mtsk_find},
 	{NULL, NULL}
 };
 
+static int mtsk_getContainer(lua_State *L){
+	class LuaTask *task = checkMajordomeTask(L);
+	lua_pushstring( L, task->getWhereC() );
+	return 1;
+}
+
+static int mtsk_enabled( lua_State *L ){
+	class LuaTask *task = checkMajordomeTask(L);
+	task->enable();
+	return 1;
+}
+
+static int mtsk_disable( lua_State *L ){
+	class LuaTask *task = checkMajordomeTask(L);
+	task->disable();
+	return 1;
+}
+
+static int mtsk_isEnabled( lua_State *L ){
+	class LuaTask *task = checkMajordomeTask(L);
+	lua_pushboolean( L, task->isEnabled() );
+	return 1;
+}
+
 static const struct luaL_Reg MajTaskM [] = {
 	{"getContainer", mtsk_getContainer},
+	{"isEnabled", mtsk_isEnabled},
+	{"enable", mtsk_enabled},
+	{"disable", mtsk_disable},
 	{NULL, NULL}
 };
 
