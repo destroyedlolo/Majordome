@@ -73,7 +73,7 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 				}
 			} else if( !!(arg = striKWcmp( l, "-->> waitfor=" ))){
 				Config::TimerElements::iterator timer;
-				if( (timer = cfg.Timerslist.find(arg)) != cfg.Timerslist.end()){
+				if( (timer = cfg.TimersList.find(arg)) != cfg.TimersList.end()){
 					publishLog('C', "\t\tAdded to timer '%s'", arg.c_str());
 	 				timer->second.addTasks( this->getName() );
 					nameused = true;
@@ -265,7 +265,7 @@ static int mtsk_find(lua_State *L){
 	const char *name = luaL_checkstring(L, 1);
 
 	try {
-		LuaTask &tsk = config.TasksList.at( name );
+		class LuaTask &tsk = config.TasksList.at( name );
 		class LuaTask **task = (class LuaTask **)lua_newuserdata(L, sizeof(class LuaTask *));
 		assert(task);
 

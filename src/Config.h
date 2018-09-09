@@ -25,7 +25,7 @@ public:
 	TopicElements TopicsList;
 
 	typedef std::unordered_map<std::string, Timer> TimerElements;
-	TimerElements Timerslist;
+	TimerElements TimersList;
 
 	typedef std::unordered_map<std::string, LuaTask> TaskElements;
 	TaskElements TasksList;

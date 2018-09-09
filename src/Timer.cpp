@@ -2,8 +2,12 @@
 #include <fstream>
 #include <cstring>
 #include <cstdlib>
+#include <cassert>
 
-#include <sys/timerfd.h>
+extern "C" {
+    #include "lualib.h"
+    #include "lauxlib.h"
+};
 
 #include "Helpers.h"
 #include "Timer.h"
@@ -177,3 +181,75 @@ void Timer::execTasks( void ){
 		publishLog('D', "Timer %s is disabled : no tasks launched", this->getNameC() );
 #endif
 }
+
+	/*****
+	 * Lua exposed functions
+	 *****/
+static class Timer *checkMajordomeTimer(lua_State *L){
+	class Timer **r = (class Timer **)luaL_testudata(L, 1, "MajordomeTimer");
+	luaL_argcheck(L, r != NULL, 1, "'MajordomeTimer' expected");
+	return *r;
+}
+
+static int mtmr_find(lua_State *L){
+	const char *name = luaL_checkstring(L, 1);
+
+	try {
+		class Timer &tmr = config.TimersList.at( name );
+		class Timer **timer = (class Timer **)lua_newuserdata(L, sizeof(class Timer *));
+		assert(timer);
+
+		*timer = &tmr;
+		luaL_getmetatable(L, "MajordomeTimer");
+		lua_setmetatable(L, -2);
+
+		return 1;
+	} catch( std::out_of_range &e ){	// Not found 
+		return 0;
+	}
+}
+
+static const struct luaL_Reg MajTimerLib [] = {
+	{"find", mtmr_find},
+	{NULL, NULL}
+};
+
+static int mtmr_getContainer(lua_State *L){
+	class Timer *timer = checkMajordomeTimer(L);
+	lua_pushstring( L, timer->getWhereC() );
+	return 1;
+}
+
+static int mtmr_enabled( lua_State *L ){
+	class Timer *timer = checkMajordomeTimer(L);
+	timer->enable();
+	return 1;
+}
+
+static int mtmr_disable( lua_State *L ){
+	class Timer *timer = checkMajordomeTimer(L);
+	timer->disable();
+	return 1;
+}
+
+static int mtmr_isEnabled( lua_State *L ){
+	class Timer *timer = checkMajordomeTimer(L);
+	lua_pushboolean( L, timer->isEnabled() );
+	return 1;
+}
+
+static const struct luaL_Reg MajTimerM [] = {
+	{"getContainer", mtmr_getContainer},
+	{"isEnabled", mtmr_isEnabled},
+	{"enable", mtmr_enabled},
+	{"disable", mtmr_disable},
+	{NULL, NULL}
+};
+
+int Timer::initLuaObject( lua_State *L ){
+	libSel_objFuncs( L, "MajordomeTimer", MajTimerM );
+	libSel_libFuncs( L, "MajordomeTimer", MajTimerLib );
+
+	return 1;
+}
+

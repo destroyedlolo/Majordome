@@ -106,12 +106,12 @@ void Config::SubscribeTopics( void ){
 }
 
 void Config::LaunchTimers( void ){
-	for( TimerElements::iterator i = this->Timerslist.begin(); i != config.Timerslist.end(); i++)
+	for( TimerElements::iterator i = this->TimersList.begin(); i != config.TimersList.end(); i++)
 		(*i).second.launchThread();
 }
 
 void Config::RunImmediates( void ){
-	for( TimerElements::iterator i = this->Timerslist.begin(); i != config.Timerslist.end(); i++){
+	for( TimerElements::iterator i = this->TimersList.begin(); i != config.TimersList.end(); i++){
 		if( (*i).second.getImmediate() || (*i).second.isOver() )
 			(*i).second.execTasks();
 	}

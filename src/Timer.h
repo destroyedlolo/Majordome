@@ -65,6 +65,9 @@ public:
 	unsigned long getEvery( void ){ return this->every; };
 	bool getImmediate( void ){ return this->immediate; };
 	bool getRunIfOver( void ){ return this->runifover; };
+
+	/* Create Lua's object */
+	static int initLuaObject( lua_State *L );
 };
 
 #endif

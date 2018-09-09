@@ -287,6 +287,7 @@ int main(int ac, char **av){
 	luainitfunc = libSel_AddStartupFunc( luainitfunc, initSeleMQTT );
 
 	luainitfunc = libSel_AddStartupFunc( luainitfunc, LuaTask::initLuaObject );
+	luainitfunc = libSel_AddStartupFunc( luainitfunc, Timer::initLuaObject );
 
 	libSel_ApplyStartupFunc( luainitfunc, L );
 
