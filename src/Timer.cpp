@@ -222,7 +222,7 @@ static int mtmr_getEvery( lua_State *L ){
 
 static int mtmr_setEvery( lua_State *L ){
 	class Timer *timer = checkMajordomeTimer(L);
-	timer->setEvery( luaL_checkinteger(L, 1) );
+	timer->setEvery( luaL_checkinteger(L, 2) );
 	return 1;
 }
 
