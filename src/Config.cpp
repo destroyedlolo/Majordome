@@ -44,12 +44,13 @@ void Config::init(const char *where, lua_State *L){
 
 void Config::SanityChecks( void ){
 
-		/* May be removed future version if only dynamic topics are allowed */
+#if 0
+		/* We may have timer driven only automation */
 	if(TopicsList.empty()){
-		publishLog('F', "There is not topic defined");
+		publishLog('F', "There is no topic defined");
 		exit(EXIT_FAILURE);
 	}
-
+#endif
 	 /* 
 	  * Verify topics overlapping
 	  */
