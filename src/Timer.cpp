@@ -214,7 +214,19 @@ static const struct luaL_Reg MajTimerLib [] = {
 	{NULL, NULL}
 };
 
-static int mtmr_getContainer(lua_State *L){
+static int mtmr_getEvery( lua_State *L ){
+	class Timer *timer = checkMajordomeTimer(L);
+	lua_pushnumber( L, (lua_Number)timer->getEvery() );
+	return 1;
+}
+
+static int mtmr_setEvery( lua_State *L ){
+	class Timer *timer = checkMajordomeTimer(L);
+	timer->setEvery( luaL_checkinteger(L, 1) );
+	return 1;
+}
+
+static int mtmr_getContainer( lua_State *L ){
 	class Timer *timer = checkMajordomeTimer(L);
 	lua_pushstring( L, timer->getWhereC() );
 	return 1;
@@ -239,6 +251,8 @@ static int mtmr_isEnabled( lua_State *L ){
 }
 
 static const struct luaL_Reg MajTimerM [] = {
+	{"getEvery", mtmr_getEvery},
+	{"setEvery", mtmr_setEvery},
 	{"getContainer", mtmr_getContainer},
 	{"isEnabled", mtmr_isEnabled},
 	{"enable", mtmr_enabled},
