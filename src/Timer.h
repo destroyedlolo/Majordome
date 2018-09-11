@@ -60,13 +60,24 @@ public:
 	bool isOver( void );
 
 	/*
+	 * (un)Lock timer data to avoid race condition
+	 */
+	void lock( void );
+	void unlock( void );
+
+	/*
 	 * Accessors
 	 */
-	unsigned long getEvery( void ){ return this->every; };
-	bool getImmediate( void ){ return this->immediate; };
-	bool getRunIfOver( void ){ return this->runifover; };
-
+	unsigned long getEvery( void ){ return this->every; }
 	void setEvery( unsigned long v ){ this->every = v; }
+
+	unsigned short getAt( void ){ return this->at; }
+	unsigned short getMin( void ){ return this->min; }
+	void setAt( unsigned short v ){ this->at = v; }
+	void setMin( unsigned short v ){ this->min = v; }
+
+	bool getImmediate( void ){ return this->immediate; }
+	bool getRunIfOver( void ){ return this->runifover; }
 
 	/* Create Lua's object */
 	static int initLuaObject( lua_State *L );

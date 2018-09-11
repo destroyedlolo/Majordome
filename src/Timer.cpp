@@ -182,6 +182,14 @@ void Timer::execTasks( void ){
 #endif
 }
 
+void Timer::lock( void ){
+	pthread_mutex_lock( &(this->mutex) );
+}
+
+void Timer::unlock( void ){
+	pthread_mutex_unlock( &(this->mutex) );
+}
+
 	/*****
 	 * Lua exposed functions
 	 *****/
@@ -223,7 +231,33 @@ static int mtmr_getEvery( lua_State *L ){
 static int mtmr_setEvery( lua_State *L ){
 	class Timer *timer = checkMajordomeTimer(L);
 	timer->setEvery( luaL_checkinteger(L, 2) );
+	return 0;
+}
+
+static int mtmr_getAt( lua_State *L ){
+	class Timer *timer = checkMajordomeTimer(L);
+	timer->lock();	// As "at" is stored in 2 fields, we have to avoid race condition
+	lua_Number r = timer->getAt() + timer->getMin()/100.0;
+	lua_pushnumber( L, r );
+	timer->unlock();
 	return 1;
+}
+
+static int mtmr_setAt( lua_State *L ){
+	class Timer *timer = checkMajordomeTimer(L);
+	lua_Number v = luaL_checknumber(L, 2);
+	v += 0.0005;	// Avoid FFP rounding
+
+	unsigned short h = (unsigned short)v, m;
+	m = (v - h) * 100;
+	h += m/60;
+	m %= 60;
+
+	timer->lock();	// As "at" is stored in 2 fields, we have to avoid race condition
+	timer->setAt( h );
+	timer->setMin( m );
+	timer->unlock();
+	return 0;
 }
 
 static int mtmr_getContainer( lua_State *L ){
@@ -253,6 +287,8 @@ static int mtmr_isEnabled( lua_State *L ){
 static const struct luaL_Reg MajTimerM [] = {
 	{"getEvery", mtmr_getEvery},
 	{"setEvery", mtmr_setEvery},
+	{"getAt", mtmr_getAt},
+	{"setAt", mtmr_setAt},
 	{"getContainer", mtmr_getContainer},
 	{"isEnabled", mtmr_isEnabled},
 	{"enable", mtmr_enabled},
