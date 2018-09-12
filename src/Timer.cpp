@@ -94,6 +94,7 @@ void Timer::launchThread( void ){
 		publishLog('F', "Can't create a new thread for '%s' : %s", this->getWhereC(), strerror(errno) );
 		exit(EXIT_FAILURE);
 	}
+	pthread_attr_destroy(&thread_attr);
 }
 
 void *Timer::threadedslave(void *arg){
@@ -243,13 +244,16 @@ static int mtmr_getAt( lua_State *L ){
 	return 1;
 }
 
-static int mtmr_setAt( lua_State *L ){
+static int mtmr_getAtHM( lua_State *L ){
 	class Timer *timer = checkMajordomeTimer(L);
-	lua_Number v = luaL_checknumber(L, 2);
-	v += 0.0005;	// Avoid FFP rounding
+	timer->lock();	// As "at" is stored in 2 fields, we have to avoid race condition
+	lua_pushnumber( L, timer->getAt() );
+	lua_pushnumber( L, timer->getMin() );
+	timer->unlock();
+	return 2;
+}
 
-	unsigned short h = (unsigned short)v, m;
-	m = (v - h) * 100;
+static void internal_setAt( class Timer *timer, unsigned short h, unsigned short m ){
 	h += m/60;
 	m %= 60;
 
@@ -257,6 +261,24 @@ static int mtmr_setAt( lua_State *L ){
 	timer->setAt( h );
 	timer->setMin( m );
 	timer->unlock();
+}
+
+static int mtmr_setAt( lua_State *L ){
+	class Timer *timer = checkMajordomeTimer(L);
+	lua_Number v = luaL_checknumber(L, 2);
+	v += 0.0005;	// Avoid FFP rounding
+
+	unsigned short h = (unsigned short)v;
+	internal_setAt( timer, h, (v - h) * 100 );
+	return 0;
+}
+
+static int mtmr_setAtHM( lua_State *L ){
+	class Timer *timer = checkMajordomeTimer(L);
+	unsigned short h = luaL_checkinteger(L, 2);
+	unsigned short m = luaL_checkinteger(L, 3);
+
+	internal_setAt( timer, h, m );
 	return 0;
 }
 
@@ -288,7 +310,9 @@ static const struct luaL_Reg MajTimerM [] = {
 	{"getEvery", mtmr_getEvery},
 	{"setEvery", mtmr_setEvery},
 	{"getAt", mtmr_getAt},
+	{"getAtHM", mtmr_getAtHM},
 	{"setAt", mtmr_setAt},
+	{"setAtHM", mtmr_setAtHM},
 	{"getContainer", mtmr_getContainer},
 	{"isEnabled", mtmr_isEnabled},
 	{"enable", mtmr_enabled},
