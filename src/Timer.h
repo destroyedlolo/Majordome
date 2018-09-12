@@ -27,11 +27,14 @@ class Timer : public Event {
 	pthread_cond_t cond;
 	pthread_mutex_t mutex;
 
+public:
 	enum Commands {
-	NOW,	// Launch tasks now
-	CHANGE,	// Change consigns
-	RESET,	// Reset the timer (only useful if set in "Every" mode)
-	} cmd;
+	LAUNCH,	// Launch tasks now
+	RESET,	// Reset the timer without launching tasks
+	};
+
+private :
+	enum Commands cmd;
 
 	static void *threadedslave(void *);
 
@@ -59,11 +62,19 @@ public:
 	 */
 	bool isOver( void );
 
+	/* Tell if this timer is in 'every' mode */
+	bool inEveryMode( void );
+
 	/*
 	 * (un)Lock timer data to avoid race condition
 	 */
 	void lock( void );
 	void unlock( void );
+
+	/*
+	 *	Send a command to the timer
+	 */
+	void sendCommand( enum Commands );
 
 	/*
 	 * Accessors

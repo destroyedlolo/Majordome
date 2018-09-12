@@ -141,9 +141,11 @@ void *Timer::threadedslave(void *arg){
 
 		int rc;
 		if( (rc = pthread_cond_timedwait(&(me->cond), &(me->mutex), &ts)) != ETIMEDOUT ){
-				/* AF : Handle command */
-			printf("Interrupted : %s", strerror(rc));
-			exit(0);
+// publishLog('d', "Interrupted : %s", strerror(rc));
+			if( me->cmd == Commands::RESET ){
+// publishLog('d', "debut");
+				continue;	// Rethink the timer without launching tasks
+			}
 		}
 
 #ifdef DEBUG
@@ -174,6 +176,10 @@ bool Timer::isOver( void ){
 		return true;
 }
 
+bool Timer::inEveryMode( void ){
+	return( !!this->every );
+}
+
 void Timer::execTasks( void ){
 	if( this->isEnabled() )
 		Event::execTasks( config, this->getNameC() );
@@ -189,6 +195,13 @@ void Timer::lock( void ){
 
 void Timer::unlock( void ){
 	pthread_mutex_unlock( &(this->mutex) );
+}
+
+void Timer::sendCommand( enum Commands c ){
+	this->lock();
+	this->cmd = c;
+	pthread_cond_signal( &(this->cond) );
+	this->unlock();
 }
 
 	/*****
@@ -261,6 +274,9 @@ static void internal_setAt( class Timer *timer, unsigned short h, unsigned short
 	timer->setAt( h );
 	timer->setMin( m );
 	timer->unlock();
+
+	if( !timer->inEveryMode() )	// The timer need to be recalculed only if in 'at' mode
+		timer->sendCommand( Timer::Commands::RESET );
 }
 
 static int mtmr_setAt( lua_State *L ){
