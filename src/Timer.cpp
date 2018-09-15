@@ -298,6 +298,23 @@ static int mtmr_setAtHM( lua_State *L ){
 	return 0;
 }
 
+static int mtmr_Reset( lua_State *L ){
+	class Timer *timer = checkMajordomeTimer(L);
+
+	if( timer->inEveryMode() )	// Only usefull in Every mode
+		timer->sendCommand( Timer::Commands::RESET );
+
+	return 0;
+}
+
+static int mtmr_Launch( lua_State *L ){
+	class Timer *timer = checkMajordomeTimer(L);
+
+	timer->sendCommand( Timer::Commands::LAUNCH );
+
+	return 0;
+}
+
 static int mtmr_getContainer( lua_State *L ){
 	class Timer *timer = checkMajordomeTimer(L);
 	lua_pushstring( L, timer->getWhereC() );
@@ -329,10 +346,12 @@ static const struct luaL_Reg MajTimerM [] = {
 	{"getAtHM", mtmr_getAtHM},
 	{"setAt", mtmr_setAt},
 	{"setAtHM", mtmr_setAtHM},
+	{"Reset", mtmr_Reset},
+	{"Launch", mtmr_Launch},
 	{"getContainer", mtmr_getContainer},
 	{"isEnabled", mtmr_isEnabled},
-	{"enable", mtmr_enabled},
-	{"disable", mtmr_disable},
+	{"Enable", mtmr_enabled},
+	{"Disable", mtmr_disable},
 	{NULL, NULL}
 };
 
