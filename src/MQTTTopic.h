@@ -40,6 +40,10 @@ public:
 	 * <- matching (bool) or not (false)
 	 */
 	bool match( const char *intopic );
+
+
+	/* Create Lua's object */
+	static int initLuaObject( lua_State *L );
 };
 
 #endif

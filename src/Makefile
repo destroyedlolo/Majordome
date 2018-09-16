@@ -30,7 +30,7 @@ Majordome.o : Majordome.cpp Helpers.h MayBeEmptyString.h Config.h \
 	$(cc) -c -o Majordome.o Majordome.cpp $(opts) 
 
 MQTTTopic.o : MQTTTopic.cpp Helpers.h MayBeEmptyString.h MQTTTopic.h \
-  Event.h Object.h LuaTask.h Makefile 
+  Event.h Object.h LuaTask.h Config.h SortDir.h Timer.h Makefile 
 	$(cc) -c -o MQTTTopic.o MQTTTopic.cpp $(opts) 
 
 Object.o : Object.cpp Object.h Makefile 
