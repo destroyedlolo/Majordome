@@ -143,7 +143,7 @@ void *Timer::threadedslave(void *arg){
 		if( (rc = pthread_cond_timedwait(&(me->cond), &(me->mutex), &ts)) != ETIMEDOUT ){
 // publishLog('d', "Interrupted : %s", strerror(rc));
 			if( me->cmd == Commands::RESET ){
-// publishLog('d', "debut");
+// publishLog('d', "reset");
 				continue;	// Rethink the timer without launching tasks
 			}
 		}
