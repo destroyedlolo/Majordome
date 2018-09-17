@@ -137,6 +137,18 @@ static const struct luaL_Reg MajTopicLib [] = {
 	{NULL, NULL}
 };
 
+static int mtpc_Launch( lua_State *L ){
+	class MQTTTopic *topic = checkMajordomeMQTTTopic(L);
+
+	if( topic->isEnabled() )
+		topic->execTasks(config, topic->getNameC(), NULL, "fake");
+#ifdef DEBUG
+	else
+		publishLog('D', "Topic %s is disabled : no tasks launched", topic->getNameC() );
+#endif	
+	return 0;
+}
+
 static int mtpc_getContainer( lua_State *L ){
 	class MQTTTopic *topic = checkMajordomeMQTTTopic(L);
 	lua_pushstring( L, topic->getWhereC() );
@@ -146,13 +158,13 @@ static int mtpc_getContainer( lua_State *L ){
 static int mtpc_enabled( lua_State *L ){
 	class MQTTTopic *topic = checkMajordomeMQTTTopic(L);
 	topic->enable();
-	return 1;
+	return 0;
 }
 
 static int mtpc_disable( lua_State *L ){
 	class MQTTTopic *topic = checkMajordomeMQTTTopic(L);
 	topic->disable();
-	return 1;
+	return 0;
 }
 
 static int mtpc_isEnabled( lua_State *L ){
@@ -162,6 +174,7 @@ static int mtpc_isEnabled( lua_State *L ){
 }
 
 static const struct luaL_Reg MajTopicM [] = {
+	{"Launch", mtpc_Launch},
 	{"getContainer", mtpc_getContainer},
 	{"isEnabled", mtpc_isEnabled},
 	{"Enable", mtpc_enabled},

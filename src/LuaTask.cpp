@@ -205,10 +205,12 @@ bool LuaTask::exec( const char *name, const char *topic, const char *payload ){
 	if( payload ){	// Launched by a trigger
 		lua_pushstring( arg->L, name );	// Push the name of the trigger
 		lua_setglobal( arg->L, "MAJORDOME_TRIGGER" );
-		lua_pushstring( arg->L, topic );	// Push the topic
-		lua_setglobal( arg->L, "MAJORDOME_TOPIC" );
-		lua_pushstring( arg->L, payload);	// and its payload
-		lua_setglobal( arg->L, "MAJORDOME_PAYLOAD" );
+		if( topic ){	// Otherwise, it means it has been launched by a Lua script
+			lua_pushstring( arg->L, topic );	// Push the topic
+			lua_setglobal( arg->L, "MAJORDOME_TOPIC" );
+			lua_pushstring( arg->L, payload);	// and its payload
+			lua_setglobal( arg->L, "MAJORDOME_PAYLOAD" );
+		}
 	} else {	// Launched by a timer
 		lua_pushstring( arg->L, name );	// Push the name of the trigger
 		lua_setglobal( arg->L, "MAJORDOME_TIMER" );
