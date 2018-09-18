@@ -140,6 +140,11 @@ static const struct luaL_Reg MajTopicLib [] = {
 static int mtpc_getVal( lua_State *L ){
 	class MQTTTopic *topic = checkMajordomeMQTTTopic(L);
 
+#ifdef DEBUG
+	if( !topic->toBeStored() )
+		publishLog('D', "Topic %s is not \"stored\" : getVal() will not works", topic->getNameC() );
+#endif
+
 	struct SharedVarContent var;
 	soc_get( topic->getNameC(), &var );
 
