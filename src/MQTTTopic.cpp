@@ -137,6 +137,28 @@ static const struct luaL_Reg MajTopicLib [] = {
 	{NULL, NULL}
 };
 
+static int mtpc_getVal( lua_State *L ){
+	class MQTTTopic *topic = checkMajordomeMQTTTopic(L);
+
+	struct SharedVarContent var;
+	soc_get( topic->getNameC(), &var );
+
+	switch( var.type ){
+	case SOT_NUMBER:
+		lua_pushnumber( L, var.val.num );
+		soc_free( &var );
+		return 1;
+	case SOT_STRING:
+	case SOT_XSTRING:
+		lua_pushstring( L, var.val.str );
+		soc_free( &var );
+		return 1;
+	default:
+		soc_free( &var );
+		return 0;
+	}
+}
+
 static int mtpc_Launch( lua_State *L ){
 	class MQTTTopic *topic = checkMajordomeMQTTTopic(L);
 
@@ -174,6 +196,7 @@ static int mtpc_isEnabled( lua_State *L ){
 }
 
 static const struct luaL_Reg MajTopicM [] = {
+	{"getVal", mtpc_getVal},
 	{"Launch", mtpc_Launch},
 	{"getContainer", mtpc_getContainer},
 	{"isEnabled", mtpc_isEnabled},
