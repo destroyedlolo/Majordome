@@ -58,13 +58,15 @@ void Config::SanityChecks( void ){
 		TopicElements::iterator j = i;
 		for(j++; j != TopicsList.end(); j++){
 			if( !(i->second.hasWildcard()) && !(j->second.hasWildcard()) ){ // No wildcard
-				publishLog('F', "Same MQTT topic used for topics '%s' from '%s' and '%s' from '%s'",
-					i->second.getName().c_str(), 
-					i->second.getWhere().c_str(), 
-					j->second.getName().c_str(),
-					j->second.getWhere().c_str()
-				);
-				exit(EXIT_FAILURE);
+				if( !strcmp( i->second.getTopic(), j->second.getTopic() )){
+					publishLog('F', "Same MQTT topic used for topics '%s' from '%s' and '%s' from '%s'",
+						i->second.getName().c_str(), 
+						i->second.getWhere().c_str(), 
+						j->second.getName().c_str(),
+						j->second.getWhere().c_str()
+					);
+					exit(EXIT_FAILURE);
+				}
 			} else if( i->second.hasWildcard() && j->second.hasWildcard() ){	// Both contain wildcard
 			} else if( i->second.hasWildcard() ){
 				if( !mqtttokcmp( i->second.getTopic(), j->second.getTopic() )){

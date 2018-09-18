@@ -13,7 +13,7 @@ extern "C" {
 #include "MQTTTopic.h"
 #include "Config.h"
 
-MQTTTopic::MQTTTopic( const std::string &fch, std::string &where, std::string &name ) : qos(0), store(false) {
+MQTTTopic::MQTTTopic( const std::string &fch, std::string &where, std::string &name ) : qos(0), store(false), numeric(false), ttl(0) {
 
 	this->extrName( fch, name );
 	this->name = name;
