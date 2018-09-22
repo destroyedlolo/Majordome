@@ -9,10 +9,10 @@ local Topic_pompe = "maison/IO/Pompe_Piscine"
 local ModePiscine = MajordomeMQTTTopic.find("ModePiscine")
 assert( ModePiscine, "'ModePiscine' pas trouvé" );
 
--- debug
+--[[ debug
 print( "TarifElectricite", SelShared.Get("TarifElectricite") )
 print( "ModePiscine",  ModePiscine:getVal() )
---
+--]]
 
 if ModePiscine:getVal() == 'Forcé' then
 	SelLog.log('A', "Pompe piscine forcée");
