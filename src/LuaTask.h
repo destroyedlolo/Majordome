@@ -31,6 +31,7 @@ public:
 
 	void setOnce( bool v ){ this->once = v; }
 	bool getOnce( void ){ return this->once; }
+	struct elastic_storage *getFunc( void ){ return &(this->func); }
 
 	/* Launch this tasks if possible
 	 * -> name : name of the topic/timer that triggers this task

@@ -286,6 +286,38 @@ static const struct luaL_Reg MajTaskLib [] = {
 	{NULL, NULL}
 };
 
+static int mtsk_launch(lua_State *L){
+	class LuaTask *task = checkMajordomeTask(L);
+
+	if( !task->isEnabled() ){
+		if(verbose)
+			publishLog('I', "Task '%s' from '%s' is disabled", task->getNameC(), task->getWhereC() );
+		return 0;
+	}
+
+	if( !task->canRun() ){
+		if(verbose)
+			publishLog('I', "Task '%s' from '%s' is already running", task->getNameC(), task->getWhereC() );
+		return 0;
+	}
+
+	int err;
+	if( (err = loadsharedfunction( L, task->getFunc() )) ){
+		publishLog('E', "Unable to create task '%s' from '%s' : %s", task->getNameC(), task->getWhereC(), (err == LUA_ERRSYNTAX) ? "Syntax error" : "Memory error" );
+		task->finished();
+		return 0;
+	}
+
+	if(verbose)
+		publishLog('I', "running Task '%s' from '%s'", task->getNameC(), task->getWhereC() );
+
+	if(lua_pcall( L, 0, 0, 0))
+		publishLog('E', "Unable to create task '%s' from '%s' : %s", task->getNameC(), task->getWhereC(), lua_tostring(L, -1));
+
+	task->finished();
+	return 0;
+}
+
 static int mtsk_getContainer(lua_State *L){
 	class LuaTask *task = checkMajordomeTask(L);
 	lua_pushstring( L, task->getWhereC() );
@@ -311,6 +343,7 @@ static int mtsk_isEnabled( lua_State *L ){
 }
 
 static const struct luaL_Reg MajTaskM [] = {
+	{"Launch", mtsk_launch},
 	{"getContainer", mtsk_getContainer},
 	{"isEnabled", mtsk_isEnabled},
 	{"enable", mtsk_enabled},
