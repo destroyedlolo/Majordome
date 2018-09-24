@@ -34,7 +34,7 @@
 #include "Helpers.h"
 #include "Config.h"
 
-#define VERSION 0.0704
+#define VERSION 0.0800
 #define DEFAULT_CONFIGURATION_FILE "/usr/local/etc/Majordome.conf"
 
 using namespace std;
@@ -44,6 +44,8 @@ using namespace std;
 	 *****/
 
 bool verbose = false;
+bool debug = false;
+
 bool configtest = false;
 const char *MQTT_ClientID = NULL;	/* MQTT client id : must be unique among a broker's clients */
 void *luainitfunc;
@@ -140,7 +142,8 @@ static int msgarrived(void *actx, char *topic, int tlen, MQTTClient_message *msg
 	for(Config::TopicElements::iterator i = config.TopicsList.begin(); i != config.TopicsList.end(); i++){
 		if( i->second.match( topic ) ){
 #ifdef DEBUG
-			publishLog('D', "Accepted by topic '%s'", i->second.getNameC() );
+			if( debug )
+				publishLog('D', "Accepted by topic '%s'", i->second.getNameC() );
 #endif
 			if( i->second.toBeStored() ){	// Store it in a SharedVar
 				if( i->second.isNumeric() ){
@@ -166,7 +169,7 @@ static int msgarrived(void *actx, char *topic, int tlen, MQTTClient_message *msg
 }
 
 static void connlost(void *ctx, char *cause){
-	publishLog('W', "Broker connection lost due to %s", cause);
+	publishLog('F', "Broker connection lost due to %s", cause);
 	exit(EXIT_FAILURE);
 }
 
@@ -196,13 +199,16 @@ int main(int ac, char **av){
 
 	slc_init( NULL, LOG_STDOUT );	/* Early logging to STDOUT before broker initialisation*/
 
-	while((c = getopt(ac, av, "vhf:t")) != EOF) switch(c){
+	while((c = getopt(ac, av, "vdhf:t")) != EOF) switch(c){
 	case 'h':
 		fprintf(stderr, "%s (%.04f)\n"
 			"A lightweight event based Automation System\n"
 			"Known options are :\n"
 			"\t-h : this online help\n"
 			"\t-v : enable verbose messages\n"
+#ifdef DEBUG
+			"\t-d : enable debug messages\n"
+#endif
 			"\t-f<file> : read <file> for configuration\n"
 			"\t\t(default is '%s')\n"
 			"\t-t : test configuration file and exit\n",
@@ -216,6 +222,11 @@ int main(int ac, char **av){
 	case 'v':
 		verbose = true;
 		break;
+#ifdef DEBUG
+	case 'd':
+		debug = true;
+		break;
+#endif
 	case 'f':
 		conf_file = optarg;
 		break;

@@ -17,6 +17,7 @@
 	 * Configuration's
 	 ****/
 extern bool verbose;
+extern bool debug;
 extern bool configtest;
 extern MQTTClient MQTT_client;
 extern const char *ClientID;

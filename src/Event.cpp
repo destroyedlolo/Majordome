@@ -4,7 +4,8 @@
 
 void Event::execTasks( Config &cfg, const char *trig_name, const char *topic, const char *payload ){
 #ifdef DEBUG
-	publishLog('D', "execTasks() : %d to run", this->tasks.size() );
+	if(debug)
+		publishLog('D', "execTasks() : %d to run", this->tasks.size() );
 #endif
 
 	for( TaskEntries::iterator tsk = this->tasks.begin(); tsk != this->tasks.end(); tsk++){
@@ -20,7 +21,8 @@ void Event::execTasks( Config &cfg, const char *trig_name, const char *topic, co
 
 void Event::execTasks( Config &cfg, const char *timer_name ){
 #ifdef DEBUG
-	publishLog('D', "execTasks() : %d to run", this->tasks.size() );
+	if(debug)
+		publishLog('D', "execTasks() : %d to run", this->tasks.size() );
 #endif
 
 	for( TaskEntries::iterator tsk = this->tasks.begin(); tsk != this->tasks.end(); tsk++){

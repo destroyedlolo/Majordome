@@ -84,7 +84,9 @@ SubConfigDir::SubConfigDir( Config &cfg, std::string &where, lua_State *L){
 				cfg.TasksList.insert( std::make_pair(name, tsk) );
 		}
 #ifdef DEBUG
-else printf("*d* ignoring %s (ext '%s')\n", (*i).c_str(), ext );
+else 
+	if( debug )
+		printf("*d* ignoring %s (ext '%s')\n", (*i).c_str(), ext );
 #endif
 	}
 }

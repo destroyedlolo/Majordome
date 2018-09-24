@@ -93,7 +93,7 @@ else publishLog('D', "Ignore '%s'", l.c_str());
 		this->topic.find('+') != std::string::npos;
 
 #ifdef DEBUG
-	if( this->wildcard )
+	if( this->wildcard && debug )
 		publishLog('D', "\t\tHas wildcard");
 #endif
 }
@@ -147,7 +147,7 @@ static int mtpc_getVal( lua_State *L ){
 	class MQTTTopic *topic = checkMajordomeMQTTTopic(L);
 
 #ifdef DEBUG
-	if( !topic->toBeStored() )
+	if( !topic->toBeStored() && debug )
 		publishLog('D', "Topic %s is not \"stored\" : getVal() will not works", topic->getNameC() );
 #endif
 
@@ -176,7 +176,7 @@ static int mtpc_Launch( lua_State *L ){
 	if( topic->isEnabled() )
 		topic->execTasks(config, topic->getNameC(), NULL, "fake");
 #ifdef DEBUG
-	else
+	else if( debug )
 		publishLog('D', "Topic %s is disabled : no tasks launched", topic->getNameC() );
 #endif	
 	return 0;

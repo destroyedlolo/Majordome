@@ -131,7 +131,8 @@ void *Timer::threadedslave(void *arg){
 				}
 			}
 #ifdef DEBUG
-			publishLog('D', "Timer %s : %lu second(s) to wait", me->getNameC(), sec );
+			if( debug )
+				publishLog('D', "Timer %s : %lu second(s) to wait", me->getNameC(), sec );
 #endif
 			ts.tv_sec += sec;
 		} else {
@@ -149,8 +150,10 @@ void *Timer::threadedslave(void *arg){
 		}
 
 #ifdef DEBUG
-		time_t current_time = time(NULL);
-		publishLog('D', "Timer %s : it's %s", me->getNameC(), ctime(&current_time) );
+		if( debug ){
+			time_t current_time = time(NULL);
+			publishLog('D', "Timer %s : it's %s", me->getNameC(), ctime(&current_time) );
+		}
 #endif
 		me->execTasks();
 	}
@@ -184,7 +187,7 @@ void Timer::execTasks( void ){
 	if( this->isEnabled() )
 		Event::execTasks( config, this->getNameC() );
 #ifdef DEBUG
-	else
+	else if( debug )
 		publishLog('D', "Timer %s is disabled : no tasks launched", this->getNameC() );
 #endif
 }
