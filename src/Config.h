@@ -30,6 +30,9 @@ public:
 	typedef std::unordered_map<std::string, LuaTask> TaskElements;
 	TaskElements TasksList;
 
+	typedef std::unordered_map<std::string, Event> EventElements;
+	EventElements EventsList;
+
 	/* Initialise this configuration against 'where' directory's content */
 	void init(const char *where, lua_State *L);
 

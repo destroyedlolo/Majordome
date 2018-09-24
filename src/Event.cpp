@@ -1,6 +1,62 @@
+#include <iostream>
+#include <fstream>
+#include <cstring>
+#include <cassert>
+
+extern "C" {
+    #include "lualib.h"
+    #include "lauxlib.h"
+};
+
 #include "Helpers.h"
 #include "Event.h"
 #include "Config.h"
+
+Event::Event( const std::string &fch, std::string &where, std::string &name ){
+	this->extrName( fch, name );
+	this->name = name;
+	this->where = where;
+
+	/*
+	 * Reading file's content
+	 */
+	if(verbose)
+		publishLog('L', "\t'%s'", fch.c_str());
+
+	std::ifstream file;
+	file.exceptions ( std::ios::eofbit | std::ios::failbit ); // No need to check failbit
+	try {
+		std::string l;
+
+		file.open(fch);
+		while( std::getline( file, l) ){
+			MayBeEmptyString arg;
+
+			if( !!(arg = striKWcmp( l, "name=" )) ){
+				this->name = name = arg;
+				if(verbose)
+					publishLog('C', "\t\tChanging name to '%s'", name.c_str());
+			} else if( l == "disabled" ){
+				if(verbose)
+					publishLog('C', "\t\tDisabled");
+				this->disable();
+			}
+#if 0
+else publishLog('D', "Ignore '%s'", l.c_str());
+#endif
+		}
+	} catch(const std::ifstream::failure &e){
+		if(!file.eof()){
+			publishLog('F', "%s : %s", fch.c_str(), strerror(errno) );
+			exit(EXIT_FAILURE);
+		}
+	} catch(const std::invalid_argument &e){
+		publishLog('F', "%s : invalid argument", fch.c_str() );
+		exit(EXIT_FAILURE);
+	}
+
+	file.close();
+}
 
 void Event::execTasks( Config &cfg, const char *trig_name, const char *topic, const char *payload ){
 #ifdef DEBUG
@@ -35,3 +91,88 @@ void Event::execTasks( Config &cfg, const char *timer_name ){
 		}
 	}
 }
+
+	/*****
+	 * Lua exposed functions
+	 *****/
+static class Event *checkMajordomeEvent(lua_State *L){
+	class Event **r = (class Event **)luaL_testudata(L, 1, "MajordomeEvent");
+	luaL_argcheck(L, r != NULL, 1, "'MajordomeEvent' expected");
+	return *r;
+}
+
+static int mevt_find(lua_State *L){
+	const char *name = luaL_checkstring(L, 1);
+
+	try {
+		class Event &evt = config.EventsList.at( name );
+		class Event **event = (class Event **)lua_newuserdata(L, sizeof(class Event *));
+		assert(event);
+
+		*event = &evt;
+		luaL_getmetatable(L, "MajordomeEvent");
+		lua_setmetatable(L, -2);
+
+		return 1;
+	} catch( std::out_of_range &e ){	// Not found 
+		return 0;
+	}
+}
+
+static const struct luaL_Reg MajEventLib [] = {
+	{"find", mevt_find},
+	{NULL, NULL}
+};
+
+static int mevt_Launch( lua_State *L ){
+	class Event *event = checkMajordomeEvent(L);
+
+	if( event->isEnabled() )
+		event->execTasks(config, event->getNameC(), NULL, "fake");
+#ifdef DEBUG
+	else if( debug )
+		publishLog('D', "Event %s is disabled : no tasks launched", event->getNameC() );
+#endif	
+	return 0;
+}
+
+static int mevt_getContainer( lua_State *L ){
+	class Event *event = checkMajordomeEvent(L);
+	lua_pushstring( L, event->getWhereC() );
+	return 1;
+}
+
+static int mevt_enabled( lua_State *L ){
+	class Event *event = checkMajordomeEvent(L);
+	event->enable();
+	return 0;
+}
+
+static int mevt_disable( lua_State *L ){
+	class Event *event = checkMajordomeEvent(L);
+	event->disable();
+	return 0;
+}
+
+static int mevt_isEnabled( lua_State *L ){
+	class Event *event = checkMajordomeEvent(L);
+	lua_pushboolean( L, event->isEnabled() );
+	return 1;
+}
+
+static const struct luaL_Reg MajEventM [] = {
+	{"Launch", mevt_Launch},
+	{"getContainer", mevt_getContainer},
+	{"isEnabled", mevt_isEnabled},
+	{"Enable", mevt_enabled},
+	{"Disable", mevt_disable},
+	{NULL, NULL}
+};
+
+int Event::initLuaObject( lua_State *L ){
+	libSel_objFuncs( L, "MajordomeEvent", MajEventM );
+	libSel_libFuncs( L, "MajordomeEvent", MajEventLib );
+
+	return 1;
+}
+

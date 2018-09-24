@@ -22,7 +22,19 @@ class Event : public Object {
 	typedef std::vector<std::string> TaskEntries;	// List of tasks'name to launch when a message arrives
 	TaskEntries tasks;
 
+protected:
+	/* Default empty constructor to be only used by derived classes 
+	 */
+	Event(){}
+
 public:
+	/* Constructor from a file
+	 * -> file : file to load
+	 * -> where : file's directory
+	 * <- name : this object's name
+	 */
+	Event( const std::string &file, std::string &where, std::string &name  );
+
 	typedef TaskEntries::iterator iterator;
 	typedef TaskEntries::const_iterator const_iterator;
 	iterator begin() { return tasks.begin(); }
@@ -40,6 +52,9 @@ public:
 	 * -> name of the object that triggers the task
 	 */
 	void execTasks( Config &, const char *name );
+
+	/* Create Lua's object */
+	static int initLuaObject( lua_State *L );
 };
 
 #endif

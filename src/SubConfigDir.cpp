@@ -16,8 +16,9 @@ bool SubConfigDir::accept( const char *fch, std::string &full ){
 	if( SortDir::accept( fch, full ) ){
 		const char *ext = fileextention( fch );
 		if( !strcmp(ext,".lua") ||
+			!strcmp(ext,".event") ||
 			!strcmp(ext,".topic") ||
-			!strcmp(ext,".timer")
+			!strcmp(ext,".timer") 
 		)
 			return true;
 	}
@@ -61,6 +62,17 @@ SubConfigDir::SubConfigDir( Config &cfg, std::string &where, lua_State *L){
 				exit(EXIT_FAILURE);
 			} else {
 				cfg.TopicsList.insert( std::make_pair(name, tpc) );
+			}
+		} else if( !strcmp(ext,".event") ){
+			std::string name;
+			Event evt( completpath, where, name );
+
+			Config::EventElements::iterator prev;
+			if((prev = cfg.EventsList.find(name)) != cfg.EventsList.end()){
+				publishLog('F', "Event '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second.getWhere().c_str());
+				exit(EXIT_FAILURE);
+			} else {
+				cfg.EventsList.insert( std::make_pair(name, evt) );
 			}
 		} else if( !strcmp(ext,".timer") ){
 			std::string name;
