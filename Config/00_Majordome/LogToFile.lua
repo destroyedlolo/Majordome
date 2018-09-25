@@ -1,5 +1,5 @@
 -- Initialise log to file will every day log rotation
--->> waitfor=MidnightOrAtLaunch
+-->> until=MidnightOrAtLaunch
 local _,err = SelLog.init('/tmp/'.. MAJORDOME_ClientID ..'.log_' .. os.date('%Y%m%d'), false)
 
 if err then

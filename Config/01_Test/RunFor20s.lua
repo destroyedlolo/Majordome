@@ -1,6 +1,6 @@
 -- This is an example of "once" script
 --
--->> waitfor=15s
+-->> until=15s
 -- If set, only one instance is allowed to run
 -->> once
 

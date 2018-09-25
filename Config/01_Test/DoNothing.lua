@@ -14,8 +14,8 @@
 -->> listen=NoStations
 --
 -- Indicate the Timer(s) to wait for
--- (more than one "waitfor" can be present)
--->> waitfor=15s
+-- (more than one "until" can be present)
+-->> until=15s
 --
 -- If set, only one instance is allowed to run
 --->> once
