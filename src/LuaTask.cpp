@@ -54,7 +54,7 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 			MayBeEmptyString arg;
 			if( !!(arg = striKWcmp( l, "-->> name=" ))){
 				if( nameused ){
-					publishLog('F', "\t\tName can be changed only before listen directives");
+					publishLog('F', "\t\tName can be changed only before listen, until or waitfor directives");
 					exit(EXIT_FAILURE);
 				}
 
@@ -79,6 +79,16 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 					nameused = true;
 				} else {
 					publishLog('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
+					exit(EXIT_FAILURE);
+				}
+			} else if( !!(arg = striKWcmp( l, "-->> waitfor=" ))){
+				Config::EventElements::iterator event;
+				if( (event = cfg.EventsList.find(arg)) != cfg.EventsList.end()){
+					publishLog('C', "\t\tAdded to event '%s'", arg.c_str());
+	 				event->second.addTasks( this->getName() );
+					nameused = true;
+				} else {
+					publishLog('F', "\t\event '%s' is not (yet ?) defined", arg.c_str());
 					exit(EXIT_FAILURE);
 				}
 			} else if( l == "-->> once" ){
