@@ -105,6 +105,35 @@ bool MQTTTopic::match( const char *intopic ){
 	return false;
 }
 
+bool MQTTTopic::enable( void ){
+	int err;
+	if( (err = MQTTClient_subscribe(
+		MQTT_client, 
+		this->getTopic(),
+		this->getQOS()
+	)) != MQTTCLIENT_SUCCESS){
+		publishLog('E', "Can't subscribe to '%s' : error %d", this->getTopic(), err);
+		return false;
+	}
+
+	this->Event::enable();
+	return true;
+}
+
+bool MQTTTopic::disable( void ){
+	int err;
+	if( (err = MQTTClient_unsubscribe(
+		MQTT_client, 
+		this->getTopic()
+	)) != MQTTCLIENT_SUCCESS){
+		publishLog('E', "Can't unsubscribe to '%s' : error %d", this->getTopic(), err);
+		return false;
+	}
+
+	this->Event::disable();
+	return true;
+}
+
 	/*****
 	 * Lua exposed functions
 	 *****/

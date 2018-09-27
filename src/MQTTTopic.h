@@ -35,6 +35,9 @@ public:
 	bool isNumeric( void ){ return this->numeric; };
 	unsigned long int getTTL( void ){ return this->ttl; };
 
+	bool enable( void );
+	bool disable( void );
+
 	/* check if an incoming topic matches this one
 	 * -> intopic : incoming topic
 	 * <- matching (bool) or not (false)

@@ -101,7 +101,7 @@ void Config::SubscribeTopics( void ){
 				i->second.getTopic(),
 				i->second.getQOS()
 			)) != MQTTCLIENT_SUCCESS){
-				publishLog('D', "Can't subscribe to '%s' : error %d", i->second.getTopic(), err);
+				publishLog('E', "Can't subscribe to '%s' : error %d", i->second.getTopic(), err);
 				exit(EXIT_FAILURE);
 			}
 		}
