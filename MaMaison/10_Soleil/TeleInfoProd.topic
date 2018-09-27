@@ -5,7 +5,7 @@ store
 numeric
 ttl=60
 
-# desactivé par défaut sinon ... il crée beaucoup trop d'activité (et de log)
+# désactivé par défaut sinon ... il crée beaucoup trop d'activité (et de log)
 # pour rien.
 # Sera activé au couché du soleil
 disabled

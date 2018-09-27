@@ -1,6 +1,7 @@
+# Consigne de "coucher du soleil" provenant de la météo.
 # Mis à jour automatiquement à la réception des info météo
 
 at=2100
 #immediate
-#runifover
+runifover
 #disabled
