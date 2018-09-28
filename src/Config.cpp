@@ -32,7 +32,8 @@ void Config::init(const char *where, lua_State *L){
 
 		/* Load packages */
 	for( iterator i=this->begin(); i<this->end(); i++){
-		publishLog('L', "Loading '%s'", (*i).c_str());
+		if(!quiet)
+			publishLog('L', "Loading '%s'", (*i).c_str());
 
 		std::string completpath = where;
 		completpath += '/';

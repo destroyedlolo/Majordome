@@ -64,7 +64,8 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 			} else if( !!(arg = striKWcmp( l, "-->> listen=" ))){
 				Config::TopicElements::iterator topic;
 				if( (topic = cfg.TopicsList.find(arg)) != cfg.TopicsList.end()){
-					publishLog('C', "\t\tAdded to topic '%s'", arg.c_str());
+					if(verbose)
+						publishLog('C', "\t\tAdded to topic '%s'", arg.c_str());
 	 				topic->second.addTasks( this->getName() );
 					nameused = true;
 				} else {
@@ -74,7 +75,8 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 			} else if( !!(arg = striKWcmp( l, "-->> until=" ))){
 				Config::TimerElements::iterator timer;
 				if( (timer = cfg.TimersList.find(arg)) != cfg.TimersList.end()){
-					publishLog('C', "\t\tAdded to timer '%s'", arg.c_str());
+					if(verbose)
+						publishLog('C', "\t\tAdded to timer '%s'", arg.c_str());
 	 				timer->second.addTasks( this->getName() );
 					nameused = true;
 				} else {
@@ -84,7 +86,8 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 			} else if( !!(arg = striKWcmp( l, "-->> waitfor=" ))){
 				Config::EventElements::iterator event;
 				if( (event = cfg.EventsList.find(arg)) != cfg.EventsList.end()){
-					publishLog('C', "\t\tAdded to event '%s'", arg.c_str());
+					if(verbose)
+						publishLog('C', "\t\tAdded to event '%s'", arg.c_str());
 	 				event->second.addTasks( this->getName() );
 					nameused = true;
 				} else {

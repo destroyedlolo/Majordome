@@ -34,7 +34,7 @@
 #include "Helpers.h"
 #include "Config.h"
 
-#define VERSION 0.0902
+#define VERSION 0.0903
 #define DEFAULT_CONFIGURATION_FILE "/usr/local/etc/Majordome.conf"
 
 using namespace std;
@@ -45,6 +45,7 @@ using namespace std;
 
 bool verbose = false;
 bool debug = false;
+bool quiet = false;
 
 bool configtest = false;
 const char *MQTT_ClientID = NULL;	/* MQTT client id : must be unique among a broker's clients */
@@ -199,15 +200,16 @@ int main(int ac, char **av){
 
 	slc_init( NULL, LOG_STDOUT );	/* Early logging to STDOUT before broker initialisation*/
 
-	while((c = getopt(ac, av, "vdhf:t")) != EOF) switch(c){
+	while((c = getopt(ac, av, "qvdhf:t")) != EOF) switch(c){
 	case 'h':
 		fprintf(stderr, "%s (%.04f)\n"
 			"A lightweight event based Automation System\n"
 			"Known options are :\n"
 			"\t-h : this online help\n"
-			"\t-v : enable verbose messages\n"
+			"\t-q : be quiet (remove all messages but script generated one)\n"
+			"\t-v : enable verbose messages (overwrite -q)\n"
 #ifdef DEBUG
-			"\t-d : enable debug messages\n"
+			"\t-d : enable debug messages (overwrite -q)\n"
 #endif
 			"\t-f<file> : read <file> for configuration\n"
 			"\t\t(default is '%s')\n"
@@ -218,13 +220,19 @@ int main(int ac, char **av){
 		break;
 	case 't':
 		configtest = true;
-		printf("%s v%.04f\n", basename(av[0]), VERSION);
 	case 'v':
+		printf("%s v%.04f\n", basename(av[0]), VERSION);
 		verbose = true;
+		quiet = false;
+		break;
+	case 'q':
+		if( !verbose )
+			quiet = true;
 		break;
 #ifdef DEBUG
 	case 'd':
 		debug = true;
+		quiet = false;
 		break;
 #endif
 	case 'f':
@@ -303,7 +311,7 @@ int main(int ac, char **av){
 
 	libSel_ApplyStartupFunc( luainitfunc, L );
 
-	if(verbose)
+	if(!quiet)
 		publishLog('I', "Starting %s %f ...", basename(av[0]), VERSION);
 
 		/***
@@ -317,7 +325,8 @@ int main(int ac, char **av){
 		exit(EXIT_FAILURE);
 	}
 
-	publishLog('I', "Let's go ...");
+	if(!quiet)
+		publishLog('I', "Let's go ...");
 
 	config.SubscribeTopics();	// MQTT : activate topics receiving
 	config.LaunchTimers();	// Launch slave timers

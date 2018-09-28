@@ -16,6 +16,7 @@
 	/****
 	 * Configuration's
 	 ****/
+extern bool quiet;
 extern bool verbose;
 extern bool debug;
 extern bool configtest;
