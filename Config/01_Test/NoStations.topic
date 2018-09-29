@@ -20,5 +20,10 @@ numeric
 # time to live of this variable (in Seconds)
 ttl=2
 
+# set the default value for this topic.
+# must be defined after 'name', 'numeric' and 'ttl'
+# useful only with 'store'd topics
+# default=3.14
+
 # disable this topic
 #disabled

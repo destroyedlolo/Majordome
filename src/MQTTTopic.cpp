@@ -29,12 +29,17 @@ MQTTTopic::MQTTTopic( const std::string &fch, std::string &where, std::string &n
 	file.exceptions ( std::ios::eofbit | std::ios::failbit ); // No need to check failbit
 	try {
 		std::string l;
+		bool alreadydefault = false;
 
 		file.open(fch);
 		while( std::getline( file, l) ){
 			MayBeEmptyString arg;
 
 			if( !!(arg = striKWcmp( l, "name=" )) ){
+				if(alreadydefault){
+					publishLog('F',"'name' can't be used after 'default'");
+					exit(EXIT_FAILURE);
+				}
 				this->name = name = arg;
 				if(verbose)
 					publishLog('C', "\t\tChanging name to '%s'", name.c_str());
@@ -52,13 +57,43 @@ MQTTTopic::MQTTTopic( const std::string &fch, std::string &where, std::string &n
 					publishLog('C', "\t\tStore in a SelShared");
 				this->store = true;
 			} else if( l == "numeric" ){
+				if(alreadydefault){
+					publishLog('F',"'default' must be set after 'numeric'");
+					exit(EXIT_FAILURE);
+				}
 				if(verbose)
 					publishLog('C', "\t\tStore as a numeric value");
 				this->numeric = true;
 			} else if( !!(arg = striKWcmp( l, "ttl=" )) ){
+				if(alreadydefault){
+					publishLog('F',"'ttl' can't be set after 'default'");
+					exit(EXIT_FAILURE);
+				}
 				this->ttl = strtoul( arg.c_str(), NULL, 0 );
 				if(verbose)
 					publishLog('C', "\t\tTTL = %lu", this->ttl);
+			} else if( !!(arg = striKWcmp( l, "default=" )) ){
+				alreadydefault = true;
+				if( !this->toBeStored() )
+					publishLog('E',"Default value is only useful for a stored topic");
+				else {
+					if( this->numeric ){
+						try {
+							double val = std::stod( arg );
+							soc_setn( this->getNameC(), val, this->ttl );
+
+							if(verbose)
+								publishLog('C', "\t\tdefault = %lf", val);
+						} catch( ... ){
+							publishLog('F', "Topic '%s' is expecting a number : no convertion done ", this->getNameC() );
+							exit(EXIT_FAILURE);
+						}
+					} else {
+						soc_sets( this->getNameC(), arg.c_str(), this->ttl );
+						if(verbose)
+							publishLog('C', "\t\tdefault = \"%s\"", arg.c_str());
+					}
+				}
 			} else if( l == "disabled" ){
 				if(verbose)
 					publishLog('C', "\t\tDisabled");
