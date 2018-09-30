@@ -201,6 +201,20 @@ static const struct luaL_Reg MajTopicLib [] = {
 	{NULL, NULL}
 };
 
+static int mtpc_Publish(lua_State *L){
+/* Publish to a topic
+ *	2 : valeur
+ *	3 : retain
+ */
+	class MQTTTopic *topic = checkMajordomeMQTTTopic(L);
+	const char *val = luaL_checkstring(L, 2);
+	int retain =  lua_toboolean(L, 3);
+
+	mqttpublish( MQTT_client, topic->getTopic(), strlen(val), (void *)val, retain );
+
+	return 0;
+}
+
 static int mtpc_getTopic( lua_State *L ){
 	class MQTTTopic *topic = checkMajordomeMQTTTopic(L);
 	lua_pushstring( L, topic->getTopic() );
@@ -271,6 +285,7 @@ static int mtpc_isEnabled( lua_State *L ){
 }
 
 static const struct luaL_Reg MajTopicM [] = {
+	{"Publish", mtpc_Publish},
 	{"getTopic", mtpc_getTopic},
 	{"getVal", mtpc_getVal},
 	{"Launch", mtpc_Launch},
