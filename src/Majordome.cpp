@@ -16,6 +16,8 @@
  *
  *	05/07/2018 - LF - Start of development
  *	25/07/2018 - LF - Switch to C++ (when it's useful)
+ *	02/10/2018 - LF - Start logging before scribscribing in order to get early
+ *		messages as well
  */
 
 #include <iostream>
@@ -34,7 +36,7 @@
 #include "Helpers.h"
 #include "Config.h"
 
-#define VERSION 0.1001
+#define VERSION 0.1002
 #define DEFAULT_CONFIGURATION_FILE "/usr/local/etc/Majordome.conf"
 
 using namespace std;
@@ -328,9 +330,9 @@ int main(int ac, char **av){
 	if(!quiet)
 		publishLog('I', "Let's go ...");
 
-	config.SubscribeTopics();	// MQTT : activate topics receiving
 	config.LaunchTimers();	// Launch slave timers
 	config.RunImmediates();	// Run immediate & over timers tasks
+	config.SubscribeTopics();	// MQTT : activate topics receiving
 
 	pause();	// Waiting for events, nothing else to do
 }
