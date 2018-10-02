@@ -36,7 +36,7 @@
 #include "Helpers.h"
 #include "Config.h"
 
-#define VERSION 0.1002
+#define VERSION 0.1003
 #define DEFAULT_CONFIGURATION_FILE "/usr/local/etc/Majordome.conf"
 
 using namespace std;
@@ -97,9 +97,6 @@ static void read_configuration( const char *fch){
 
 	file.close();
 
-	if(verbose)
-		puts("");
-
 	if(!MQTT_ClientID){
 		char h[HOST_NAME_MAX];
 		if(gethostname( h, HOST_NAME_MAX )){
@@ -112,6 +109,10 @@ static void read_configuration( const char *fch){
 		if(verbose)
 			printf("MQTT Client ID : '%s' (computed)\n", MQTT_ClientID);
 	}
+
+	if(verbose)
+		puts("");
+
 }
 
 	/******
