@@ -91,7 +91,7 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 	 				event->second.addTasks( this->getName() );
 					nameused = true;
 				} else {
-					publishLog('F', "\t\event '%s' is not (yet ?) defined", arg.c_str());
+					publishLog('F', "\t\tevent '%s' is not (yet ?) defined", arg.c_str());
 					exit(EXIT_FAILURE);
 				}
 			} else if( l == "-->> once" ){
