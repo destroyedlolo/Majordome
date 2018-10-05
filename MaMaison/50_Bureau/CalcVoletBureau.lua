@@ -13,6 +13,7 @@ or not SelShared.Get("Saison") then
 	return
 end
 
+-- print("******* Lancé par trig:", MAJORDOME_TRIGGER, "tmr:", MAJORDOME_TIMER )
 
 --
 -- Récupération des timers cibles
@@ -24,17 +25,21 @@ assert(OuvertureVoletBureau, "'OuvertureVoletBureau' pas trouvé")
 local FermetureVoletBureau = MajordomeTimer.find("FermetureVoletBureau")
 assert(FermetureVoletBureau, "'FermetureVoletBureau' pas trouvé")
 
--- print("******* Lancé par trig:", MAJORDOME_TRIGGER, "tmr:", MAJORDOME_TIMER )
+local hl,ml = string.match(string.gsub( SelShared.Get('LeverSoleil'), '%.', ':'), "(%d+):(%d+)")
+local hc,mc = string.match(string.gsub( SelShared.Get('CoucherSoleil'), '%.', ':'), "(%d+):(%d+)")
 
 if SelShared.Get("Saison") == 'Hiver' then
-	local h,m = string.match(string.gsub( SelShared.Get('LeverSoleil'), '%.', ':'), "(%d+):(%d+)")
-	OuvertureVoletBureau:setAtHM( h+1, m )
-	h,m = OuvertureVoletBureau:getAtHM()
-	SelLog.log('I', "Le volet du bureau s'ouvrira à ".. h ..":".. m)
+	OuvertureVoletBureau:setAtHM( hl+1, ml )
+	hl,ml = OuvertureVoletBureau:getAtHM()
+	SelLog.log('I', "Le volet du bureau s'ouvrira à ".. hl ..":".. ml)
 	
-	h,m = string.match(string.gsub( SelShared.Get('CoucherSoleil'), '%.', ':'), "(%d+):(%d+)")
-	FermetureVoletBureau:setAtHM( h-1, m )
-	h,m = FermetureVoletBureau:getAtHM()
-	SelLog.log('I', "Le volet du bureau se fermera à ".. h ..":".. m)
+	FermetureVoletBureau:setAtHM( hc-1, mc )
+	hc,mc = FermetureVoletBureau:getAtHM()
+	SelLog.log('I', "Le volet du bureau se fermera à ".. hc ..":".. mc)
 else -- Autre saison
+	OuvertureVoletBureau:setAtHM( hl, ml )
+	SelLog.log('I', "Le volet du bureau s'ouvrira avec le soleil à ".. hl ..":".. ml)
+
+	FermetureVoletBureau:setAtHM( hc, mc )
+	SelLog.log('I', "Le volet du bureau se fermera avec le soleil à ".. hc ..":".. mc)
 end

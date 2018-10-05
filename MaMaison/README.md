@@ -1,5 +1,5 @@
 This directory contains my own smart home automation. Use it as example of real implementation.
-Notez-Bien : comment are in French.
+Notez-Bien : comments are in French.
 
 ----
 
