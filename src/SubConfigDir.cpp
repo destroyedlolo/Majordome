@@ -16,7 +16,7 @@ bool SubConfigDir::accept( const char *fch, std::string &full ){
 	if( SortDir::accept( fch, full ) ){
 		const char *ext = fileextention( fch );
 		if( !strcmp(ext,".lua") ||
-			!strcmp(ext,".event") ||
+			!strcmp(ext,".rendezvous") ||
 			!strcmp(ext,".topic") ||
 			!strcmp(ext,".timer") 
 		)
@@ -63,7 +63,7 @@ SubConfigDir::SubConfigDir( Config &cfg, std::string &where, lua_State *L){
 			} else {
 				cfg.TopicsList.insert( std::make_pair(name, tpc) );
 			}
-		} else if( !strcmp(ext,".event") ){
+		} else if( !strcmp(ext,".rendezvous") ){
 			std::string name;
 			Event evt( completpath, where, name );
 
