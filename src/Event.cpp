@@ -96,8 +96,8 @@ void Event::execTasks( Config &cfg, const char *timer_name ){
 	 * Lua exposed functions
 	 *****/
 static class Event *checkMajordomeEvent(lua_State *L){
-	class Event **r = (class Event **)luaL_testudata(L, 1, "MajordomeEvent");
-	luaL_argcheck(L, r != NULL, 1, "'MajordomeEvent' expected");
+	class Event **r = (class Event **)luaL_testudata(L, 1, "MajordomeRendezVous");
+	luaL_argcheck(L, r != NULL, 1, "'MajordomeRendezVous' expected");
 	return *r;
 }
 
@@ -110,7 +110,7 @@ static int mevt_find(lua_State *L){
 		assert(event);
 
 		*event = &evt;
-		luaL_getmetatable(L, "MajordomeEvent");
+		luaL_getmetatable(L, "MajordomeRendezVous");
 		lua_setmetatable(L, -2);
 
 		return 1;
