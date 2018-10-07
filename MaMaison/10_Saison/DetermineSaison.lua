@@ -1,4 +1,4 @@
--->> until=22h
+-->> when=22h
 
 SelLog.log('M',"Détermination de la saison")
 

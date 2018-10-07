@@ -1,7 +1,7 @@
 -- Reset du répéteur WiFi
 --
--->> until=11h
--->> until=CdGRepWiFi
+-->> when=11h
+-->> when=CdGRepWiFi
 -->> once
 
 local commande = MajordomeMQTTTopic.find("CommandeResetRepWiFi")

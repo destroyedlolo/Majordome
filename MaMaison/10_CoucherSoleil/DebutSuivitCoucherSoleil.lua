@@ -1,5 +1,5 @@
 -- L'heure de coucher du soleil est arrivée
--->> until=ConsigneCoucherSoleil
+-->> when=ConsigneCoucherSoleil
 
 SelLog.log('I', "Début du suivit de la production solaire")
 

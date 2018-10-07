@@ -1,5 +1,5 @@
 -- Le soleil est couché, on remet à zéro le mécanisme de suivit
--->> until=CoucherSoleil
+-->> when=CoucherSoleil
 
 SelLog.log('I', "Le soleil est couché")
 

@@ -1,5 +1,5 @@
 -- Commande la mise en position "my" du volet de la trappe du chat
--->> until=MyTrappeChat
+-->> when=MyTrappeChat
 
 local CmdTrappeChat = MajordomeMQTTTopic.find("CmdTrappeChat")
 assert(CmdTrappeChat, "'CmdTrappeChat' pas trouvé")
