@@ -7,8 +7,5 @@ L'**hiver**, dans le but d'économiser le chauffage
 - *fermeture* à l'heure du coucher - 1h
 
 Les **autres saisons**, *ouverture* et *fermeture* avec le soleil
-Debut surveillance : 9:30
-Fin surveillance : 16:30
-Temp : 21.5
-
+La surveillance standard est de mise.
 
