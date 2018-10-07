@@ -164,7 +164,6 @@ bool MQTTTopic::disable( void ){
 		publishLog('E', "Can't unsubscribe to '%s' : error %d", this->getTopic(), err);
 		return false;
 	}
-
 	this->Event::disable();
 	return true;
 }

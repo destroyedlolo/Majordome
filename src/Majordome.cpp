@@ -36,7 +36,7 @@
 #include "Helpers.h"
 #include "Config.h"
 
-#define VERSION 0.1003
+#define VERSION 0.1004
 #define DEFAULT_CONFIGURATION_FILE "/usr/local/etc/Majordome.conf"
 
 using namespace std;
@@ -194,6 +194,13 @@ static int setGlobalVar( lua_State *L ){
 	lua_pushstring( L, MQTT_ClientID );	/* Expose ClientID to lua side */
 	lua_setglobal( L, "MAJORDOME_ClientID" );
 
+#if DEBUG
+	if(debug){
+		lua_pushinteger( L, 1 );	/* Expose ClientID to lua side */
+		lua_setglobal( L, "MAJORDOME_DEBUG" );
+	}
+#endif
+		
 	return 0;
 }
 
