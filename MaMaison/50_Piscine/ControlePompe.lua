@@ -6,8 +6,7 @@
 local Topic_pompe = "maison/IO/Pompe_Piscine"
 -- fin config
 
-local ModePiscine = MajordomeMQTTTopic.find("ModePiscine")
-assert( ModePiscine, "'ModePiscine' pas trouvé" );
+local ModePiscine = MajordomeMQTTTopic.find("ModePiscine", true)
 
 --[[ debug
 print( "TarifElectricite", SelShared.Get("TarifElectricite") )

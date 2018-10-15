@@ -2,11 +2,8 @@
 -->> listen=ModeDemain
 -->> listen=Saison
 
-local CmdTrappeChat = MajordomeMQTTTopic.find("CmdTrappeChat")
-assert(CmdTrappeChat, "'CmdTrappeChat' pas trouvé")
-
-local MyTrappeChat = MajordomeTimer.find("MyTrappeChat")
-assert(MyTrappeChat, "'MyTrappeChat' pas trouvé")
+local CmdTrappeChat = MajordomeMQTTTopic.find("CmdTrappeChat", true)
+local MyTrappeChat = MajordomeTimer.find("MyTrappeChat", true)
 
 if SelShared.Get("Saison") == 'Hiver' then
 	SelLog.log('I', "'My' de la trappe du chat à 21h")

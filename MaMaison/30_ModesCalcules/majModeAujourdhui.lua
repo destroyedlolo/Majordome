@@ -2,8 +2,7 @@
 -->> listen=ModeAujourdhui
 -->> listen=ModeForce
 
-local Mode = MajordomeMQTTTopic.find("Mode")
-assert(Mode, "'Mode' pas trouvé")
+local Mode = MajordomeMQTTTopic.find("Mode", true)
 
 if SelShared.Get("ModeForce") == "Auto" then
 	SelLog.log('M', "Mode calculé : " .. SelShared.Get("ModeAujourdhui"))

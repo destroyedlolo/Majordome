@@ -8,11 +8,8 @@
 
 -- Cette tâche sera activé si besoin par DetermineSaison
 
-local DetermineSaison = MajordomeTask.find("DetermineSaison")
-assert( DetermineSaison, '"DetermineSaison" pas trouvé')
+local DetermineSaison = MajordomeTask.find("DetermineSaison", true)
+local DetermineSaison2 = MajordomeTask.find("DetermineSaison2Chance", true)
 
-local DetermineSaison2 = MajordomeTask.find("DetermineSaison2Chance")
-assert( DetermineSaison2, '"DetermineSaison2Chance" pas trouvé')
 DetermineSaison2:disable() -- Il a fait son taf, on le redésactive
-
 DetermineSaison:Launch()

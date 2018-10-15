@@ -2,8 +2,7 @@
 -->> listen=TeleInfoProd
 
 if SelShared.Get("TeleInfoProd") > 0 then
-	local timer = MajordomeTimer.find("CoucherSoleil")
-	assert( timer, '"CoucherSoleil" pas trouvé' )
+	local timer = MajordomeTimer.find("CoucherSoleil", true)
 	timer:Reset()
 	SelLog.log('I', "Le soleil n'est pas encore couché")
 end

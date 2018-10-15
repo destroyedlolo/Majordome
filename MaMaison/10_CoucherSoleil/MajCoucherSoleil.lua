@@ -3,8 +3,7 @@
 --
 -->> listen=CoucherSoleil
 
-local timer = MajordomeTimer.find("ConsigneCoucherSoleil")
-assert( timer, '"ConsigneCoucherSoleil" pas trouvé' )
+local timer = MajordomeTimer.find("ConsigneCoucherSoleil", true)
 
 local h,m = string.match(string.gsub( SelShared.Get('CoucherSoleil'), '%.', ':'), "(%d+):(%d+)")
 

@@ -17,11 +17,8 @@ end
 -- Récupération des timers cibles
 --
 
-local OuvertureVoletBureau = MajordomeTimer.find("OuvertureVoletBureau")
-assert(OuvertureVoletBureau, "'OuvertureVoletBureau' pas trouvé")
-
-local FermetureVoletBureau = MajordomeTimer.find("FermetureVoletBureau")
-assert(FermetureVoletBureau, "'FermetureVoletBureau' pas trouvé")
+local OuvertureVoletBureau = MajordomeTimer.find("OuvertureVoletBureau", true)
+local FermetureVoletBureau = MajordomeTimer.find("FermetureVoletBureau", true)
 
 local hl,ml = string.match(string.gsub( SelShared.Get('LeverSoleil'), '%.', ':'), "(%d+):(%d+)")
 local hc,mc = string.match(string.gsub( SelShared.Get('CoucherSoleil'), '%.', ':'), "(%d+):(%d+)")

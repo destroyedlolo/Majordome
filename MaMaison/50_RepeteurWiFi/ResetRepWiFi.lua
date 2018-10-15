@@ -4,8 +4,7 @@
 -->> when=CdGRepWiFi
 -->> once
 
-local commande = MajordomeMQTTTopic.find("CommandeResetRepWiFi")
-assert( commande, 'Topic "CommandeResetRepWiFi" pas trouvé' )
+local commande = MajordomeMQTTTopic.find("CommandeResetRepWiFi", true)
 
 SelLog.log('A', "Arrêt du répéteur WiFi")
 commande:Publish("1")

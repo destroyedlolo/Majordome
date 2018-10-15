@@ -2,15 +2,10 @@
 -->> waitfor=recalculeSurveillance
 -->> once
 
-local TemperatureBureau = MajordomeMQTTTopic.find("TemperatureBureau")
-assert(TemperatureBureau, "'TemperatureBureau' pas trouvé")
-
-local DebutSurveillance= MajordomeTimer.find("DebutSurveillance")
-assert(DebutSurveillance, "'DebutSurveillance' pas trouvé")
+local TemperatureBureau = MajordomeMQTTTopic.find("TemperatureBureau", true)
+local DebutSurveillance= MajordomeTimer.find("DebutSurveillance", true)
+local FinSurveillance= MajordomeTimer.find("FinSurveillance", true)
 local debut = DebutSurveillance:getAt()
-
-local FinSurveillance= MajordomeTimer.find("FinSurveillance")
-assert(FinSurveillance, "'FinSurveillance' pas trouvé")
 local fin = FinSurveillance:getAt()
 
 local maintenant = tonumber(os.date("%H.%M"))

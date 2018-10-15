@@ -4,11 +4,8 @@
 -- Consigne
 local TLIMIT=21.5
 
-local TemperatureBureau = MajordomeMQTTTopic.find("TemperatureBureau")
-assert(TemperatureBureau, "'TemperatureBureau' pas trouvé")
-
-local VoletBureau = MajordomeMQTTTopic.find("CmdVoletBureau")
-assert(VoletBureau, "'CmdVoletBureau' pas trouvé")
+local TemperatureBureau = MajordomeMQTTTopic.find("TemperatureBureau", true)
+local VoletBureau = MajordomeMQTTTopic.find("CmdVoletBureau", true)
 
 if MAJORDOME_PAYLOAD >= TLIMIT then
 	SelLog.log('I', "Température du bureau, "..TLIMIT.." > à la consigne, Fin de la surveillance")

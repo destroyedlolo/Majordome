@@ -1,11 +1,8 @@
 -- Mise à jour de la consigne du mode
 -->> listen=ModeForce
 
-local Mode = MajordomeMQTTTopic.find("Mode")
-assert(Mode, "'Mode' pas trouvé")
-
-local ModeForce = MajordomeMQTTTopic.find("ModeForce")
-assert(ModeForce, "'ModeForce' pas trouvé")
+local Mode = MajordomeMQTTTopic.find("Mode", true)
+local ModeForce = MajordomeMQTTTopic.find("ModeForce", true)
 
 if ModeForce:getVal() == 'Auto' then
 	SelLog.log('M', "Mode repassé à 'automatique'")

@@ -9,11 +9,8 @@ end
 -- Récupération des timers cibles
 --
 
-local OuvertureVoletChAmis = MajordomeTimer.find("OuvertureVoletChAmis")
-assert(OuvertureVoletChAmis, "'OuvertureVoletChAmis' pas trouvé")
-
-local FermetureVoletChAmis = MajordomeTimer.find("FermetureVoletChAmis")
-assert(FermetureVoletChAmis, "'FermetureVoletChAmis' pas trouvé")
+local OuvertureVoletChAmis = MajordomeTimer.find("OuvertureVoletChAmis", true)
+local FermetureVoletChAmis = MajordomeTimer.find("FermetureVoletChAmis", true)
 
 if SelShared.Get("Mode") == 'Absent' then
 	SelLog.log('I', "Le volet de la chambre d'amis restera fermé")

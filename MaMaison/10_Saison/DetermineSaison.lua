@@ -2,10 +2,8 @@
 
 SelLog.log('M',"Détermination de la saison")
 
-local Saison = MajordomeMQTTTopic.find("Saison")
-assert(Saison, "'Saison' pas trouvé")
-local SaisonHier = MajordomeMQTTTopic.find("SaisonHier")
-assert(SaisonHier, "'SaisonHier' pas trouvé")
+local Saison = MajordomeMQTTTopic.find("Saison", true)
+local SaisonHier = MajordomeMQTTTopic.find("SaisonHier", true)
 
 
 SelLog.log('M',"T°Ext = " .. (SelShared.Get('TExterieur') or '??') .. " TSalon = " .. (SelShared.Get('TSalon') or '??') )
@@ -13,8 +11,7 @@ SelLog.log('M',"T°Ext = " .. (SelShared.Get('TExterieur') or '??') .. " TSalon 
 if not SelShared.Get('TExterieur') or not SelShared.Get('TSalon') then
 	SelLog.log('M', "On attend l'arrivée des températures")
 
-	local DetermineSaison2 = MajordomeTask.find("DetermineSaison2Chance")
-	assert( DetermineSaison2, '"DetermineSaison2Chance" pas trouvé' )
+	local DetermineSaison2 = MajordomeTask.find("DetermineSaison2Chance", true)
 	DetermineSaison2:enable() -- On attend l'arrivée de la température
 else
 	SeleMQTT.Publish( SaisonHier:getTopic(), Saison:getVal() )

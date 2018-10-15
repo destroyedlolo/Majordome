@@ -15,15 +15,9 @@ end
 -- Récupération des infos
 --
 
-local DebutSurveillance = MajordomeTimer.find("DebutSurveillance")
-assert(DebutSurveillance, "'DebutSurveillance' pas trouvé")
-
-local FinSurveillance = MajordomeTimer.find("FinSurveillance")
-assert(FinSurveillance, "'FinSurveillance' pas trouvé")
-
-local notifRecalcul = MajordomeRendezVous.find("recalculeSurveillance")
-assert(notifRecalcul, "'recalculeSurveillance' pas trouvé")
-
+local DebutSurveillance = MajordomeTimer.find("DebutSurveillance", true)
+local FinSurveillance = MajordomeTimer.find("FinSurveillance", true)
+local notifRecalcul = MajordomeRendezVous.find("recalculeSurveillance", true)
 
 local hc,mc = string.match(string.gsub( SelShared.Get('CoucherSoleil'), '%.', ':'), "(%d+):(%d+)")
 

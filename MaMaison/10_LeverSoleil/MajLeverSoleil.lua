@@ -1,7 +1,6 @@
 -->> listen=LeverSoleil
 
-local timer = MajordomeTimer.find("LeverSoleil")
-assert( timer, '"LeverSoleil" pas trouvé' )
+local timer = MajordomeTimer.find("LeverSoleil", true)
 
 local h,m = string.match(string.gsub( SelShared.Get('LeverSoleil'), '%.', ':'), "(%d+):(%d+)")
 

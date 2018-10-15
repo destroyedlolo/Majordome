@@ -2,7 +2,6 @@
 -->> listen=InfoRepWiFi
 -->> once
 
-local CdG = MajordomeTimer.find("CdGRepWiFi")
-assert( CdG, 'Timer "CdGRepWiFi" pas trouvé' )
+local CdG = MajordomeTimer.find("CdGRepWiFi", true)
 
 CdG:Reset()

@@ -1,10 +1,7 @@
 -->> when=FinSurveillance
 
-local TemperatureBureau = MajordomeMQTTTopic.find("TemperatureBureau")
-assert(TemperatureBureau, "'TemperatureBureau' pas trouvé")
-
-local VoletBureau = MajordomeMQTTTopic.find("CmdVoletBureau")
-assert(VoletBureau, "'CmdVoletBureau' pas trouvé")
+local TemperatureBureau = MajordomeMQTTTopic.find("TemperatureBureau", true)
+local VoletBureau = MajordomeMQTTTopic.find("CmdVoletBureau", true)
 
 SelLog.log('I', "Fin de la surveillance de la température du bureau")
 
