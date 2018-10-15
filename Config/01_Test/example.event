@@ -1,0 +1,8 @@
+# Example of an "Event"
+
+# name of the event
+# if not set, takes the filename
+#name=toto
+
+# disable this event
+#disabled

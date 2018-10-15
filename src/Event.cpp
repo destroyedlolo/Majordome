@@ -102,7 +102,12 @@ static class Event *checkMajordomeEvent(lua_State *L){
 }
 
 static int mevt_find(lua_State *L){
+/* Find an event
+ * 1 : event to find
+ * 2 : true if it has to fail if not found
+ */
 	const char *name = luaL_checkstring(L, 1);
+	bool tofail =  lua_toboolean(L, 2);
 
 	try {
 		class Event &evt = config.EventsList.at( name );
@@ -114,7 +119,9 @@ static int mevt_find(lua_State *L){
 		lua_setmetatable(L, -2);
 
 		return 1;
-	} catch( std::out_of_range &e ){	// Not found 
+	} catch( std::out_of_range &e ){	// Not found
+		if( tofail )
+			return luaL_error( L, "Can't find \"%s\" RendezVous", name );
 		return 0;
 	}
 }

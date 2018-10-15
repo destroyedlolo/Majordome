@@ -277,7 +277,12 @@ static class LuaTask *checkMajordomeTask(lua_State *L){
 }
 
 static int mtsk_find(lua_State *L){
+/* Find a task
+ * 1 : task to find
+ * 2 : true if it has to fail if not found
+ */
 	const char *name = luaL_checkstring(L, 1);
+	bool tofail =  lua_toboolean(L, 2);
 
 	try {
 		class LuaTask &tsk = config.TasksList.at( name );
@@ -290,6 +295,8 @@ static int mtsk_find(lua_State *L){
 
 		return 1;
 	} catch( std::out_of_range &e ){	// Not found 
+		if( tofail )
+			return luaL_error( L, "Can't find \"%s\" task", name );
 		return 0;
 	}
 }

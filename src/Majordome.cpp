@@ -36,7 +36,7 @@
 #include "Helpers.h"
 #include "Config.h"
 
-#define VERSION 0.1006
+#define VERSION 0.1007
 #define DEFAULT_CONFIGURATION_FILE "/usr/local/etc/Majordome.conf"
 
 using namespace std;
