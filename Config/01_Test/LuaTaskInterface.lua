@@ -23,10 +23,10 @@ else
 
 	if task:isEnabled() then
 		print "Now, it's disabled"
-		task:disable()
+		task:Disable()
 	else
 		print "Now, it's enabled"
-		task:enable()
+		task:Enable()
 	end
 end
 

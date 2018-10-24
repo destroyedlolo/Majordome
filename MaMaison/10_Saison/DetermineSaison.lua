@@ -12,7 +12,7 @@ if not SelShared.Get('TExterieur') or not SelShared.Get('TSalon') then
 	SelLog.log('M', "On attend l'arrivée des températures")
 
 	local DetermineSaison2 = MajordomeTask.find("DetermineSaison2Chance", true)
-	DetermineSaison2:enable() -- On attend l'arrivée de la température
+	DetermineSaison2:Enable() -- On attend l'arrivée de la température
 else
 	SeleMQTT.Publish( SaisonHier:getTopic(), Saison:getVal() )
 	if SelShared.Get('TExterieur') < 5 then

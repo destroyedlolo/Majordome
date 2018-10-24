@@ -11,5 +11,5 @@
 local DetermineSaison = MajordomeTask.find("DetermineSaison", true)
 local DetermineSaison2 = MajordomeTask.find("DetermineSaison2Chance", true)
 
-DetermineSaison2:disable() -- Il a fait son taf, on le redésactive
+DetermineSaison2:Disable() -- Il a fait son taf, on le redésactive
 DetermineSaison:Launch()

@@ -366,8 +366,8 @@ static const struct luaL_Reg MajTaskM [] = {
 	{"Launch", mtsk_launch},
 	{"getContainer", mtsk_getContainer},
 	{"isEnabled", mtsk_isEnabled},
-	{"enable", mtsk_enabled},
-	{"disable", mtsk_disable},
+	{"Enable", mtsk_enabled},
+	{"Disable", mtsk_disable},
 	{NULL, NULL}
 };
 
