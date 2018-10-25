@@ -1,7 +1,0 @@
-# Consigne de mode générale
-
-topic=Majordome/Mode/Force
-store
-
-# Par défaut, pas d'automatisation
-default=Auto
