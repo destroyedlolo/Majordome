@@ -5,7 +5,7 @@ Notez-Bien : comments are in French.
 
 Ce répertoire contient les automatismes de ma propre domotique. Prenez le comme un exemple un utilisation réelle.
 
-## Objets utilisés
+## Objets utilisés les plus importants
 
 Nom (*shared object* et *MQTTTopic*) | Topic | Commentaire
 ----|----|----
