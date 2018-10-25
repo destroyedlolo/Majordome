@@ -1,0 +1,7 @@
+# Mode actif
+
+topic=Majordome/Mode
+store
+
+# Par défaut, pas d'automatisation
+default=Manuel
