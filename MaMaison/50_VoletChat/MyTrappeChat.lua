@@ -2,6 +2,11 @@
 -->> when=MyTrappeChat
 
 local CmdTrappeChat = MajordomeMQTTTopic.find("CmdTrappeChat", true)
+local mode = SelShared.Get("Mode") or "Manuel"
 
-SelLog.log('A', "'My' de la trappe du chat")
-CmdTrappeChat:Publish("My")
+if mode == "Manuel" then
+	SelLog.log('I', "Mode \"Manuel\" : 'My' de la trappe du chat ignoré")
+else
+	SelLog.log('A', "'My' de la trappe du chat")
+	CmdTrappeChat:Publish("My")
+end
