@@ -216,7 +216,8 @@ static int mtpc_Publish(lua_State *L){
 	const char *val = luaL_checkstring(L, 2);
 	int retain =  lua_toboolean(L, 3);
 
-	mqttpublish( MQTT_client, topic->getTopic(), strlen(val), (void *)val, retain );
+	if( topic->isEnabled() )
+		mqttpublish( MQTT_client, topic->getTopic(), strlen(val), (void *)val, retain );
 
 	return 0;
 }
