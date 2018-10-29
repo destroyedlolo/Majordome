@@ -24,6 +24,9 @@ ModeForce | Majordome/Mode/Force | Mode générale
 ModeForceChAmis | Majordome/Mode/Force/ChAmis | Mode de la chambre d'amis
 
 ### Modes actifs
+
+Nom (*shared object* et *MQTTTopic*) | Topic | Commentaire
+----|----|----
 Mode | Majordome/Mode | Mode **réel** calculé depuis *ModeAujourdhui* et de *ModeForce*
 ModeChAmis | Majordome/Mode/ChAmis | Mode **réel** pour la chambre d'amis
 

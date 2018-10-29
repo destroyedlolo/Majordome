@@ -41,6 +41,7 @@ end
 --
 
 if SelShared.Get("ModeChAmis") == 'Absent' or SelShared.Get("ModeChAmis") == 'Manuel' then
+	-- Ces 2 modes désactive les automatismes du volet
 	OuvertureVoletChAmis:Disable()
 	FermetureVoletChAmis:Disable()
 
@@ -54,16 +55,16 @@ if SelShared.Get("ModeChAmis") == 'Absent' or SelShared.Get("ModeChAmis") == 'Ma
 		end
 	else
 		SelShared.Set("ChAmisAbsent", {})
-		SelLog.log('I', "Le volet de la chambre d'amis ne sera pas commandé")
+		SelLog.log('I', "Le volet de la chambre d'amis n'est plus soumi à aucun automatisme")
 	end
-elseif SelShared.Get("ModeChAmis") == 'Vacances' then
+elseif SelShared.Get("ModeChAmis") == 'Vacances' then -- La chambre est occupée par des vacanciers
 	OuvertureVoletChAmis:Disable()
 	FermetureVoletChAmis:Enable()
 	
 	SelLog.log('I', "Le volet de la chambre d'amis ne s'ouvrira pas")
 	SelLog.log('I', "Le volet de la chambre d'amis se fermera à ".. hc ..":".. mc)
 	SelShared.Set("ChAmisAbsent", {})
-else
+else -- autre modes
 	OuvertureVoletChAmis:Enable()
 	FermetureVoletChAmis:Enable()
 	
