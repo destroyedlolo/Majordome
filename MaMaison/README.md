@@ -11,8 +11,19 @@ Nom (*shared object* et *MQTTTopic*) | Topic | Commentaire
 ----|----|----
 Saison | Majordome/Saison | 
 SaisonHier | Majordome/Saison/Hier | Saison de la veille
-ModeForce... | Majordome/Mode/Force# | Consigne de mode provenant de l'*IHM* de la domotique
 ModeAujourdhui | Majordome/Mode/AujourdHui | Mode de fonctionnement pour aujourd'hui calculé par **Marcel**
 ModeDemain | Majordome/Mode/Demain | Mode de fonctionnement pour demain calculé par **Marcel**
+
+### Modes forcés
+Modes en provenance de l'*IHM* de la domotique.
+Les modes les plus *profonds* ont priorité sur les précédents.
+
+Nom (*shared object* et *MQTTTopic*) | Topic | Commentaire
+----|----|----
+ModeForce | Majordome/Mode/Force | Mode générale
+ModeForceChAmis | Majordome/Mode/Force/ChAmis | Mode de la chambre d'amis
+
+### Modes actifs
 Mode | Majordome/Mode | Mode **réel** calculé depuis *ModeAujourdhui* et de *ModeForce*
+ModeChAmis | Majordome/Mode/ChAmis | Mode **réel** pour la chambre d'amis
 
