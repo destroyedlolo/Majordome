@@ -55,7 +55,7 @@ if SelShared.Get("ModeChAmis") == 'Absent' or SelShared.Get("ModeChAmis") == 'Ma
 		end
 	else
 		SelShared.Set("ChAmisAbsent", {})
-		SelLog.log('I', "Le volet de la chambre d'amis n'est plus soumi à aucun automatisme")
+		SelLog.log('I', "Le volet de la chambre d'amis n'est plus soumis à aucun automatisme")
 	end
 elseif SelShared.Get("ModeChAmis") == 'Vacances' then -- La chambre est occupée par des vacanciers
 	OuvertureVoletChAmis:Disable()
