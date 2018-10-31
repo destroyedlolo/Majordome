@@ -8,13 +8,20 @@ local FinSurveillance= MajordomeTimer.find("FinSurveillance", true)
 local debut = DebutSurveillance:getAt()
 local fin = FinSurveillance:getAt()
 
+local mode = SelShared.Get("Mode") or "Manuel"
+
 local maintenant = tonumber(os.date("%H.%M"))
 
-if SelShared.Get("Saison") == "Hiver" then
+if SelShared.Get("Saison") == "Hiver" or mode == "Manuel" then
 	if TemperatureBureau:isEnabled() then
 		TemperatureBureau:Disable()
 	end
-	SelLog.log('I', "C'est l'hiver : Pas de surveillance de la température du bureau")
+	local res = "C'est l'hiver"
+	if mode == "Manuel" then
+		res = "Mode Manuel"
+	end
+
+	SelLog.log('I', res .. " : Pas de surveillance de la température du bureau")
 elseif maintenant >= debut and maintenant < fin then
 	if not TemperatureBureau:isEnabled() then
 		TemperatureBureau:Enable()
