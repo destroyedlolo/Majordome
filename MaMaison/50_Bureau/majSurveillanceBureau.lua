@@ -1,4 +1,4 @@
--- Recalcul de la surveillance de la température
+-- Recalcule de la surveillance de la température du bureau
 -->> waitfor=recalculeSurveillance
 -->> once
 
