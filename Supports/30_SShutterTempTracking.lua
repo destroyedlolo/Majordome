@@ -26,8 +26,13 @@ function SShutterTempTracking(aname, atpc, atimer, atemp, astart, astop, alimit)
 			self.My()
 			StopTracking()
 
-			timer.TaskAdd( HMonitoringStop, self.Up )
-			pubLog( self.getName() .. " : Les volets s'ouvriront à " .. HMonitoringStop )
+			if SunSet.get() > HMonitoringStop then
+				timer.TaskAdd( HMonitoringStop, self.Up )
+				pubLog( self.getName() .. " : Les volets s'ouvriront à " .. HMonitoringStop )
+			else
+				pubLog( self.getName() .. " : Les volets ne se rouvriront pas" )
+			end
+
 		elseif DEBUG then
 			SelLog.log( self.getName() .. " : " .. probe.get() .. ' -> trop basse' )
 		end
