@@ -10,3 +10,8 @@ L'**hiver**, dans le but d'économiser le chauffage
 Les **autres saisons**, *ouverture* et *fermeture* avec le soleil
 La surveillance standard est de mise.
 
+## Technique
+
+** OuvertureVoletBureau ** - Timer d'ouverture des volets
+** FermetureVoletBureau ** - Timer de fermeture. Actif uniquement en mode *hiver*
+

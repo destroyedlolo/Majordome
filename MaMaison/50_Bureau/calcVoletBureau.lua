@@ -15,37 +15,28 @@ or not SelShared.Get("Saison") then
 end
 
 --
--- Récupération des timers cibles
+-- Récupération des objets cibles
 --
 
 local OuvertureVoletBureau = MajordomeTimer.find("OuvertureVoletBureau", true)
 local FermetureVoletBureau = MajordomeTimer.find("FermetureVoletBureau", true)
+local FermetureVoletBureauAction = MajordomeTask.find("FermetureVoletBureau", true)
+
+--
+-- Récupération des paramètres solaire
+--
 
 local hl,ml = string.match(string.gsub( SelShared.Get('LeverSoleil'), '%.', ':'), "(%d+):(%d+)")
 local hc,mc = string.match(string.gsub( SelShared.Get('CoucherSoleil'), '%.', ':'), "(%d+):(%d+)")
 
+--
+-- C'est parti
+--
+
 if SelShared.Get("Mode") == 'Manuel' then
 	OuvertureVoletBureau:Disable()
 	FermetureVoletBureau:Disable()
+	FermetureVoletBureauAction:Disable()
 
 	SelLog.log('I', "Le volet du bureau n'est soumis à aucun automatisme")
-else
-	OuvertureVoletBureau:Enable()
-	FermetureVoletBureau:Enable()
-
-	if SelShared.Get("Saison") == 'Hiver' then
-		OuvertureVoletBureau:setAtHM( hl+1, ml )
-		hl,ml = OuvertureVoletBureau:getAtHM()
-		SelLog.log('I', "Le volet du bureau s'ouvrira à ".. hl ..":".. ml)
-	
-		FermetureVoletBureau:setAtHM( hc-1, mc )
-		hc,mc = FermetureVoletBureau:getAtHM()
-		SelLog.log('I', "Le volet du bureau se fermera à ".. hc ..":".. mc)
-	else -- Autre saison
-		OuvertureVoletBureau:setAtHM( hl, ml )
-		SelLog.log('I', "Le volet du bureau s'ouvrira avec le soleil à ".. hl ..":".. ml)
-
-		FermetureVoletBureau:setAtHM( hc, mc )
-		SelLog.log('I', "Le volet du bureau se fermera avec le soleil à ".. hc ..":".. mc)
-	end
 end
