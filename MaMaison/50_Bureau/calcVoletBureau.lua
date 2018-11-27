@@ -44,11 +44,11 @@ else
 	FermetureVoletBureauAction:Enable()
 
 	if SelShared.Get("Saison") == 'Hiver' then
-		OuvertureVoletBureau:setAtHM( hl+1, ml )
+		OuvertureVoletBureau:setAtHM( hl, ml + 30 )
 		hl,ml = OuvertureVoletBureau:getAtHM()
 		SelLog.log('I', "Le volet du bureau s'ouvrira à ".. hl ..":".. ml)
 	
-		FermetureVoletBureau:setAtHM( hc-1, mc )
+		FermetureVoletBureau:setAtHM( hc, mc - 15 )
 		hc,mc = FermetureVoletBureau:getAtHM()
 		FermetureVoletBureau:Enable()	-- Fermeture depuis le timer
 		SelLog.log('I', "Le volet du bureau se fermera à ".. hc ..":".. mc)
