@@ -39,4 +39,24 @@ if SelShared.Get("Mode") == 'Manuel' then
 	FermetureVoletBureauAction:Disable()
 
 	SelLog.log('I', "Le volet du bureau n'est soumis à aucun automatisme")
+else
+	OuvertureVoletBureau:Enable()
+	FermetureVoletBureauAction:Enable()
+
+	if SelShared.Get("Saison") == 'Hiver' then
+		OuvertureVoletBureau:setAtHM( hl+1, ml )
+		hl,ml = OuvertureVoletBureau:getAtHM()
+		SelLog.log('I', "Le volet du bureau s'ouvrira à ".. hl ..":".. ml)
+	
+		FermetureVoletBureau:setAtHM( hc-1, mc )
+		hc,mc = FermetureVoletBureau:getAtHM()
+		FermetureVoletBureau:Enable()	-- Fermeture depuis le timer
+		SelLog.log('I', "Le volet du bureau se fermera à ".. hc ..":".. mc)
+	else -- Autre saison
+		OuvertureVoletBureau:setAtHM( hl, ml )
+		SelLog.log('I', "Le volet du bureau s'ouvrira avec le soleil à ".. hl ..":".. ml)
+
+		FermetureVoletBureau:Disable()	-- Fermeture avec le soleil
+		SelLog.log('I', "Le volet du bureau se fermera avec le soleil à ".. hc ..":".. mc)
+	end
 end
