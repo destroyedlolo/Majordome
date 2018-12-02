@@ -30,3 +30,10 @@ Nom (*shared object* et *MQTTTopic*) | Topic | Commentaire
 Mode | Majordome/Mode | Mode **réel** calculé depuis *ModeAujourdhui* et de *ModeForce*
 ModeChAmis | Majordome/Mode/ChAmis | Mode **réel** pour la chambre d'amis
 
+## Traces
+
+Ces topics sont utilisés à fin de monitoring. Ils permettent d'exposer les états des automatismes de **majordome**.
+
+Topic | Valeurs | Commentaire
+---|---|---
+Majordome/Traces/SuiviCoucherSoleil | `D;heure_debut` / `E;heure_debut` / `F:heure_fin;heure_debut' | Début à quelle heure / EnCour depuis quelle heure / F a quelle heure

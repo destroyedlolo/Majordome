@@ -10,3 +10,7 @@ local h,m = string.match(string.gsub( SelShared.Get('CoucherSoleil'), '%.', ':')
 timer:setAtHM( h, m )
 
 SelLog.log('I', "Le soleil se couche à ".. h ..":".. m)
+
+local trace = MajordomeMQTTTopic.find("TraceSuiviCoucherSoleil", true)
+trace:Publish("D;" .. h ..":".. m)
+

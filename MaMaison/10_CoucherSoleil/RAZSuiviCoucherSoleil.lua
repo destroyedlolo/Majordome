@@ -10,3 +10,9 @@ timer:Disable()
 local prodSolaire = MajordomeMQTTTopic.find("TeleInfoProd", true)
 prodSolaire:Disable()
 
+local timer = MajordomeTimer.find("ConsigneCoucherSoleil", true)
+local h,m = timer:getAtHM()
+
+local trace = MajordomeMQTTTopic.find("TraceSuiviCoucherSoleil", true)
+trace:Publish("F;" .. os.date("%H:%M" ..";".. h ..':'..m))
+

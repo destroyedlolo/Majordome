@@ -10,3 +10,5 @@ timer:Enable()
 local prodSolaire = MajordomeMQTTTopic.find("TeleInfoProd", true)
 prodSolaire:Enable()
 
+local trace = MajordomeMQTTTopic.find("TraceSuiviCoucherSoleil", true)
+trace:Publish("E;" .. os.date("%H:%M"))
