@@ -1,4 +1,4 @@
--- Suivit de la production solaire jusqu'à son coucher effectif.
+-- Suivi de la production solaire jusqu'à son coucher effectif.
 -->> listen=TeleInfoProd
 
 if SelShared.Get("TeleInfoProd") > 0 then

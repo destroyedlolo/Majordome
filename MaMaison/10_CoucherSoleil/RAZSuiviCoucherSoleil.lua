@@ -1,4 +1,4 @@
--- Le soleil est couché, on remet à zéro le mécanisme de suivit
+-- Le soleil est couché, on remet à zéro le mécanisme de suivi
 -->> when=CoucherSoleil
 
 SelLog.log('I', "Le soleil est couché")
