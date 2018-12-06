@@ -4,6 +4,10 @@
 -->> listen=CoucherSoleil
 -->> listen=Saison
 
+if not SelShared.Get('CoucherSoleil') then
+	return
+end
+
 local timer = MajordomeTimer.find("ConsigneCoucherSoleil", true)
 
 local h,m = string.match(string.gsub( SelShared.Get('CoucherSoleil'), '%.', ':'), "(%d+):(%d+)")
