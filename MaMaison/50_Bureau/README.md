@@ -12,6 +12,6 @@ La surveillance standard est de mise.
 
 ## Technique
 
-** OuvertureVoletBureau ** - Timer d'ouverture des volets
-** FermetureVoletBureau ** - Timer de fermeture. Actif uniquement en mode *hiver*
+- **OuvertureVoletBureau** - Timer d'ouverture des volets
+- **FermetureVoletBureau** - Timer de fermeture. Actif uniquement en mode *hiver*
 
