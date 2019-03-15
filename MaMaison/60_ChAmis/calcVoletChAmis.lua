@@ -9,6 +9,7 @@
 --
 
 if not SelShared.Get("ModeChAmis")
+or not SelShared.Get("PrevModeChAmis")
 or not SelShared.Get("LeverSoleil") 
 or not SelShared.Get("CoucherSoleil")
 or not SelShared.Get("Saison") then
@@ -16,9 +17,20 @@ or not SelShared.Get("Saison") then
 end
 
 --
--- Récupération des timers cibles
+-- Récupération des topics
 --
 
+local CmdVoletChAmis = MajordomeMQTTTopic.find("CmdVoletChAmis", true)
 local OuvertureVoletChAmis = MajordomeTimer.find("OuvertureVoletChAmis", true)
 local FermetureVoletChAmis = MajordomeTimer.find("FermetureVoletChAmis", true)
 
+--
+-- C'est parti
+--
+
+if SelShared.Get("ModeChAmis") == "Absent" then
+	if SelShared.Get("PrevModeChAmis") ~= "Absent" then
+		SelLog.log('A', "'Fermeture' forcé du volet de la chambre d'amis")
+		CmdVoletChAmis:Publish("Down")
+	end
+end

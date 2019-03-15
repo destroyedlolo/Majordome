@@ -7,6 +7,7 @@ if not SelShared.Get("Mode") then
 end
 
 local ModeChAmis = MajordomeMQTTTopic.find("ModeChAmis", true)
+SelShared.Set("PrevModeChAmis", ModeChAmis:getVal() or "??")
 local res = SelShared.Get("ModeForceChAmis") or "Auto"
 
 if res == "Auto" then
