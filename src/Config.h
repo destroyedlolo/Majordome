@@ -15,6 +15,7 @@
 #include "Timer.h"
 
 #include "LuaTask.h"
+#include "Tracker.h"
 
 class Config : virtual public SortDir {
 protected :
@@ -29,6 +30,9 @@ public:
 
 	typedef std::unordered_map<std::string, LuaTask> TaskElements;
 	TaskElements TasksList;
+
+	typedef std::unordered_map<std::string, Tracker> TrackerElements;
+	TrackerElements TrackerList;
 
 	typedef std::unordered_map<std::string, Event> EventElements;
 	EventElements EventsList;
@@ -50,10 +54,11 @@ public:
 	/* Triggers immediate & over timers */
 	void RunImmediates( void );
 
-	/* Find a task by its name 
+	/* Find a task/tracker by its name 
 	 *	throw an exception if not found
 	 */
 	LuaTask &findTask( std::string & );
+	Tracker &findTracker( std::string & );
 };
 
 extern Config config;

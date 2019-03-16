@@ -66,7 +66,7 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 				if( (topic = cfg.TopicsList.find(arg)) != cfg.TopicsList.end()){
 					if(verbose)
 						publishLog('C', "\t\tAdded to topic '%s'", arg.c_str());
-	 				topic->second.addTasks( this->getName() );
+	 				topic->second.addTask( this->getName() );
 					nameused = true;
 				} else {
 					publishLog('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
@@ -77,7 +77,7 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 				if( (timer = cfg.TimersList.find(arg)) != cfg.TimersList.end()){
 					if(verbose)
 						publishLog('C', "\t\tAdded to timer '%s'", arg.c_str());
-	 				timer->second.addTasks( this->getName() );
+	 				timer->second.addTask( this->getName() );
 					nameused = true;
 				} else {
 					publishLog('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
@@ -88,7 +88,7 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 				if( (event = cfg.EventsList.find(arg)) != cfg.EventsList.end()){
 					if(verbose)
 						publishLog('C', "\t\tAdded to event '%s'", arg.c_str());
-	 				event->second.addTasks( this->getName() );
+	 				event->second.addTask( this->getName() );
 					nameused = true;
 				} else {
 					publishLog('F', "\t\tEvent '%s' is not (yet ?) defined", arg.c_str());

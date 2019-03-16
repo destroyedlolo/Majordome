@@ -2,6 +2,7 @@
  *
  * 27/07/2018 - LF - First version
  * 10/08/2018 - LF - Force loading order
+ * 16/03/2019 - LF - Add .tracker
  */
 #include <cstring>
 #include <algorithm>
@@ -18,6 +19,7 @@ bool SubConfigDir::accept( const char *fch, std::string &full ){
 		if( !strcmp(ext,".lua") ||
 			!strcmp(ext,".rendezvous") ||
 			!strcmp(ext,".topic") ||
+			!strcmp(ext,".tracker") ||
 			!strcmp(ext,".timer") 
 		)
 			return true;
@@ -94,6 +96,16 @@ SubConfigDir::SubConfigDir( Config &cfg, std::string &where, lua_State *L){
 				exit(EXIT_FAILURE);
 			} else
 				cfg.TasksList.insert( std::make_pair(name, tsk) );
+		} else if( !strcmp(ext,".tracker") ){
+			std::string name;
+			Tracker trk( cfg, completpath, where, name, L );
+	
+			Config::TrackerElements::iterator prev;
+			if((prev = cfg.TrackerList.find(name)) != cfg.TrackerList.end()){
+				publishLog('F', "Tracker '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second.getWhere().c_str());
+				exit(EXIT_FAILURE);
+			} else
+				cfg.TrackerList.insert( std::make_pair(name, trk) );
 		}
 #ifdef DEBUG
 else 

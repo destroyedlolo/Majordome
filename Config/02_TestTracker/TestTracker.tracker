@@ -1,0 +1,19 @@
+-- This is an example of Tracker script
+-- In the header of the script (comment bloc at the very beginning of
+-- the script), each line starting with -->> are Majordome's commands.
+-- Consequently, '--->>' are commented out commands.
+--
+-- Name of this script
+-- if not set, takes the filename
+-- Notez-bien : if used, this directive MUST be defined before any
+-- listen directive.
+--->> name=Toto
+--
+-- Disable this script
+--->> disabled
+--
+-- Indicate MQTT topic(s) to listen to
+-- (more than one "listen" can be present)
+-->> listen=NoStations
+
+
