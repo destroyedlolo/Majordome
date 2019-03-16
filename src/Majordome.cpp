@@ -16,8 +16,9 @@
  *
  *	05/07/2018 - LF - Start of development
  *	25/07/2018 - LF - Switch to C++ (when it's useful)
- *	02/10/2018 - LF - Start logging before scribscribing in order to get early
+ *	02/10/2018 - LF - Start logging before subscribing in order to get early
  *		messages as well
+ *	16/03/2019 - LF - Externalize Version
  */
 
 #include <iostream>
@@ -35,8 +36,8 @@
 
 #include "Helpers.h"
 #include "Config.h"
+#include "Version.h"
 
-#define VERSION 3.0100
 #define DEFAULT_CONFIGURATION_FILE "/usr/local/etc/Majordome.conf"
 
 using namespace std;
