@@ -16,6 +16,9 @@ class Config;
 class Tracker : public Object {
 	struct elastic_storage func;	// Function to execute
 
+	std::string startTimerName;
+	std::string stopTimerName;
+
 public:
 	/* Constructor from a file
 	 * -> file : file to load

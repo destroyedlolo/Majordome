@@ -15,5 +15,10 @@
 -- Indicate MQTT topic(s) to listen to
 -- (more than one "listen" can be present)
 -->> listen=NoStations
-
-
+--
+-- Timers
+-- ------
+-- At start timer's time, the tracker become active.
+-->> start=15s
+-- At stop timer's time, the tracker become inactive.
+-->> stop=15s

@@ -69,6 +69,30 @@ Tracker::Tracker( Config &cfg, const std::string &fch, std::string &where, std::
 					publishLog('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
 					exit(EXIT_FAILURE);
 				}
+			} else if( !!(arg = striKWcmp( l, "-->> start=" ))){
+				Config::TimerElements::iterator timer;
+				if( (timer = cfg.TimersList.find(arg)) != cfg.TimersList.end()){
+					if(verbose)
+						publishLog('C', "\t\tStart timer '%s'", arg.c_str());
+	 				timer->second.addTracker( this->getName() );
+					this->startTimerName = arg;
+					nameused = true;
+				} else {
+					publishLog('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
+					exit(EXIT_FAILURE);
+				}
+			} else if( !!(arg = striKWcmp( l, "-->> stop=" ))){
+				Config::TimerElements::iterator timer;
+				if( (timer = cfg.TimersList.find(arg)) != cfg.TimersList.end()){
+					if(verbose)
+						publishLog('C', "\t\tStop timer '%s'", arg.c_str());
+	 				timer->second.addTracker( this->getName() );
+					this->stopTimerName = arg;
+					nameused = true;
+				} else {
+					publishLog('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
+					exit(EXIT_FAILURE);
+				}
 			} else if( l == "-->> disabled" ){
 				if(verbose)
 					publishLog('C', "\t\tDisabled");
