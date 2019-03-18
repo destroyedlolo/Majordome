@@ -18,6 +18,7 @@ class Tracker : public Object {
 
 	std::string startTimerName;
 	std::string stopTimerName;
+	bool active;	//	Is the tracker handling incoming messages
 
 public:
 	/* Constructor from a file
