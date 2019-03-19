@@ -18,6 +18,11 @@ class Tracker : public Object {
 
 	std::string startTimerName;
 	std::string stopTimerName;
+	enum _status {
+		WAITING,	// Waiting for start time
+		CHECKING,	// checking periode (b/w start and stop time)
+		DONE,		// the condition has been met during checking periode
+	} status;
 	bool active;	//	Is the tracker handling incoming messages
 
 public:

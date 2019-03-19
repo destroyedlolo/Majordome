@@ -14,7 +14,7 @@ extern "C" {
 #include "Helpers.h"
 #include "Tracker.h"
 
-Tracker::Tracker( Config &cfg, const std::string &fch, std::string &where, std::string &name, lua_State *L ):active(false){
+Tracker::Tracker( Config &cfg, const std::string &fch, std::string &where, std::string &name, lua_State *L ):status(_status::WAITING){
 	if(verbose)
 		publishLog('L', "\t'%s'", fch.c_str());
 
@@ -96,7 +96,7 @@ Tracker::Tracker( Config &cfg, const std::string &fch, std::string &where, std::
 			} else if( l == "-->> activated" ){
 				if(verbose)
 					publishLog('C', "\t\tActivated at startup");
-				this->active = true;
+				this->status = _status::CHECKING;
 			} else if( l == "-->> disabled" ){
 				if(verbose)
 					publishLog('C', "\t\tDisabled");
