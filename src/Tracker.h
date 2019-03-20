@@ -23,7 +23,6 @@ class Tracker : public Object {
 		CHECKING,	// checking periode (b/w start and stop time)
 		DONE,		// the condition has been met during checking periode
 	} status;
-	bool active;	//	Is the tracker handling incoming messages
 
 public:
 	/* Constructor from a file
@@ -34,9 +33,11 @@ public:
 	 */
 	Tracker( Config &cfg, const std::string &file, std::string &where, std::string &name, lua_State *L );
 
+	enum _status getStatus( void ){ return this->status; }
+
 	struct elastic_storage *getFunc( void ){ return &(this->func); }
 
-	/* Launch this tasks if possible
+	/* Launch lua script if applicable
 	 * -> name : name of the topic/timer that triggers this task
 	 * -> topic : the topic itself
 	 * <- true if it has been launched, false otherwise
