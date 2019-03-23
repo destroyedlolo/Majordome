@@ -81,7 +81,7 @@ void Event::execTrackers( Config &cfg, const char *trig_name, const char *topic,
 		publishLog('D', "execTrackers() : %d to run", this->trackers.size() );
 #endif
 
-	for( TrackerEntries::iterator trk = this->trackers.begin(); trk != this->trackers.end(); trk++){
+	for( StringVector::iterator trk = this->trackers.begin(); trk != this->trackers.end(); trk++){
 		try {
 			Tracker &tracker = cfg.findTracker( *trk );
 			tracker.exec( trig_name, topic, payload );
@@ -115,7 +115,7 @@ void Event::execTrackers( Config &cfg, const char *timer_name ){
 		publishLog('D', "execTrackers() : %d to run", this->trackers.size() );
 #endif
 
-	for( TrackerEntries::iterator trk = this->trackers.begin(); trk != this->trackers.end(); trk++){
+	for( StringVector::iterator trk = this->trackers.begin(); trk != this->trackers.end(); trk++){
 		try {
 			Tracker &tracker = cfg.findTracker( *trk );
 			tracker.exec( timer_name );

@@ -22,7 +22,9 @@ public :
 	typedef Entries::const_iterator const_iterator;
 	iterator begin() { return list.begin(); }
 	iterator end() { return list.end(); }
-	
+
+	void Add( std::string t ){ this->list.push_back(t); }
+	size_t size(){ return this->list.size(); }
 };
 
 #endif

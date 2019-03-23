@@ -14,8 +14,7 @@ class Config;
 
 class Event : public Object, StringVector {
 
-	typedef std::vector<std::string> TrackerEntries;	// List of tasks'name to launch when a message arrives
-	TrackerEntries trackers;
+	StringVector trackers;
 
 protected:
 	/* Default empty constructor to be only used by derived classes 
@@ -31,8 +30,8 @@ public:
 	Event( const std::string &file, std::string &where, std::string &name  );
 
 
-	void addTask( std::string t ){ this->list.push_back(t); }
-	void addTracker( std::string t ){ this->trackers.push_back(t); }
+	void addTask( std::string t ){ this->Add(t); }
+	void addTracker( std::string t ){ this->trackers.Add(t); }
 
 	/* launch tasks associated to this event (topic)
 	 * -> name of the object that triggers the task
