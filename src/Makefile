@@ -9,30 +9,31 @@ cc=g++ -Wall -O2 -DDEBUG -lpthread -lpaho-mqtt3c  -llua -lm -I/home/laurent/Proj
 opts=
 
 Config.o : Config.cpp Helpers.h MayBeEmptyString.h Config.h SortDir.h \
-  MQTTTopic.h Event.h Object.h LuaTask.h Timer.h Tracker.h \
-  SubConfigDir.h Makefile 
+  MQTTTopic.h Event.h Object.h StringVector.h LuaTask.h Timer.h \
+  Tracker.h SubConfigDir.h Makefile 
 	$(cc) -c -o Config.o Config.cpp $(opts) 
 
 Event.o : Event.cpp Helpers.h MayBeEmptyString.h Event.h Object.h \
-  LuaTask.h Config.h SortDir.h MQTTTopic.h Timer.h Tracker.h Makefile 
+  StringVector.h LuaTask.h Config.h SortDir.h MQTTTopic.h Timer.h \
+  Tracker.h Makefile 
 	$(cc) -c -o Event.o Event.cpp $(opts) 
 
 Helpers.o : Helpers.cpp Helpers.h MayBeEmptyString.h Makefile 
 	$(cc) -c -o Helpers.o Helpers.cpp $(opts) 
 
 LuaTask.o : LuaTask.cpp Config.h SortDir.h MQTTTopic.h \
-  MayBeEmptyString.h Event.h Object.h LuaTask.h Timer.h Tracker.h \
-  Helpers.h Makefile 
+  MayBeEmptyString.h Event.h Object.h StringVector.h LuaTask.h Timer.h \
+  Tracker.h Helpers.h Makefile 
 	$(cc) -c -o LuaTask.o LuaTask.cpp $(opts) 
 
 Majordome.o : Majordome.cpp Helpers.h MayBeEmptyString.h Config.h \
-  SortDir.h MQTTTopic.h Event.h Object.h LuaTask.h Timer.h Tracker.h \
-  Version.h Makefile 
+  SortDir.h MQTTTopic.h Event.h Object.h StringVector.h LuaTask.h \
+  Timer.h Tracker.h Version.h Makefile 
 	$(cc) -c -o Majordome.o Majordome.cpp $(opts) 
 
 MQTTTopic.o : MQTTTopic.cpp Helpers.h MayBeEmptyString.h MQTTTopic.h \
-  Event.h Object.h LuaTask.h Config.h SortDir.h Timer.h Tracker.h \
-  Makefile 
+  Event.h Object.h StringVector.h LuaTask.h Config.h SortDir.h Timer.h \
+  Tracker.h Makefile 
 	$(cc) -c -o MQTTTopic.o MQTTTopic.cpp $(opts) 
 
 Object.o : Object.cpp Object.h Makefile 
@@ -43,16 +44,17 @@ SortDir.o : SortDir.cpp SortDir.h Makefile
 
 SubConfigDir.o : SubConfigDir.cpp Helpers.h MayBeEmptyString.h \
   SubConfigDir.h Config.h SortDir.h MQTTTopic.h Event.h Object.h \
-  LuaTask.h Timer.h Tracker.h Makefile 
+  StringVector.h LuaTask.h Timer.h Tracker.h Makefile 
 	$(cc) -c -o SubConfigDir.o SubConfigDir.cpp $(opts) 
 
 Timer.o : Timer.cpp Helpers.h MayBeEmptyString.h Timer.h Event.h \
-  Object.h LuaTask.h Config.h SortDir.h MQTTTopic.h Tracker.h Makefile 
+  Object.h StringVector.h LuaTask.h Config.h SortDir.h MQTTTopic.h \
+  Tracker.h Makefile 
 	$(cc) -c -o Timer.o Timer.cpp $(opts) 
 
 Tracker.o : Tracker.cpp Config.h SortDir.h MQTTTopic.h \
-  MayBeEmptyString.h Event.h Object.h LuaTask.h Timer.h Tracker.h \
-  Helpers.h Makefile 
+  MayBeEmptyString.h Event.h Object.h StringVector.h LuaTask.h Timer.h \
+  Tracker.h Helpers.h Makefile 
 	$(cc) -c -o Tracker.o Tracker.cpp $(opts) 
 
 ../Majordome : Tracker.o Timer.o SubConfigDir.o SortDir.o Object.o \
