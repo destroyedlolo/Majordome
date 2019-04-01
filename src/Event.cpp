@@ -75,23 +75,6 @@ void Event::execTasks( Config &cfg, const char *trig_name, const char *topic, co
 	}
 }
 
-void Event::execTrackers( Config &cfg, const char *trig_name, const char *topic, const char *payload ){
-#ifdef DEBUG
-	if(debug)
-		publishLog('D', "execTrackers() : %d to run", this->trackers.size() );
-#endif
-
-	for( StringVector::iterator trk = this->trackers.begin(); trk != this->trackers.end(); trk++){
-		try {
-			Tracker &tracker = cfg.findTracker( *trk );
-			tracker.exec( trig_name, topic, payload );
-		} catch (...) {
-			publishLog('F', "Internal error : can't find tracker \"%s\"", (*trk).c_str() );
-			exit(EXIT_FAILURE);
-		}
-	}
-}
-
 void Event::execTasks( Config &cfg, const char *timer_name ){
 #ifdef DEBUG
 	if(debug)
@@ -104,23 +87,6 @@ void Event::execTasks( Config &cfg, const char *timer_name ){
 			task.exec( timer_name );
 		} catch (...) {
 			publishLog('F', "Internal error : can't find task \"%s\"", (*tsk).c_str() );
-			exit(EXIT_FAILURE);
-		}
-	}
-}
-
-void Event::execTrackers( Config &cfg, const char *timer_name ){
-#ifdef DEBUG
-	if(debug)
-		publishLog('D', "execTrackers() : %d to run", this->trackers.size() );
-#endif
-
-	for( StringVector::iterator trk = this->trackers.begin(); trk != this->trackers.end(); trk++){
-		try {
-			Tracker &tracker = cfg.findTracker( *trk );
-			tracker.exec( timer_name );
-		} catch (...) {
-			publishLog('F', "Internal error : can't find tracker \"%s\"", (*trk).c_str() );
 			exit(EXIT_FAILURE);
 		}
 	}

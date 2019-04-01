@@ -12,9 +12,7 @@
 
 class Config;
 
-class Event : public Object, StringVector {
-
-	StringVector trackers;
+class Event : public Object, public StringVector {
 
 protected:
 	/* Default empty constructor to be only used by derived classes 
@@ -31,20 +29,17 @@ public:
 
 
 	void addTask( std::string t ){ this->Add(t); }
-	void addTracker( std::string t ){ this->trackers.Add(t); }
 
 	/* launch tasks associated to this event (topic)
 	 * -> name of the object that triggers the task
 	 * -> topic : the one that triggers the task
 	 */
 	void execTasks( Config &, const char *name, const char *topic, const char *payload );
-	void execTrackers( Config &, const char *name, const char *topic, const char *payload );
 
 	/* launch tasks associated to this event (timer)
 	 * -> name of the object that triggers the task
 	 */
 	void execTasks( Config &, const char *name );
-	void execTrackers( Config &, const char *name );
 
 	/* Create Lua's object */
 	static int initLuaObject( lua_State *L );

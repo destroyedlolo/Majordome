@@ -13,6 +13,7 @@
 #include <sys/time.h>
 #include <cerrno>
 
+#include "StringVector.h"
 #include "Event.h"
 
 class Timer : public Event {
@@ -26,6 +27,9 @@ class Timer : public Event {
 	pthread_t thread;
 	pthread_cond_t cond;
 	pthread_mutex_t mutex;
+
+	StringVector startTrackers;
+	StringVector stopTrackers;
 
 public:
 	enum Commands {
@@ -45,6 +49,9 @@ public:
 	 * <- name : this object's name
 	 */
 	Timer( const std::string &file, std::string &where, std::string &name  );
+
+	void addStartTracker( std::string t ){ this->startTrackers.Add(t); }
+	void addStopTracker( std::string t ){ this->startTrackers.Add(t); }
 
 	/* The timer is handled through a dedicated thread ... a pointer
 	 * to this object has to be passed to the newly created thread

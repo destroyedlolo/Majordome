@@ -74,7 +74,7 @@ Tracker::Tracker( Config &cfg, const std::string &fch, std::string &where, std::
 				if( (timer = cfg.TimersList.find(arg)) != cfg.TimersList.end()){
 					if(verbose)
 						publishLog('C', "\t\tStart timer '%s'", arg.c_str());
-	 				timer->second.addTracker( this->getName() );
+	 				timer->second.addStartTracker( this->getName() );
 					this->startTimerName = arg;
 					nameused = true;
 				} else {
@@ -86,7 +86,7 @@ Tracker::Tracker( Config &cfg, const std::string &fch, std::string &where, std::
 				if( (timer = cfg.TimersList.find(arg)) != cfg.TimersList.end()){
 					if(verbose)
 						publishLog('C', "\t\tStop timer '%s'", arg.c_str());
-	 				timer->second.addTracker( this->getName() );
+	 				timer->second.addStopTracker( this->getName() );
 					this->stopTimerName = arg;
 					nameused = true;
 				} else {
