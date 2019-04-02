@@ -156,7 +156,7 @@ void Tracker::stop( void ){
 }
 
 void Tracker::done( void ){
-	if( this->isEnabled() )
+	if( this->isEnabled() && this->getStatus() == _status::CHECKING )
 		this->execTasks(config, this->getNameC(), NULL, NULL, true);
 	this->status = _status::DONE;
 }
