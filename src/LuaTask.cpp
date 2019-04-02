@@ -170,7 +170,7 @@ static void *launchfunc(void *a){
 	return NULL;
 }
 
-bool LuaTask::exec( const char *name, const char *topic, const char *payload ){
+bool LuaTask::exec( const char *name, const char *topic, const char *payload, bool tracker ){
 		/* Check if the task can be launched */
 	if( !this->isEnabled() ){
 		if(verbose)
@@ -215,7 +215,14 @@ bool LuaTask::exec( const char *name, const char *topic, const char *payload ){
 		return false;
 	}
 
-	if( payload ){	// Launched by a trigger
+	if( tracker ){	// Launched by a tracker
+		lua_pushstring( arg->L, name );	// Push the name of the tracker
+		lua_setglobal( arg->L, "MAJORDOME_TRACKER" );
+		if( topic ){ // Launched when the tracker is stopped
+			lua_pushstring( arg->L, topic );	// Push the status
+			lua_setglobal( arg->L, "MAJORDOME_TRACKER_STATUS" );
+		}
+	} else if( payload ){	// Launched by a trigger
 		lua_pushstring( arg->L, name );	// Push the name of the trigger
 		lua_setglobal( arg->L, "MAJORDOME_TRIGGER" );
 		if( topic ){	// Otherwise, it means it has been launched by a Lua script

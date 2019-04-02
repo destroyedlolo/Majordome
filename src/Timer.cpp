@@ -184,12 +184,13 @@ bool Timer::inEveryMode( void ){
 }
 
 void Timer::execTasks( void ){
-	if( this->isEnabled() )
+	if( this->isEnabled() ){
 		Event::execTasks( config, this->getNameC() );
 #ifdef DEBUG
-	else if( debug )
-		publishLog('D', "Timer %s is disabled : no tasks launched", this->getNameC() );
+	} else if( debug ) {
+		publishLog('D', "Timer %s is disabled : no tasks launched nor trackers touched", this->getNameC() );
 #endif
+	}
 }
 
 void Timer::lock( void ){

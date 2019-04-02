@@ -30,11 +30,13 @@ public:
 
 	void addTask( std::string t ){ this->Add(t); }
 
-	/* launch tasks associated to this event (topic)
+	/* launch tasks associated to this event (topic or tracker)
 	 * -> name of the object that triggers the task
 	 * -> topic : the one that triggers the task
+	 * -> payload
+	 * -> tracker : true if it's a tracker
 	 */
-	void execTasks( Config &, const char *name, const char *topic, const char *payload );
+	void execTasks( Config &, const char *name, const char *topic, const char *payload, bool tracker=false );
 
 	/* launch tasks associated to this event (timer)
 	 * -> name of the object that triggers the task

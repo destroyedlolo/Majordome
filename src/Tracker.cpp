@@ -75,7 +75,6 @@ Tracker::Tracker( Config &cfg, const std::string &fch, std::string &where, std::
 					if(verbose)
 						publishLog('C', "\t\tStart timer '%s'", arg.c_str());
 	 				timer->second.addStartTracker( this->getName() );
-					this->startTimerName = arg;
 					nameused = true;
 				} else {
 					publishLog('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
@@ -87,7 +86,6 @@ Tracker::Tracker( Config &cfg, const std::string &fch, std::string &where, std::
 					if(verbose)
 						publishLog('C', "\t\tStop timer '%s'", arg.c_str());
 	 				timer->second.addStopTracker( this->getName() );
-					this->stopTimerName = arg;
 					nameused = true;
 				} else {
 					publishLog('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
@@ -152,3 +150,13 @@ bool Tracker::exec( const char *name, const char *topic, const char *payload ){
 	return false;
 }
 
+void Tracker::stop( void ){
+/*AF: lancer ici toutes les stoppingTasks */
+	this->status = _status::WAITING;
+}
+
+void Tracker::done( void ){
+	if( this->isEnabled() )
+		this->execTasks(config, this->getNameC(), NULL, NULL, true);
+	this->status = _status::DONE;
+}

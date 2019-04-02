@@ -34,11 +34,12 @@ public:
 	struct elastic_storage *getFunc( void ){ return &(this->func); }
 
 	/* Launch this tasks if possible
-	 * -> name : name of the topic/timer that triggers this task
-	 * -> topic : the topic itself
+	 * -> name : name of the topic/timer/tracker that triggers this task
+	 * -> topic : the topic itself (or the tracker status if tracker's stoppingTasks)
+	 * -> tracker : true if launched by a tracker
 	 * <- true if it has been launched, false otherwise
 	 */
-	bool exec( const char *name, const char *topic=NULL, const char *payload=NULL );
+	bool exec( const char *name, const char *topic=NULL, const char *payload=NULL, bool tracker=false );
 
 	/* Check if this task can run */
 	bool canRun( void );

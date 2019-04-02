@@ -16,7 +16,9 @@
 #include "StringVector.h"
 #include "Event.h"
 
-class Timer : public Event {
+ 
+class Timer : public Event {	// Event contains tasks to launch
+
 	unsigned long every;		// Delay b/w launches
 	unsigned short at;			// launch time
 	unsigned short min;			// At's minute 
@@ -57,11 +59,12 @@ public:
 	 * to this object has to be passed to the newly created thread
 	 * BUT as object are copied into maps, the pointer is only valid after
 	 * the said insertion.
-	 *
 	 */
 	void launchThread( void );
 
-	/* Launch tasks associated to this trigger */
+	/* Launch tasks associated to this trigger 
+	 * Disable/Enable trackers as well
+	 */
 	void execTasks( void );
 
 	/* Tell if this timer is passed and has runifover

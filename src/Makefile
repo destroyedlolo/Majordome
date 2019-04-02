@@ -47,9 +47,9 @@ SubConfigDir.o : SubConfigDir.cpp Helpers.h MayBeEmptyString.h \
   StringVector.h LuaTask.h Timer.h Tracker.h Makefile 
 	$(cc) -c -o SubConfigDir.o SubConfigDir.cpp $(opts) 
 
-Timer.o : Timer.cpp Helpers.h MayBeEmptyString.h Timer.h Event.h \
-  Object.h StringVector.h LuaTask.h Config.h SortDir.h MQTTTopic.h \
-  Tracker.h Makefile 
+Timer.o : Timer.cpp Helpers.h MayBeEmptyString.h Timer.h \
+  StringVector.h Event.h Object.h LuaTask.h Config.h SortDir.h \
+  MQTTTopic.h Tracker.h Makefile 
 	$(cc) -c -o Timer.o Timer.cpp $(opts) 
 
 Tracker.o : Tracker.cpp Config.h SortDir.h MQTTTopic.h \

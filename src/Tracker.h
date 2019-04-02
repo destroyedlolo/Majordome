@@ -9,15 +9,16 @@
 #include <libSelene.h>
 
 #include "MayBeEmptyString.h"
-#include "Object.h"
+#include "Event.h"
 
 class Config;
 
-class Tracker : public Object {
+class Tracker : public Event {	// Event contains tasks to launch when tracker changes to DONE
+
+	StringVector stoppingTasks;	// Tasks to launch when stopping the tracker
+
 	struct elastic_storage func;	// Function to execute
 
-	std::string startTimerName;
-	std::string stopTimerName;
 	enum _status {
 		WAITING,	// Waiting for start time
 		CHECKING,	// checking periode (b/w start and stop time)
@@ -43,6 +44,11 @@ public:
 	 * <- true if it has been launched, false otherwise
 	 */
 	bool exec( const char *name, const char *topic=NULL, const char *payload=NULL );
+
+	/* Change tracker status */
+	void start( void ){ this->status = _status::CHECKING; }
+	void stop( void );
+	void done( void );
 
 		/* Create Lua's object */
 	static int initLuaObject( lua_State *L );
