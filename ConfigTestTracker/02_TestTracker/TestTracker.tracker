@@ -14,7 +14,7 @@
 --
 -- Indicate MQTT topic(s) to listen to
 -- (more than one "listen" can be present)
--->> listen=NoStations
+-->> listen=Test
 --
 -- Timers
 -- ------
