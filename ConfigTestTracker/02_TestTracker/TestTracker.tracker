@@ -21,7 +21,7 @@
 -- At start timer's time, the tracker become active.
 -->> start=15s
 -- At stop timer's time, the tracker become inactive.
--->> stop=15s
+-->> stop=25s
 --
 -- Activated at startup
--->> activated
+--->> activated
