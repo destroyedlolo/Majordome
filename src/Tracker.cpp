@@ -150,13 +150,20 @@ bool Tracker::exec( const char *name, const char *topic, const char *payload ){
 	return false;
 }
 
+void Tracker::start( void ){
+	publishLog('I', "Tracker '%s' is checking", this->getNameC() );
+	this->status = _status::CHECKING; 
+}
+
 void Tracker::stop( void ){
 /*AF: lancer ici toutes les stoppingTasks */
+	publishLog('I', "Tracker '%s' is waiting", this->getNameC() );
 	this->status = _status::WAITING;
 }
 
 void Tracker::done( void ){
 	if( this->isEnabled() && this->getStatus() == _status::CHECKING )
 		this->execTasks(config, this->getNameC(), NULL, NULL, true);
+	publishLog('I', "Tracker '%s' is done", this->getNameC() );
 	this->status = _status::DONE;
 }

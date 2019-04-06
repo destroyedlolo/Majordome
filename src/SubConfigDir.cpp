@@ -135,18 +135,4 @@ void SubConfigDir::sort( void ){
 			return(va < vb);
 		}
 	);
-/*
-	std::sort(entries.begin(), entries.end(), 
-		[](std::string const &a, std::string const &b) -> bool {
-			const char *exta = fileextention( a.c_str() );
-			const char *extb = fileextention( b.c_str() );
-			int diff = strcmp(extb, exta); // as .topic & .timer > .lua but has to be loaded before
-
-			if(!diff)
-			    return a < b;
-			else
-				return diff<0;
-		}
-	);
-*/
 }

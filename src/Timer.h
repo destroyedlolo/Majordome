@@ -53,7 +53,7 @@ public:
 	Timer( const std::string &file, std::string &where, std::string &name  );
 
 	void addStartTracker( std::string t ){ this->startTrackers.Add(t); }
-	void addStopTracker( std::string t ){ this->startTrackers.Add(t); }
+	void addStopTracker( std::string t ){ this->stopTrackers.Add(t); }
 
 	/* The timer is handled through a dedicated thread ... a pointer
 	 * to this object has to be passed to the newly created thread

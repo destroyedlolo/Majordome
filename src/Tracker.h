@@ -46,7 +46,7 @@ public:
 	bool exec( const char *name, const char *topic=NULL, const char *payload=NULL );
 
 	/* Change tracker status */
-	void start( void ){ this->status = _status::CHECKING; }
+	void start( void );
 	void stop( void );
 	void done( void );
 
