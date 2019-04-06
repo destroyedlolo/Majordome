@@ -146,6 +146,12 @@ else printf("Ignore '%s'\n", l.c_str());
 }
 
 bool Tracker::exec( const char *name, const char *topic, const char *payload ){
+	if( !this->isEnabled() || this->status != _status::CHECKING ){
+		if(verbose)
+			publishLog('I', "Tracker '%s' from '%s' is disabled or inactive", this->getNameC(), this->getWhereC() );
+		return false;
+	}
+
 	publishLog('E', "Tracker::exec() : not implemented");
 	return false;
 }

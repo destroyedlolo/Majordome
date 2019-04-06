@@ -18,8 +18,6 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 	if(verbose)
 		publishLog('L', "\t'%s'", fch.c_str());
 
-	assert( EStorage_init(&this->func) );
-
 	this->extrName( fch, name );
 	this->name = name;
 	this->where = where;
@@ -138,7 +136,7 @@ else printf("Ignore '%s'\n", l.c_str());
 		}
 	}
 
-	if(lua_dump(L, ssfc_dumpwriter, &this->func
+	if(lua_dump(L, ssfc_dumpwriter, this->getFunc()
 #if LUA_VERSION_NUM > 501
 		,1
 #endif
@@ -207,7 +205,7 @@ bool LuaTask::exec( const char *name, const char *topic, const char *payload, bo
 	libSel_ApplyStartupFunc( luainitfunc, arg->L );
 
 	int err;
-	if( (err = loadsharedfunction( arg->L, &(this->func) )) ){
+	if( (err = loadsharedfunction( arg->L, this->getFunc() )) ){
 		publishLog('E', "Unable to create task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), (err == LUA_ERRSYNTAX) ? "Syntax error" : "Memory error" );
 		lua_close( arg->L );
 		this->finished();

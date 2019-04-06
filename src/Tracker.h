@@ -10,6 +10,7 @@
 
 #include "MayBeEmptyString.h"
 #include "Event.h"
+#include "LuaExec.h"
 
 class Config;
 

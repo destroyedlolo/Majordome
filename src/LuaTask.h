@@ -10,11 +10,11 @@
 
 #include "MayBeEmptyString.h"
 #include "Object.h"
+#include "LuaExec.h"
 
 class Config;
 
-class LuaTask : public Object {
-	struct elastic_storage func;	// Function to execute
+class LuaTask : public Object, public LuaExec {
 	bool once;	// can run only once
 
 	pthread_mutex_t running_access;	// we want an access to "running"
@@ -31,8 +31,7 @@ public:
 
 	void setOnce( bool v ){ this->once = v; }
 	bool getOnce( void ){ return this->once; }
-	struct elastic_storage *getFunc( void ){ return &(this->func); }
-
+	
 	/* Launch this tasks if possible
 	 * -> name : name of the topic/timer/tracker that triggers this task
 	 * -> topic : the topic itself (or the tracker status if tracker's stoppingTasks)
