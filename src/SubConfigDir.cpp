@@ -13,16 +13,27 @@
 #include "SubConfigDir.h"
 #include "Timer.h"
 
+/* Determine object weight based on its file extension */
+static const char * fileext[] = {
+	".topic",
+	".timer",
+	".rendezvous",
+	".tracker",
+	".lua"
+};
+
+static int objectweight( const char *ext ){
+	for( unsigned int i = 0; i<sizeof(fileext)/sizeof(const char *); i++){
+		if(!strcmp(ext, fileext[i]))
+			return (int)i;
+	}
+	return -1;
+}
+
 bool SubConfigDir::accept( const char *fch, std::string &full ){
 	if( SortDir::accept( fch, full ) ){
 		const char *ext = fileextention( fch );
-		if( !strcmp(ext,".lua") ||
-			!strcmp(ext,".rendezvous") ||
-			!strcmp(ext,".topic") ||
-			!strcmp(ext,".tracker") ||
-			!strcmp(ext,".timer") 
-		)
-			return true;
+		return( objectweight(ext) != -1 );
 	}
 	return false;
 }
@@ -118,6 +129,15 @@ else
 void SubConfigDir::sort( void ){
 	std::sort(entries.begin(), entries.end(), 
 		[](std::string const &a, std::string const &b) -> bool {
+			int va = objectweight( fileextention( a.c_str() ));
+			int vb = objectweight( fileextention( b.c_str() ));
+
+			return(va < vb);
+		}
+	);
+/*
+	std::sort(entries.begin(), entries.end(), 
+		[](std::string const &a, std::string const &b) -> bool {
 			const char *exta = fileextention( a.c_str() );
 			const char *extb = fileextention( b.c_str() );
 			int diff = strcmp(extb, exta); // as .topic & .timer > .lua but has to be loaded before
@@ -127,5 +147,6 @@ void SubConfigDir::sort( void ){
 			else
 				return diff<0;
 		}
-	);	
+	);
+*/
 }
