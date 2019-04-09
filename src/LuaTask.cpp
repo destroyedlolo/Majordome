@@ -1,6 +1,5 @@
 #include <iostream>
 #include <fstream>
-#include <sstream>	// stringstream
 
 #include <cstring>
 #include <cassert>
@@ -121,30 +120,8 @@ else printf("Ignore '%s'\n", l.c_str());
 		}
 	}
 
-	int err;
-	if( !!(err = luaL_loadbuffer( L, buffer.str().c_str(), buffer.str().size(), this->name.c_str() ))){
-		switch( err ){
-		case LUA_ERRMEM :
-			publishLog('F', "Memory allocation error");
-			exit(EXIT_FAILURE);
-		case LUA_ERRSYNTAX :
-			publishLog('F', lua_tostring(L, -1));
-			exit(EXIT_FAILURE);
-		default :
-			publishLog('F', "luaL_loadbuffer() unknown error : %d", err);
-			exit(EXIT_FAILURE);
-		}
-	}
-
-	if(lua_dump(L, ssfc_dumpwriter, this->getFunc()
-#if LUA_VERSION_NUM > 501
-		,1
-#endif
-	) != 0){
-		publishLog('F', "lua_dump() : %d", err);
+	if( !this->LoadFunc( L, buffer, this->name.c_str() ))
 		exit(EXIT_FAILURE);
-	}
-	lua_pop(L,1);	// remove the function from the stack
 }
 
 
