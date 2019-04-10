@@ -41,7 +41,7 @@ public:
 	bool canRun( void );
 
 	/* tell this task finished */
-	void finished( void );
+	virtual void finished( void );
 
 	/* Create Lua's object */
 	static int initLuaObject( lua_State *L );

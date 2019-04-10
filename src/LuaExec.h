@@ -28,13 +28,17 @@ public:
 	 */
 	bool LoadFunc( lua_State *L, std::stringstream &buffer, const char *name );
 
-	/* Launch this tasks
+	/* Initialise the Lua state
 	 * -> name : name of the topic/timer/tracker that triggers this task
 	 * -> topic : the topic itself (or the tracker status if tracker's stoppingTasks)
 	 * -> tracker : true if launched by a tracker
 	 * <- true if it has been launched, false otherwise
 	 */
+	void feedState( lua_State *L, const char *name, const char *topic=NULL, const char *payload=NULL, bool tracker=false );
+
 	bool exec( const char *name, const char *topic=NULL, const char *payload=NULL, bool tracker=false );
+
+	virtual void finished( void ){ }
 };
 
 #endif
