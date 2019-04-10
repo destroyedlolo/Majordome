@@ -79,14 +79,14 @@ static void *launchfunc(void *a){
 	struct launchargs *arg = (struct launchargs *)a;	// To avoid further casting
 
 	if(lua_pcall( arg->L, 0, 0, 0))
-		publishLog('E', "Unable to create task '%s' from '%s' : %s", arg->task->getNameC(), arg->task->getWhereC(), lua_tostring(arg->L, -1));
+		publishLog('E', "Can't execute task '%s' from '%s' : %s", arg->task->getNameC(), arg->task->getWhereC(), lua_tostring(arg->L, -1));
 	lua_close(arg->L);
 	arg->task->finished();
 	free(arg);
 	return NULL;
 }
 
-bool LuaExec::execASync( const char *name, const char *topic, const char *payload, bool tracker ){
+bool LuaExec::execAsync( const char *name, const char *topic, const char *payload, bool tracker ){
 		 /* Create the new thread */
 	struct launchargs *arg = new launchargs;
 	arg->task = this;
@@ -121,7 +121,7 @@ bool LuaExec::execASync( const char *name, const char *topic, const char *payloa
 	this->feedState( arg->L, name, topic, payload, tracker );
 
 	if(verbose)
-		publishLog('I', "running Task '%s' from '%s'", this->getNameC(), this->getWhereC() );
+		publishLog('I', "Async running Task '%s' from '%s'", this->getNameC(), this->getWhereC() );
 
 	pthread_t tid;	// No need to be kept
 	if(pthread_create( &tid, &thread_attr, launchfunc,  arg) < 0){
@@ -131,6 +131,35 @@ bool LuaExec::execASync( const char *name, const char *topic, const char *payloa
 		free( arg );
 		return false;
 	}
+
+	return true;
+}
+
+bool LuaExec::execSync( const char *name, const char *topic, const char *payload, bool tracker ){
+	lua_State *L = luaL_newstate();
+	if( L ){
+		publishLog('E', "Unable to create a new Lua State for '%s' from '%s'", this->getNameC(), this->getWhereC() );
+		return false;
+	}
+
+	luaL_openlibs(L);
+	libSel_ApplyStartupFunc( luainitfunc, L );
+
+	int err;
+	if( (err = loadsharedfunction( L, this->getFunc() )) ){
+		publishLog('E', "Unable to create task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), (err == LUA_ERRSYNTAX) ? "Syntax error" : "Memory error" );
+		lua_close( L );
+		return false;
+	}
+
+	this->feedState( L, name, topic, payload, tracker );
+
+	if(verbose)
+		publishLog('I', "Async running Task '%s' from '%s'", this->getNameC(), this->getWhereC() );
+
+	if(lua_pcall( L, 0, 0, 0))
+		publishLog('E', "Can't execute task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), lua_tostring(L, -1));
+	lua_close(L);
 
 	return true;
 }

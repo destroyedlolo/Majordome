@@ -142,7 +142,7 @@ bool LuaTask::exec( const char *name, const char *topic, const char *payload, bo
 		return false;
 	}
 
-	bool ret = this->LuaExec::execASync(name, topic, payload, tracker);
+	bool ret = this->LuaExec::execAsync(name, topic, payload, tracker);
 	if(!ret)
 		this->finished();
 

@@ -39,7 +39,13 @@ public:
 	 * -> same as feedState()
 	 * <- true if it has been launched, false otherwise
 	 */
-	bool execASync( const char *name, const char *topic=NULL, const char *payload=NULL, bool tracker=false );
+	bool execAsync( const char *name, const char *topic=NULL, const char *payload=NULL, bool tracker=false );
+
+	/* Execute a task in the same thread
+	 * -> same as feedState()
+	 * <- true if it has been executed, false otherwise
+	 */
+	bool execSync( const char *name, const char *topic=NULL, const char *payload=NULL, bool tracker=false );
 
 	virtual void finished( void ){}
 };
