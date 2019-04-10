@@ -12,11 +12,12 @@
 
 #include <libSelene.h>
 
-class LuaExec {
+class LuaExec : public Object {
 	struct elastic_storage func;	// Function to execute
 
 public:
 	LuaExec();
+	struct elastic_storage *getFunc( void ){ return &(this->func); }
 
 	/* Store Lua's code
 	 *
@@ -27,8 +28,13 @@ public:
 	 */
 	bool LoadFunc( lua_State *L, std::stringstream &buffer, const char *name );
 
-
-	struct elastic_storage *getFunc( void ){ return &(this->func); }
+	/* Launch this tasks
+	 * -> name : name of the topic/timer/tracker that triggers this task
+	 * -> topic : the topic itself (or the tracker status if tracker's stoppingTasks)
+	 * -> tracker : true if launched by a tracker
+	 * <- true if it has been launched, false otherwise
+	 */
+	bool exec( const char *name, const char *topic=NULL, const char *payload=NULL, bool tracker=false );
 };
 
 #endif

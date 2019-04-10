@@ -124,26 +124,9 @@ else printf("Ignore '%s'\n", l.c_str());
 		exit(EXIT_FAILURE);
 }
 
-
-	/***** 
-	 * Slave threads
-	 ****/
-
-struct launchargs {
-	lua_State *L;	// New thread Lua state
-	LuaTask *task;	// task definition
-};
-
-static void *launchfunc(void *a){
-	struct launchargs *arg = (struct launchargs *)a;	// To avoid further casting
-
-	if(lua_pcall( arg->L, 0, 0, 0))
-		publishLog('E', "Unable to create task '%s' from '%s' : %s", arg->task->getNameC(), arg->task->getWhereC(), lua_tostring(arg->L, -1));
-	lua_close(arg->L);
-	arg->task->finished();
-	free(arg);
-	return NULL;
-}
+	/*****
+	 * Execute the code
+	 *****/
 
 bool LuaTask::exec( const char *name, const char *topic, const char *payload, bool tracker ){
 		/* Check if the task can be launched */
@@ -159,70 +142,11 @@ bool LuaTask::exec( const char *name, const char *topic, const char *payload, bo
 		return false;
 	}
 
-		 /* Create the new thread */
-	struct launchargs *arg = new launchargs;
-	arg->task = this;
-#if 0	// Let the default handler working
-	if( !arg ){
-		publishLog('E', "Unable to create a new thread arguments for '%s' from '%s'", this->getNameC(), this->getWhereC() );
+	bool ret = this->LuaExec::exec(name, topic, payload, tracker);
+	if(!ret)
 		this->finished();
-		return false;
-	}
-#endif
 
-	arg->L = luaL_newstate();
-	if( !arg->L ){
-		publishLog('E', "Unable to create a new Lua State for '%s' from '%s'", this->getNameC(), this->getWhereC() );
-		this->finished();
-		free( arg );
-		return false;
-	}
-
-	luaL_openlibs(arg->L);
-	libSel_ApplyStartupFunc( luainitfunc, arg->L );
-
-	int err;
-	if( (err = loadsharedfunction( arg->L, this->getFunc() )) ){
-		publishLog('E', "Unable to create task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), (err == LUA_ERRSYNTAX) ? "Syntax error" : "Memory error" );
-		lua_close( arg->L );
-		this->finished();
-		free( arg );
-		return false;
-	}
-
-	if( tracker ){	// Launched by a tracker
-		lua_pushstring( arg->L, name );	// Push the name of the tracker
-		lua_setglobal( arg->L, "MAJORDOME_TRACKER" );
-		if( topic ){ // Launched when the tracker is stopped
-			lua_pushstring( arg->L, topic );	// Push the status
-			lua_setglobal( arg->L, "MAJORDOME_TRACKER_STATUS" );
-		}
-	} else if( payload ){	// Launched by a trigger
-		lua_pushstring( arg->L, name );	// Push the name of the trigger
-		lua_setglobal( arg->L, "MAJORDOME_TRIGGER" );
-		if( topic ){	// Otherwise, it means it has been launched by a Lua script
-			lua_pushstring( arg->L, topic );	// Push the topic
-			lua_setglobal( arg->L, "MAJORDOME_TOPIC" );
-			lua_pushstring( arg->L, payload);	// and its payload
-			lua_setglobal( arg->L, "MAJORDOME_PAYLOAD" );
-		}
-	} else {	// Launched by a timer
-		lua_pushstring( arg->L, name );	// Push the name of the trigger
-		lua_setglobal( arg->L, "MAJORDOME_TIMER" );
-	}
-
-	if(verbose)
-		publishLog('I', "running Task '%s' from '%s'", this->getNameC(), this->getWhereC() );
-
-	pthread_t tid;	// No need to be kept
-	if(pthread_create( &tid, &thread_attr, launchfunc,  arg) < 0){
-		publishLog('E', "Unable to create task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), strerror(errno));
-		this->finished();
-		lua_close( arg->L );
-		free( arg );
-	}
-
-	return true;
+	return ret;
 }
 
 bool LuaTask::canRun( void ){

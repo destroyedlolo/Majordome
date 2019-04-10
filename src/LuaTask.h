@@ -14,7 +14,7 @@
 
 class Config;
 
-class LuaTask : public Object, public LuaExec {
+class LuaTask : public LuaExec {
 	bool once;	// can run only once
 
 	pthread_mutex_t running_access;	// we want an access to "running"
@@ -33,10 +33,7 @@ public:
 	bool getOnce( void ){ return this->once; }
 	
 	/* Launch this tasks if possible
-	 * -> name : name of the topic/timer/tracker that triggers this task
-	 * -> topic : the topic itself (or the tracker status if tracker's stoppingTasks)
-	 * -> tracker : true if launched by a tracker
-	 * <- true if it has been launched, false otherwise
+	 * Same arguments as LuaExec::exec()
 	 */
 	bool exec( const char *name, const char *topic=NULL, const char *payload=NULL, bool tracker=false );
 
