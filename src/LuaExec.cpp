@@ -86,7 +86,7 @@ static void *launchfunc(void *a){
 	return NULL;
 }
 
-bool LuaExec::exec( const char *name, const char *topic, const char *payload, bool tracker ){
+bool LuaExec::execASync( const char *name, const char *topic, const char *payload, bool tracker ){
 		 /* Create the new thread */
 	struct launchargs *arg = new launchargs;
 	arg->task = this;
