@@ -164,6 +164,7 @@ static int msgarrived(void *actx, char *topic, int tlen, MQTTClient_message *msg
 			}
 
 			i->second.execTasks( config, i->second.getNameC(), topic, cpayload );
+			i->second.execTrackers( config, i->second.getNameC(), topic, cpayload );
 			break;
 		}
 	}

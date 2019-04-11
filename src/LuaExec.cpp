@@ -137,7 +137,7 @@ bool LuaExec::execAsync( const char *name, const char *topic, const char *payloa
 
 bool LuaExec::execSync( const char *name, const char *topic, const char *payload, bool tracker ){
 	lua_State *L = luaL_newstate();
-	if( L ){
+	if( !L ){
 		publishLog('E', "Unable to create a new Lua State for '%s' from '%s'", this->getNameC(), this->getWhereC() );
 		return false;
 	}

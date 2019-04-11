@@ -12,7 +12,7 @@
 
 #include <libSelene.h>
 
-class LuaExec : public Object {
+class LuaExec : virtual public Object {
 	struct elastic_storage func;	// Function to execute
 
 public:

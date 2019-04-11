@@ -14,11 +14,9 @@
 
 class Config;
 
-class Tracker : public Event {	// Event contains tasks to launch when tracker changes to DONE
+class Tracker : public Event, public LuaExec {	// Event contains tasks to launch when tracker changes to DONE
 
 	StringVector stoppingTasks;	// Tasks to launch when stopping the tracker
-
-	struct elastic_storage func;	// Function to execute
 
 	enum _status {
 		WAITING,	// Waiting for start time
@@ -36,8 +34,6 @@ public:
 	Tracker( Config &cfg, const std::string &file, std::string &where, std::string &name, lua_State *L );
 
 	enum _status getStatus( void ){ return this->status; }
-
-	struct elastic_storage *getFunc( void ){ return &(this->func); }
 
 	/* Launch lua script if applicable
 	 * -> name : name of the topic/timer that triggers this task

@@ -12,7 +12,7 @@
 
 class Config;
 
-class Event : public Object, public StringVector {
+class Event : virtual public Object, public StringVector {
 
 protected:
 	/* Default empty constructor to be only used by derived classes 

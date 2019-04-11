@@ -25,3 +25,5 @@
 --
 -- Activated at startup
 --->> activated
+
+print("I'm the TestTracker code")

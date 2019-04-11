@@ -15,7 +15,7 @@ qos=0
 store
 
 # Store it as a numeric value
-numeric
+#numeric
 
 # time to live of this variable (in Seconds)
 ttl=2
