@@ -121,6 +121,25 @@ else printf("Ignore '%s'\n", l.c_str());
 		exit(EXIT_FAILURE);
 }
 
+void Tracker::feedState( lua_State *L, const char *name, const char *topic, const char *payload, bool tracker ){
+
+	try {
+		class Tracker &trk = config.TrackersList.at( this->getNameC() );
+		class Tracker **tracker = (class Tracker **)lua_newuserdata(L, sizeof(class Tracker *));
+		assert(tracker);
+
+		*tracker = &trk;
+		luaL_getmetatable(L, "MajordomeTracker");
+		lua_setmetatable(L, -2);
+		lua_setglobal( L, "MAJORDOME_Myself" );
+	} catch( std::out_of_range &e ){	// Not found 
+		publishLog('F', "Can't find tracker '%s'", this->getNameC() );
+		exit(EXIT_FAILURE);
+	}
+
+	LuaExec::feedState(L, name, topic, payload, tracker);
+}
+
 bool Tracker::exec( const char *name, const char *topic, const char *payload ){
 	if( !this->isEnabled() || this->status != _status::CHECKING ){
 		if(verbose)
@@ -182,9 +201,59 @@ static const struct luaL_Reg MajTrackerLib [] = {
 	{NULL, NULL}
 };
 
+static int mtrk_getContainer(lua_State *L){
+	class Tracker *tracker = checkMajordomeTracker(L);
+	lua_pushstring( L, tracker->getWhereC() );
+	return 1;
+}
+
+static int mtrk_enabled( lua_State *L ){
+	class Tracker *tracker = checkMajordomeTracker(L);
+	tracker->enable();
+	return 1;
+}
+
+static int mtrk_disable( lua_State *L ){
+	class Tracker *tracker = checkMajordomeTracker(L);
+	tracker->disable();
+	return 1;
+}
+
+static int mtrk_isEnabled( lua_State *L ){
+	class Tracker *tracker = checkMajordomeTracker(L);
+	lua_pushboolean( L, tracker->isEnabled() );
+	return 1;
+}
+
+static int mtrk_getStatus(lua_State *L){
+	class Tracker *tracker = checkMajordomeTracker(L);
+	switch( tracker->getStatus() ){
+	case Tracker::_status::WAITING:
+		lua_pushstring( L, "WAITING" );
+		break;
+	case Tracker::_status::CHECKING:
+		lua_pushstring( L, "CHECKING" );
+		break;
+	case Tracker::_status::DONE:
+		lua_pushstring( L, "DONE" );
+		break;
+	default :
+		return 0;
+	}
+	return 1;
+}
+
+static const struct luaL_Reg MajTrackerM [] = {
+	{"getContainer", mtrk_getContainer},
+	{"isEnabled", mtrk_isEnabled},
+	{"Enable", mtrk_enabled},
+	{"Disable", mtrk_disable},
+	{"getStatus", mtrk_getStatus},
+	{NULL, NULL}
+};
 
 int Tracker::initLuaObject( lua_State *L ){
-//	libSel_objFuncs( L, "MajordomeTracker", MajTrackerM );
+	libSel_objFuncs( L, "MajordomeTracker", MajTrackerM );
 	libSel_libFuncs( L, "MajordomeTracker", MajTrackerLib );
 
 	return 1;

@@ -32,8 +32,10 @@ public:
 	 * -> name : name of the topic/timer/tracker that triggers this task
 	 * -> topic : the topic itself (or the tracker status if tracker's stoppingTasks)
 	 * -> tracker : true if launched by a tracker
+	 *
+	 *  May be overloaded if some local objects have to be created
 	 */
-	void feedState( lua_State *L, const char *name, const char *topic=NULL, const char *payload=NULL, bool tracker=false );
+	virtual void feedState( lua_State *L, const char *name, const char *topic=NULL, const char *payload=NULL, bool tracker=false );
 
 	/* Launch a task in a slave thread
 	 * -> same as feedState()

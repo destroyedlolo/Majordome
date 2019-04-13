@@ -26,4 +26,8 @@
 -- Activated at startup
 --->> activated
 
+-- MAJORDOME_Myself is automatically created and contains 
+-- the current tracker
+
 print("I'm the TestTracker code")
+print("My status is :", MAJORDOME_Myself:getStatus() )
