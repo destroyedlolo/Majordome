@@ -243,12 +243,26 @@ static int mtrk_getStatus(lua_State *L){
 	return 1;
 }
 
+static int mtrk_setStatus(lua_State *L){
+	class Tracker *tracker = checkMajordomeTracker(L);
+	const char *arg = luaL_checkstring(L, 2);
+
+	if( !strcmp(arg, "CHECKING") || !strcmp(arg, "START") )
+		tracker->start();
+	else if( !strcmp(arg, "WAITING") || !strcmp(arg, "STOP") )
+		tracker->stop();
+	else 
+		tracker->done();
+	return 0;
+}
+
 static const struct luaL_Reg MajTrackerM [] = {
 	{"getContainer", mtrk_getContainer},
 	{"isEnabled", mtrk_isEnabled},
 	{"Enable", mtrk_enabled},
 	{"Disable", mtrk_disable},
 	{"getStatus", mtrk_getStatus},
+	{"setStatus", mtrk_setStatus},
 	{NULL, NULL}
 };
 

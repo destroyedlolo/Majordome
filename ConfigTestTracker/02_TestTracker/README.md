@@ -16,3 +16,15 @@ Status are :
 	 ||
 	WAITING
 
+--------
+
+This particular example will react to following topics :
+
++ *Control* : control test behaviours
+..+ **STATUS** : displays the tracker status
+..+ **MANUAL** : disables timers so the tracker stays in the same state
+..+ **AUTO** : activates timers so the tracker switches automatically b/w waiting and checking state
+..+ **WAITING** or **STOP** : the tracker waits for a start signal
+..+ **CHECKING** or **START** : the tracker checks for incoming values
+..+ **DONE** : expected value found
++ *Test* : value to be tested. If > 10, the tracker switch to *Done* state

@@ -48,6 +48,27 @@ bool LuaExec::LoadFunc( lua_State *L, std::stringstream &buffer, const char *nam
 	 ****/
 
 void LuaExec::feedState( lua_State *L, const char *name, const char *topic, const char *payload, bool tracker ){
+	if( !payload ){	// Launched by a timer
+		lua_pushstring( L, name );	// Push the name of the trigger
+		lua_setglobal( L, "MAJORDOME_TIMER" );
+	} else {
+		if( tracker ){	// Launched by a tracker
+			lua_pushstring( L, name );	// Push the name of the tracker
+			lua_setglobal( L, "MAJORDOME_TRACKER" );
+		} else {	// Launched by a trigger
+			lua_pushstring( L, name );	// Push the name of the trigger
+			lua_setglobal( L, "MAJORDOME_TRIGGER" );
+		}
+
+		if( topic ){	// Otherwise, it means it has been launched by a Lua script
+			lua_pushstring( L, topic );	// Push the topic
+			lua_setglobal( L, "MAJORDOME_TOPIC" );
+			lua_pushstring( L, payload);	// and its payload
+			lua_setglobal( L, "MAJORDOME_PAYLOAD" );
+		}
+	}
+
+#if 0 /* Obsolete - kept 'till new code validation */
 	if( tracker ){	// Launched by a tracker
 		lua_pushstring( L, name );	// Push the name of the tracker
 		lua_setglobal( L, "MAJORDOME_TRACKER" );
@@ -68,6 +89,7 @@ void LuaExec::feedState( lua_State *L, const char *name, const char *topic, cons
 		lua_pushstring( L, name );	// Push the name of the trigger
 		lua_setglobal( L, "MAJORDOME_TIMER" );
 	}
+#endif
 }
 
 struct launchargs {
