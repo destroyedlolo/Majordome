@@ -319,6 +319,7 @@ int main(int ac, char **av){
 
 	luainitfunc = libSel_AddStartupFunc( luainitfunc, LuaTask::initLuaObject );
 	luainitfunc = libSel_AddStartupFunc( luainitfunc, Timer::initLuaObject );
+	luainitfunc = libSel_AddStartupFunc( luainitfunc, Tracker::initLuaObject );
 	luainitfunc = libSel_AddStartupFunc( luainitfunc, MQTTTopic::initLuaObject );
 	luainitfunc = libSel_AddStartupFunc( luainitfunc, Event::initLuaObject );
 

@@ -148,3 +148,45 @@ void Tracker::done( void ){
 	publishLog('I', "Tracker '%s' is done", this->getNameC() );
 	this->status = _status::DONE;
 }
+
+	/*****
+	 * Lua exposed functions
+	 *****/
+
+static class Tracker *checkMajordomeTracker(lua_State *L){
+	class Tracker **r = (class Tracker **)luaL_testudata(L, 1, "MajordomeTracker");
+	luaL_argcheck(L, r != NULL, 1, "'MajordomeTracker' expected");
+	return *r;
+}
+
+static int mtrk_find(lua_State *L){
+	const char *name = luaL_checkstring(L, 1);
+
+	try {
+		class Tracker &trk = config.TrackersList.at( name );
+		class Tracker **tracker = (class Tracker **)lua_newuserdata(L, sizeof(class Tracker *));
+		assert(tracker);
+
+		*tracker = &trk;
+		luaL_getmetatable(L, "MajordomeTracker");
+		lua_setmetatable(L, -2);
+
+		return 1;
+	} catch( std::out_of_range &e ){	// Not found 
+		return 0;
+	}
+}
+
+static const struct luaL_Reg MajTrackerLib [] = {
+	{"find", mtrk_find},
+	{NULL, NULL}
+};
+
+
+int Tracker::initLuaObject( lua_State *L ){
+//	libSel_objFuncs( L, "MajordomeTracker", MajTrackerM );
+	libSel_libFuncs( L, "MajordomeTracker", MajTrackerLib );
+
+	return 1;
+}
+

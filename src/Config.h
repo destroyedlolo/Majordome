@@ -32,7 +32,7 @@ public:
 	TaskElements TasksList;
 
 	typedef std::unordered_map<std::string, Tracker> TrackerElements;
-	TrackerElements TrackerList;
+	TrackerElements TrackersList;
 
 	typedef std::unordered_map<std::string, Event> EventElements;
 	EventElements EventsList;

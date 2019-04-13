@@ -112,11 +112,11 @@ SubConfigDir::SubConfigDir( Config &cfg, std::string &where, lua_State *L){
 			Tracker trk( cfg, completpath, where, name, L );
 	
 			Config::TrackerElements::iterator prev;
-			if((prev = cfg.TrackerList.find(name)) != cfg.TrackerList.end()){
+			if((prev = cfg.TrackersList.find(name)) != cfg.TrackersList.end()){
 				publishLog('F', "Tracker '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second.getWhere().c_str());
 				exit(EXIT_FAILURE);
 			} else
-				cfg.TrackerList.insert( std::make_pair(name, trk) );
+				cfg.TrackersList.insert( std::make_pair(name, trk) );
 		}
 #ifdef DEBUG
 else 
