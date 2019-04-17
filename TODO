@@ -1,6 +1,5 @@
 Ajouter pour les taches :
-- Done= - pour les taches qui sont lancée lorsqu'un tracker passe done
-- stop= - pour les taches qui sont lancée lorsqu'un tracker s'arrete
+- whenStopped= - pour les taches qui sont lancée lorsqu'un tracker s'arrete
 (-> voir comment passer le status du tracker)
 
 Faire le ménage dans LuaExec.cpp : LuaExec::feedState()

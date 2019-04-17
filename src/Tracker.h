@@ -54,6 +54,8 @@ public:
 	void stop( void );
 	void done( void );
 
+	void addDone( std::string t ){ this->Add(t); }
+
 		/* Create Lua's object */
 	static int initLuaObject( lua_State *L );
 };

@@ -12,6 +12,7 @@ extern "C" {
 #include "Config.h"
 #include "Helpers.h"
 #include "LuaTask.h"
+#include "Tracker.h"
 
 LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::string &name, lua_State *L ) : once( false ), running_access(PTHREAD_MUTEX_INITIALIZER), running(false){
 	if(verbose)
@@ -89,6 +90,17 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 					nameused = true;
 				} else {
 					publishLog('F', "\t\tEvent '%s' is not (yet ?) defined", arg.c_str());
+					exit(EXIT_FAILURE);
+				}
+			} else if( !!(arg = striKWcmp( l, "-->> whenDone=" ))){
+				Config::TrackerElements::iterator tracker;
+				if( (tracker = cfg.TrackersList.find(arg)) != cfg.TrackersList.end()){
+					if(verbose)
+						publishLog('C', "\t\tAdded to tracker '%s'", arg.c_str());
+	 				tracker->second.addDone( this->getName() );
+					nameused = true;
+				} else {
+					publishLog('F', "\t\tracker '%s' is not (yet ?) defined", arg.c_str());
 					exit(EXIT_FAILURE);
 				}
 			} else if( l == "-->> once" ){
