@@ -47,7 +47,7 @@ bool LuaExec::LoadFunc( lua_State *L, std::stringstream &buffer, const char *nam
 	 * Slave threads
 	 ****/
 
-void LuaExec::feedState( lua_State *L, const char *name, const char *topic, const char *payload, bool tracker ){
+void LuaExec::feedState( lua_State *L, const char *name, const char *topic, const char *payload, bool tracker, const char *trkstatus ){
 	if( !payload ){	// Launched by a timer
 		lua_pushstring( L, name );	// Push the name of the trigger
 		lua_setglobal( L, "MAJORDOME_TIMER" );
@@ -55,6 +55,11 @@ void LuaExec::feedState( lua_State *L, const char *name, const char *topic, cons
 		if( tracker ){	// Launched by a tracker
 			lua_pushstring( L, name );	// Push the name of the tracker
 			lua_setglobal( L, "MAJORDOME_TRACKER" );
+
+			if(trkstatus){
+				lua_pushstring( L, trkstatus );	// Push the name of the tracker
+				lua_setglobal( L, "MAJORDOME_TRACKER_STATUS" );
+			}
 		} else {	// Launched by a trigger
 			lua_pushstring( L, name );	// Push the name of the trigger
 			lua_setglobal( L, "MAJORDOME_TRIGGER" );
@@ -67,29 +72,6 @@ void LuaExec::feedState( lua_State *L, const char *name, const char *topic, cons
 			lua_setglobal( L, "MAJORDOME_PAYLOAD" );
 		}
 	}
-
-#if 0 /* Obsolete - kept 'till new code validation */
-	if( tracker ){	// Launched by a tracker
-		lua_pushstring( L, name );	// Push the name of the tracker
-		lua_setglobal( L, "MAJORDOME_TRACKER" );
-		if( topic ){ // Launched when the tracker is stopped
-			lua_pushstring( L, topic );	// Push the status
-			lua_setglobal( L, "MAJORDOME_TRACKER_STATUS" );
-		}
-	} else if( payload ){	// Launched by a trigger
-		lua_pushstring( L, name );	// Push the name of the trigger
-		lua_setglobal( L, "MAJORDOME_TRIGGER" );
-		if( topic ){	// Otherwise, it means it has been launched by a Lua script
-			lua_pushstring( L, topic );	// Push the topic
-			lua_setglobal( L, "MAJORDOME_TOPIC" );
-			lua_pushstring( L, payload);	// and its payload
-			lua_setglobal( L, "MAJORDOME_PAYLOAD" );
-		}
-	} else {	// Launched by a timer
-		lua_pushstring( L, name );	// Push the name of the trigger
-		lua_setglobal( L, "MAJORDOME_TIMER" );
-	}
-#endif
 }
 
 struct launchargs {
@@ -108,17 +90,10 @@ static void *launchfunc(void *a){
 	return NULL;
 }
 
-bool LuaExec::execAsync( const char *name, const char *topic, const char *payload, bool tracker ){
+bool LuaExec::execAsync( const char *name, const char *topic, const char *payload, bool tracker, const char *trkstatus ){
 		 /* Create the new thread */
 	struct launchargs *arg = new launchargs;
 	arg->task = this;
-#if 0	// Let the default handler working
-	if( !arg ){
-		publishLog('E', "Unable to create a new thread arguments for '%s' from '%s'", this->getNameC(), this->getWhereC() );
-		this->finished();
-		return false;
-	}
-#endif
 
 	arg->L = luaL_newstate();
 	if( !arg->L ){
@@ -140,7 +115,7 @@ bool LuaExec::execAsync( const char *name, const char *topic, const char *payloa
 		return false;
 	}
 
-	this->feedState( arg->L, name, topic, payload, tracker );
+	this->feedState( arg->L, name, topic, payload, tracker, trkstatus );
 
 	if(verbose)
 		publishLog('I', "Async running Task '%s' from '%s'", this->getNameC(), this->getWhereC() );
