@@ -48,29 +48,27 @@ bool LuaExec::LoadFunc( lua_State *L, std::stringstream &buffer, const char *nam
 	 ****/
 
 void LuaExec::feedState( lua_State *L, const char *name, const char *topic, const char *payload, bool tracker, const char *trkstatus ){
-	if( !payload ){	// Launched by a timer
+	if( topic ){	// If launched by a message receiving
+		lua_pushstring( L, topic );	// Push the topic
+		lua_setglobal( L, "MAJORDOME_TOPIC" );
+		lua_pushstring( L, payload);	// and its payload
+		lua_setglobal( L, "MAJORDOME_PAYLOAD" );
+	}
+
+	if( tracker ){	// Launched by a tracker
+		lua_pushstring( L, name );	// Push the name of the tracker
+		lua_setglobal( L, "MAJORDOME_TRACKER" );
+
+		if(trkstatus){
+			lua_pushstring( L, trkstatus );	// Push the name of the tracker
+			lua_setglobal( L, "MAJORDOME_TRACKER_STATUS" );
+		}
+	} else if( !payload ){	// Launched by a timer
 		lua_pushstring( L, name );	// Push the name of the trigger
 		lua_setglobal( L, "MAJORDOME_TIMER" );
-	} else {
-		if( tracker ){	// Launched by a tracker
-			lua_pushstring( L, name );	// Push the name of the tracker
-			lua_setglobal( L, "MAJORDOME_TRACKER" );
-
-			if(trkstatus){
-				lua_pushstring( L, trkstatus );	// Push the name of the tracker
-				lua_setglobal( L, "MAJORDOME_TRACKER_STATUS" );
-			}
-		} else {	// Launched by a trigger
-			lua_pushstring( L, name );	// Push the name of the trigger
-			lua_setglobal( L, "MAJORDOME_TRIGGER" );
-		}
-
-		if( topic ){	// Otherwise, it means it has been launched by a Lua script
-			lua_pushstring( L, topic );	// Push the topic
-			lua_setglobal( L, "MAJORDOME_TOPIC" );
-			lua_pushstring( L, payload);	// and its payload
-			lua_setglobal( L, "MAJORDOME_PAYLOAD" );
-		}
+	} else { // Launched by a trigger
+		lua_pushstring( L, name );	// Push the name of the trigger
+		lua_setglobal( L, "MAJORDOME_TRIGGER" );
 	}
 }
 
@@ -114,7 +112,6 @@ bool LuaExec::execAsync( const char *name, const char *topic, const char *payloa
 		free( arg );
 		return false;
 	}
-
 	this->feedState( arg->L, name, topic, payload, tracker, trkstatus );
 
 	if(verbose)

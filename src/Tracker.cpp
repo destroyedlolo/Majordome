@@ -121,7 +121,20 @@ else printf("Ignore '%s'\n", l.c_str());
 		exit(EXIT_FAILURE);
 }
 
-void Tracker::feedState( lua_State *L, const char *name, const char *topic, const char *payload, bool tracker ){
+const char *Tracker::getStatusC( void ){
+	switch( this->status ){
+	case _status::WAITING :
+		return "WAITING";
+	case _status::CHECKING :
+		return "CHECKING";
+	case _status::DONE :
+		return "DONE";
+	}
+
+	return "?? Invalid tracker status ??";
+}
+
+void Tracker::feedState( lua_State *L, const char *name, const char *topic, const char *payload, bool tracker, const char *trkstatus ){
 
 	try {
 		class Tracker &trk = config.TrackersList.at( this->getNameC() );
@@ -137,7 +150,7 @@ void Tracker::feedState( lua_State *L, const char *name, const char *topic, cons
 		exit(EXIT_FAILURE);
 	}
 
-	LuaExec::feedState(L, name, topic, payload, tracker);
+	LuaExec::feedState(L, name, topic, payload, tracker, trkstatus);
 }
 
 bool Tracker::exec( const char *name, const char *topic, const char *payload ){
@@ -156,7 +169,17 @@ void Tracker::start( void ){
 }
 
 void Tracker::stop( void ){
-/*AF: lancer ici toutes les stoppingTasks */
+	if( this->isEnabled() && this->getStatus() != _status::WAITING ){
+		for( Entries::iterator tsk = this->stoppingTasks.begin(); tsk != this->stoppingTasks.end(); tsk++){
+			try {
+				LuaTask &task = config.findTask( *tsk );
+				task.exec( this->getNameC(), NULL, NULL, true, this->getStatusC() );
+			} catch (...) {
+				publishLog('F', "Internal error : can't find task \"%s\"", (*tsk).c_str() );
+				exit(EXIT_FAILURE);
+			}
+		}
+	}
 	publishLog('I', "Tracker '%s' is waiting", this->getNameC() );
 	this->status = _status::WAITING;
 }
@@ -227,19 +250,7 @@ static int mtrk_isEnabled( lua_State *L ){
 
 static int mtrk_getStatus(lua_State *L){
 	class Tracker *tracker = checkMajordomeTracker(L);
-	switch( tracker->getStatus() ){
-	case Tracker::_status::WAITING:
-		lua_pushstring( L, "WAITING" );
-		break;
-	case Tracker::_status::CHECKING:
-		lua_pushstring( L, "CHECKING" );
-		break;
-	case Tracker::_status::DONE:
-		lua_pushstring( L, "DONE" );
-		break;
-	default :
-		return 0;
-	}
+	lua_pushstring( L, tracker->getStatusC() );
 	return 1;
 }
 

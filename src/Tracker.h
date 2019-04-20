@@ -38,9 +38,10 @@ public:
 	Tracker( Config &cfg, const std::string &file, std::string &where, std::string &name, lua_State *L );
 
 	enum _status getStatus( void ){ return this->status; }
+	const char *getStatusC( void );
 
 	/* Overloading of LuaExec's in order to initialise Myself object */
-	virtual void feedState( lua_State *L, const char *name, const char *topic=NULL, const char *payload=NULL, bool tracker=false );
+	virtual void feedState( lua_State *L, const char *name, const char *topic=NULL, const char *payload=NULL, bool tracker=false, const char *trkstatus=NULL );
 
 	/* Launch lua script if applicable
 	 * -> name : name of the topic/timer that triggers this task
@@ -55,6 +56,7 @@ public:
 	void done( void );
 
 	void addDone( std::string t ){ this->Add(t); }
+	void addStopped( std::string t ){ this->stoppingTasks.Add(t); }
 
 		/* Create Lua's object */
 	static int initLuaObject( lua_State *L );

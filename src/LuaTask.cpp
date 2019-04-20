@@ -96,8 +96,19 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 				Config::TrackerElements::iterator tracker;
 				if( (tracker = cfg.TrackersList.find(arg)) != cfg.TrackersList.end()){
 					if(verbose)
-						publishLog('C', "\t\tAdded to tracker '%s'", arg.c_str());
+						publishLog('C', "\t\tAdded to tracker '%s' as Done task", arg.c_str());
 	 				tracker->second.addDone( this->getName() );
+					nameused = true;
+				} else {
+					publishLog('F', "\t\tracker '%s' is not (yet ?) defined", arg.c_str());
+					exit(EXIT_FAILURE);
+				}
+			} else if( !!(arg = striKWcmp( l, "-->> whenStopped=" ))){
+				Config::TrackerElements::iterator tracker;
+				if( (tracker = cfg.TrackersList.find(arg)) != cfg.TrackersList.end()){
+					if(verbose)
+						publishLog('C', "\t\tAdded to tracker '%s' as Stopped task", arg.c_str());
+	 				tracker->second.addStopped( this->getName() );
 					nameused = true;
 				} else {
 					publishLog('F', "\t\tracker '%s' is not (yet ?) defined", arg.c_str());
@@ -140,7 +151,7 @@ else printf("Ignore '%s'\n", l.c_str());
 	 * Execute the code
 	 *****/
 
-bool LuaTask::exec( const char *name, const char *topic, const char *payload, bool tracker ){
+bool LuaTask::exec( const char *name, const char *topic, const char *payload, bool tracker, const char *trkstatus ){
 		/* Check if the task can be launched */
 	if( !this->isEnabled() ){
 		if(verbose)
@@ -154,7 +165,7 @@ bool LuaTask::exec( const char *name, const char *topic, const char *payload, bo
 		return false;
 	}
 
-	bool ret = this->LuaExec::execAsync(name, topic, payload, tracker);
+	bool ret = this->LuaExec::execAsync(name, topic, payload, tracker, trkstatus);
 	if(!ret)
 		this->finished();
 

@@ -58,7 +58,7 @@ else publishLog('D', "Ignore '%s'", l.c_str());
 	file.close();
 }
 
-void Event::execTasks( Config &cfg, const char *trig_name, const char *topic, const char *payload, bool tracker ){
+void Event::execTasks( Config &cfg, const char *trig_name, const char *topic, const char *payload, bool tracker, const char *trkstatus ){
 #ifdef DEBUG
 	if(debug)
 		publishLog('D', "execTasks() : %d to run", this->list.size() );
@@ -67,7 +67,7 @@ void Event::execTasks( Config &cfg, const char *trig_name, const char *topic, co
 	for( Entries::iterator tsk = this->begin(); tsk != this->end(); tsk++){
 		try {
 			LuaTask &task = cfg.findTask( *tsk );
-			task.exec( trig_name, topic, payload, tracker );
+			task.exec( trig_name, topic, payload, tracker, trkstatus );
 		} catch (...) {
 			publishLog('F', "Internal error : can't find task \"%s\"", (*tsk).c_str() );
 			exit(EXIT_FAILURE);

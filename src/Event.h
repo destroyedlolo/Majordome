@@ -35,8 +35,9 @@ public:
 	 * -> topic : the one that triggers the task
 	 * -> payload
 	 * -> tracker : true if it's a tracker
+	 * -> trkstatus : status of the tracker
 	 */
-	void execTasks( Config &, const char *name, const char *topic, const char *payload, bool tracker=false );
+	void execTasks( Config &, const char *name, const char *topic, const char *payload, bool tracker=false, const char *trkstatus=NULL );
 
 	/* launch tasks associated to this event (timer)
 	 * -> name of the object that triggers the task

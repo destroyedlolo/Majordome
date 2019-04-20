@@ -35,7 +35,7 @@ public:
 	/* Launch this tasks if possible
 	 * Same arguments as LuaExec::exec()
 	 */
-	bool exec( const char *name, const char *topic=NULL, const char *payload=NULL, bool tracker=false );
+	bool exec( const char *name, const char *topic=NULL, const char *payload=NULL, bool tracker=false, const char *trkstatus=NULL );
 
 	/* Check if this task can run */
 	bool canRun( void );
