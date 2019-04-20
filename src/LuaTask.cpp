@@ -103,6 +103,17 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 					publishLog('F', "\t\tracker '%s' is not (yet ?) defined", arg.c_str());
 					exit(EXIT_FAILURE);
 				}
+			} else if( !!(arg = striKWcmp( l, "-->> whenStarted=" ))){
+				Config::TrackerElements::iterator tracker;
+				if( (tracker = cfg.TrackersList.find(arg)) != cfg.TrackersList.end()){
+					if(verbose)
+						publishLog('C', "\t\tAdded to tracker '%s' as Started task", arg.c_str());
+	 				tracker->second.addStarted( this->getName() );
+					nameused = true;
+				} else {
+					publishLog('F', "\t\tracker '%s' is not (yet ?) defined", arg.c_str());
+					exit(EXIT_FAILURE);
+				}
 			} else if( !!(arg = striKWcmp( l, "-->> whenStopped=" ))){
 				Config::TrackerElements::iterator tracker;
 				if( (tracker = cfg.TrackersList.find(arg)) != cfg.TrackersList.end()){

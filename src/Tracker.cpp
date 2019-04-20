@@ -164,6 +164,17 @@ bool Tracker::exec( const char *name, const char *topic, const char *payload ){
 }
 
 void Tracker::start( void ){
+	if( this->isEnabled() && this->getStatus() != _status::CHECKING ){
+		for( Entries::iterator tsk = this->startingTasks.begin(); tsk != this->startingTasks.end(); tsk++){
+			try {
+				LuaTask &task = config.findTask( *tsk );
+				task.exec( this->getNameC(), NULL, NULL, true, this->getStatusC() );
+			} catch (...) {
+				publishLog('F', "Internal error : can't find task \"%s\"", (*tsk).c_str() );
+				exit(EXIT_FAILURE);
+			}
+		}
+	}
 	publishLog('I', "Tracker '%s' is checking", this->getNameC() );
 	this->status = _status::CHECKING; 
 }
@@ -186,7 +197,7 @@ void Tracker::stop( void ){
 
 void Tracker::done( void ){
 	if( this->isEnabled() && this->getStatus() == _status::CHECKING )
-		this->execTasks(config, this->getNameC(), NULL, NULL, true);
+		this->execTasks(config, this->getNameC(), NULL, NULL, true, this->getStatusC()); // by definition the previous status was CHECKING
 	publishLog('I', "Tracker '%s' is done", this->getNameC() );
 	this->status = _status::DONE;
 }

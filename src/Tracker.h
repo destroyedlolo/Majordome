@@ -16,6 +16,7 @@ class Config;
 
 class Tracker : public Event, public LuaExec {	// Event contains tasks to launch when tracker changes to DONE
 
+	StringVector startingTasks;	// Tasks to launch when starting the tracker
 	StringVector stoppingTasks;	// Tasks to launch when stopping the tracker
 
 public:
@@ -56,6 +57,7 @@ public:
 	void done( void );
 
 	void addDone( std::string t ){ this->Add(t); }
+	void addStarted( std::string t ){ this->startingTasks.Add(t); }
 	void addStopped( std::string t ){ this->stoppingTasks.Add(t); }
 
 		/* Create Lua's object */
