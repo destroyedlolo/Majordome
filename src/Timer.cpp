@@ -184,12 +184,33 @@ bool Timer::inEveryMode( void ){
 }
 
 void Timer::execTasks( void ){
-	if( this->isEnabled() )
+	if( this->isEnabled() ){
+		for( Entries::iterator trk = this->startTrackers.begin(); trk != this->startTrackers.end(); trk++){	// starting tracker
+			try {
+				Tracker &tracker = config.findTracker( *trk );
+				tracker.start();
+			} catch (...) {
+				publishLog('F', "Internal error : can't find tracker \"%s\"", (*trk).c_str() );
+				exit(EXIT_FAILURE);
+			}
+		}
+
+		for( Entries::iterator trk = this->stopTrackers.begin(); trk != this->stopTrackers.end(); trk++){	// starting tracker
+			try {
+				Tracker &tracker = config.findTracker( *trk );
+				tracker.stop();
+			} catch (...) {
+				publishLog('F', "Internal error : can't find tracker \"%s\"", (*trk).c_str() );
+				exit(EXIT_FAILURE);
+			}
+		}
+
 		Event::execTasks( config, this->getNameC() );
 #ifdef DEBUG
-	else if( debug )
-		publishLog('D', "Timer %s is disabled : no tasks launched", this->getNameC() );
+	} else if( debug ) {
+		publishLog('D', "Timer %s is disabled : no tasks launched nor trackers touched", this->getNameC() );
 #endif
+	}
 }
 
 void Timer::lock( void ){

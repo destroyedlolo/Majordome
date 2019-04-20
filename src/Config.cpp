@@ -133,7 +133,7 @@ LuaTask &Config::findTask( std::string &n ) {
 Tracker &Config::findTracker( std::string &n ) {
 	Config::TrackerElements::iterator trk;
 
-	if( (trk = this->TrackerList.find( n )) == this->TrackerList.end() )
+	if( (trk = this->TrackersList.find( n )) == this->TrackersList.end() )
 		throw 1;
 	else
 		return (*trk).second;

@@ -58,35 +58,18 @@ else publishLog('D', "Ignore '%s'", l.c_str());
 	file.close();
 }
 
-void Event::execTasks( Config &cfg, const char *trig_name, const char *topic, const char *payload ){
+void Event::execTasks( Config &cfg, const char *trig_name, const char *topic, const char *payload, bool tracker, const char *trkstatus ){
 #ifdef DEBUG
 	if(debug)
-		publishLog('D', "execTasks() : %d to run", this->tasks.size() );
+		publishLog('D', "execTasks() : %d to run", this->list.size() );
 #endif
 
-	for( TaskEntries::iterator tsk = this->tasks.begin(); tsk != this->tasks.end(); tsk++){
+	for( Entries::iterator tsk = this->begin(); tsk != this->end(); tsk++){
 		try {
 			LuaTask &task = cfg.findTask( *tsk );
-			task.exec( trig_name, topic, payload );
+			task.exec( trig_name, topic, payload, tracker, trkstatus );
 		} catch (...) {
 			publishLog('F', "Internal error : can't find task \"%s\"", (*tsk).c_str() );
-			exit(EXIT_FAILURE);
-		}
-	}
-}
-
-void Event::execTrackers( Config &cfg, const char *trig_name, const char *topic, const char *payload ){
-#ifdef DEBUG
-	if(debug)
-		publishLog('D', "execTrackers() : %d to run", this->trackers.size() );
-#endif
-
-	for( TrackerEntries::iterator trk = this->trackers.begin(); trk != this->trackers.end(); trk++){
-		try {
-			Tracker &tracker = cfg.findTracker( *trk );
-			tracker.exec( trig_name, topic, payload );
-		} catch (...) {
-			publishLog('F', "Internal error : can't find tracker \"%s\"", (*trk).c_str() );
 			exit(EXIT_FAILURE);
 		}
 	}
@@ -95,32 +78,15 @@ void Event::execTrackers( Config &cfg, const char *trig_name, const char *topic,
 void Event::execTasks( Config &cfg, const char *timer_name ){
 #ifdef DEBUG
 	if(debug)
-		publishLog('D', "execTasks() : %d to run", this->tasks.size() );
+		publishLog('D', "execTasks() : %d to run", this->list.size() );
 #endif
 
-	for( TaskEntries::iterator tsk = this->tasks.begin(); tsk != this->tasks.end(); tsk++){
+	for( Entries::iterator tsk = this->begin(); tsk != this->end(); tsk++){
 		try {
 			LuaTask &task = cfg.findTask( *tsk );
 			task.exec( timer_name );
 		} catch (...) {
 			publishLog('F', "Internal error : can't find task \"%s\"", (*tsk).c_str() );
-			exit(EXIT_FAILURE);
-		}
-	}
-}
-
-void Event::execTrackers( Config &cfg, const char *timer_name ){
-#ifdef DEBUG
-	if(debug)
-		publishLog('D', "execTrackers() : %d to run", this->trackers.size() );
-#endif
-
-	for( TrackerEntries::iterator trk = this->trackers.begin(); trk != this->trackers.end(); trk++){
-		try {
-			Tracker &tracker = cfg.findTracker( *trk );
-			tracker.exec( timer_name );
-		} catch (...) {
-			publishLog('F', "Internal error : can't find tracker \"%s\"", (*trk).c_str() );
 			exit(EXIT_FAILURE);
 		}
 	}
