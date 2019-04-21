@@ -1,11 +1,11 @@
 # makefile created automaticaly by LFMakeMaker
-# LFMakeMaker 1.4 (May  1 2018 12:31:45) (c)LFSoft 1997
+# LFMakeMaker 1.4 (Apr  3 2018 23:14:49) (c)LFSoft 1997
 
 gotoall: all
 
 
 #The compiler (may be customized for compiler's options).
-cc=g++ -Wall -O2 -DDEBUG -lpthread -lpaho-mqtt3c  -llua -lm -I/home/laurent/Projets/Selene.v4/src/SeleneLibrary -L/home/laurent/Projets/Selene.v4 -lSelene
+cc=g++ -Wall -O2 -DDEBUG -lpthread -lpaho-mqtt3c  -llua -lm -I/home/laurent/Projets/Selene/src/SeleneLibrary -L/home/laurent/Projets/Selene -lSelene
 opts=
 
 Config.o : Config.cpp Helpers.h MayBeEmptyString.h Config.h SortDir.h \
