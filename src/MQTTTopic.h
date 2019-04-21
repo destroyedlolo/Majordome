@@ -6,12 +6,13 @@
 #ifndef MQTTTOPIC_H
 #define MQTTTOPIC_H
 
-#include <vector>
-
 #include "MayBeEmptyString.h"
 #include "Event.h"
 
 class MQTTTopic : public Event {
+public :
+	StringVector trackers;
+
 protected:
 	MayBeEmptyString topic;	// Topic to look for
 	unsigned int qos;		// Associated QoS
@@ -44,6 +45,10 @@ public:
 	 */
 	bool match( const char *intopic );
 
+		/* Have a look on *Task() in Event.h for some documentation */
+	void addTracker( std::string t ){ this->trackers.Add(t); }
+	void execTrackers( Config &, const char *name, const char *topic, const char *payload );
+	void execTrackers( Config &, const char *name );
 
 	/* Create Lua's object */
 	static int initLuaObject( lua_State *L );

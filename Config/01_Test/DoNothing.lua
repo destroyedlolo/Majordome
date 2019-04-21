@@ -17,6 +17,15 @@
 -- (more than one "when" can be present)
 -->> when=15s
 --
+-- Launched when a tracker is done
+--->> whenDone=tracker
+--
+-- Launched when a tracker is started
+--->> whenStarted=tracker
+--
+-- Launched when a tracker is stopped
+--->> whenStopped=tracker
+--
 -- If set, only one instance is allowed to run
 --->> once
 --

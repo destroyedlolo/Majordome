@@ -13,9 +13,12 @@
 #include <sys/time.h>
 #include <cerrno>
 
+#include "StringVector.h"
 #include "Event.h"
 
-class Timer : public Event {
+ 
+class Timer : public Event {	// Event contains tasks to launch
+
 	unsigned long every;		// Delay b/w launches
 	unsigned short at;			// launch time
 	unsigned short min;			// At's minute 
@@ -26,6 +29,9 @@ class Timer : public Event {
 	pthread_t thread;
 	pthread_cond_t cond;
 	pthread_mutex_t mutex;
+
+	StringVector startTrackers;
+	StringVector stopTrackers;
 
 public:
 	enum Commands {
@@ -46,15 +52,19 @@ public:
 	 */
 	Timer( const std::string &file, std::string &where, std::string &name  );
 
+	void addStartTracker( std::string t ){ this->startTrackers.Add(t); }
+	void addStopTracker( std::string t ){ this->stopTrackers.Add(t); }
+
 	/* The timer is handled through a dedicated thread ... a pointer
 	 * to this object has to be passed to the newly created thread
 	 * BUT as object are copied into maps, the pointer is only valid after
 	 * the said insertion.
-	 *
 	 */
 	void launchThread( void );
 
-	/* Launch tasks associated to this trigger */
+	/* Launch tasks associated to this trigger 
+	 * Disable/Enable trackers as well
+	 */
 	void execTasks( void );
 
 	/* Tell if this timer is passed and has runifover

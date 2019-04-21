@@ -10,11 +10,11 @@
 
 #include "MayBeEmptyString.h"
 #include "Object.h"
+#include "LuaExec.h"
 
 class Config;
 
-class LuaTask : public Object {
-	struct elastic_storage func;	// Function to execute
+class LuaTask : public LuaExec {
 	bool once;	// can run only once
 
 	pthread_mutex_t running_access;	// we want an access to "running"
@@ -31,20 +31,17 @@ public:
 
 	void setOnce( bool v ){ this->once = v; }
 	bool getOnce( void ){ return this->once; }
-	struct elastic_storage *getFunc( void ){ return &(this->func); }
-
+	
 	/* Launch this tasks if possible
-	 * -> name : name of the topic/timer that triggers this task
-	 * -> topic : the topic itself
-	 * <- true if it has been launched, false otherwise
+	 * Same arguments as LuaExec::exec()
 	 */
-	bool exec( const char *name, const char *topic=NULL, const char *payload=NULL );
+	bool exec( const char *name, const char *topic=NULL, const char *payload=NULL, bool tracker=false, const char *trkstatus=NULL );
 
 	/* Check if this task can run */
 	bool canRun( void );
 
 	/* tell this task finished */
-	void finished( void );
+	virtual void finished( void );
 
 	/* Create Lua's object */
 	static int initLuaObject( lua_State *L );

@@ -16,8 +16,9 @@
  *
  *	05/07/2018 - LF - Start of development
  *	25/07/2018 - LF - Switch to C++ (when it's useful)
- *	02/10/2018 - LF - Start logging before scribscribing in order to get early
+ *	02/10/2018 - LF - Start logging before subscribing in order to get early
  *		messages as well
+ *	16/03/2019 - LF - Externalize Version
  */
 
 #include <iostream>
@@ -35,8 +36,8 @@
 
 #include "Helpers.h"
 #include "Config.h"
+#include "Version.h"
 
-#define VERSION 3.0100
 #define DEFAULT_CONFIGURATION_FILE "/usr/local/etc/Majordome.conf"
 
 using namespace std;
@@ -163,6 +164,7 @@ static int msgarrived(void *actx, char *topic, int tlen, MQTTClient_message *msg
 			}
 
 			i->second.execTasks( config, i->second.getNameC(), topic, cpayload );
+			i->second.execTrackers( config, i->second.getNameC(), topic, cpayload );
 			break;
 		}
 	}
@@ -317,6 +319,7 @@ int main(int ac, char **av){
 
 	luainitfunc = libSel_AddStartupFunc( luainitfunc, LuaTask::initLuaObject );
 	luainitfunc = libSel_AddStartupFunc( luainitfunc, Timer::initLuaObject );
+	luainitfunc = libSel_AddStartupFunc( luainitfunc, Tracker::initLuaObject );
 	luainitfunc = libSel_AddStartupFunc( luainitfunc, MQTTTopic::initLuaObject );
 	luainitfunc = libSel_AddStartupFunc( luainitfunc, Event::initLuaObject );
 

@@ -58,16 +58,16 @@ else publishLog('D', "Ignore '%s'", l.c_str());
 	file.close();
 }
 
-void Event::execTasks( Config &cfg, const char *trig_name, const char *topic, const char *payload ){
+void Event::execTasks( Config &cfg, const char *trig_name, const char *topic, const char *payload, bool tracker, const char *trkstatus ){
 #ifdef DEBUG
 	if(debug)
-		publishLog('D', "execTasks() : %d to run", this->tasks.size() );
+		publishLog('D', "execTasks() : %d to run", this->list.size() );
 #endif
 
-	for( TaskEntries::iterator tsk = this->tasks.begin(); tsk != this->tasks.end(); tsk++){
+	for( Entries::iterator tsk = this->begin(); tsk != this->end(); tsk++){
 		try {
 			LuaTask &task = cfg.findTask( *tsk );
-			task.exec( trig_name, topic, payload );
+			task.exec( trig_name, topic, payload, tracker, trkstatus );
 		} catch (...) {
 			publishLog('F', "Internal error : can't find task \"%s\"", (*tsk).c_str() );
 			exit(EXIT_FAILURE);
@@ -78,10 +78,10 @@ void Event::execTasks( Config &cfg, const char *trig_name, const char *topic, co
 void Event::execTasks( Config &cfg, const char *timer_name ){
 #ifdef DEBUG
 	if(debug)
-		publishLog('D', "execTasks() : %d to run", this->tasks.size() );
+		publishLog('D', "execTasks() : %d to run", this->list.size() );
 #endif
 
-	for( TaskEntries::iterator tsk = this->tasks.begin(); tsk != this->tasks.end(); tsk++){
+	for( Entries::iterator tsk = this->begin(); tsk != this->end(); tsk++){
 		try {
 			LuaTask &task = cfg.findTask( *tsk );
 			task.exec( timer_name );

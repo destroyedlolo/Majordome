@@ -2,6 +2,7 @@
  *
  * 27/07/2018 - LF - First version
  * 10/08/2018 - LF - Force loading order
+ * 16/03/2019 - LF - Add .tracker
  */
 #include <cstring>
 #include <algorithm>
@@ -12,15 +13,27 @@
 #include "SubConfigDir.h"
 #include "Timer.h"
 
+/* Determine object weight based on its file extension */
+static const char * fileext[] = {
+	".topic",
+	".timer",
+	".rendezvous",
+	".tracker",
+	".lua"
+};
+
+static int objectweight( const char *ext ){
+	for( unsigned int i = 0; i<sizeof(fileext)/sizeof(const char *); i++){
+		if(!strcmp(ext, fileext[i]))
+			return (int)i;
+	}
+	return -1;
+}
+
 bool SubConfigDir::accept( const char *fch, std::string &full ){
 	if( SortDir::accept( fch, full ) ){
 		const char *ext = fileextention( fch );
-		if( !strcmp(ext,".lua") ||
-			!strcmp(ext,".rendezvous") ||
-			!strcmp(ext,".topic") ||
-			!strcmp(ext,".timer") 
-		)
-			return true;
+		return( objectweight(ext) != -1 );
 	}
 	return false;
 }
@@ -94,6 +107,16 @@ SubConfigDir::SubConfigDir( Config &cfg, std::string &where, lua_State *L){
 				exit(EXIT_FAILURE);
 			} else
 				cfg.TasksList.insert( std::make_pair(name, tsk) );
+		} else if( !strcmp(ext,".tracker") ){
+			std::string name;
+			Tracker trk( cfg, completpath, where, name, L );
+	
+			Config::TrackerElements::iterator prev;
+			if((prev = cfg.TrackersList.find(name)) != cfg.TrackersList.end()){
+				publishLog('F', "Tracker '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second.getWhere().c_str());
+				exit(EXIT_FAILURE);
+			} else
+				cfg.TrackersList.insert( std::make_pair(name, trk) );
 		}
 #ifdef DEBUG
 else 
@@ -106,14 +129,10 @@ else
 void SubConfigDir::sort( void ){
 	std::sort(entries.begin(), entries.end(), 
 		[](std::string const &a, std::string const &b) -> bool {
-			const char *exta = fileextention( a.c_str() );
-			const char *extb = fileextention( b.c_str() );
-			int diff = strcmp(extb, exta); // as .topic & .timer > .lua but has to be loaded before
+			int va = objectweight( fileextention( a.c_str() ));
+			int vb = objectweight( fileextention( b.c_str() ));
 
-			if(!diff)
-			    return a < b;
-			else
-				return diff<0;
+			return(va < vb);
 		}
-	);	
+	);
 }
