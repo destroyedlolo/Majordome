@@ -15,3 +15,7 @@ La surveillance standard est de mise.
 - **OuvertureVoletBureau** - Timer d'ouverture des volets
 - **FermetureVoletBureau** - Timer de fermeture. Actif uniquement en mode *hiver*
 
+## Surveillance de la température
+
+Uniquement en dehors de l'hiver.
+Sinon, les volets se ferment lorsque la température atteint 21.5°
