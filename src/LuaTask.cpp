@@ -129,6 +129,10 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 				if(verbose)
 					publishLog('C', "\t\tOnly one instance is allowed to run (once)");
 				this->setOnce( true );
+			} else if( l == "-->> quiet" ){
+				if(verbose)
+					publishLog('C', "\t\tBe quiet");
+				this->beQuiet();
 			} else if( l == "-->> disabled" ){
 				if(verbose)
 					publishLog('C', "\t\tDisabled");

@@ -93,6 +93,10 @@ Tracker::Tracker( Config &cfg, const std::string &fch, std::string &where, std::
 				if(verbose)
 					publishLog('C', "\t\tActivated at startup");
 				this->status = _status::CHECKING;
+			} else if( l == "-->> quiet" ){
+				if(verbose)
+					publishLog('C', "\t\tBe quiet");
+				this->beQuiet();
 			} else if( l == "-->> disabled" ){
 				if(verbose)
 					publishLog('C', "\t\tDisabled");
@@ -168,6 +172,8 @@ void Tracker::start( void ){
 		for( Entries::iterator tsk = this->startingTasks.begin(); tsk != this->startingTasks.end(); tsk++){
 			try {
 				LuaTask &task = config.findTask( *tsk );
+				if( this->isQuiet() )
+					task.beQuiet();
 				task.exec( this->getNameC(), NULL, NULL, true, this->getStatusC() );
 			} catch (...) {
 				publishLog('F', "Internal error : can't find task \"%s\"", (*tsk).c_str() );
@@ -184,6 +190,8 @@ void Tracker::stop( void ){
 		for( Entries::iterator tsk = this->stoppingTasks.begin(); tsk != this->stoppingTasks.end(); tsk++){
 			try {
 				LuaTask &task = config.findTask( *tsk );
+				if( this->isQuiet() )
+					task.beQuiet();
 				task.exec( this->getNameC(), NULL, NULL, true, this->getStatusC() );
 			} catch (...) {
 				publishLog('F', "Internal error : can't find task \"%s\"", (*tsk).c_str() );

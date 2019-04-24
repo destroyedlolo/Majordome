@@ -25,5 +25,9 @@ ttl=2
 # useful only with 'store'd topics
 # default=3.14
 
+# remove some trace
+# This option is useful to avoid logging of very noisy topics
+#quiet
+
 # disable this topic
 #disabled

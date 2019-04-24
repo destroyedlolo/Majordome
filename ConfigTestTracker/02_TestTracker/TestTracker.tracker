@@ -9,6 +9,10 @@
 -- listen directive.
 --->> name=Toto
 --
+-- remove some trace
+-- This option is useful to avoid logging of very noisy topics
+-->> quiet
+--
 -- Disable this trigger
 --->> disabled
 --

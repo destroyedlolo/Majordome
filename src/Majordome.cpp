@@ -47,6 +47,7 @@ using namespace std;
 	 *****/
 
 bool verbose = false;
+bool hideTopicArrival = false;	// Silence topics arrival
 bool debug = false;
 bool quiet = false;
 
@@ -136,7 +137,7 @@ MQTTClient MQTT_client;
  * already running.
  */
 static int msgarrived(void *actx, char *topic, int tlen, MQTTClient_message *msg){
-	if(verbose)
+	if(verbose && !hideTopicArrival)
 		publishLog('I', "Receiving '%s'", topic);
 
 		// Convert the payload to a string
@@ -147,8 +148,12 @@ static int msgarrived(void *actx, char *topic, int tlen, MQTTClient_message *msg
 	for(Config::TopicElements::iterator i = config.TopicsList.begin(); i != config.TopicsList.end(); i++){
 		if( i->second.match( topic ) ){
 #ifdef DEBUG
-			if( debug )
-				publishLog('D', "Accepted by topic '%s'", i->second.getNameC() );
+			if( debug && !i->second.isQuiet() ){
+				if(hideTopicArrival)
+					publishLog('D', "'%s' accepted by topic '%s'", topic, i->second.getNameC() );
+				else
+					publishLog('D', "Accepted by topic '%s'", i->second.getNameC() );
+			}
 #endif
 			if( i->second.toBeStored() ){	// Store it in a SharedVar
 				if( i->second.isNumeric() ){
@@ -212,7 +217,7 @@ int main(int ac, char **av){
 
 	slc_init( NULL, LOG_STDOUT );	/* Early logging to STDOUT before broker initialisation*/
 
-	while((c = getopt(ac, av, "qvdhf:t")) != EOF) switch(c){
+	while((c = getopt(ac, av, "qvVdhf:t")) != EOF) switch(c){
 	case 'h':
 		fprintf(stderr, "%s (%.04f)\n"
 			"A lightweight event based Automation System\n"
@@ -220,6 +225,7 @@ int main(int ac, char **av){
 			"\t-h : this online help\n"
 			"\t-q : be quiet (remove all messages but script generated one)\n"
 			"\t-v : enable verbose messages (overwrite -q)\n"
+			"\t-V : silence topic arrival\n"
 #ifdef DEBUG
 			"\t-d : enable debug messages (overwrite -q)\n"
 #endif
@@ -236,6 +242,9 @@ int main(int ac, char **av){
 		printf("%s v%.04f\n", basename(av[0]), VERSION);
 		verbose = true;
 		quiet = false;
+		break;
+	case 'V':
+		hideTopicArrival = true;
 		break;
 	case 'q':
 		if( !verbose )

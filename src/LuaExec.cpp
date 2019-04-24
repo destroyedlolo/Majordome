@@ -114,7 +114,7 @@ bool LuaExec::execAsync( const char *name, const char *topic, const char *payloa
 	}
 	this->feedState( arg->L, name, topic, payload, tracker, trkstatus );
 
-	if(verbose)
+	if(verbose && !this->isQuiet())
 		publishLog('I', "Async running Task '%s' from '%s'", this->getNameC(), this->getWhereC() );
 
 	pthread_t tid;	// No need to be kept
@@ -148,7 +148,7 @@ bool LuaExec::execSync( const char *name, const char *topic, const char *payload
 
 	this->feedState( L, name, topic, payload, tracker );
 
-	if(verbose)
+	if(verbose && !this->isQuiet())
 		publishLog('I', "Async running Task '%s' from '%s'", this->getNameC(), this->getWhereC() );
 
 	if(lua_pcall( L, 0, 0, 0))

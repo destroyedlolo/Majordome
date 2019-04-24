@@ -36,6 +36,9 @@ Event::Event( const std::string &fch, std::string &where, std::string &name ){
 				this->name = name = arg;
 				if(verbose)
 					publishLog('C', "\t\tChanging name to '%s'", name.c_str());
+			} else if( l == "quiet" ){
+				if(verbose)
+					publishLog('C', "\t\tBe quiet");
 			} else if( l == "disabled" ){
 				if(verbose)
 					publishLog('C', "\t\tDisabled");
@@ -60,13 +63,15 @@ else publishLog('D', "Ignore '%s'", l.c_str());
 
 void Event::execTasks( Config &cfg, const char *trig_name, const char *topic, const char *payload, bool tracker, const char *trkstatus ){
 #ifdef DEBUG
-	if(debug)
+	if(debug && !this->isQuiet())
 		publishLog('D', "execTasks() : %d to run", this->list.size() );
 #endif
 
 	for( Entries::iterator tsk = this->begin(); tsk != this->end(); tsk++){
 		try {
 			LuaTask &task = cfg.findTask( *tsk );
+			if( this->isQuiet() )
+				task.beQuiet();
 			task.exec( trig_name, topic, payload, tracker, trkstatus );
 		} catch (...) {
 			publishLog('F', "Internal error : can't find task \"%s\"", (*tsk).c_str() );
@@ -77,13 +82,15 @@ void Event::execTasks( Config &cfg, const char *trig_name, const char *topic, co
 
 void Event::execTasks( Config &cfg, const char *timer_name ){
 #ifdef DEBUG
-	if(debug)
+	if(debug && !this->isQuiet())
 		publishLog('D', "execTasks() : %d to run", this->list.size() );
 #endif
 
 	for( Entries::iterator tsk = this->begin(); tsk != this->end(); tsk++){
 		try {
 			LuaTask &task = cfg.findTask( *tsk );
+			if( this->isQuiet() )
+				task.beQuiet();
 			task.exec( timer_name );
 		} catch (...) {
 			publishLog('F', "Internal error : can't find task \"%s\"", (*tsk).c_str() );
