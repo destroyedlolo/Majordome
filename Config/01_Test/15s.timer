@@ -21,5 +21,9 @@ immediate
 # Launch tasks if Majordome is starting after at= time (for the same day)
 #runifover
 
+# remove some trace
+# This option is useful to avoid logging of very noisy topics
+quiet
+
 # disable this timer
 #disabled
