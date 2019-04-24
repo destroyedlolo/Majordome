@@ -36,6 +36,9 @@ Event::Event( const std::string &fch, std::string &where, std::string &name ){
 				this->name = name = arg;
 				if(verbose)
 					publishLog('C', "\t\tChanging name to '%s'", name.c_str());
+			} else if( l == "quiet" ){
+				if(verbose)
+					publishLog('C', "\t\tBe quiet");
 			} else if( l == "disabled" ){
 				if(verbose)
 					publishLog('C', "\t\tDisabled");
