@@ -60,7 +60,7 @@ else publishLog('D', "Ignore '%s'", l.c_str());
 
 void Event::execTasks( Config &cfg, const char *trig_name, const char *topic, const char *payload, bool tracker, const char *trkstatus ){
 #ifdef DEBUG
-	if(debug)
+	if(debug && !this->isQuiet())
 		publishLog('D', "execTasks() : %d to run", this->list.size() );
 #endif
 
@@ -77,7 +77,7 @@ void Event::execTasks( Config &cfg, const char *trig_name, const char *topic, co
 
 void Event::execTasks( Config &cfg, const char *timer_name ){
 #ifdef DEBUG
-	if(debug)
+	if(debug && !this->isQuiet())
 		publishLog('D', "execTasks() : %d to run", this->list.size() );
 #endif
 
