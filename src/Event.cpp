@@ -70,6 +70,8 @@ void Event::execTasks( Config &cfg, const char *trig_name, const char *topic, co
 	for( Entries::iterator tsk = this->begin(); tsk != this->end(); tsk++){
 		try {
 			LuaTask &task = cfg.findTask( *tsk );
+			if( this->isQuiet() )
+				task.beQuiet();
 			task.exec( trig_name, topic, payload, tracker, trkstatus );
 		} catch (...) {
 			publishLog('F', "Internal error : can't find task \"%s\"", (*tsk).c_str() );
@@ -87,6 +89,8 @@ void Event::execTasks( Config &cfg, const char *timer_name ){
 	for( Entries::iterator tsk = this->begin(); tsk != this->end(); tsk++){
 		try {
 			LuaTask &task = cfg.findTask( *tsk );
+			if( this->isQuiet() )
+				task.beQuiet();
 			task.exec( timer_name );
 		} catch (...) {
 			publishLog('F', "Internal error : can't find task \"%s\"", (*tsk).c_str() );
