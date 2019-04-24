@@ -26,5 +26,5 @@ Comme la chambre d'amis n'a pas encore de sonde, la surveillance se fait sur cel
 - **OuvertureVoletChAmis** - Timer d'ouverture des volets
 - **FermetureVoletChAmis** - Timer de fermeture. Actif uniquement en mode *hiver*
 ## variables partagées
-- **PrevModeChAmis** - Contient la valeur précédente du mode de la chambre d'amis. Pour éviter d'envoyer plusieurs fois l'ordre de fermeture du volet si on reste en mode *Absent*
+- **ChAmisAbsent** - Contient la valeur précédente du mode de la chambre d'amis. Pour éviter d'envoyer plusieurs fois l'ordre de fermeture du volet si on reste en mode *Absent*
 
