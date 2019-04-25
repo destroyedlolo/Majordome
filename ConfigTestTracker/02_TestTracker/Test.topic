@@ -1,0 +1,29 @@
+# test topic
+
+# name of the topic
+# if not set, takes the filename
+# name=toto
+
+# set the topic (mandatory)
+topic=Test
+
+# QOS for this topic between 0 and 2
+# if outside this range, forced to 0 (which is the default value)
+qos=0
+
+# Store this topic's content in a SelShared variable with the name of this topic
+store
+
+# Store it as a numeric value
+#numeric
+
+# time to live of this variable (in Seconds)
+ttl=2
+
+# set the default value for this topic.
+# must be defined after 'name', 'numeric' and 'ttl'
+# useful only with 'store'd topics
+# default=3.14
+
+# disable this topic
+#disabled
