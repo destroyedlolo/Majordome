@@ -94,6 +94,10 @@ MQTTTopic::MQTTTopic( const std::string &fch, std::string &where, std::string &n
 							publishLog('C', "\t\tdefault = \"%s\"", arg.c_str());
 					}
 				}
+			} else if( l == "quiet" ){
+				if(verbose)
+					publishLog('C', "\t\tBe quiet");
+				this->beQuiet();
 			} else if( l == "disabled" ){
 				if(verbose)
 					publishLog('C', "\t\tDisabled");
@@ -170,7 +174,7 @@ bool MQTTTopic::disable( void ){
 
 void MQTTTopic::execTrackers( Config &cfg, const char *trig_name, const char *topic, const char *payload ){
 #ifdef DEBUG
-	if(debug)
+	if(debug && !this->isQuiet())
 		publishLog('D', "execTrackers() : %d to run", this->trackers.size() );
 #endif
 
@@ -187,7 +191,7 @@ void MQTTTopic::execTrackers( Config &cfg, const char *trig_name, const char *to
 
 void MQTTTopic::execTrackers( Config &cfg, const char *timer_name ){
 #ifdef DEBUG
-	if(debug)
+	if(debug && !this->isQuiet())
 		publishLog('D', "execTrackers() : %d to run", this->trackers.size() );
 #endif
 

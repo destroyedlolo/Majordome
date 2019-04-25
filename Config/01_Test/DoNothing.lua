@@ -29,6 +29,10 @@
 -- If set, only one instance is allowed to run
 --->> once
 --
+-- remove some trace
+-- This option is useful to avoid logging of very noisy topics
+--->> quiet
+--
 -- Disable this script
 --->> disabled
 

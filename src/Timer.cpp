@@ -55,6 +55,10 @@ Timer::Timer( const std::string &fch, std::string &where, std::string &name ) : 
 				this->runifover = true;
 				if(verbose)
 					publishLog('C', "\t\tRun if over");
+			} else if( l == "quiet" ){
+				if(verbose)
+					publishLog('C', "\t\tBe quiet");
+				this->beQuiet();
 			} else if( l == "disabled" ){
 				if(verbose)
 					publishLog('C', "\t\tDisabled");

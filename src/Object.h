@@ -10,17 +10,23 @@
 
 class Object {
 	bool disabled;
+	bool quiet;
 
 protected:
 	std::string name;
 	std::string where;
 
 public:
-	Object() : disabled(false){};
+	Object() : disabled(false), quiet(false){};
 
 	void enable( void ){ this->disabled = false; };
 	void disable( void ){ this->disabled = true; };
 	bool isEnabled( void ){ return !this->disabled; };
+
+		// Remove some messages
+	void beQuiet( void ){ this->quiet = true; };
+	void beNoisy( void ){ this->quiet = false; };
+	bool isQuiet( void ){ return this->quiet; };
 
 	std::string &getName( void ){ return this->name; };
 	const char *getNameC( void ){ return this->name.c_str(); };
