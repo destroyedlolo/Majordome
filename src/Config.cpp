@@ -94,17 +94,29 @@ void Config::SanityChecks( void ){
 }
 
 void Config::SubscribeTopics( void ){
+	size_t nbre = TopicsList.size();
+	const char **topics = new const char * [nbre];
+	int *qoss = new int [nbre];
+
+	nbre = 0;
 	for(TopicElements::iterator i = TopicsList.begin(); i != TopicsList.end(); i++){
 		if( i->second.isEnabled() ){
-			int err;
-			if( (err = MQTTClient_subscribe(
-				MQTT_client, 
-				i->second.getTopic(),
-				i->second.getQOS()
-			)) != MQTTCLIENT_SUCCESS){
-				publishLog('E', "Can't subscribe to '%s' : error %d", i->second.getTopic(), err);
-				exit(EXIT_FAILURE);
-			}
+			topics[nbre] = i->second.getTopic();
+			qoss[nbre++] = i->second.getQOS();
+		}
+	}
+#ifdef DEBUG
+	publishLog('C', "Subscribing to %ld active topics\n", nbre);
+#endif
+
+	if( nbre ){
+		int err;
+		if( (err = MQTTClient_subscribeMany(
+			MQTT_client,
+			nbre, (char* const*)topics, qoss
+		)) != MQTTCLIENT_SUCCESS){
+			publishLog('E', "Can't subscribe to topics : error %d", err);
+			exit(EXIT_FAILURE);
 		}
 	}
 }
