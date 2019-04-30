@@ -11,6 +11,9 @@ local res = SelShared.Get("ModeForceChAmis") or "Auto"
 
 if res == "Auto" then
 	res = SelShared.Get("Mode")
+	if res == "Vacances" then	-- repasse en "Travail" car il n'y a personne dans la chambre d'amis
+		res = "Travail"
+	end
 end
 
 ModeChAmis:Publish(res)
