@@ -9,3 +9,5 @@ ttl=60
 # pour rien.
 # Sera activé au couché du soleil
 disabled
+
+quiet
