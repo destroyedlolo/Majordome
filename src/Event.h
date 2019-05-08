@@ -13,6 +13,7 @@
 class Config;
 
 class Event : virtual public Object, public StringVector {
+	// The StringVector contains the lists of LuaTasks to launch
 
 protected:
 	/* Default empty constructor to be only used by derived classes 
@@ -43,6 +44,17 @@ public:
 	 * -> name of the object that triggers the task
 	 */
 	void execTasks( Config &, const char *name );
+
+private:
+	StringVector trackersToEnable;	// Trackers to be enable by this event
+	StringVector trackersToDisable;	// Trackers to be disabled by this event
+
+public:
+	void addTrackerEN( std::string t ){ this->trackersToEnable.Add(t); }
+	void addTrackerDIS( std::string t ){ this->trackersToDisable.Add(t); }
+
+	void enableTrackers( void );
+	void disableTrackers( void );
 
 	/* Create Lua's object */
 	static int initLuaObject( lua_State *L );

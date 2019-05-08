@@ -42,4 +42,18 @@ elseif MAJORDOME_PAYLOAD == "WAITING" or MAJORDOME_PAYLOAD == "STOP" or
 		MAJORDOME_PAYLOAD == "CHECKING" or MAJORDOME_PAYLOAD == "START" or
 		MAJORDOME_PAYLOAD == "DONE" then
 	tracker:setStatus( MAJORDOME_PAYLOAD )
+elseif MAJORDOME_PAYLOAD == "ENABLE" then
+	local rdv = MajordomeRendezVous.find("enabletracker")
+	if not rdv then
+		SelLog.log('E',"Can't find 'enabletracker' rendez-vous")
+		return
+	end
+	rdv:Launch()
+elseif MAJORDOME_PAYLOAD == "DISABLE" then
+	local rdv = MajordomeRendezVous.find("disabletracker")
+	if not rdv then
+		SelLog.log('E',"Can't find 'disabletracker' rendez-vous")
+		return
+	end
+	rdv:Launch()
 end
