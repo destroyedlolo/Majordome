@@ -75,7 +75,7 @@ Tracker::Tracker( Config &cfg, const std::string &fch, std::string &where, std::
 	 				timer->second.addStartTracker( this->getName() );
 					nameused = true;
 				} else {
-					publishLog('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
+					publishLog('F', "\t\tTimer '%s' is not (yet ?) defined", arg.c_str());
 					exit(EXIT_FAILURE);
 				}
 			} else if( !!(arg = striKWcmp( l, "-->> stop=" ))){
@@ -86,7 +86,29 @@ Tracker::Tracker( Config &cfg, const std::string &fch, std::string &where, std::
 	 				timer->second.addStopTracker( this->getName() );
 					nameused = true;
 				} else {
-					publishLog('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
+					publishLog('F', "\t\tTimer '%s' is not (yet ?) defined", arg.c_str());
+					exit(EXIT_FAILURE);
+				}
+			} else if( !!(arg = striKWcmp( l, "-->> enableRDV=" ))){
+				Config::EventElements::iterator event;
+				if( (event = cfg.EventsList.find(arg)) != cfg.EventsList.end()){
+					if(verbose)
+						publishLog('C', "\t\tEnabling rendez-vous '%s'", arg.c_str());
+	 				event->second.addTrackerEN( this->getName() );
+					nameused = true;
+				} else {
+					publishLog('F', "\t\tRendez-vous '%s' is not (yet ?) defined", arg.c_str());
+					exit(EXIT_FAILURE);
+				}
+			} else if( !!(arg = striKWcmp( l, "-->> disableRDV=" ))){
+				Config::EventElements::iterator event;
+				if( (event = cfg.EventsList.find(arg)) != cfg.EventsList.end()){
+					if(verbose)
+						publishLog('C', "\t\tDisabling rendez-vous '%s'", arg.c_str());
+	 				event->second.addTrackerDIS( this->getName() );
+					nameused = true;
+				} else {
+					publishLog('F', "\t\tRendez-vous '%s' is not (yet ?) defined", arg.c_str());
 					exit(EXIT_FAILURE);
 				}
 			} else if( l == "-->> activated" ){

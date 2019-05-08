@@ -99,6 +99,44 @@ void Event::execTasks( Config &cfg, const char *timer_name ){
 	}
 }
 
+void Event::enableTrackers( void ){
+#ifdef DEBUG
+	if(debug && !this->isQuiet())
+		publishLog('D', "enableTrackers() : %d to enable", this->trackersToEnable.size() );
+#endif
+
+	for( Tracker::iterator trk = this->trackersToEnable.begin(); trk != this->trackersToEnable.end(); trk++){
+		try {
+			Tracker &tracker = config.findTracker( *trk );
+			if( this->isQuiet() )
+				tracker.beQuiet();
+			tracker.enable();
+		} catch (...) {
+			publishLog('F', "Internal error : can't find tracker \"%s\"", (*trk).c_str() );
+			exit(EXIT_FAILURE);
+		}		
+	}
+}
+
+void Event::disableTrackers( void ){
+#ifdef DEBUG
+	if(debug && !this->isQuiet())
+		publishLog('D', "disableTrackers() : %d to disable", this->trackersToDisable.size() );
+#endif
+
+	for( Tracker::iterator trk = this->trackersToDisable.begin(); trk != this->trackersToDisable.end(); trk++){
+		try {
+			Tracker &tracker = config.findTracker( *trk );
+			if( this->isQuiet() )
+				tracker.beQuiet();
+			tracker.disable();
+		} catch (...) {
+			publishLog('F', "Internal error : can't find tracker \"%s\"", (*trk).c_str() );
+			exit(EXIT_FAILURE);
+		}		
+	}
+}
+
 	/*****
 	 * Lua exposed functions
 	 *****/
@@ -141,12 +179,15 @@ static const struct luaL_Reg MajEventLib [] = {
 static int mevt_Launch( lua_State *L ){
 	class Event *event = checkMajordomeEvent(L);
 
-	if( event->isEnabled() )
+	if( event->isEnabled() ){
 		event->execTasks(config, event->getNameC(), NULL, "fake");
+		event->enableTrackers();
+		event->disableTrackers();
 #ifdef DEBUG
-	else if( debug )
+	} else if( debug ){
 		publishLog('D', "Event %s is disabled : no tasks launched", event->getNameC() );
-#endif	
+#endif
+	}
 	return 0;
 }
 
