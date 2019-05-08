@@ -85,11 +85,11 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 				Config::EventElements::iterator event;
 				if( (event = cfg.EventsList.find(arg)) != cfg.EventsList.end()){
 					if(verbose)
-						publishLog('C', "\t\tAdded to event '%s'", arg.c_str());
+						publishLog('C', "\t\tAdded to rendezvous '%s'", arg.c_str());
 	 				event->second.addTask( this->getName() );
 					nameused = true;
 				} else {
-					publishLog('F', "\t\tEvent '%s' is not (yet ?) defined", arg.c_str());
+					publishLog('F', "\t\tRendezvous '%s' is not (yet ?) defined", arg.c_str());
 					exit(EXIT_FAILURE);
 				}
 			} else if( !!(arg = striKWcmp( l, "-->> whenDone=" ))){

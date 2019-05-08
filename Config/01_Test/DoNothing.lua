@@ -26,6 +26,9 @@
 -- Launched when a tracker is stopped
 --->> whenStopped=tracker
 --
+-- Wait for a rendez-vous (a.k.a event)
+-->> waitfor=exemple
+--
 -- If set, only one instance is allowed to run
 --->> once
 --

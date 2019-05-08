@@ -3,5 +3,5 @@
  * 16/03/2019 - Split from Majordome.cpp
  */
 
-#define VERSION 3.0400
+#define VERSION 3.0500
 

@@ -10,8 +10,10 @@
 #include "Event.h"
 
 class MQTTTopic : public Event {
+	// LuaTasks to launch are stored in the Event
+
 public :
-	StringVector trackers;
+	StringVector trackers;	// Trackers to launch at message arrival
 
 protected:
 	MayBeEmptyString topic;	// Topic to look for
