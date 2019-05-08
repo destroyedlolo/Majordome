@@ -30,7 +30,20 @@ if SelShared.Get("Saison") == 'Hiver' then	-- L'hiver il n'y a pas de surveillan
 	if FinSurveillance:isEnabled() then
 		FinSurveillance:Disable()
 	end
+
+	local rdv = MajordomeRendezVous.find("desactiveSurveillance", true)
+	rdv:Launch()
 else	-- Autre saison : on surveille
+	if not DebutSurveillance:isEnabled() then
+		DebutSurveillance:Enable()
+	end
+	if not FinSurveillance:isEnabled() then
+		FinSurveillance:Enable()
+	end
+
+	local rdv = MajordomeRendezVous.find("activeSurveillance", true)
+	rdv:Launch()
+
 	hc = hc - 2;	-- On arrête la surveillance 2 heure avant le coucher du soleil
 	if hc > 16 then	-- on force la fin de surveillance à 17:00 si le soleil se couche tard
 		hc = 17
