@@ -46,7 +46,6 @@ end
 --
 -- On tient compte du mode
 --
-
 if SelShared.Get("ModeChAmis") == 'Absent' or SelShared.Get("ModeChAmis") == 'Manuel' then -- Ces 2 modes désactive les automatismes du volet
 	OuvertureVoletChAmis:Disable()
 	FermetureVoletChAmis:Disable()
