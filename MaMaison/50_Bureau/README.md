@@ -18,4 +18,6 @@ La surveillance standard est de mise.
 ## Surveillance de la température
 
 Uniquement en dehors de l'hiver.
-Sinon, les volets se ferment lorsque la température atteint 21.5°
+Sinon, les volets se ferment *my* lorsque la température atteint 21.5° (fait par le script **MyVoletBureau**).
+A la fin de la surveillance, le volet est ré-ouvert uniquement s'il avait été fermé (**FinSurveillanceBureau**)
+

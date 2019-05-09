@@ -1,4 +1,4 @@
--- Ouverture du volet du bureau
+-- Fermeture du volet du bureau
 -->> when=FermetureVoletBureau
 -->> when=CoucherSoleil
 
