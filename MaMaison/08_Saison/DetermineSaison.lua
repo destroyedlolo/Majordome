@@ -23,6 +23,4 @@ else
 	else
 		SeleMQTT.Publish( Saison:getTopic(), 'Intersaison' );
 	end
-
-	SelLog.log('M', "Ok")
 end
