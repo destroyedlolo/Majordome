@@ -5,7 +5,7 @@
 
 Si mode "**Absent**" les volets restent fermés.
 
-Si le mode est forcé à "**Vacances**" alors les volets restent fermés et la surveillance de température commence a 12h.
+Si le mode est forcé à "**Vacances**" alors les volets restent fermés et la surveillance de température commence a 12h30.
 S'il n'est pas forcé, le mode restera à "**Travail**" même si le mode générale est "**Vacances**". Le but est de ne pas laisser la chambre fermée lorsqu'il n'y a pas d'invité.
 Fermeture avec le soleil.
 
@@ -28,6 +28,6 @@ Surveillance en dehors de l'*Hiver*, il faut que le mode soit *Travail* (début 
 ### timers
 - **OuvertureVoletChAmis** - Timer d'ouverture des volets
 - **FermetureVoletChAmis** - Timer de fermeture. Actif uniquement en mode *hiver*
-## variables partagées
+### variables partagées
 - **ChAmisAbsent** - Contient la valeur précédente du mode de la chambre d'amis. Pour éviter d'envoyer plusieurs fois l'ordre de fermeture du volet si on reste en mode *Absent*
 
