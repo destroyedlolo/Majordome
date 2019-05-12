@@ -1,12 +1,4 @@
-# Example of an "Rendez-vous"
-
-# name of the event
-# if not set, takes the filename
+# Active la surveillance (si la saison est autre qu'hiver)
 #name=toto
-
-# remove some trace
-# This option is useful to avoid logging of very noisy topics
 #quiet
-
-# disable this rendezvous
 #disabled
