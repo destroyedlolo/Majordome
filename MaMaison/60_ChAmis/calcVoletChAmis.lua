@@ -70,6 +70,7 @@ elseif SelShared.Get("ModeChAmis") == 'Vacances' then -- La chambre est occupée
 	OuvertureVoletChAmis:Disable()
 	FermetureVoletChAmis:Enable()
 
+	SelLog.log('I', "Le volet de la chambre d'amis est soumis aux automatismes")
 	SelLog.log('I', "Le volet de la chambre d'amis ne s'ouvrira pas")
 	SelLog.log('I', "Le volet de la chambre d'amis se fermera à ".. hc ..":".. mc)
 
@@ -79,6 +80,7 @@ else -- autre modes
 	OuvertureVoletChAmis:Enable()
 	FermetureVoletChAmis:Enable()
 
+	SelLog.log('I', "Le volet de la chambre d'amis est soumis aux automatismes")
 	SelLog.log('I', "Le volet de la chambre d'amis s'ouvrira à ".. hl ..":".. ml)
 	SelLog.log('I', "Le volet de la chambre d'amis se fermera à ".. hc ..":".. mc)	
 end
