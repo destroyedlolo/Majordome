@@ -106,7 +106,8 @@ void Config::SubscribeTopics( void ){
 		}
 	}
 #ifdef DEBUG
-	publishLog('C', "Subscribing to %ld actives topics", nbre);
+	if(verbose)
+		publishLog('C', "Subscribing to %ld actives topics", nbre);
 #endif
 
 	if( nbre ){
