@@ -3,7 +3,7 @@
 
 ## Ouverture / fermeture programmées
 
-L'**été**, uniquement une fermeture my au couché du soleil. Pas de lever le matin (les fenêtres ont peut-être laissée ouvertes pour rafraîchir).
+L'**été**, uniquement une fermeture "**My**" au couché du soleil. Pas de lever le matin (les fenêtres ont peut-être laissée ouvertes pour rafraîchir).
 
 Les autres saisons, *Ouverture* et *fermeture* avec les consignes solaires.
 

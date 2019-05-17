@@ -8,7 +8,7 @@ if mode == "Manuel" then
 	SelLog.log('I', "Mode \"Manuel\" : 'Ouverture' du volet du salon ignoré")
 else
 	if saison == "Ete" then
-		SelLog.log('A', "C'est l'été : on laisse les volets du salon comme ils sont")
+		SelLog.log('I', "C'est l'été : on laisse les volets du salon comme ils sont")
 	else
 		SelLog.log('A', "'Ouverture' du volet du salon")
 
