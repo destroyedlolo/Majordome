@@ -10,6 +10,6 @@ Les autres saisons, *Ouverture* et *fermeture* avec les consignes solaires.
 ## Surveillance de la température
 
 Uniquement en dehors de l'hiver.
-Sinon, les volets se ferment *my* lorsque la température atteint 21.5° (fait par le script **-------------**).
-A la fin de la surveillance, le volet est ré-ouvert uniquement s'il avait été fermé (**---------------------**)
+Sinon, les volets se ferment *my* lorsque la température atteint 21.5° (fait par le script **MyVoletSalon**).
+A la fin de la surveillance, le volet est ré-ouvert uniquement s'il avait été fermé (**FinDeJourneeSalon**)
 
