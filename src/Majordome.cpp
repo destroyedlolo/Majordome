@@ -352,8 +352,8 @@ int main(int ac, char **av){
 		publishLog('I', "Let's go ...");
 
 	config.LaunchTimers();	// Launch slave timers
-	config.RunImmediates();	// Run immediate & over timers tasks
 	config.SubscribeTopics();	// MQTT : activate topics receiving
+	config.RunImmediates();	// Run immediate & overdue timers tasks
 
 	pause();	// Waiting for events, nothing else to do
 }
