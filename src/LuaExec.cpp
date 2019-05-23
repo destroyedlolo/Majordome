@@ -48,6 +48,10 @@ bool LuaExec::LoadFunc( lua_State *L, std::stringstream &buffer, const char *nam
 	 ****/
 
 void LuaExec::feedState( lua_State *L, const char *name, const char *topic, const char *payload, bool tracker, const char *trkstatus ){
+
+	if( !name )	// No argument provide (launched at startup)
+		return;
+
 	if( topic ){	// If launched by a message receiving
 		lua_pushstring( L, topic );	// Push the topic
 		lua_setglobal( L, "MAJORDOME_TOPIC" );
