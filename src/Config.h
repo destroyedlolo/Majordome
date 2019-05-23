@@ -54,6 +54,9 @@ public:
 	/* Triggers immediate & over timers */
 	void RunImmediates( void );
 
+	/* Run startup functions */
+	void RunStartups( void );
+
 	/* Find a task/tracker by its name 
 	 *	throw an exception if not found
 	 */

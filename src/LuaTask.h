@@ -20,6 +20,8 @@ class LuaTask : public LuaExec {
 	pthread_mutex_t running_access;	// we want an access to "running"
 	bool running;	// Is the task running
 
+	bool runatstartup;	// Launch at startup
+
 public:
 	/* Constructor from a file
 	 * -> file : file to load
@@ -32,6 +34,9 @@ public:
 	void setOnce( bool v ){ this->once = v; }
 	bool getOnce( void ){ return this->once; }
 	
+	void setRunAtStartup( bool v ){ this->runatstartup = v; }
+	bool getRunAtStartup( void ){ return this->runatstartup; }
+
 	/* Launch this tasks if possible
 	 * Same arguments as LuaExec::exec()
 	 */

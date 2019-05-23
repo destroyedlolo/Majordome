@@ -14,7 +14,7 @@ extern "C" {
 #include "LuaTask.h"
 #include "Tracker.h"
 
-LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::string &name, lua_State *L ) : once( false ), running_access(PTHREAD_MUTEX_INITIALIZER), running(false){
+LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::string &name, lua_State *L ) : once(false), running_access(PTHREAD_MUTEX_INITIALIZER), running(false), runatstartup(false){
 	if(verbose)
 		publishLog('L', "\t'%s'", fch.c_str());
 
@@ -129,6 +129,10 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 				if(verbose)
 					publishLog('C', "\t\tOnly one instance is allowed to run (once)");
 				this->setOnce( true );
+			} else if( l == "-->> RunAtStartup" ){
+				if(verbose)
+					publishLog('C', "\t\tRun at startup");
+				this->setRunAtStartup( true );
 			} else if( l == "-->> quiet" ){
 				if(verbose)
 					publishLog('C', "\t\tBe quiet");
