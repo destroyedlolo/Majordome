@@ -319,8 +319,13 @@ static int mtmr_setAt( lua_State *L ){
 
 static int mtmr_setAtHM( lua_State *L ){
 	class Timer *timer = checkMajordomeTimer(L);
-	unsigned short h = luaL_checkinteger(L, 2);
-	unsigned short m = luaL_checkinteger(L, 3);
+	short h = luaL_checkinteger(L, 2);
+	short m = luaL_checkinteger(L, 3);
+
+	while( m<0 ){	// If it's in previous hour
+		h--;
+		m += 60;
+	}
 
 	internal_setAt( timer, h, m );
 	return 0;
