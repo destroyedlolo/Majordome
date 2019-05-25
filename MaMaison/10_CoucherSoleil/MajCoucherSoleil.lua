@@ -26,3 +26,5 @@ end
 local trace = MajordomeMQTTTopic.find("TraceSuiviCoucherSoleil", true)
 trace:Publish("D;" .. h ..":".. m, true)
 
+local rdv = MajordomeRendezVous.find("CoucherSoleilChange", true)
+rdv:Launch()
