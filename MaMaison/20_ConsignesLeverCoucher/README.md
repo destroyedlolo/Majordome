@@ -13,3 +13,4 @@ ConsigneCoucher | Majordome/HCoucher | Heure de coucher
 
 Les configs par défaut sont publiées par **PublicationConsignesParDefaut.lua**
 
+Note : La fermeture des volets se fera au plus tot de la consigne ou du coucher du soleil
