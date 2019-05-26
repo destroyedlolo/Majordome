@@ -6,7 +6,7 @@
 --
 
 local CmdVolet = MajordomeMQTTTopic.find("CmdVoletChOceane", true)
-local mode = SelShared.Get("Mode") or "Manuel"
+local mode = SelShared.Get("ModeChOceane") or "Manuel"
 
 --
 -- C'est parti
