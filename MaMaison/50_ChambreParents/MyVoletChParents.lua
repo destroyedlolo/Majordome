@@ -1,5 +1,7 @@
 -- Fermeture "My" du volet de la chambre des parents
--->> when=ConsigneCoucherMy
+-->> when=OuvertureVoletChParentsMy
+-- (pas nécessaire pour la chambre des parents)
+--->> when=ConsigneCoucherMy
 
 --
 -- Récupération des objets cibles
@@ -23,5 +25,5 @@ else	-- Vérifie en fonction de ce qui a lancer l'exécution
 	end
 
 	SelLog.log('A', "'My' du volet de la chambre des parents")
-	CmdVolet:Publish("Down")
+	CmdVolet:Publish("My")
 end
