@@ -2,7 +2,7 @@
 --
 -- Ces 2 timers peuvent déclencher la surveillance
 -->> when=DebutSurveillance
--->> when=DebutSurveillanceChAmisVacances
+-->> when=DebutSurveillanceVacances
 
 --
 -- Récupération des objets cibles
@@ -23,7 +23,7 @@ end
 
 
 if (MAJORDOME_TIMER == "DebutSurveillance" and mode ~= "Vacances") or
-   (MAJORDOME_TIMER == "DebutSurveillanceChAmisVacances" and mode == "Vacances")
+   (MAJORDOME_TIMER == "DebutSurveillanceVacances" and mode == "Vacances")
 then
 	SelLog.log('D', "Début de la surveillance de la chambre d'amis dû à ".. MAJORDOME_TIMER)
 	trackersurveillance:setStatus("START")
