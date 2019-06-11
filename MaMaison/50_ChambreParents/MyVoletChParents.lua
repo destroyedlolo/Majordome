@@ -1,7 +1,13 @@
 -- Fermeture "My" du volet de la chambre des parents
+--
+-- Ouverture du matin
 -->> when=OuvertureVoletChParentsMy
--- (pas nécessaire pour la chambre des parents)
+--
+-- Fermeture du soir (pas nécessaire pour la chambre des parents)
 --->> when=ConsigneCoucherMy
+--
+-- Suivit de la température
+-->> whenDone=SurveillanceChParents
 
 --
 -- Récupération des objets cibles

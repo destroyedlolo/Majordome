@@ -18,3 +18,10 @@ Notes :
 ## Consignes
 
 Les consignes par défaut sont publiée par **20_ConsignesLeverCoucher/PublicationConsignesParDefaut**
+
+## Surveillance de la température
+
+La surveillance débute avec les consignes "**DebutSurveillance**" ou "**DebutSurveillanceVacances**" en fonction du mode. Le mode n'a pas d'incidence.
+Elle se termine avec "**FinSurveillance**"
+
+En mode "*Absent*", les volets ne sont pas ouvert à la fin de la surveillance
