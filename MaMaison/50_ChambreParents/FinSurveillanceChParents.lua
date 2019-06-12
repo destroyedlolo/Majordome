@@ -13,7 +13,7 @@ local mode = SelShared.Get("ModeChParents") or "Manuel"
 --
 
 if mode == "Manuel" or mode == "Absent" then
-	SelLog.log('I', "Mode \"".. mode .."\" : Ouverture du volet de la chambre des parents ignoré")
+	SelLog.log('I', "Mode \"".. mode .."\" : Ouverture du volet de la chambre des parents ignorée")
 else
 	local tracker = MajordomeTracker.find("SurveillanceChParents")
 	if not tracker then

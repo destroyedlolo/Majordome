@@ -13,7 +13,7 @@ local mode = SelShared.Get("ModeChParents") or "Manuel"
 --
 
 if mode == "Manuel" then
-	SelLog.log('I', "Mode \"Manuel\" : Ouverture du volet de la chambre des parents ignoré")
+	SelLog.log('I', "Mode \"Manuel\" : Ouverture du volet de la chambre des parents ignorée")
 else	
 	SelLog.log('A', "Ouverture du volet de la chambre des parents")
 	CmdVolet:Publish("Up")

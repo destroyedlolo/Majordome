@@ -1,6 +1,6 @@
 -- Surveillance de la température de la chambre des parents
 --
--->> listen=TemperatureBureau
+-->> listen=TChParents
 --
 -- Le tracker se lance par la fonction LanceSurveillanceChParents
 --->> start=
