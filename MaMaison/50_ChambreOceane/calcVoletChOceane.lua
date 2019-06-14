@@ -1,7 +1,7 @@
 -- Calcul des automatismes du volet de la chambre d'Océane
 -- Paramètres qui vont lancer un recalcul
 -->> listen=ModeChOceane
--->> listen=ConsigneLever
+-->> listen=ConsigneLeverOceane
 
 -- Vérification que tous les paramètres sont déjà présents
 if not SelShared.Get("ModeChOceane")
