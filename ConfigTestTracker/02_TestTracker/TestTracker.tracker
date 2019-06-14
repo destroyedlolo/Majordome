@@ -20,6 +20,10 @@
 -- (more than one "listen" can be present)
 -->> listen=Test
 --
+--
+-- Indicate the MQTT topic to publish tracker status
+-->> statustopic=TestTracker/status
+--
 -- Timers
 -- ------
 -- At start timer's time, the tracker become active.
