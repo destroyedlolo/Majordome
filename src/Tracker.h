@@ -28,6 +28,7 @@ public:
 
 private:
 	enum _status status;
+	MayBeEmptyString statusTopic;
 
 public:
 	/* Constructor from a file
@@ -60,6 +61,14 @@ public:
 	void addStarted( std::string t ){ this->startingTasks.Add(t); }
 	void addStopped( std::string t ){ this->stoppingTasks.Add(t); }
 
+	void setStatusTopic( std::string t ){ this->statusTopic = t; }
+	bool asStatusTopic( void ){ return !!this->statusTopic; }
+	MayBeEmptyString &getStatusTopic( void ){ return this->statusTopic; }
+
+protected :
+	void publishstatus( void );
+
+public :
 		/* Create Lua's object */
 	static int initLuaObject( lua_State *L );
 };

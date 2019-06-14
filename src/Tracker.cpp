@@ -67,6 +67,10 @@ Tracker::Tracker( Config &cfg, const std::string &fch, std::string &where, std::
 					publishLog('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
 					exit(EXIT_FAILURE);
 				}
+			} else if( !!(arg = striKWcmp( l, "-->> statustopic=" ))){
+				setStatusTopic( arg );
+				if(verbose)
+					publishLog('C', "\t\tStatus timer : '%s'", arg.c_str());
 			} else if( !!(arg = striKWcmp( l, "-->> start=" ))){
 				Config::TimerElements::iterator timer;
 				if( (timer = cfg.TimersList.find(arg)) != cfg.TimersList.end()){
@@ -160,6 +164,12 @@ const char *Tracker::getStatusC( void ){
 	return "?? Invalid tracker status ??";
 }
 
+void Tracker::publishstatus( void ){
+	if( this->asStatusTopic() ){
+		mqttpublish( MQTT_client, this->getStatusTopic().c_str(), strlen(this->getStatusC()), (void *)this->getStatusC(), false);
+	}
+}
+
 void Tracker::feedState( lua_State *L, const char *name, const char *topic, const char *payload, bool tracker, const char *trkstatus ){
 
 	try {
@@ -205,6 +215,7 @@ void Tracker::start( void ){
 	}
 	publishLog('I', "Tracker '%s' is checking", this->getNameC() );
 	this->status = _status::CHECKING; 
+	this->publishstatus();
 }
 
 void Tracker::stop( void ){
@@ -223,6 +234,7 @@ void Tracker::stop( void ){
 	}
 	publishLog('I', "Tracker '%s' is waiting", this->getNameC() );
 	this->status = _status::WAITING;
+	this->publishstatus();
 }
 
 void Tracker::done( void ){
@@ -230,6 +242,7 @@ void Tracker::done( void ){
 		this->execTasks(config, this->getNameC(), NULL, NULL, true, this->getStatusC()); // by definition the previous status was CHECKING
 	publishLog('I', "Tracker '%s' is done", this->getNameC() );
 	this->status = _status::DONE;
+	this->publishstatus();
 }
 
 	/*****
