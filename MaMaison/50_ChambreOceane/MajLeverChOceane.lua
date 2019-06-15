@@ -1,11 +1,11 @@
--- Mise à jour de la consigne "ConsigneLever"
+-- Mise à jour de la consigne "ConsigneLever" de la chambre d'Océane
 --
--->> listen=ConsigneLever
+-->> listen=ConsigneLeverOceane
 
 local timer = MajordomeTimer.find("OuvertureVoletChOceane", true)
 local timerMy = MajordomeTimer.find("OuvertureVoletChOceaneMy", true)
 
-local h,m = string.match(string.gsub( SelShared.Get('ConsigneLever'), '%.', ':'), "(%d+):(%d+)")
+local h,m = string.match(string.gsub( SelShared.Get('ConsigneLeverOceane'), '%.', ':'), "(%d+):(%d+)")
 
 -- Maj des timers
 timer:setAtHM( h, m )

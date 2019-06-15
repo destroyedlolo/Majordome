@@ -5,7 +5,7 @@
 
 -- Vérification que tous les paramètres sont déjà présents
 if not SelShared.Get("ModeChOceane")
-or not SelShared.Get("ConsigneLever") then
+or not SelShared.Get("ConsigneLeverOceane") then
 	return
 end
 
@@ -17,7 +17,7 @@ end
 local OuvertureVoletChOceane = MajordomeTimer.find("OuvertureVoletChOceane", true)
 local OuvertureVoletChOceaneMy = MajordomeTimer.find("OuvertureVoletChOceaneMy", true)
 
-local hl,ml = string.match(string.gsub( SelShared.Get('ConsigneLever'), '%.', ':'), "(%d+):(%d+)")
+local hl,ml = string.match(string.gsub( SelShared.Get('ConsigneLeverOceane'), '%.', ':'), "(%d+):(%d+)")
 
 
 --
