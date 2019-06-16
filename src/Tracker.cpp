@@ -213,7 +213,8 @@ void Tracker::start( void ){
 			}
 		}
 	}
-	publishLog('I', "Tracker '%s' is checking", this->getNameC() );
+	if(verbose)
+		publishLog('I', "Tracker '%s' is checking", this->getNameC() );
 	this->status = _status::CHECKING; 
 	this->publishstatus();
 }
@@ -232,7 +233,8 @@ void Tracker::stop( void ){
 			}
 		}
 	}
-	publishLog('I', "Tracker '%s' is waiting", this->getNameC() );
+	if(verbose)
+		publishLog('I', "Tracker '%s' is waiting", this->getNameC() );
 	this->status = _status::WAITING;
 	this->publishstatus();
 }
@@ -240,7 +242,8 @@ void Tracker::stop( void ){
 void Tracker::done( void ){
 	if( this->isEnabled() && this->getStatus() == _status::CHECKING )
 		this->execTasks(config, this->getNameC(), NULL, NULL, true, this->getStatusC()); // by definition the previous status was CHECKING
-	publishLog('I', "Tracker '%s' is done", this->getNameC() );
+	if(verbose)
+		publishLog('I', "Tracker '%s' is done", this->getNameC() );
 	this->status = _status::DONE;
 	this->publishstatus();
 }
