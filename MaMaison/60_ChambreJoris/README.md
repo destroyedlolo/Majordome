@@ -3,9 +3,9 @@
 
 ## Ouverture
 
-Si le mode est "*Vacances*" alors les volets restent fermés et la surveillance de température commence a 12h30.
-En mode *Absent*, ils s'ouvrent avec la consigne mais il n'y a pas de *My* avant. Surveillance par défaut
-~~ Sinon (donc mode *Travail*) ouverture *My* 5 minutes avant la consigne, ouverture a l'heure de la consigne. ~~ (Joris n'en veut pas)
+  - Si le mode est "*Vacances*" alors les volets restent fermés et la surveillance de température commence a 12h30.
+  - En mode *Absent*, ils s'ouvrent avec la consigne mais il n'y a pas de *My* avant. Surveillance par défaut
+  - ~~Sinon (donc mode *Travail*) ouverture *My* 5 minutes avant la consigne, ouverture a l'heure de la consigne.~~ (Joris n'en veut pas)
 
 ## Fermeture
 
