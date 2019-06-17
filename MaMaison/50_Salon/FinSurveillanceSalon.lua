@@ -22,7 +22,7 @@ else
 		return
 	end
 
-	if tracker:getStatus() == "DONE" then
+	if MAJORDOME_TRACKER_STATUS == "DONE" then
 		SelLog.log('A', "Ouverture du volet du salon")
 		CmdVoletSalonBalcon:Publish("Up")
 		CmdVoletSalonCheminee:Publish("Up")
