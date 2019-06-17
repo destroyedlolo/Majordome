@@ -1,7 +1,7 @@
 -- Fermeture "My" du volet de la chambre de Joris
 --
 -- Ouverture du matin
--->> when=OuvertureVoletChJorisMy
+--->> when=OuvertureVoletChJorisMy
 --
 -- Fermeture du soir
 -->> when=ConsigneCoucherMy
