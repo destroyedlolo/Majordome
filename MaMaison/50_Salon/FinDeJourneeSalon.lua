@@ -9,7 +9,7 @@ if mode == "Manuel" then
 else
 	local action
 	if saison == "Ete" then
-		SelLog.log('A', "C'est l'été : les volets se ferment en \"My\"")
+		SelLog.log('A', "C'est l'été : les volets du salon se ferment en \"My\"")
 		action = "My"
 	else
 		SelLog.log('A', "'Fermeture' du volet du salon")
