@@ -45,10 +45,12 @@ else	-- Autre saison : on surveille
 	rdv:Launch()
 
 	hc = hc - 2;	-- On arrête la surveillance 2 heure avant le coucher du soleil
+--[[
 	if hc > 16 then	-- on force la fin de surveillance à 17:00 si le soleil se couche tard
 		hc = 17
 		mc = 0
 	end
+--]]
 	FinSurveillance:setAtHM( hc, mc )
 	hc,mc = FinSurveillance:getAtHM()
 	SelLog.log('I', "La surveillance de température se termine à ".. hc ..":".. mc)
