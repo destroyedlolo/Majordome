@@ -18,7 +18,7 @@ elseif ModePiscine:getVal() == 'Arret' then
 	SelLog.log('A', "Pompe piscine Arrêtée");
 	commande:Publish( "0" )
 	SeleMQTT.Publish( ModePiscine:getTopic() .. '/status', 'Arret', true )
-elseif ModePiscine:getVal() == 'Heure Creuse' then
+elseif ModePiscine:getVal() == 'Heures Creuses' then
 	if SelShared.Get("TarifElectricite") == 'HC..' then
 		SelLog.log('A', "Pompe piscine activée");
 		commande:Publish( "1" )
