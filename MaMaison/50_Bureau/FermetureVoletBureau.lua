@@ -19,9 +19,9 @@ if mode == "Manuel" then
 	SelLog.log('I', "Mode \"Manuel\" : 'Fermeture' du volet du bureau ignoré")
 else
 	if MAJORDOME_TIMER == "CoucherSoleil" and saison == "Hiver" then
-		SelLog.log('D', "'Fermeture' du volet du bureau ignoré (déja fermé car 'hiver')")
+		SelLog.log('D', "Fermeture du volet du bureau ignoré (déja fermé car 'hiver')")
 	else
-		SelLog.log('A', "'Fermeture' du volet du bureau")
+		SelLog.log('A', "Fermeture du volet du bureau")
 		CmdVoletBureau:Publish("Down")
 	end
 end

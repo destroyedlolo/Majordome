@@ -13,8 +13,8 @@ local mode = SelShared.Get("ModeChJoris") or "Manuel"
 --
 
 if mode == "Manuel" then
-	SelLog.log('I', "Mode \"Manuel\" : 'Fermeture' du volet de la chambre de Joris ignoré")
+	SelLog.log('I', "Mode \"Manuel\" : Fermeture du volet de la chambre de Joris ignoré")
 else
-	SelLog.log('A', "'Fermeture' du volet de la chambre de Joris")
+	SelLog.log('A', "Fermeture du volet de la chambre de Joris")
 	CmdVolet:Publish("Down")
 end

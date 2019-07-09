@@ -23,9 +23,9 @@ end
 -- C'est parti
 
 if mode == "Manuel" then
-	SelLog.log('I', "Mode \"Manuel\" : 'Ouverture' du volet de la cuisine ignoré")
+	SelLog.log('I', "Mode \"Manuel\" : Ouverture du volet de la cuisine ignoré")
 else
-	SelLog.log('A', "'Ouverture' du volet de la cuisine")
+	SelLog.log('A', "Ouverture du volet de la cuisine")
 
 	local CmdVoletCuisine = MajordomeMQTTTopic.find("CmdVoletCuisine", true)
 	CmdVoletCuisine:Publish("Up")

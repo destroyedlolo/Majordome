@@ -10,7 +10,7 @@ else
 	if saison == "Ete" then
 		SelLog.log('I', "C'est l'été : on laisse les volets du salon comme ils sont")
 	else
-		SelLog.log('A', "'Ouverture' du volet du salon")
+		SelLog.log('A', "Ouverture du volet du salon")
 
 		local CmdVoletSalonBalcon = MajordomeMQTTTopic.find("CmdVoletSalonBalcon", true)
 		local CmdVoletSalonCheminee = MajordomeMQTTTopic.find("CmdVoletSalonCheminee", true)

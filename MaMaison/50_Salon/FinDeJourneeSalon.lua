@@ -12,7 +12,7 @@ else
 		SelLog.log('A', "C'est l'été : les volets du salon se ferment en \"My\"")
 		action = "My"
 	else
-		SelLog.log('A', "'Fermeture' du volet du salon")
+		SelLog.log('A', "Fermeture du volet du salon")
 		action = "Down"
 	end
 
