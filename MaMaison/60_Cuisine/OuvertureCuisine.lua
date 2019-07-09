@@ -10,7 +10,7 @@ local saison = SelShared.Get("Saison") or "Hiver"
 -- Vérfication des conditions
 
 if MAJORDOME_TIMER == "FinSurveillance" and saison ~= "Ete" then
-	SelLog.log('I', "'Ouverture' du volet de la cuisine par FinSurveillance ignoré car ce n'est pas l'été")
+	SelLog.log('I', "Ouverture du volet de la cuisine par FinSurveillance ignoré car ce n'est pas l'été")
 	return
 elseif MAJORDOME_TRACKER == "SurveillanceSalon" then
 	if MAJORDOME_TRACKER_STATUS ~= "DONE" then
