@@ -2,11 +2,18 @@
 
 #this script is used to create a Makefile
 
-if [ -d ~/Projets/Selene.v4 ]; then
+if [ -d /usr/local/lib/Selene ]; then
+	echo "System installation"
+	SELLIBDIR=/usr/local/lib
+elif [ -d ~/Projets/Selene.v4 ]; then
+	echo "**DEV**DEV** V4"
 	SELLIBDIR=~/Projets/Selene.v4
 else
+	echo "**DEV**DEV**"
 	SELLIBDIR=~/Projets/Selene
 fi
+echo "----------------"
+echo
 
 SELLIBHDIR=$SELLIBDIR/src/SeleneLibrary
 

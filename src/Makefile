@@ -5,7 +5,7 @@ gotoall: all
 
 
 #The compiler (may be customized for compiler's options).
-cc=g++ -Wall -O2 -DDEBUG -lpthread -lpaho-mqtt3c  -llua -lm -I/home/laurent/Projets/Selene/src/SeleneLibrary -L/home/laurent/Projets/Selene -lSelene
+cc=g++ -Wall -O2 -DDEBUG -lpthread -lpaho-mqtt3c  -llua -lm -I/usr/local/lib/src/SeleneLibrary -L/usr/local/lib -lSelene
 opts=
 
 Config.o : Config.cpp Helpers.h MayBeEmptyString.h Config.h SortDir.h \
@@ -31,15 +31,15 @@ LuaTask.o : LuaTask.cpp Config.h SortDir.h MQTTTopic.h \
   LuaExec.h Timer.h Tracker.h Helpers.h Makefile 
 	$(cc) -c -o LuaTask.o LuaTask.cpp $(opts) 
 
-MQTTTopic.o : MQTTTopic.cpp Helpers.h MayBeEmptyString.h MQTTTopic.h \
-  Event.h Object.h StringVector.h LuaTask.h LuaExec.h Config.h \
-  SortDir.h Timer.h Tracker.h Makefile 
-	$(cc) -c -o MQTTTopic.o MQTTTopic.cpp $(opts) 
-
 Majordome.o : Majordome.cpp Helpers.h MayBeEmptyString.h Config.h \
   SortDir.h MQTTTopic.h Event.h Object.h StringVector.h LuaTask.h \
   LuaExec.h Timer.h Tracker.h Version.h Makefile 
 	$(cc) -c -o Majordome.o Majordome.cpp $(opts) 
+
+MQTTTopic.o : MQTTTopic.cpp Helpers.h MayBeEmptyString.h MQTTTopic.h \
+  Event.h Object.h StringVector.h LuaTask.h LuaExec.h Config.h \
+  SortDir.h Timer.h Tracker.h Makefile 
+	$(cc) -c -o MQTTTopic.o MQTTTopic.cpp $(opts) 
 
 Object.o : Object.cpp Object.h Makefile 
 	$(cc) -c -o Object.o Object.cpp $(opts) 
@@ -63,10 +63,10 @@ Tracker.o : Tracker.cpp Config.h SortDir.h MQTTTopic.h \
 	$(cc) -c -o Tracker.o Tracker.cpp $(opts) 
 
 ../Majordome : Tracker.o Timer.o SubConfigDir.o SortDir.o Object.o \
-  Majordome.o MQTTTopic.o LuaTask.o LuaExec.o Helpers.o Event.o \
+  MQTTTopic.o Majordome.o LuaTask.o LuaExec.o Helpers.o Event.o \
   Config.o Makefile 
 	 $(cc) -o ../Majordome Tracker.o Timer.o SubConfigDir.o \
-  SortDir.o Object.o Majordome.o MQTTTopic.o LuaTask.o LuaExec.o \
+  SortDir.o Object.o MQTTTopic.o Majordome.o LuaTask.o LuaExec.o \
   Helpers.o Event.o Config.o $(opts) 
 
 all: ../Majordome 
