@@ -1,0 +1,15 @@
+-- Surveillance de la température de la cuisine
+--
+-- Pour le moment, la cuisine n'a pas de sonde.
+-->> listen=TSalon
+--
+-->> start=DebutSurveillance
+-->> stop=FinSurveillance
+--
+-- Le tracker sera activé par majSaisonCuisine
+-->> disabled
+
+if tonumber(MAJORDOME_PAYLOAD) > 21.5 then
+	SelLog.log('I', "La consigne de la cuisine est atteinte")
+	MAJORDOME_Myself:setStatus("DONE")
+end

@@ -1,0 +1,8 @@
+# Timer pour le suivi du coucher du soleil.
+# Il sera activé lorsque l'heure de consigne ConsigneCoucherSoleil sera arrivée
+# Il sera remis-à-zéro lorsqu'un information de production soleil NON NULLE arrive
+# Si le timer se déclenchent, le soleil est couché.
+
+every=120
+disabled
+
