@@ -5,6 +5,7 @@
 # name=toto
 
 # set the topic (mandatory)
+# if present, %ClientID% will be replaced by Majordome's MQTT client ID
 topic=ESPRouter_Domo/NoStations
 
 # QOS for this topic between 0 and 2
