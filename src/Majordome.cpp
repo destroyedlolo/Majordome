@@ -133,7 +133,7 @@ MQTTClient MQTT_client;
  */
 static int msgarrived(void *actx, char *topic, int tlen, MQTTClient_message *msg){
 	if(verbose && !hideTopicArrival)
-		publishLog('I', "Receiving '%s'", topic);
+		publishLog('T', "Receiving '%s'", topic);
 
 		// Convert the payload to a string
 	char cpayload[msg->payloadlen + 1];

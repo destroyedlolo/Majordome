@@ -174,13 +174,13 @@ bool LuaTask::exec( const char *name, const char *topic, const char *payload, bo
 		/* Check if the task can be launched */
 	if( !this->isEnabled() ){
 		if(verbose)
-			publishLog('I', "Task '%s' from '%s' is disabled", this->getNameC(), this->getWhereC() );
+			publishLog('T', "Task '%s' from '%s' is disabled", this->getNameC(), this->getWhereC() );
 		return false;
 	}
 
 	if( !this->canRun() ){
 		if(verbose)
-			publishLog('I', "Task '%s' from '%s' is already running", this->getNameC(), this->getWhereC() );
+			publishLog('T', "Task '%s' from '%s' is already running", this->getNameC(), this->getWhereC() );
 		return false;
 	}
 
@@ -259,13 +259,13 @@ static int mtsk_launch(lua_State *L){
 
 	if( !task->isEnabled() ){
 		if(verbose)
-			publishLog('I', "Task '%s' from '%s' is disabled", task->getNameC(), task->getWhereC() );
+			publishLog('T', "Task '%s' from '%s' is disabled", task->getNameC(), task->getWhereC() );
 		return 0;
 	}
 
 	if( !task->canRun() ){
 		if(verbose)
-			publishLog('I', "Task '%s' from '%s' is already running", task->getNameC(), task->getWhereC() );
+			publishLog('T', "Task '%s' from '%s' is already running", task->getNameC(), task->getWhereC() );
 		return 0;
 	}
 
@@ -277,7 +277,7 @@ static int mtsk_launch(lua_State *L){
 	}
 
 	if(verbose)
-		publishLog('I', "running Task '%s' from '%s'", task->getNameC(), task->getWhereC() );
+		publishLog('T', "running Task '%s' from '%s'", task->getNameC(), task->getWhereC() );
 
 	if(lua_pcall( L, 0, 0, 0))
 		publishLog('E', "Unable to create task '%s' from '%s' : %s", task->getNameC(), task->getWhereC(), lua_tostring(L, -1));
