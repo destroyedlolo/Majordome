@@ -14,11 +14,6 @@
  *      but WITHOUT ANY WARRANTY; without even the implied warranty of
  *      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- *	05/07/2018 - LF - Start of development
- *	25/07/2018 - LF - Switch to C++ (when it's useful)
- *	02/10/2018 - LF - Start logging before subscribing in order to get early
- *		messages as well
- *	16/03/2019 - LF - Externalize Version
  */
 
 #include <iostream>
@@ -198,6 +193,9 @@ static int setGlobalVar( lua_State *L ){
 	lua_pushnumber( L, VERSION );	/* Expose version to lua side */
 	lua_setglobal( L, "MAJORDOME_VERSION" );
 
+	lua_pushstring( L, COPYRIGHT );	/* Expose copyright to lua side */
+	lua_setglobal( L, "MAJORDOME_COPYRIGHT" );
+
 	lua_pushstring( L, MQTT_ClientID );	/* Expose ClientID to lua side */
 	lua_setglobal( L, "MAJORDOME_ClientID" );
 
@@ -221,6 +219,7 @@ int main(int ac, char **av){
 	case 'h':
 		fprintf(stderr, "%s (%.04f)\n"
 			"A lightweight event based Automation System\n"
+			"%s\n"
 			"Known options are :\n"
 			"\t-h : this online help\n"
 			"\t-q : be quiet (remove all messages but script generated one)\n"
@@ -232,7 +231,7 @@ int main(int ac, char **av){
 			"\t-f<file> : read <file> for configuration\n"
 			"\t\t(default is '%s')\n"
 			"\t-t : test configuration file and exit\n",
-			basename(av[0]), VERSION, DEFAULT_CONFIGURATION_FILE
+			basename(av[0]), VERSION, COPYRIGHT, DEFAULT_CONFIGURATION_FILE
 		);
 		exit(EXIT_FAILURE);
 		break;

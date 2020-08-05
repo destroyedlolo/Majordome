@@ -3,6 +3,7 @@
 #include <cstring>
 #include <cstdlib>
 #include <cassert>
+#include <regex>
 
 extern "C" {
     #include "lualib.h"
@@ -44,7 +45,7 @@ MQTTTopic::MQTTTopic( const std::string &fch, std::string &where, std::string &n
 				if(verbose)
 					publishLog('C', "\t\tChanging name to '%s'", name.c_str());
 			} else if( !!(arg = striKWcmp( l, "topic=" )) ){
-				this->topic = arg;
+				this->topic = std::regex_replace(arg, std::regex("%ClientID%"), MQTT_ClientID);
 				if(verbose)
 					publishLog('C', "\t\ttopic : '%s'", this->topic.c_str());
 			} else if( !!(arg = striKWcmp( l, "qos=" ))){
