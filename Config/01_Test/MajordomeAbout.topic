@@ -6,7 +6,7 @@
 
 # set the topic (mandatory)
 # if present, %ClientID% will be replaced by Majordome's MQTT client ID
-topic=ESPRouter_Domo/NoStations
+topic=%ClientID%/About
 
 # QOS for this topic between 0 and 2
 # if outside this range, forced to 0 (which is the default value)
