@@ -17,7 +17,8 @@
  *	02/10/2018 - LF - Start logging before subscribing in order to get early
  *		messages as well
  *	16/03/2019 - LF - Externalize Version
+ *	04/08/2020 - v3.08 - LF - Add %ClientID% in topic parsing
  */
 
-#define VERSION 3.0800
-#define COPYRIGHT "Majordome (c) L.Faillie 2015-2020"
+#define VERSION 3.0801
+#define COPYRIGHT "Majordome (c) L.Faillie 2018-2020"

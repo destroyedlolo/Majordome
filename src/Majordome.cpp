@@ -193,6 +193,9 @@ static int setGlobalVar( lua_State *L ){
 	lua_pushnumber( L, VERSION );	/* Expose version to lua side */
 	lua_setglobal( L, "MAJORDOME_VERSION" );
 
+	lua_pushstring( L, COPYRIGHT );	/* Expose copyright to lua side */
+	lua_setglobal( L, "MAJORDOME_COPYRIGHT" );
+
 	lua_pushstring( L, MQTT_ClientID );	/* Expose ClientID to lua side */
 	lua_setglobal( L, "MAJORDOME_ClientID" );
 
