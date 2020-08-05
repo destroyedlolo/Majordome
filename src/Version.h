@@ -18,7 +18,8 @@
  *		messages as well
  *	16/03/2019 - LF - Externalize Version
  *	04/08/2020 - v3.08 - LF - Add %ClientID% in topic parsing
+ *	05/08/2020 - v3.09 - LF - Amost all 'I' migrated to 'T' to be less noisy
  */
 
-#define VERSION 3.0801
+#define VERSION 3.0900
 #define COPYRIGHT "Majordome (c) L.Faillie 2018-2020"
