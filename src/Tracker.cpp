@@ -192,7 +192,7 @@ void Tracker::feedState( lua_State *L, const char *name, const char *topic, cons
 bool Tracker::exec( const char *name, const char *topic, const char *payload ){
 	if( !this->isEnabled() || this->status != _status::CHECKING ){
 		if(verbose)
-			publishLog('I', "Tracker '%s' from '%s' is disabled or inactive", this->getNameC(), this->getWhereC() );
+			publishLog('T', "Tracker '%s' from '%s' is disabled or inactive", this->getNameC(), this->getWhereC() );
 		return false;
 	}
 
@@ -214,7 +214,7 @@ void Tracker::start( void ){
 		}
 	}
 	if(verbose)
-		publishLog('I', "Tracker '%s' is checking", this->getNameC() );
+		publishLog('T', "Tracker '%s' is checking", this->getNameC() );
 	this->status = _status::CHECKING; 
 	this->publishstatus();
 }
@@ -234,7 +234,7 @@ void Tracker::stop( void ){
 		}
 	}
 	if(verbose)
-		publishLog('I', "Tracker '%s' is waiting", this->getNameC() );
+		publishLog('T', "Tracker '%s' is waiting", this->getNameC() );
 	this->status = _status::WAITING;
 	this->publishstatus();
 }
@@ -243,7 +243,7 @@ void Tracker::done( void ){
 	if( this->isEnabled() && this->getStatus() == _status::CHECKING )
 		this->execTasks(config, this->getNameC(), NULL, NULL, true, this->getStatusC()); // by definition the previous status was CHECKING
 	if(verbose)
-		publishLog('I', "Tracker '%s' is done", this->getNameC() );
+		publishLog('T', "Tracker '%s' is done", this->getNameC() );
 	this->status = _status::DONE;
 	this->publishstatus();
 }

@@ -119,7 +119,7 @@ bool LuaExec::execAsync( const char *name, const char *topic, const char *payloa
 	this->feedState( arg->L, name, topic, payload, tracker, trkstatus );
 
 	if(verbose && !this->isQuiet())
-		publishLog('I', "Async running Task '%s' from '%s'", this->getNameC(), this->getWhereC() );
+		publishLog('T', "Async running Task '%s' from '%s'", this->getNameC(), this->getWhereC() );
 
 	pthread_t tid;	// No need to be kept
 	if(pthread_create( &tid, &thread_attr, launchfunc,  arg) < 0){
@@ -153,7 +153,7 @@ bool LuaExec::execSync( const char *name, const char *topic, const char *payload
 	this->feedState( L, name, topic, payload, tracker );
 
 	if(verbose && !this->isQuiet())
-		publishLog('I', "Async running Task '%s' from '%s'", this->getNameC(), this->getWhereC() );
+		publishLog('T', "Async running Task '%s' from '%s'", this->getNameC(), this->getWhereC() );
 
 	if(lua_pcall( L, 0, 0, 0))
 		publishLog('E', "Can't execute task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), lua_tostring(L, -1));
