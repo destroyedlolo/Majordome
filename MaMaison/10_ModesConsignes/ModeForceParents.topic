@@ -1,6 +1,6 @@
-# Consigne de mode générale
+# Consigne de mode de la chambre des parents
 
-topic=Majordome/Mode/Force/Parents
+topic=%ClientID%/Mode/Force/Parents
 store
 
 # Par défaut, mode calculé

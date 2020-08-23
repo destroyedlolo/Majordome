@@ -1,6 +1,6 @@
-# Consigne de mode générale
+# Consigne de mode pour la chambre de Joris
 
-topic=Majordome/Mode/Force/Enfants/Joris
+topic=%ClientID%/Mode/Force/Enfants/Joris
 store
 
 # Par défaut, mode calculé

@@ -1,6 +1,6 @@
 # Consigne de mode générale
 
-topic=Majordome/Mode/Force
+topic=%ClientID%/Mode/Force
 store
 
 # Par défaut, pas d'automatisation
