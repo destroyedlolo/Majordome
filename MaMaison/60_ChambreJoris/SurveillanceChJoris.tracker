@@ -1,8 +1,6 @@
 -- Surveillance de la température de la chambre de Joris
 --
--- La sonde étant actuellement HS, la mesure se fait sur celle d'Océane
---->> listen=TChJoris
--->> listen=TChOceane
+-->> listen=TChJoris
 --
 -- Le tracker se lance par la fonction LanceSurveillanceChJoris
 --->> start=

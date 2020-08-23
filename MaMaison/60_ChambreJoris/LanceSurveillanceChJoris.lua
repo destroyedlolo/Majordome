@@ -15,6 +15,8 @@ local trackersurveillance = MajordomeTracker.find("SurveillanceChJoris", true)
 -- C'est parti
 --
 
+	-- En fonction du mode, vérifie que c'est le bon timer qui tente de
+	-- réveiller ce tracker
 if (MAJORDOME_TIMER == "DebutSurveillance" and mode ~= "Vacances") or
    (MAJORDOME_TIMER == "DebutSurveillanceVacances" and mode == "Vacances")
 then
