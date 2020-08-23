@@ -1,7 +1,7 @@
 -- Surveillance de la température de la chambre d'amis
 --
--- Comme la chambre d'amis n'a pas encore de sonde, on utilise celle du bureau
--->> listen=TemperatureBureau
+-- Comme la chambre d'amis n'a pas encore de sonde, on utilise celle de la chambre des parents
+-->> listen=TChParents
 --
 -- Le tracker se lance par la fonction LanceSurveillanceChAmis
 --->> start=
