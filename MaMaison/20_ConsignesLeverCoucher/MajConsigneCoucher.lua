@@ -3,10 +3,11 @@
 -->> listen=ConsigneCoucher
 -->> waitfor=CoucherSoleilChange
 
-if not SelShared.Get('ConsigneCoucher') then	-- appel de la tache avant reception de la consigne
+if not SelShared.Get('ConsigneCoucher') then	-- La consigne n'est pas encore renseignée
 	return
 end
 
+-- Liens vers les timers
 local timer = MajordomeTimer.find("ConsigneCoucher", true)
 local timerMy = MajordomeTimer.find("ConsigneCoucherMy", true)
 
@@ -15,13 +16,14 @@ local hs,ms = couchersoleil:getAtHM()
 
 local h,m = string.match(string.gsub( SelShared.Get('ConsigneCoucher'), '%.', ':'), "(%d+):(%d+)")
 
-if hs*100+ms < h*100+m then	-- Le soleil se couche avant
+-- c'est parti
+if hs*100+ms < h*100+m then	-- Le soleil se couche avant la consigne
 	timer:setAtHM( hs, ms )
 	h,m = timer:getAtHM()
 	SelLog.log('I', "Fermeture des volets des chambres directement à ".. h ..":".. m)
 
 	timerMy:Disable()
-else	-- On utilise la consigne
+else	-- Le soleil se couche après la consigne
 	timer:setAtHM( h, m )
 	timerMy:setAtHM( h, m-5 )
 	timerMy:Enable()
