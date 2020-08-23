@@ -1,6 +1,6 @@
 # Mode d'aujourdhui calculé d'après le calendrier
 
-topic=Majordome/Mode/AujourdHui
+topic=%ClientID%/Mode/AujourdHui
 store
 
 # Par défaut, pas d'automatisation

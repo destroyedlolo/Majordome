@@ -1,6 +1,6 @@
 # Mode actif
 
-topic=Majordome/Mode
+topic=%ClientID%/Mode
 store
 
 # Par défaut, pas d'automatisation

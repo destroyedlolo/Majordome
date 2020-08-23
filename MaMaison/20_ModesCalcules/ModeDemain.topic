@@ -1,6 +1,6 @@
-# Mode d'aujourdhui calculé d'après le calendrier
+# Mode de demain calculé d'après le calendrier
 
-topic=Majordome/Mode/Demain
+topic=%ClientID%/Mode/Demain
 store
 
 # Par défaut, pas d'automatisation
