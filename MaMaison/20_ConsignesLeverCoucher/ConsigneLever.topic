@@ -1,4 +1,4 @@
 # Heure de lever pour les parents
-topic=Majordome/HLever
+topic=%ClientID%/HLever
 store
 #numeric
