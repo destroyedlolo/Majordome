@@ -24,6 +24,9 @@ if args[1]:upper() == "TRACKER" then
 	else
 		tracker:setStatus( args[3]:upper() )
 	end
+elseif args[1]:upper() == "SAISON" then
+	local DetermineSaison = MajordomeTask.find("DetermineSaison")
+	DetermineSaison:Launch()
 else
 	SelLog.log('E',"Command inconnue '"..args[1].."'")
 end
