@@ -1,6 +1,8 @@
-# Mode de demain calculé d'après le calendrier
+# Mode de demain calculé d'après le calendrier et fourni par Marcel
+# Forcé donc au topic de la prod
 
-topic=%ClientID%/Mode/Demain
+#topic=%ClientID%/Mode/Demain
+topic=Majordome/Mode/Demain
 store
 
 # Par défaut, pas d'automatisation
