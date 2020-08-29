@@ -196,7 +196,13 @@ bool Tracker::exec( const char *name, const char *topic, const char *payload ){
 		return false;
 	}
 
-	return this->LuaExec::execSync(name, topic, payload, true);
+	LuaExec::boolRetCode rc;
+	bool r = this->LuaExec::execSync(name, topic, payload, true, &rc);
+
+	if( rc == LuaExec::boolRetCode::RCtrue )
+		this->done();
+
+	return r;
 }
 
 void Tracker::start( void ){
