@@ -1,8 +1,8 @@
 -- Surveillance de la température du bureau
 --
 -->> listen=TemperatureBureau
--->> start=DebutSurveillance
--->> stop=FinSurveillance
+-->> start=DebutSurvBureau
+-->> stop=FinSurvBureau
 -->> enableRDV=activeSurveillance
 -->> disableRDV=desactiveSurveillance
 
