@@ -1,7 +1,0 @@
-# Topic de trace du suivi du coucher du soleil
-topic=%ClientID%/Traces/SuiviCoucherSoleil
-
-# Valeurs
-# 	D;hh:mm - Heure de début du suivit
-# 	E;hh:mm - le suivit est en cour
-#	F;hh:mm;hhc:mmc - Heure effective de coucher du soleil (hh:mm réelle, hhc:mmc consigne)

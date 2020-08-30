@@ -1,16 +1,18 @@
 -- Mise à jour du timer de la consigne "ConsigneCoucherSoleil" en fonction
 -- des infos reçues de la météo.
 --
--->> listen=CoucherSoleil
+-->> listen=ConsigneMeteoCoucherSoleil
 -->> listen=Saison
 
-if not SelShared.Get('CoucherSoleil') then
+-- Toutes les données sont-elles là
+if not SelShared.Get('ConsigneMeteoCoucherSoleil') then
 	return
 end
 
-local timer = MajordomeTimer.find("ConsigneCoucherSoleil", true)
+local timer = MajordomeTimer.find("HeureDebutSurveillanceCoucherSoleil", true)
+local timerFin = MajordomeTimer.find("HeureFinSurveillanceCoucherSoleil", true)
 
-local h,m = string.match(string.gsub( SelShared.Get('CoucherSoleil'), '%.', ':'), "(%d+):(%d+)")
+local h,m = string.match(string.gsub( SelShared.Get('ConsigneMeteoCoucherSoleil'), '%.', ':'), "(%d+):(%d+)")
 
 SelLog.log('I', "Le soleil se couche à ".. h ..":".. m)
 
@@ -23,8 +25,10 @@ else
 	timer:setAtHM( h, m )
 end
 
-local trace = MajordomeMQTTTopic.find("TraceSuiviCoucherSoleil", true)
-trace:Publish("D;" .. h ..":".. m, true)
+timerFin:setAtHM( h, m+30 )
+h,m = timer:getAtHM()
+SelLog.log('I', "Fin de la surveillance solaire à ".. h ..":".. m)
 
+-- Les consignes ont changées
 local rdv = MajordomeRendezVous.find("CoucherSoleilChange", true)
 rdv:Launch()

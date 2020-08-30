@@ -4,12 +4,12 @@
 -->> listen=ModeChAmis
 -->> listen=Saison
 -->> listen=LeverSoleil
--->> listen=CoucherSoleil
+-->> listen=ConsigneMeteoCoucherSoleil
 
 -- Vérification que tous les paramètres sont déjà présents
 if not SelShared.Get("ModeChAmis")
 or not SelShared.Get("LeverSoleil") 
-or not SelShared.Get("CoucherSoleil")
+or not SelShared.Get("ConsigneMeteoCoucherSoleil")
 or not SelShared.Get("Saison") then
 	return
 end
@@ -29,7 +29,7 @@ local FermetureVoletChAmis = MajordomeTimer.find("FermetureVoletChAmis", true)
 --
 
 local hl,ml = string.match(string.gsub( SelShared.Get('LeverSoleil'), '%.', ':'), "(%d+):(%d+)")
-local hc,mc = string.match(string.gsub( SelShared.Get('CoucherSoleil'), '%.', ':'), "(%d+):(%d+)")
+local hc,mc = string.match(string.gsub( SelShared.Get('ConsigneMeteoCoucherSoleil'), '%.', ':'), "(%d+):(%d+)")
 
 if SelShared.Get("Saison") == 'Hiver' then	-- économisons la chaleur
 	OuvertureVoletChAmis:setAtHM( hl+1, ml )

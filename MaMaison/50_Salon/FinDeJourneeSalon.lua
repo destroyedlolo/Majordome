@@ -1,5 +1,5 @@
 -- Fermeture des volets en fin de journée
--->> when=CoucherSoleil
+-->> whenDone=CoucherSoleil
 
 local mode = SelShared.Get("Mode") or "Manuel"
 local saison = SelShared.Get("Saison") or "Intersaison"
