@@ -16,9 +16,12 @@ Status are :
 	 ||
 	WAITING
 
-In this example, the decision is propagated using the return code of tracker's code as following :
-* **true** : goes to DONE status
-* **false** or no return : status unchanged
+This is an example of usage of **howmany** : the tracker will wait for *how many* positive checks before becoming DONE.
+
+Checking is based on tracker's script return code as following :
+* **true** : increase "DONE" counter
+* **false** : reset "DONE" counter
+* other (including nil) : ignored
 
 --------
 

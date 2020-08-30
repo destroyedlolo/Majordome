@@ -21,6 +21,7 @@ if MAJORDOME_PAYLOAD == 'STATUS' then
 	print("Tracker is coming from", tracker:getContainer())
 	print("Tracker is", tracker:isEnabled() and 'Enabled' or 'Disabled')
 	print("Tracker's status is", tracker:getStatus())
+	print("Tracker's counter is", tracker:getCounter())
 elseif MAJORDOME_PAYLOAD == "CHECKING" or MAJORDOME_PAYLOAD == "START" then
 	tracker:setStatus( MAJORDOME_PAYLOAD )
 end

@@ -22,5 +22,5 @@
  *	29/08/2020 - v3.10 - LF - Handle tracker's function return code
  */
 
-#define VERSION 3.1000
+#define VERSION 3.1001
 #define COPYRIGHT "Majordome (c) L.Faillie 2018-2020"

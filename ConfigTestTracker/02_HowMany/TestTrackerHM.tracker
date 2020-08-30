@@ -20,6 +20,8 @@
 -- (more than one "listen" can be present)
 -->> listen=TestHM
 --
+-- Numbers of positive responses before the tracker status become DONE
+-->> howmany=3
 --
 -- Indicate the MQTT topic to publish tracker status
 -->> statustopic=TestTrackerHM/status
@@ -39,5 +41,7 @@ print("My current status is :", MAJORDOME_Myself:getStatus() )
 
 if tonumber(MAJORDOME_PAYLOAD) > 10 then
 
-	return true
+	return true		-- Decrease the counter
+else
+	return false	-- Reset the counter
 end

@@ -29,6 +29,8 @@ public:
 private:
 	enum _status status;
 	MayBeEmptyString statusTopic;
+	unsigned int howmany;		// howmany consign
+	unsigned int hm_counter;	// actual counter value
 
 public:
 	/* Constructor from a file
@@ -41,6 +43,7 @@ public:
 
 	enum _status getStatus( void ){ return this->status; }
 	const char *getStatusC( void );
+	unsigned int getCounter(void){ return this->hm_counter; }
 
 	/* Overloading of LuaExec's in order to initialise Myself object */
 	virtual void feedState( lua_State *L, const char *name, const char *topic=NULL, const char *payload=NULL, bool tracker=false, const char *trkstatus=NULL );

@@ -14,7 +14,7 @@ extern "C" {
 #include "Helpers.h"
 #include "Tracker.h"
 
-Tracker::Tracker( Config &cfg, const std::string &fch, std::string &where, std::string &name, lua_State *L ):status(_status::WAITING){
+Tracker::Tracker( Config &cfg, const std::string &fch, std::string &where, std::string &name, lua_State *L ):status(_status::WAITING), howmany(1){
 	if(verbose)
 		publishLog('L', "\t'%s'", fch.c_str());
 
@@ -67,6 +67,11 @@ Tracker::Tracker( Config &cfg, const std::string &fch, std::string &where, std::
 					publishLog('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
 					exit(EXIT_FAILURE);
 				}
+			} else if( !!(arg = striKWcmp( l, "-->> howmany=" ))){
+				if((this->howmany = strtoul(arg.c_str(), NULL, 0))<1)
+					this->howmany = 1;
+				if(verbose)
+					publishLog('C', "\t\tHow many: '%d'", this->howmany);
 			} else if( !!(arg = striKWcmp( l, "-->> statustopic=" ))){
 				setStatusTopic( arg );
 				if(verbose)
@@ -119,6 +124,7 @@ Tracker::Tracker( Config &cfg, const std::string &fch, std::string &where, std::
 				if(verbose)
 					publishLog('C', "\t\tActivated at startup");
 				this->status = _status::CHECKING;
+				this->hm_counter = this->howmany;
 			} else if( l == "-->> quiet" ){
 				if(verbose)
 					publishLog('C', "\t\tBe quiet");
@@ -199,8 +205,12 @@ bool Tracker::exec( const char *name, const char *topic, const char *payload ){
 	LuaExec::boolRetCode rc;
 	bool r = this->LuaExec::execSync(name, topic, payload, true, &rc);
 
-	if( rc == LuaExec::boolRetCode::RCtrue )
-		this->done();
+	if( rc == LuaExec::boolRetCode::RCfalse )
+		this->hm_counter = this->howmany;
+	else if( rc == LuaExec::boolRetCode::RCtrue ){
+		if(!--this->hm_counter)
+			this->done();
+	}
 
 	return r;
 }
@@ -221,7 +231,8 @@ void Tracker::start( void ){
 	}
 	if(verbose)
 		publishLog('T', "Tracker '%s' is checking", this->getNameC() );
-	this->status = _status::CHECKING; 
+	this->status = _status::CHECKING;
+	this->hm_counter = this->howmany;
 	this->publishstatus();
 }
 
@@ -311,6 +322,12 @@ static int mtrk_isEnabled( lua_State *L ){
 	return 1;
 }
 
+static int mtrk_getCounter(lua_State *L){
+	class Tracker *tracker = checkMajordomeTracker(L);
+	lua_pushinteger( L, tracker->getCounter() );
+	return 1;
+}
+
 static int mtrk_getStatus(lua_State *L){
 	class Tracker *tracker = checkMajordomeTracker(L);
 	lua_pushstring( L, tracker->getStatusC() );
@@ -335,6 +352,7 @@ static const struct luaL_Reg MajTrackerM [] = {
 	{"isEnabled", mtrk_isEnabled},
 	{"Enable", mtrk_enabled},
 	{"Disable", mtrk_disable},
+	{"getCounter", mtrk_getCounter},
 	{"getStatus", mtrk_getStatus},
 	{"setStatus", mtrk_setStatus},
 	{NULL, NULL}
