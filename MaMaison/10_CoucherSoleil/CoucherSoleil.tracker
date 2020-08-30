@@ -17,7 +17,7 @@
 -- le soleil est couché ?
 -- Comme la TéléInfo envoie ses valeurs toutes les secondes, on attend quasiment
 -- 2 minutes
---->> howmany=120
+-->> howmany=120
 --
 -- Timers
 -- ------
@@ -48,5 +48,8 @@ if tonumber(MAJORDOME_PAYLOAD) > 0 then
 	SelLog.log('I', "Le soleil n'est pas encore couché")
 	return false
 end
+
+local tracker = MajordomeTracker.find("CoucherSoleil")
+print("Tracker's counter is", tracker:getCounter())
 
 return true	-- Plus de production

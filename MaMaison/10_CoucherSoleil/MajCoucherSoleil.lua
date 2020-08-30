@@ -1,4 +1,4 @@
--- Mise à jour du timer de la consigne "ConsigneCoucherSoleil" en fonction
+-- Mise à jour du timer de la consigne "ConsigneMeteoCoucherSoleil" en fonction
 -- des infos reçues de la météo.
 --
 -->> listen=ConsigneMeteoCoucherSoleil

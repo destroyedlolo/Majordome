@@ -7,14 +7,14 @@ if not SelShared.Get('ConsigneCoucher') then	-- La consigne n'est pas encore ren
 	return
 end
 
--- Liens vers les timers
+-- Liens vers les timers de consignes
 local timer = MajordomeTimer.find("ConsigneCoucher", true)
+local h,m = string.match(string.gsub( SelShared.Get('ConsigneCoucher'), '%.', ':'), "(%d+):(%d+)")
 local timerMy = MajordomeTimer.find("ConsigneCoucherMy", true)
 
-local couchersoleil = MajordomeTimer.find("ConsigneCoucherSoleil", true)
+-- Heure de coucher d'après la météo
+local couchersoleil = MajordomeTimer.find("HeureDebutSurveillanceCoucherSoleil", true)
 local hs,ms = couchersoleil:getAtHM()
-
-local h,m = string.match(string.gsub( SelShared.Get('ConsigneCoucher'), '%.', ':'), "(%d+):(%d+)")
 
 -- c'est parti
 if hs*100+ms < h*100+m then	-- Le soleil se couche avant la consigne
