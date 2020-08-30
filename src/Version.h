@@ -19,7 +19,8 @@
  *	16/03/2019 - LF - Externalize Version
  *	04/08/2020 - v3.08 - LF - Add %ClientID% in topic parsing
  *	05/08/2020 - v3.09 - LF - Amost all 'I' migrated to 'T' to be less noisy
+ *	29/08/2020 - v3.10 - LF - Handle tracker's function return code
  */
 
-#define VERSION 3.0900
+#define VERSION 3.1001
 #define COPYRIGHT "Majordome (c) L.Faillie 2018-2020"
