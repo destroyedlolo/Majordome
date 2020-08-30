@@ -16,6 +16,12 @@ Status are :
 	 ||
 	WAITING
 
+In this example, the decision is propagated using tracker's getStatus()
+
+Alternatively, the status can be changed by the tracker's script return code.
+* Return code = **true** - change to *Done* status
+* other value - don't change the status **ONLY IF *howmany* UNSET or =1**
+
 --------
 
 This particular example will react to following topics :
