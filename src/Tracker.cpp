@@ -4,6 +4,7 @@
 
 #include <cstring>
 #include <cassert>
+#include <regex>
 
 extern "C" {
     #include "lualib.h"
@@ -73,9 +74,9 @@ Tracker::Tracker( Config &cfg, const std::string &fch, std::string &where, std::
 				if(verbose)
 					publishLog('C', "\t\tHow many: '%d'", this->howmany);
 			} else if( !!(arg = striKWcmp( l, "-->> statustopic=" ))){
-				setStatusTopic( arg );
+				setStatusTopic( std::regex_replace(arg, std::regex("%ClientID%"), MQTT_ClientID) );
 				if(verbose)
-					publishLog('C', "\t\tStatus timer : '%s'", arg.c_str());
+					publishLog('C', "\t\tStatus topic : '%s'", this->getStatusTopic().c_str());
 			} else if( !!(arg = striKWcmp( l, "-->> start=" ))){
 				Config::TimerElements::iterator timer;
 				if( (timer = cfg.TimersList.find(arg)) != cfg.TimersList.end()){
