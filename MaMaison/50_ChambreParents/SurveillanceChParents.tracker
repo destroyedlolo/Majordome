@@ -5,6 +5,7 @@
 -- Le tracker se lance par la fonction LanceSurveillanceChParents
 --->> start=
 -->> stop=FinSurveillance
+-->> statustopic=%ClientID%/SurveillanceChParents/status
 
 if tonumber(MAJORDOME_PAYLOAD) > 21.5 then
 	SelLog.log('I', "La consigne de la chambre des parents est atteinte")
