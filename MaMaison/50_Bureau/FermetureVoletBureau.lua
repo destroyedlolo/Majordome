@@ -1,6 +1,7 @@
 -- Fermeture du volet du bureau
 -->> when=FermetureVoletBureau
--->> whenDone=CoucherSoleil
+-->> waitfor=CoucherSoleilEffectif
+--->> whenDone=CoucherSoleil
 
 --
 -- Récupération des objets cibles

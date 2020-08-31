@@ -49,7 +49,9 @@ if tonumber(MAJORDOME_PAYLOAD) > 0 then
 	return false
 end
 
+--[[
 local tracker = MajordomeTracker.find("CoucherSoleil")
 print("Tracker's counter is", tracker:getCounter())
+]]
 
 return true	-- Plus de production

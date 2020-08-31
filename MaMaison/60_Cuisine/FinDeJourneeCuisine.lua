@@ -1,5 +1,6 @@
 -- Fermeture des volets en fin de journée
--->> whenDone=CoucherSoleil
+-->> waitfor=CoucherSoleilEffectif
+--->> whenDone=CoucherSoleil
 
 local mode = SelShared.Get("Mode") or "Manuel"
 
