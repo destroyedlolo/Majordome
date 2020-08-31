@@ -8,7 +8,7 @@
 --->> disabled
 --
 -- Publie l'état du suivi solaire.
--->> statustopic=CoucherSoleil/status
+-->> statustopic=%ClientID%/CoucherSoleil/status
 --
 -- On se base sur la production photo voltaïque
 -->> listen=TeleInfoProd
