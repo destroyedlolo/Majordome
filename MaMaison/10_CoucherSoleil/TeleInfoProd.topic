@@ -7,7 +7,7 @@ ttl=60
 
 # désactivé par défaut sinon ... il crée beaucoup trop d'activité (et de log)
 # pour rien.
-# Sera activé au couché du soleil
+# Sera activé au coucher du soleil
 disabled
 
 quiet

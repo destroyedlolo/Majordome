@@ -15,6 +15,9 @@
 class LuaExec : virtual public Object {
 	struct elastic_storage func;	// Function to execute
 
+protected:
+	enum boolRetCode { RCnil=-1, RCfalse=false, RCtrue=true };
+
 public:
 	LuaExec();
 	struct elastic_storage *getFunc( void ){ return &(this->func); }
@@ -46,9 +49,10 @@ public:
 
 	/* Execute a task in the same thread
 	 * -> same as feedState()
+	 * -> return code from the function (NULL = Ignored)
 	 * <- true if it has been executed, false otherwise
 	 */
-	bool execSync( const char *name, const char *topic=NULL, const char *payload=NULL, bool tracker=false );
+	bool execSync( const char *name, const char *topic=NULL, const char *payload=NULL, bool tracker=false, enum boolRetCode *rc=NULL );
 
 	virtual void finished( void ){}
 };

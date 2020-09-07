@@ -1,6 +1,7 @@
 -- Fermeture du volet du bureau
 -->> when=FermetureVoletBureau
--->> when=CoucherSoleil
+-->> waitfor=CoucherSoleilEffectif
+--->> whenDone=CoucherSoleil
 
 --
 -- Récupération des objets cibles
@@ -18,7 +19,7 @@ local FermetureVoletBureau = MajordomeTimer.find("FermetureVoletBureau", true)
 if mode == "Manuel" then
 	SelLog.log('I', "Mode \"Manuel\" : 'Fermeture' du volet du bureau ignoré")
 else
-	if MAJORDOME_TIMER == "CoucherSoleil" and saison == "Hiver" then
+	if MAJORDOME_TRACKER == "CoucherSoleil" and saison == "Hiver" then
 		SelLog.log('D', "Fermeture du volet du bureau ignoré (déja fermé car 'hiver')")
 	else
 		SelLog.log('A', "Fermeture du volet du bureau")

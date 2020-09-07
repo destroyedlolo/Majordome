@@ -1,4 +1,4 @@
--- Dans le cas où la température extérieur n'est pas encore acquise
+-- Dans le cas où une température n'est pas encore acquise
 -- on attend qu'elle arrive et on relance la détermination de la saison
 --
 -->> listen=TExterieur

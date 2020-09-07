@@ -2,7 +2,7 @@
 -->> listen=Mode
 -->> listen=ModeForceChAmis
 
-if not SelShared.Get("Mode") then
+if not SelShared.Get("Mode") then	-- Lancement avant que le mode soit déterminé
 	return
 end
 

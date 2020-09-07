@@ -133,7 +133,7 @@ bool LuaExec::execAsync( const char *name, const char *topic, const char *payloa
 	return true;
 }
 
-bool LuaExec::execSync( const char *name, const char *topic, const char *payload, bool tracker ){
+bool LuaExec::execSync( const char *name, const char *topic, const char *payload, bool tracker, enum boolRetCode *rc ){
 	lua_State *L = luaL_newstate();
 	if( !L ){
 		publishLog('E', "Unable to create a new Lua State for '%s' from '%s'", this->getNameC(), this->getWhereC() );
@@ -153,10 +153,17 @@ bool LuaExec::execSync( const char *name, const char *topic, const char *payload
 	this->feedState( L, name, topic, payload, tracker );
 
 	if(verbose && !this->isQuiet())
-		publishLog('T', "Async running Task '%s' from '%s'", this->getNameC(), this->getWhereC() );
+		publishLog('T', "Sync running Task '%s' from '%s'", this->getNameC(), this->getWhereC() );
 
-	if(lua_pcall( L, 0, 0, 0))
+	if(lua_pcall( L, 0, 1, 0))
 		publishLog('E', "Can't execute task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), lua_tostring(L, -1));
+
+	if(rc){
+		*rc = boolRetCode::RCnil;
+		if(lua_isboolean(L, -1))
+			*rc = lua_toboolean(L, -1) ? boolRetCode::RCtrue : boolRetCode::RCfalse;
+	}
+
 	lua_close(L);
 
 	return true;

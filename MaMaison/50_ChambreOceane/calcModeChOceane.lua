@@ -3,7 +3,7 @@
 -->> listen=ModeForceEnfants
 -->> listen=ModeForceOceane
 
-if not SelShared.Get("Mode") then
+if not SelShared.Get("Mode") then -- Appel avant l'acquisition du mode
 	return
 end
 

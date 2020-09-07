@@ -2,7 +2,7 @@
 -->> listen=Mode
 -->> listen=ModeForceParents
 
-if not SelShared.Get("Mode") then
+if not SelShared.Get("Mode") then -- Appel avant que le mode soit déterminé
 	return
 end
 

@@ -2,14 +2,14 @@
 -->> listen=Mode
 -->> listen=Saison
 -->> listen=LeverSoleil
--->> listen=CoucherSoleil
+-->> listen=ConsigneMeteoCoucherSoleil
 
 --
 -- Vérification que tous les paramètres sont bien présents
 --
 
 if not SelShared.Get("LeverSoleil") 
-or not SelShared.Get("CoucherSoleil")
+or not SelShared.Get("ConsigneMeteoCoucherSoleil")
 or not SelShared.Get("Saison") then
 	return
 end
@@ -27,7 +27,7 @@ local FermetureVoletBureauAction = MajordomeTask.find("FermetureVoletBureau", tr
 --
 
 local hl,ml = string.match(string.gsub( SelShared.Get('LeverSoleil'), '%.', ':'), "(%d+):(%d+)")
-local hc,mc = string.match(string.gsub( SelShared.Get('CoucherSoleil'), '%.', ':'), "(%d+):(%d+)")
+local hc,mc = string.match(string.gsub( SelShared.Get('ConsigneMeteoCoucherSoleil'), '%.', ':'), "(%d+):(%d+)")
 
 --
 -- C'est parti

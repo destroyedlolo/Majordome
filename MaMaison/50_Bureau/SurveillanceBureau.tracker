@@ -1,10 +1,11 @@
 -- Surveillance de la température du bureau
 --
 -->> listen=TemperatureBureau
--->> start=DebutSurveillance
--->> stop=FinSurveillance
+-->> start=DebutSurvBureau
+-->> stop=FinSurvBureau
 -->> enableRDV=activeSurveillance
 -->> disableRDV=desactiveSurveillance
+-->> statustopic=%ClientID%/SurveillanceBureau/status
 
 if tonumber(MAJORDOME_PAYLOAD) > 21.5 then
 	SelLog.log('I', "La consigne du bureau est atteinte")

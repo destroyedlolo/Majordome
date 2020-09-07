@@ -18,7 +18,7 @@ if mode == "Manuel" then
 else
 	local tracker = MajordomeTracker.find("SurveillanceSalon")
 	if not tracker then
-		print("Can't find 'SurveillanceSalon'")
+		SelLog.log('E', "Impossible de trouver 'SurveillanceSalon'")
 		return
 	end
 

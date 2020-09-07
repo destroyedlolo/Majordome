@@ -6,7 +6,7 @@
 # name=toto
 
 # set the topic (mandatory)
-topic=%ClientID%/Debug
+topic=ControlHM
 
 # QOS for this topic between 0 and 2
 # if outside this range, forced to 0 (which is the default value)

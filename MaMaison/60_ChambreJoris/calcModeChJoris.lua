@@ -3,7 +3,7 @@
 -->> listen=ModeForceEnfants
 -->> listen=ModeForceJoris
 
-if not SelShared.Get("Mode") then
+if not SelShared.Get("Mode") then	-- Lancement avant la détermination du mode
 	return
 end
 

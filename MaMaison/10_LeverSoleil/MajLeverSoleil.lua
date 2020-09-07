@@ -10,7 +10,7 @@ local saison = SelShared.Get("Saison") or "Hiver"
 if saison == "Hiver" then
 	timer:setAtHM( h, m+30 )
 	h,m = timer:getAtHM()
-	SelLog.log('I', "Comme c'est l'ouvert l'information \"Lever Soleil\" est repoussée à ".. h ..":".. m)
+	SelLog.log('I', "Comme c'est l'hiver l'information \"Lever Soleil\" est repoussée à ".. h ..":".. m)
 else
 	timer:setAtHM( h, m )
 end

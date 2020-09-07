@@ -1,12 +1,11 @@
 -- Surveillance de la température de la chambre de Joris
 --
--- La sonde étant actuellement HS, la mesure se fait sur celle d'Océane
---->> listen=TChJoris
--->> listen=TChOceane
+-->> listen=TChJoris
 --
 -- Le tracker se lance par la fonction LanceSurveillanceChJoris
 --->> start=
 -->> stop=FinSurveillance
+-->> statustopic=%ClientID%/SurveillanceChJoris/status
 
 if tonumber(MAJORDOME_PAYLOAD) > 21.5 then
 	SelLog.log('I', "La consigne de la chambre de Joris est atteinte")

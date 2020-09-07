@@ -1,15 +1,16 @@
 -- Détermination de la saison en fonction des températures.
 -->> when=22h
 
-SelLog.log('M',"Détermination de la saison")
+SelLog.log('I',"Détermination de la saison")
 
+-- Récupère les topics de saison
 local Saison = MajordomeMQTTTopic.find("Saison", true)
 local SaisonHier = MajordomeMQTTTopic.find("SaisonHier", true)
 
-
+-- Log les info ayant permis de déterminer la saison
 SelLog.log('M',"T°Ext = " .. (SelShared.Get('TExterieur') or '??') .. " TSalon = " .. (SelShared.Get('TSalon') or '??') )
 
-if not SelShared.Get('TExterieur') or not SelShared.Get('TSalon') then
+if not SelShared.Get('TExterieur') or not SelShared.Get('TSalon') then	-- incomplet
 	SelLog.log('M', "On attend l'arrivée des températures")
 
 	local DetermineSaison2 = MajordomeTask.find("DetermineSaison2Chance", true)

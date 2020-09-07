@@ -1,12 +1,12 @@
 -- Détermination de l'heure de fin de surveillance en fonction du soleil
--->> listen=CoucherSoleil
+-->> listen=ConsigneMeteoCoucherSoleil
 -->> listen=Saison
 
 --
 -- Vérification que tous les paramètres sont bien présents
 --
 
-if not SelShared.Get("CoucherSoleil")
+if not SelShared.Get("ConsigneMeteoCoucherSoleil")
 or not SelShared.Get("Saison") then
 	return
 end
@@ -19,7 +19,7 @@ local DebutSurveillance = MajordomeTimer.find("DebutSurveillance", true)
 local FinSurveillance = MajordomeTimer.find("FinSurveillance", true)
 local notifRecalcul = MajordomeRendezVous.find("recalculeSurveillance", true)
 
-local hc,mc = string.match(string.gsub( SelShared.Get('CoucherSoleil'), '%.', ':'), "(%d+):(%d+)")
+local hc,mc = string.match(string.gsub( SelShared.Get('ConsigneMeteoCoucherSoleil'), '%.', ':'), "(%d+):(%d+)")
 
 if SelShared.Get("Saison") == 'Hiver' then	-- L'hiver il n'y a pas de surveillance
 	SelLog.log('I', "C'est l'hiver : Pas de surveillance de la température")
@@ -45,6 +45,10 @@ else	-- Autre saison : on surveille
 	rdv:Launch()
 
 	hc = hc - 2;	-- On arrête la surveillance 2 heure avant le coucher du soleil
+	if hc < 0 then	-- Evite des valeurs négatives (normalement que pour des tests)
+		hc,mc = 0,0
+	end
+
 --[[
 	if hc > 16 then	-- on force la fin de surveillance à 17:00 si le soleil se couche tard
 		hc = 17

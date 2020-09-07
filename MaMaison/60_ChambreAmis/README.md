@@ -19,7 +19,7 @@ Les **autres saisons**, *ouverture* et *fermeture* avec le soleil
 
 ## Surveillance de la température
 
-Comme la chambre d'amis n'a pas encore de sonde, la surveillance se fait sur celle du bureau.
+Comme la chambre d'amis n'a pas encore de sonde, la surveillance se fait sur celle de la chambre des parents.
 
 Surveillance en dehors de l'*Hiver*, il faut que le mode soit *Travail* (début de surveillance à l'heure standard) ou *Vacances* (début à 12h30).
 

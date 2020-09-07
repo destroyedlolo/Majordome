@@ -5,6 +5,7 @@
 -->> stop=FinSurveillance
 -->> enableRDV=activeSurveillance
 -->> disableRDV=desactiveSurveillance
+-->> statustopic=%ClientID%/SurveillanceSalon/status
 
 if tonumber(MAJORDOME_PAYLOAD) > 21.5 then
 	SelLog.log('I', "La consigne du salon est atteinte")

@@ -5,7 +5,7 @@
 ---
 
 Si c'est l'"**Hiver**", il n'y a pas de surveillance.
-Les **autres saisons**, la surveillance stoppe 2 heures avant le coucher du soleil ou à 17h.
+Les **autres saisons**, la surveillance stoppe 2 heures avant le coucher du soleil
 
 ## Techniquement
 ---
