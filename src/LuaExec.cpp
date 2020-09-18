@@ -53,6 +53,8 @@ void LuaExec::feedState( lua_State *L, const char *name, const char *topic, cons
 		return;
 
 	if( topic ){	// If launched by a message receiving
+		lua_pushstring( L, name);	// Push the name
+		lua_setglobal( L, "MAJORDOME_TOPIC_NAME" );
 		lua_pushstring( L, topic );	// Push the topic
 		lua_setglobal( L, "MAJORDOME_TOPIC" );
 		lua_pushstring( L, payload);	// and its payload
