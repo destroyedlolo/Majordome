@@ -23,5 +23,5 @@
  *	29/08/2020 - v3.11 - LF - Add MAJORDOME_TOPIC_NAME Lua's variable
  */
 
-#define VERSION 3.1002
+#define VERSION 3.1100
 #define COPYRIGHT "Majordome (c) L.Faillie 2018-2020"
