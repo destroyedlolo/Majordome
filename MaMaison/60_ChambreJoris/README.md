@@ -1,4 +1,4 @@
-# Automatismes pour la chambre d'Joris
+# Automatismes pour la chambre de Joris
 ---
 
 ## Ouverture
@@ -20,8 +20,6 @@ Notes :
 Les consignes par défaut sont publiée par **20_ConsignesLeverCoucher/PublicationConsignesParDefaut**
 
 ## Surveillance de la température
-
-**NOTE :** La sonde de température de la chambre de Joris étant actuellement HS, la survrillance se fait sur la température de la chambre d'Océane.
 
 La surveillance débute avec les consignes "**DebutSurveillance**" ou "**DebutSurveillanceVacances**" en fonction du mode. Le mode n'a pas d'incidence.
 Elle se termine avec "**FinSurveillance**"
