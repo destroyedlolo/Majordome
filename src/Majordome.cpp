@@ -45,6 +45,7 @@ bool verbose = false;
 bool hideTopicArrival = false;	// Silence topics arrival
 bool debug = false;
 bool quiet = false;
+bool trace = false;
 
 bool configtest = false;
 const char *MQTT_ClientID = NULL;	/* MQTT client id : must be unique among a broker's clients */
@@ -224,6 +225,7 @@ int main(int ac, char **av){
 			"\t-h : this online help\n"
 			"\t-q : be quiet (remove all messages but script generated one)\n"
 			"\t-v : enable verbose messages (overwrite -q)\n"
+			"\t-r : enable trace messages\n"
 			"\t-V : silence topic arrival\n"
 #ifdef DEBUG
 			"\t-d : enable debug messages (overwrite -q)\n"
@@ -241,6 +243,9 @@ int main(int ac, char **av){
 		printf("%s v%.04f\n", basename(av[0]), VERSION);
 		verbose = true;
 		quiet = false;
+		break;
+	case 'r':
+		trace = true;
 		break;
 	case 'V':
 		hideTopicArrival = true;

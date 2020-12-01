@@ -21,6 +21,7 @@
  *	05/08/2020 - v3.09 - LF - Amost all 'I' migrated to 'T' to be less noisy
  *	29/08/2020 - v3.10 - LF - Handle tracker's function return code
  *	29/08/2020 - v3.11 - LF - Add MAJORDOME_TOPIC_NAME Lua's variable
+ *	01/12/2020 - v3.12 - LF - Can silence trance messages
  */
 
 #define VERSION 3.1100
