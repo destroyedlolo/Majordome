@@ -3,7 +3,7 @@
 --
 -->> listen=Saison
 
-if not not SelShared.Get("Saison") then	-- ne devrait jamais arriver
+if not SelShared.Get("Saison") then	-- ne devrait jamais arriver
 	return
 end
 
@@ -21,7 +21,7 @@ SurveillanceCuisine:Disable()
 
 -- Activation en fonction de la surveillance
 
-if SelShared.Get("Saison") == "Ete" then
+if SelShared.Get("Saison") == "Ete" then	-- My forcé l'été
 	FermetureTemperatureEteCuisine:Enable()
 elseif SelShared.Get("Saison") == "Intersaison" then
 	SurveillanceCuisine:Enable()
