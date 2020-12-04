@@ -19,6 +19,7 @@
 extern bool quiet;
 extern bool verbose;
 extern bool debug;
+extern bool trace;
 extern bool configtest;
 extern MQTTClient MQTT_client;
 extern const char *MQTT_ClientID;
