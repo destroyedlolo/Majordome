@@ -216,7 +216,7 @@ int main(int ac, char **av){
 
 	slc_init( NULL, LOG_STDOUT );	/* Early logging to STDOUT before broker initialisation*/
 
-	while((c = getopt(ac, av, "qvVdhf:t")) != EOF) switch(c){
+	while((c = getopt(ac, av, "qvVdhrf:t")) != EOF) switch(c){
 	case 'h':
 		fprintf(stderr, "%s (%.04f)\n"
 			"A lightweight event based Automation System\n"
@@ -323,6 +323,8 @@ int main(int ac, char **av){
 
 	slc_initMQTT( MQTT_client, MQTT_ClientID );	// Initialize MQTT logging
 	semc_initializeSeleMQTT( MQTT_client, MQTT_ClientID );	// Initialize SeleMQTT
+	if(!trace)
+		slc_ignore("T");	// Disabling trace logging
 
 	luainitfunc = libSel_AddStartupFunc( NULL, setGlobalVar );
 	luainitfunc = libSel_AddStartupFunc( luainitfunc, initReducedSelene );
