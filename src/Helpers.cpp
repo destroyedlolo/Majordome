@@ -41,6 +41,9 @@ void publishLog( char l, const char *msg, ...){
 	va_list args;
 	va_start(args, msg);
 
+	if(l=='T' && !trace)	// Don't display trace
+		return;
+
 	char tmsg[1024];	/* No simple way here to know the message size */
 	vsnprintf(tmsg, sizeof(tmsg), msg, args);
 
