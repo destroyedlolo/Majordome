@@ -1,0 +1,9 @@
+# Si au bout de 30 minutes, le soleil n'est toujours pas détecté comme couché,
+# on force la fermeture des volets (peut être utile en cas de perte de la
+# téléinfo)
+# Mis à jour automatiquement à la réception des info météo
+
+at=2130
+#immediate
+runifover
+#disabled
