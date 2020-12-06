@@ -33,7 +33,7 @@ if SelShared.Get("ModeChJoris") == 'Vacances' then
 elseif SelShared.Get("ModeChJoris") == 'Absent' then
 		-- Ouverture directe le matin (pas de My)
 	OuvertureVoletChJoris:Enable()
-	OuvertureVoletCJorisMy:Disable()
+	OuvertureVoletChJorisMy:Disable()
 	SelLog.log('I', "Ouverture directe de la chambre d'Joris le matin (".. hl ..":".. ml ..")")
 
 else	-- Travail (le mode "Manuel est pris en charge par les scripts d'actions)
