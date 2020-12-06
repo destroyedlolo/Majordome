@@ -30,16 +30,26 @@ if SelShared.Get("ModeChParents") == 'Vacances' then
 	OuvertureVoletChParentsMy:Disable()
 	SelLog.log('I', "Pas d'ouverture de la chambre des parents le matin")
 
+	SelShared.Set("ChParentsAbsent", {}) -- Nous ne sommes pas en mode "Absent"
 elseif SelShared.Get("ModeChParents") == 'Absent' then
-		-- Ouverture directe le matin (pas de My)
-	OuvertureVoletChParents:Enable()
+	SelLog.log('I', "La chambre des parents reste fermée")
+
+		-- La fenêtre reste fermée
+	OuvertureVoletChParents:Disable()
 	OuvertureVoletChParentsMy:Disable()
-	SelLog.log('I', "Ouverture directe de la chambre des parents le matin (".. hl ..":".. ml ..")")
+
+	if not SelShared.Get("ChParentsAbsent") then	-- N'envoie l'ordre de fermeture que si ca n'a pas été déjà fait
+		local VoletChParents = MajordomeMQTTTopic.find("CmdVoletChParents", true)
+		VoletChParents:Publish("Down")
+		SelLog.log('I', "Le volet de la chambre des parents se ferme")
+		SelShared.Set("ChParentsAbsent", 1)
+	end
 
 else	-- Travail (le mode "Manuel est pris en charge par les scripts d'actions)
 	OuvertureVoletChParents:Enable()
 	OuvertureVoletChParentsMy:Enable()
 	SelLog.log('I', "My puis Ouverture de la chambre des parents le matin (".. hl ..":".. ml ..")")
 
+	SelShared.Set("ChParentsAbsent", {}) -- Nous ne sommes pas en mode "Absent"
 end
 
