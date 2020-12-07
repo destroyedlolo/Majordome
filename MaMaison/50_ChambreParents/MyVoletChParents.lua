@@ -22,14 +22,7 @@ local mode = SelShared.Get("ModeChParents") or "Manuel"
 
 if mode == "Manuel" then
 	SelLog.log('I', "Mode \"Manuel\" : 'My' du volet de la chambre des parents ignoré")
-else	-- Vérifie en fonction de ce qui a lancer l'exécution
-	if MAJORDOME_TIMER == "ConsigneCoucherMy" then
-		if mode == "Absent" then
-			SelLog.log('I', "Mode \"Absent\" : 'My' de fin de journée du volet de la chambre des parents ignoré")
-			return
-		end
-	end
-
+else
 	SelLog.log('A', "'My' du volet de la chambre des parents")
 	CmdVolet:Publish("My")
 end
