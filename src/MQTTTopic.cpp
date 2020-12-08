@@ -258,6 +258,8 @@ static int mtpc_Publish(lua_State *L){
 
 	if( topic->isEnabled() )
 		mqttpublish( MQTT_client, topic->getTopic(), strlen(val), (void *)val, retain );
+	else if(verbose)
+		publishLog('I', "'%s' is disabled : sending ignored", topic->getTopic());
 
 	return 0;
 }

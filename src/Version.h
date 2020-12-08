@@ -24,5 +24,5 @@
  *	04/12/2020 - v3.12 - LF - Trace message can be silenced
  */
 
-#define VERSION 3.1200
+#define VERSION 3.1201
 #define COPYRIGHT "Majordome (c) L.Faillie 2018-2020"
