@@ -1,6 +1,0 @@
-# Compteur de consommation HC
-
-topic=TeleInfo/Consommation/values/HCHC
-store
-numeric
-quiet

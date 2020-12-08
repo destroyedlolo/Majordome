@@ -1,9 +1,0 @@
-# Mode d'aujourdhui calculé d'après le calendrier et fourni par Marcel
-# Forcé donc au topic de la prod
-
-#topic=%ClientID%/Mode/AujourdHui
-topic=Majordome/Mode/AujourdHui
-store
-
-# Par défaut, pas d'automatisation
-default=Manuel

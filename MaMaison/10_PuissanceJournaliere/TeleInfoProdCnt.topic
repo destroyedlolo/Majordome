@@ -1,6 +1,0 @@
-# Compteur de production
-
-topic=TeleInfo/Production/values/BASE
-store
-numeric
-quiet
