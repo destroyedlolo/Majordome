@@ -292,6 +292,12 @@ static int mtsk_getContainer(lua_State *L){
 	return 1;
 }
 
+static int mtsk_getName(lua_State *L){
+	class LuaTask *task = checkMajordomeTask(L);
+	lua_pushstring( L, task->getName().c_str() );
+	return 1;
+}
+
 static int mtsk_enabled( lua_State *L ){
 	class LuaTask *task = checkMajordomeTask(L);
 	task->enable();
@@ -313,6 +319,7 @@ static int mtsk_isEnabled( lua_State *L ){
 static const struct luaL_Reg MajTaskM [] = {
 	{"Launch", mtsk_launch},
 	{"getContainer", mtsk_getContainer},
+	{"getName", mtsk_getName},
 	{"isEnabled", mtsk_isEnabled},
 	{"Enable", mtsk_enabled},
 	{"Disable", mtsk_disable},

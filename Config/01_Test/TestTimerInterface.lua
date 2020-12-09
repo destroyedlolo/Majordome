@@ -19,7 +19,7 @@ timer = MajordomeTimer.find("15s")
 if not timer then
 	print('Fail', timer)
 else
-	print('Ok found in', timer:getContainer() )
+	print('Ok found ' ..timer:getName().. ' in', timer:getContainer() )
 
 	if timer:isEnabled() then
 		print "Now, it's disabled"

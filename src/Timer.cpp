@@ -354,6 +354,12 @@ static int mtmr_getContainer( lua_State *L ){
 	return 1;
 }
 
+static int mtmr_getName( lua_State *L ){
+	class Timer *timer = checkMajordomeTimer(L);
+	lua_pushstring( L, timer->getName().c_str() );
+	return 1;
+}
+
 static int mtmr_enabled( lua_State *L ){
 	class Timer *timer = checkMajordomeTimer(L);
 	timer->enable();
@@ -382,6 +388,7 @@ static const struct luaL_Reg MajTimerM [] = {
 	{"Reset", mtmr_Reset},
 	{"Launch", mtmr_Launch},
 	{"getContainer", mtmr_getContainer},
+	{"getName", mtmr_getName},
 	{"isEnabled", mtmr_isEnabled},
 	{"Enable", mtmr_enabled},
 	{"Disable", mtmr_disable},

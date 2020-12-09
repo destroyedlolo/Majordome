@@ -305,6 +305,12 @@ static int mtrk_getContainer(lua_State *L){
 	return 1;
 }
 
+static int mtrk_getName(lua_State *L){
+	class Tracker *tracker = checkMajordomeTracker(L);
+	lua_pushstring( L, tracker->getName().c_str() );
+	return 1;
+}
+
 static int mtrk_enabled( lua_State *L ){
 	class Tracker *tracker = checkMajordomeTracker(L);
 	tracker->enable();
@@ -350,6 +356,7 @@ static int mtrk_setStatus(lua_State *L){
 
 static const struct luaL_Reg MajTrackerM [] = {
 	{"getContainer", mtrk_getContainer},
+	{"getName", mtrk_getName},
 	{"isEnabled", mtrk_isEnabled},
 	{"Enable", mtrk_enabled},
 	{"Disable", mtrk_disable},
