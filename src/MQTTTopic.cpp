@@ -315,6 +315,12 @@ static int mtpc_getContainer( lua_State *L ){
 	return 1;
 }
 
+static int mtpc_getName( lua_State *L ){
+	class MQTTTopic *topic = checkMajordomeMQTTTopic(L);
+	lua_pushstring( L, topic->getName().c_str() );
+	return 1;
+}
+
 static int mtpc_enabled( lua_State *L ){
 	class MQTTTopic *topic = checkMajordomeMQTTTopic(L);
 	topic->enable();
@@ -339,6 +345,7 @@ static const struct luaL_Reg MajTopicM [] = {
 	{"getVal", mtpc_getVal},
 	{"Launch", mtpc_Launch},
 	{"getContainer", mtpc_getContainer},
+	{"getName", mtpc_getName},
 	{"isEnabled", mtpc_isEnabled},
 	{"Enable", mtpc_enabled},
 	{"Disable", mtpc_disable},

@@ -197,6 +197,12 @@ static int mevt_getContainer( lua_State *L ){
 	return 1;
 }
 
+static int mevt_getName( lua_State *L ){
+	class Event *event = checkMajordomeEvent(L);
+	lua_pushstring( L, event->getName().c_str() );
+	return 1;
+}
+
 static int mevt_enabled( lua_State *L ){
 	class Event *event = checkMajordomeEvent(L);
 	event->enable();
@@ -218,6 +224,7 @@ static int mevt_isEnabled( lua_State *L ){
 static const struct luaL_Reg MajEventM [] = {
 	{"Launch", mevt_Launch},
 	{"getContainer", mevt_getContainer},
+	{"getName", mevt_getName},
 	{"isEnabled", mevt_isEnabled},
 	{"Enable", mevt_enabled},
 	{"Disable", mevt_disable},
