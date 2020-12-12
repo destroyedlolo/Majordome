@@ -6,6 +6,8 @@
 --->> start=
 -->> stop=FinSurveillance
 -->> statustopic=%ClientID%/SurveillanceChJoris/status
+-->> enableRDV=activeSurveillance
+-->> disableRDV=desactiveSurveillance
 
 if tonumber(MAJORDOME_PAYLOAD) > 21.5 then
 	SelLog.log('I', "La consigne de la chambre de Joris est atteinte")
