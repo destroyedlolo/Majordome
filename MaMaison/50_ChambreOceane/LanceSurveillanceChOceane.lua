@@ -40,6 +40,8 @@ elseif MAJORDOME_TIMER == "OuvertureVoletChOceane" then -- lancé par l'heure de
 	SelLog.log('D', "Début de la surveillance de la chambre d'Océane est retardée de 30 secondes")
 	Selene.Sleep(30);	-- on laisse les volets s'ouvrir
 
+else 
+	return
 end
 
 SelLog.log('D', "Début de la surveillance de la chambre d'Océane dû à ".. MAJORDOME_TIMER)
