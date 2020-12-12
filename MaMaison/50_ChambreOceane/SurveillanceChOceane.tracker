@@ -5,6 +5,8 @@
 -- Le tracker se lance par la fonction LanceSurveillanceChOceane
 --->> start=
 -->> stop=FinSurveillance
+-->> enableRDV=activeSurveillance
+-->> disableRDV=desactiveSurveillance
 -->> statustopic=%ClientID%/SurveillanceChOceane/status
 
 if tonumber(MAJORDOME_PAYLOAD) > 21.5 then
