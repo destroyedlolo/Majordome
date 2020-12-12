@@ -42,3 +42,6 @@ elseif MAJORDOME_TIMER == "OuvertureVoletChJoris" then -- lancé par l'heure de 
 
 end
 
+SelLog.log('D', "Début de la surveillance de la chambre de Joris dû à ".. MAJORDOME_TIMER)
+trackersurveillance:setStatus("START")
+
