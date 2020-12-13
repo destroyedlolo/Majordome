@@ -1,10 +1,14 @@
 # Automatismes pour la chambre des parents
 ---
 
+## Mode "absent"
+
+En mode *Absent*, les volets ne se ferment ni s'ouvrent.
+Il n'y a pas de surveillance de température
+
 ## Ouverture
 
 Si le mode est "*Vacances*" alors les volets restent fermés et la surveillance de température commence a 12h30.
-En mode *Absent*, ils s'ouvrent avec la consigne mais il n'y a pas de *My* avant. Surveillance par défaut
 Sinon (donc mode *Travail*) ouverture *My* 5 minutes avant la consigne, ouverture a l'heure de la consigne.
 
 ## Fermeture
@@ -25,3 +29,6 @@ La surveillance débute avec les consignes "**DebutSurveillance**" ou "**DebutSu
 Elle se termine avec "**FinSurveillance**"
 
 En mode "*Absent*", les volets ne sont pas ouvert à la fin de la surveillance
+
+### variables partagées
+- **ChParentsAbsent** - Contient la valeur précédente du mode de la chambre des parents. Pour éviter d'envoyer plusieurs fois l'ordre de fermeture du volet si on reste en mode *Absent*

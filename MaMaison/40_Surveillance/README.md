@@ -5,7 +5,7 @@
 ---
 
 Si c'est l'"**Hiver**", il n'y a pas de surveillance.
-Les **autres saisons**, la surveillance stoppe 2 heures avant le coucher du soleil
+Les **autres saisons**, la surveillance débute à 8h45 (**DebutSurveillance**) ou 12h30 (**DebutSurveillanceVacances**) stoppe 2 heures avant le coucher du soleil
 
 ## Techniquement
 ---

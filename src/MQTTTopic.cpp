@@ -258,6 +258,8 @@ static int mtpc_Publish(lua_State *L){
 
 	if( topic->isEnabled() )
 		mqttpublish( MQTT_client, topic->getTopic(), strlen(val), (void *)val, retain );
+	else if(verbose)
+		publishLog('I', "'%s' is disabled : sending ignored", topic->getTopic());
 
 	return 0;
 }
@@ -313,6 +315,12 @@ static int mtpc_getContainer( lua_State *L ){
 	return 1;
 }
 
+static int mtpc_getName( lua_State *L ){
+	class MQTTTopic *topic = checkMajordomeMQTTTopic(L);
+	lua_pushstring( L, topic->getName().c_str() );
+	return 1;
+}
+
 static int mtpc_enabled( lua_State *L ){
 	class MQTTTopic *topic = checkMajordomeMQTTTopic(L);
 	topic->enable();
@@ -337,6 +345,7 @@ static const struct luaL_Reg MajTopicM [] = {
 	{"getVal", mtpc_getVal},
 	{"Launch", mtpc_Launch},
 	{"getContainer", mtpc_getContainer},
+	{"getName", mtpc_getName},
 	{"isEnabled", mtpc_isEnabled},
 	{"Enable", mtpc_enabled},
 	{"Disable", mtpc_disable},
