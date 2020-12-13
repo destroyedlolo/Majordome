@@ -18,7 +18,6 @@ end
 local OuvertureVoletChParents = MajordomeTimer.find("OuvertureVoletChParents", true)
 local OuvertureVoletChParentsMy = MajordomeTimer.find("OuvertureVoletChParentsMy", true)
 local VoletChParents = MajordomeMQTTTopic.find("CmdVoletChParents", true)
-
 local hl,ml = string.match(string.gsub( SelShared.Get('ConsigneLever'), '%.', ':'), "(%d+):(%d+)")
 
 
@@ -50,4 +49,3 @@ else	-- Travail (le mode "Manuel est pris en charge par les scripts d'actions)
 	OuvertureVoletChParentsMy:Enable()
 	SelLog.log('I', "My puis Ouverture de la chambre des parents le matin (".. hl ..":".. ml ..")")
 end
-

@@ -46,4 +46,3 @@ end
 
 SelLog.log('D', "Début de la surveillance de la chambre d'Océane dû à ".. MAJORDOME_TIMER)
 trackersurveillance:setStatus("START")
-

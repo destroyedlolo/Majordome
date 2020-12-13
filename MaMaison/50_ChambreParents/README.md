@@ -32,4 +32,3 @@ En mode "*Absent*", les volets ne sont pas ouvert à la fin de la surveillance
 
 ### variables partagées
 - **ChParentsAbsent** - Contient la valeur précédente du mode de la chambre des parents. Pour éviter d'envoyer plusieurs fois l'ordre de fermeture du volet si on reste en mode *Absent*
-
