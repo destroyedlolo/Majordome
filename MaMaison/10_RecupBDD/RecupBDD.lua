@@ -21,6 +21,7 @@ assert(pg:connect())
 -- Transcodage des températures
 
 local temperature = {
+	['TDehors'] = 'Exterieur',
 	['TSSPorte'] = 'Porte Garage',
 	['TSS'] = 'Garage',
 	['TBuanderie'] = 'Buanderie',
