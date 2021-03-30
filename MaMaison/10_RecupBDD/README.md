@@ -7,6 +7,9 @@ Permet aux tableaux de bord de récupérer les anciennes valeurs directement dep
 
 ### Températures
 
+Demandes arrivant sur **DemandeHistorique**.
+Le *payload* contient l'information à recupérer.
+
 Nom | contenu DemandeHistorique | probe dans domestik.probe_hardware
 ----|---------------------------|--------------
 Porte Garage | TSSPorte | Porte Garage
@@ -20,17 +23,24 @@ Salon | TSalon | Salon
 Grenier Nord | TGrenierNord | Grenier Nord
 Chambre Joris | TChJoris | Chambre Joris
 Chambre Oceane | TChOceane | Chambre Oceane
-Chambre Amis | TAmis |
-Grenier Sud | TGrenierSud |
-Comble | TComble |
+Chambre Amis | TAmis | Chambre Amis
+Grenier Sud | TGrenierSud | Grenier Sud
+Comble | TComble | Comble
+Température extérieure | TDehors | Exterieur
+
+### Valeures groupées
+
+Demandes arrivant sur **DemandeHistoriqueG**.
+
+Nom | contenu DemandeHistoriqueG | table
+----|---------------------------|--------
+consommation2 | 
+production2 |
 
 ### Autres
 
 Nom | contenu DemandeHistorique | table
 ----|---------------------------|--------
-Température extérieure | TDehors | 
-consommation2 | 
-production2 |
 Poulailler | TPoulailler |
 
 
