@@ -10,7 +10,7 @@ Permet aux tableaux de bord de récupérer les anciennes valeurs directement dep
 Demandes arrivant sur **DemandeHistorique**.
 Le *payload* contient l'information à recupérer.
 
-Nom | contenu DemandeHistorique | probe dans domestik.probe_hardware
+Nom | contenu DemandeHistorique | probe dans domestik.probe_hardware et host='Maison'
 ----|---------------------------|--------------
 Porte Garage | TSSPorte | Porte Garage
 Sous-sol | TSS | Garage
@@ -31,11 +31,19 @@ Température extérieure | TDehors | Exterieur
 ### Valeures groupées
 
 Demandes arrivant sur **DemandeHistoriqueG**.
+Le *payload* contient `identifiant,groupe`.
 
-Nom | contenu DemandeHistoriqueG | table
+Par exemple
+
+`consomation2,300`
+
+demande la consommation électrique groupées par 5 minutes (300 secondes).
+
+
+Nom | contenu DemandeHistoriqueG | probe dans domestik.probe_hardware et host='EDF'
 ----|---------------------------|--------
-consommation2 | 
-production2 |
+Consommation électrique | consommation2 | consomation_Puissance
+Production électrique | production2 | production_Puissance
 
 ### Autres
 
