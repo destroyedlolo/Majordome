@@ -7,7 +7,10 @@ Permet aux tableaux de bord de récupérer les anciennes valeurs directement dep
 
 ### Températures
 
-Nom | contenu DemandeHistorique | probe dans domestik.probe_hardware
+Demandes arrivant sur **DemandeHistorique**.
+Le *payload* contient l'information à recupérer (suivant le tableau ci-dessous). En y ajoutant ';*valeur*' permet d'ajouter une limite : seules les dernères *valeur*s sont envoyées.
+
+Nom | contenu DemandeHistorique | probe dans domestik.probe_hardware et host='Maison'
 ----|---------------------------|--------------
 Porte Garage | TSSPorte | Porte Garage
 Sous-sol | TSS | Garage
@@ -20,17 +23,24 @@ Salon | TSalon | Salon
 Grenier Nord | TGrenierNord | Grenier Nord
 Chambre Joris | TChJoris | Chambre Joris
 Chambre Oceane | TChOceane | Chambre Oceane
-Chambre Amis | TAmis |
-Grenier Sud | TGrenierSud |
-Comble | TComble |
+Chambre Amis | TAmis | Chambre Amis
+Grenier Sud | TGrenierSud | Grenier Sud
+Comble | TComble | Comble
+Température extérieure | TDehors | Exterieur
+
+### Compteur EDF
+
+(les données en stockées en base ne sont pas assez précises par rapport à ce qui est attendu par le tableau de bord)
+
+Nom | contenu DemandeHistoriqueG | probe dans domestik.probe_hardware et host='EDF'
+----|---------------------------|--------
+Consommation électrique | consommation2 | consomation_Puissance
+Production électrique | production2 | production_Puissance
 
 ### Autres
 
 Nom | contenu DemandeHistorique | table
 ----|---------------------------|--------
-Température extérieure | TDehors | 
-consommation2 | 
-production2 |
 Poulailler | TPoulailler |
 
 
