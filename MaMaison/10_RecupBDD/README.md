@@ -8,7 +8,7 @@ Permet aux tableaux de bord de récupérer les anciennes valeurs directement dep
 ### Températures
 
 Demandes arrivant sur **DemandeHistorique**.
-Le *payload* contient l'information à recupérer.
+Le *payload* contient l'information à recupérer (suivant le tableau ci-dessous). En y ajoutant ';*valeur*' permet d'ajouter une limite : seules les dernères *valeur*s sont envoyées.
 
 Nom | contenu DemandeHistorique | probe dans domestik.probe_hardware et host='Maison'
 ----|---------------------------|--------------
