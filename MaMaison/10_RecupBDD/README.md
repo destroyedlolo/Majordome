@@ -28,17 +28,9 @@ Grenier Sud | TGrenierSud | Grenier Sud
 Comble | TComble | Comble
 Température extérieure | TDehors | Exterieur
 
-### Valeures groupées
+### Compteur EDF
 
-Demandes arrivant sur **DemandeHistoriqueG**.
-Le *payload* contient `identifiant,groupe`.
-
-Par exemple
-
-`consomation2,300`
-
-demande la consommation électrique groupées par 5 minutes (300 secondes).
-
+(les données en stockées en base ne sont pas assez précises par rapport à ce qui est attendu par le tableau de bord)
 
 Nom | contenu DemandeHistoriqueG | probe dans domestik.probe_hardware et host='EDF'
 ----|---------------------------|--------
