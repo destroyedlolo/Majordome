@@ -54,7 +54,7 @@ else
 		SelLog.log('E', "Demande de récupération pour inconnu : "..probe)
 		return
 	end
-	query = "select * from (select extract(epoch from sample_time) as \"when\", sample_time, value from domestik.probe_hardware where host = 'Maison' and probe = 'Salon' order by sample_time desc limit 10) as tmp order by \"when\";"
+	query = "select * from (select extract(epoch from sample_time) as \"when\", sample_time, value from domestik.probe_hardware where host = '".. temperature[probe].host .."' and probe = '".. temperature[probe].probe .. "' order by sample_time desc limit ".. limit ..") as tmp order by \"when\";"
 end
 
 SelLog.log('I', "Demande de récupération pour : " .. probe)
