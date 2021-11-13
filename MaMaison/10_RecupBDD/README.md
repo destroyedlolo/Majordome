@@ -37,11 +37,16 @@ Nom | contenu DemandeHistoriqueG | probe dans domestik.probe_hardware et host='E
 Consommation électrique | consommation2 | consomation_Puissance
 Production électrique | production2 | production_Puissance
 
-### Autres
+### Poulailler
 
-Nom | contenu DemandeHistorique | table
+Nom | contenu DemandeHistorique | probe dans domestik.probe_hardware et host='Poulailler'
 ----|---------------------------|--------
-Poulailler | TPoulailler |
+Température | TPoulailler | Temperature
+Humidité | HPoulailler | Humidite
+Tension Batterie | VBatPoulailler | Alimentation
+Wifi | WifiPoulailler | Wifi
+MQTT | MQTTPoulailler | MQTT
+
 
 
 
