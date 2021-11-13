@@ -36,8 +36,16 @@ local temperature = {
 	['TAmis'] = { host='Maison', probe='Chambre Amis' },
 	['TGrenierSud'] = { host='Maison', probe='Grenier Sud' },
 	['TComble'] = { host='Maison', probe='Comble' },
+
 	['consommation2'] = { host='EDF', probe='consomation_Puissance' },
 	['production2'] = { host='EDF', probe='production_Puissance' },
+
+	['TPoulailler'] = { host='Poulailler', probe='Temperature' },
+	['HPoulailler'] = { host='Poulailler', probe='Humidite' },
+	['VBatPoulailler'] = { host='Poulailler', probe='Alimentation' },
+	['WifiPoulailler'] = { host='Poulailler', probe='Wifi' },
+	['MQTTPoulailler'] = { host='Poulailler', probe='MQTT' },
+
 }
 
 local query
