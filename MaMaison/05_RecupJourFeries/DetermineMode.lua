@@ -16,7 +16,6 @@ local dt = string.format("%04d-%02d-%02d", t.year, t.month, t.day)
 
 if listJF[dt] then	-- c'est un jour férié
 	mode = 'Vacances'
-
 	JourFerieNom:Publish(listJF[dt])
 else
 	JourFerieNom:Publish('')
@@ -28,6 +27,10 @@ elseif not mode then	-- Par défaut, on bosse
 	mode = 'Travail'
 end
 
+
+local ModeAujourdhui = MajordomeMQTTTopic.find("ModeAujourdhui", true)
+assert(ModeAujourdhui)
+ModeAujourdhui:Publish(mode)
 
 -- Quel est le jour férié suivant
 local dtsuiv = "9999-99-99"
