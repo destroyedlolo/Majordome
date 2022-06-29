@@ -16,9 +16,9 @@ local dt = string.format("%04d-%02d-%02d", t.year, t.month, t.day)
 
 if listJF[dt] then	-- c'est un jour férié
 	mode = 'Vacances'
-	JourFerieNom:Publish(listJF[dt])
+	JourFerieNom:Publish(listJF[dt], true)
 else
-	JourFerieNom:Publish('')
+	JourFerieNom:Publish('', true)
 end
 
 if t['wday'] == 1 or t['wday'] == 7 then
@@ -30,7 +30,7 @@ end
 
 local ModeAujourdhui = MajordomeMQTTTopic.find("ModeAujourdhui", true)
 assert(ModeAujourdhui)
-ModeAujourdhui:Publish(mode)
+ModeAujourdhui:Publish(mode, true)
 
 -- Quel est le jour férié suivant
 local dtsuiv = "9999-99-99"
@@ -42,11 +42,11 @@ end
 
 local JourFerieSuivant = MajordomeMQTTTopic.find("JourFerieSuivant", true)
 assert(JourFerieSuivant)
-JourFerieSuivant:Publish(dtsuiv)
+JourFerieSuivant:Publish(dtsuiv, true)
 
 local JourFerieSuivantNom = MajordomeMQTTTopic.find("JourFerieSuivantNom", true)
 assert(JourFerieSuivantNom)
-JourFerieSuivantNom:Publish(listJF[dtsuiv])
+JourFerieSuivantNom:Publish(listJF[dtsuiv], true)
 
 
 -- trace result

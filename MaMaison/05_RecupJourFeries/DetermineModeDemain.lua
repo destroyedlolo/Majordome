@@ -24,7 +24,7 @@ end
 
 local ModeDemain = MajordomeMQTTTopic.find("ModeDemain", true)
 assert(ModeDemain)
-ModeDemain:Publish(mode)
+ModeDemain:Publish(mode, true)
 
 -- trace result
 SelLog.log('I', "Demain : ".. dt .." -> ".. mode)
