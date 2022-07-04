@@ -1,5 +1,5 @@
 # Nom du jour férié du jour
-topic=%ClientID%/JourFeries/Nom
+topic=%ClientID%/JourFerie/Nom
 
 # stocké dans une variable SelShared
 store
