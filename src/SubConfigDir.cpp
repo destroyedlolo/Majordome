@@ -33,6 +33,10 @@ static int objectweight( const char *ext ){
 bool SubConfigDir::accept( const char *fch, std::string &full ){
 	if( SortDir::accept( fch, full ) ){
 		const char *ext = fileextention( fch );
+
+		if(!ext)	// No file extension -> Rejected
+			return false;
+
 		return( objectweight(ext) != -1 );
 	}
 	return false;

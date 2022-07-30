@@ -25,5 +25,5 @@
  *	09/12/2020 - v3.13 - LF - add getName()
  */
 
-#define VERSION 3.1300
-#define COPYRIGHT "Majordome (c) L.Faillie 2018-2020"
+#define VERSION 3.1301
+#define COPYRIGHT "Majordome (c) L.Faillie 2018-2022"
