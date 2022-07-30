@@ -33,11 +33,15 @@ static int objectweight( const char *ext ){
 bool SubConfigDir::accept( const char *fch, std::string &full ){
 	if( SortDir::accept( fch, full ) ){
 		const char *ext = fileextention( fch );
+		bool res = false;
 
-		if(!ext)	// No file extension -> Rejected
-			return false;
+		if(ext)
+			res = (objectweight(ext) != -1 );
 
-		return( objectweight(ext) != -1 );
+		if(!res)
+			publishLog('E', "'%s' is rejected", fch);
+
+		return( res );
 	}
 	return false;
 }
