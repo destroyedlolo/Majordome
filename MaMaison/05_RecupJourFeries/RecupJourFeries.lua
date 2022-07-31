@@ -1,6 +1,6 @@
 -- Récupération de la liste des jours fériés
 --
--->> when=MidnightOrAtLaunch
+-->> when=0215OrOver
 
 require("socket")
 local https = require("ssl.https")

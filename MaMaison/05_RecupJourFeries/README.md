@@ -3,7 +3,10 @@
 Récupération de la liste depuis l'API du gouvernement, et uniquement
 pour la métropole : https://api.gouv.fr/documentation/jours-feries
 
-Elle se fait soit au démarrage de Majordome, soit au 1er Janvier
+Elle se fait soit au démarrage de Majordome, soit à 2h15 (et plus à minuit 
+sinon il aurait fallu faire une usine à gaz pour que la trappe du chat se
+ferme à la bonne heure le lendemain d'un jour férié.
+
 
 ## Dependances
 
