@@ -7,6 +7,10 @@ local saison = SelShared.Get("Saison") or "Intersaison"
 if mode == "Manuel" then
 	SelLog.log('I', "Mode \"Manuel\" : 'Ouverture' du volet du salon ignoré")
 else
+	SelLog.log('A', "Ouverture du volet du salon/Fenetre")
+	local CmdVoletSalonFenetre = MajordomeMQTTTopic.find("CmdVoletSalonFenetre", true)
+	CmdVoletSalonFenetre:Publish("Up")
+
 	if saison == "Ete" then
 		SelLog.log('I', "C'est l'été : on laisse les volets du salon comme ils sont")
 	else
@@ -14,7 +18,6 @@ else
 
 		local CmdVoletSalonBalcon = MajordomeMQTTTopic.find("CmdVoletSalonBalcon", true)
 		local CmdVoletSalonCheminee = MajordomeMQTTTopic.find("CmdVoletSalonCheminee", true)
-		local CmdVoletSalonFenetre = MajordomeMQTTTopic.find("CmdVoletSalonFenetre", true)
 
 		CmdVoletSalonBalcon:Publish("Up")
 		CmdVoletSalonCheminee:Publish("Up")

@@ -16,6 +16,9 @@ local CmdVoletSalonFenetre = MajordomeMQTTTopic.find("CmdVoletSalonFenetre", tru
 if mode == "Manuel" then
 	SelLog.log('I', "Mode \"Manuel\" : Ouverture du volet du salon ignoré")
 else
+
+		-- Note : on ne cherche pas la surveillance Fenêtre car elle est
+		-- ici redondante avec la surveillance générale
 	local tracker = MajordomeTracker.find("SurveillanceSalon")
 	if not tracker then
 		SelLog.log('E', "Impossible de trouver 'SurveillanceSalon'")

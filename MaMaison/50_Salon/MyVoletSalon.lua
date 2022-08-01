@@ -7,7 +7,7 @@
 
 local CmdVoletSalonBalcon = MajordomeMQTTTopic.find("CmdVoletSalonBalcon", true)
 local CmdVoletSalonCheminee = MajordomeMQTTTopic.find("CmdVoletSalonCheminee", true)
-local CmdVoletSalonFenetre = MajordomeMQTTTopic.find("CmdVoletSalonFenetre", true)
+-- local CmdVoletSalonFenetre = MajordomeMQTTTopic.find("CmdVoletSalonFenetre", true)
 local mode = SelShared.Get("Mode") or "Manuel"
 
 --
@@ -20,5 +20,5 @@ else
 	SelLog.log('A', "Fermeture 'My' du volet du salon")
 	CmdVoletSalonBalcon:Publish("My")
 	CmdVoletSalonCheminee:Publish("My")
-	CmdVoletSalonFenetre:Publish("My")
+--	CmdVoletSalonFenetre:Publish("My")
 end
