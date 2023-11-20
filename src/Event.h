@@ -1,5 +1,5 @@
 /* Event
- * Master class to object that has action attached
+ * Master class to objects having action attached
  */
 #ifndef EVENT_H
 #define EVENT_H
