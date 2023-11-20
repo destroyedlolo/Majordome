@@ -16,10 +16,9 @@ Installation
 
   1. install dependencies and C++ compilation suite if needed.
   1. extract Majordome sources "somewhere" (a.k.a in a temporary directory)
-  1. optionally, if you want to change compilation option
-     1. install [LFMakeMaker](https://github.com/destroyedlolo/LFMakeMaker)
-     1. customise `remake.sh` as per your needs.
-     1. execute `remake.sh` to update Makefiles.
+  1. install [LFMakeMaker](https://github.com/destroyedlolo/LFMakeMaker)
+  1. customise `remake.sh` as per your needs.
+  1. execute `remake.sh` to update Makefiles.
   1. `make`
   1. copy **Majordome** binary somewhere in your path (`/usr/local/sbin` is suggested).
 
