@@ -17,10 +17,12 @@ Some examples are provided also in `Config` directory at the root of this projec
 - `-r` : enable trace messages, even more verbose, noisy
 - `-V` : silence topic arrival messages. Avoid verbosity to be polluted but incoming messages tracking which is very noisy.
 
-# Configuration file
+# General configuration file
 
 A configuration file instructs Majordome about its basic configuration and where are located automation objects.<br>
 Lines starting by a hash sign `#` are considered as comment and, as such, ignored.
+
+:sunglasses: Thanks to `-f`, it's possible to specify the configuration file to use, consequently, it's possible to have several instances running with totally separate configuration.
 
 ## Known configuration directives
 ### Broker_URL
