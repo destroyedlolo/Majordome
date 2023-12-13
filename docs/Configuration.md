@@ -42,3 +42,16 @@ Example :<br>
 Directory where to find custom configuration and automation objects.<br>
 Example (which is the default value) :<br>
 ``UserConfiguration=/usr/local/etc/Majordome/``
+
+# Automation Configuration
+
+Automation configuration are grouped (for a specific Majordome instance) in a directory tree likes :
+```
+00_Majordome
+01_Pool
+02_LivingRoom
+```
+
+Directories are loaded in order (00_* first, 01_* after, etc ...). As soon as declared, Majordome objects can be used in further ones. An error is raised if an object is duplicated.
+
+**Notez-bien :** We are speaking here about Majordome's objects. Lua side variables can't be shared among scripts. See bellow about Lua scripting.
