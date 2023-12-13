@@ -52,6 +52,61 @@ Automation configuration are grouped (for a specific Majordome instance) in a di
 02_LivingRoom
 ```
 
-Directories are loaded in order (00_* first, 01_* after, etc ...). As soon as declared, Majordome objects can be used in further ones. An error is raised if an object is duplicated.
+Directories are loaded in order (00_* first, 01_* after, etc ...). As soon as declared, Majordome objects can be used in further ones.<br>
+:exclamation: **Notez-bien** :exclamation: Majordome's objects (triggers, timers, ...) are shared. But Lua side variables can't be shared among scripts. See bellow about Lua scripting.
 
-**Notez-bien :** We are speaking here about Majordome's objects. Lua side variables can't be shared among scripts. See bellow about Lua scripting.
+An error is raised if an object is duplicated.
+
+Have a look on `00_Majordome` provided in **Config** directory : 
+```
+LogToFile.lua
+MidnightOrAtLaunch.timer
+PurgeLog.lua
+README.md
+```
+It defines **daily rotating log** in `/tmp` with automatic purging. See [Séléné](https://github.com/destroyedlolo/Selene)'s SelLog.
+
+## Objects
+Files without known suffix are ignored.
+### Init.lua
+In each subdirectory, `Init.lua` (with capital 'I') is executed at startup. It's mostly used to do initialization (so its filename :yum:).
+### .topic : MQTT topic definition
+Define **MQTT topic**, with following known parameters :
+#### name=
+Unique name to identify the topic. If not set, takes the filename.
+```
+name=toto
+```
+#### topic=
+Topic to listen to. This field is mandatory.
+```
+topic=Temperature/Pool
+```
+
+#### qos=
+Quality of service for this topic between **0** and **2**. If outside this range, forced to **0** (which is the default value)
+```
+qos=2
+```
+#### store
+Store received payload in a SelShared variable with the name of this topic. As example :
+```
+name=titi
+topic=example
+store
+```
+If we receive a value "*toto*" in topic `example`, a SelShared variable "**titi**" is created with value "*toto*".
+#### numeric
+Store the payload as a numeric value (float).
+#### ttl=
+Time to live of this SelShared (in seconds). When the topic doesn't receive fresh data during this ttl period, SelShared is unset.
+```
+ttl=2.5
+```
+#### default=
+Set the default value for this topic. This field must be defined after **name**, **numeric** and **ttl** and is useful only with **store**d topics.
+```
+default=3.14
+```
+#### disabled
+This topic starts as disabled : incoming messages are ignored.
