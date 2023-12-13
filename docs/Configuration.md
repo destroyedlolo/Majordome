@@ -68,8 +68,14 @@ It defines **daily rotating log** in `/tmp` with automatic purging. See [Sélén
 
 ## Objects
 Files without known suffix are ignored.
+
+---
+
 ### Init.lua
 In each subdirectory, `Init.lua` (with capital 'I') is executed at startup. It's mostly used to do initialization (so its filename :yum:).
+
+---
+
 ### .topic : MQTT topic definition
 Define **MQTT topic**, with following known parameters :
 #### name=
@@ -110,3 +116,31 @@ default=3.14
 ```
 #### disabled
 This topic starts as disabled : incoming messages are ignored.
+
+---
+
+### .timer
+Define a timer for recurring task.
+
+#### name=
+Unique name to identify the topic. If not set, takes the filename.
+```
+name=toto
+```
+
+#### every=
+Specify repeating delay (in seconds), ignored if null.
+```
+every=15
+```
+
+#### at=
+Set an absolute time to this timer using format format `HHMM`.
+```
+at=2256
+```
+The trigger will be raised at 56 to 10 PM.
+
+:exclamation: **Notez-bien** :exclamation: **every=** has precedence on **at=**, if both are present, only **every=** is took in account.
+
+#### at=
