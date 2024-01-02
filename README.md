@@ -6,5 +6,4 @@ This is **N**ew **G**eneration of **Majordome**.
 
 ---
 
-[docs directory](docs/) containes various ... documentations : installation procedures, API of pluggins ...
-
+[How to configure](How to configure/) explains how to configure automation within Majordome
