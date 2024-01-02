@@ -35,3 +35,15 @@ Silences some logs. This option is useful to avoid logging of very noisy topics.
 
 ### disabled
 This trigger starts as disabled : incoming messages are ignored.
+
+## Example
+File **MidnightOrAtLaunch.timer**
+```
+# Timer to trigger an action at midnight or when Majordome is launched
+
+# Launch it at midnight
+at=0000
+
+# or at launch time
+runifover
+```
