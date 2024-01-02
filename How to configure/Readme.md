@@ -119,38 +119,4 @@ This topic starts as disabled : incoming messages are ignored.
 
 ---
 
-### .timer
-Define a timer for recurring task.
 
-#### name=
-Unique name to identify the topic. If not set, takes the filename.
-```
-name=toto
-```
-
-#### every=
-Specify repeating delay (in seconds), ignored if null.
-```
-every=15
-```
-
-#### at=
-Set an absolute time to this timer using format format `HHMM`.
-```
-at=2256
-```
-The trigger will be raised at 56 to 10 PM.
-
-:exclamation: **Notez-bien** :exclamation: **every=** has precedence on **at=**, if both are present, only **every=** is took in account.
-
-#### immediate
-Trigger this timer at startup. If not set, it will trigger after the initial delay.
-
-#### runifover
-If Majordome is starting after `at=` time, on the same day, this timer is trigger.
-
-#### quiet
-Silences some logs. This option is useful to avoid logging of very noisy topics.
-
-#### disabled
-This trigger starts as disabled : incoming messages are ignored.
