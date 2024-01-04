@@ -33,4 +33,7 @@ This tracker starts as disabled : stats change and incoming messages are ignored
 ### MQTT topics
 
 #### -->> listen=
-Indicate which [Topic](topic.md) to follow.
+Indicates which [Topic](topic.md) to follow.
+
+#### -->> statustopic=
+Report status change to the given topic.
