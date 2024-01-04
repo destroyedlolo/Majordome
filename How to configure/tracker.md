@@ -37,3 +37,4 @@ Indicates which [Topic](topic.md) to follow.
 
 #### -->> statustopic=
 Report status change to the given topic.
+(est-il hardcode, ou est-ce un topic ???)
