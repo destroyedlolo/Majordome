@@ -6,4 +6,4 @@ This is **N**ew **G**eneration of **Majordome**.
 
 ---
 
-[How to configure](How to configure/) explains how to configure automation within Majordome
+[How to configure](/HowToConfigure/) explains how to configure automation within Majordome
