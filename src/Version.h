@@ -23,7 +23,9 @@
  *	29/08/2020 - v3.11 - LF - Add MAJORDOME_TOPIC_NAME Lua's variable
  *	04/12/2020 - v3.12 - LF - Trace message can be silenced
  *	09/12/2020 - v3.13 - LF - add getName()
+ *		---
+ *	12/05/2024 - v4.00 - LF - Migrate to SeleneV7
  */
 
-#define VERSION 3.1302
-#define COPYRIGHT "Majordome (c) L.Faillie 2018-2022"
+#define VERSION 4.0000
+#define COPYRIGHT "Majordome (c) L.Faillie 2018-2024"
