@@ -17,6 +17,7 @@
  */
 
 #include "Selene.h"
+#include "Helpers.h"
 #include "Version.h"
 
 #define DEFAULT_CONFIGURATION_FILE "/usr/local/etc/Majordome.conf"

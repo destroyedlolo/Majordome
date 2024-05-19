@@ -47,14 +47,6 @@ extern char *striKWcmp( char *s, const char *kw );
 extern MayBeEmptyString striKWcmp( std::string s, const char *kw );
 extern MayBeEmptyString striKWcmp( std::string s, std::string &kw );
 
-/* Log messages (in printf() format) into both
- * stdout/err and in topics.
- * 
- * -> l : level of the message [F]atal, [E]rror, [W]arning or info
- * 	msg : the message to log + arguments
- */
-extern void publishLog( char l, const char *msg, ...);
-
 /* Return the extention of a given file
  * -> filename
  * <- pointer to the last '.' or NULL if not found

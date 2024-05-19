@@ -37,21 +37,6 @@ MayBeEmptyString striKWcmp( std::string &s, std::string &kw ){
 	return MayBeEmptyString();
 }
 
-void publishLog( char l, const char *msg, ...){
-	va_list args;
-	va_start(args, msg);
-
-	if(l=='T' && !trace)	// Don't display trace
-		return;
-
-	char tmsg[1024];	/* No simple way here to know the message size */
-	vsnprintf(tmsg, sizeof(tmsg), msg, args);
-
-	slc_log( l, tmsg );
-
-	va_end(args);
-}
-
 const char *fileextention( const char *fch ){
 	return strrchr(fch, '.');
 }
