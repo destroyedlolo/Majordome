@@ -3,17 +3,18 @@
  * 27/07/2018 - LF - First version
  * 10/08/2018 - LF - Force loading order
  * 16/03/2019 - LF - Add .tracker
+ * 20/05/2024 - LF - Migrate to v4
  */
 #include <cstring>
 #include <algorithm>
 
-#include <libSelene.h>
-
+#include "Selene.h"
 #include "Helpers.h"
 #include "SubConfigDir.h"
-#include "Timer.h"
 
-/* Determine object weight based on its file extension */
+/* Determine object weight based on its file extension 
+ * (reverse ordered by weight)
+ */
 static const char * fileext[] = {
 	".topic",
 	".timer",
@@ -23,7 +24,7 @@ static const char * fileext[] = {
 };
 
 static int objectweight( const char *ext ){
-	for( unsigned int i = 0; i<sizeof(fileext)/sizeof(const char *); i++){
+	for(unsigned int i = 0; i<sizeof(fileext)/sizeof(const char *); i++){
 		if(!strcmp(ext, fileext[i]))
 			return (int)i;
 	}
@@ -31,7 +32,7 @@ static int objectweight( const char *ext ){
 }
 
 bool SubConfigDir::accept( const char *fch, std::string &full ){
-	if( SortDir::accept( fch, full ) ){
+	if(SortDir::accept( fch, full )){
 		const char *ext = fileextention( fch );
 		bool res = false;
 
@@ -39,7 +40,7 @@ bool SubConfigDir::accept( const char *fch, std::string &full ){
 			res = (objectweight(ext) != -1 );
 
 		if(!res)
-			publishLog('E', "'%s' is rejected", fch);
+			SelLog->Log('E', "'%s' is rejected", fch);
 
 		return( res );
 	}
@@ -53,6 +54,7 @@ SubConfigDir::SubConfigDir( Config &cfg, std::string &where, lua_State *L){
 		std::string completpath = where + '/' + *i;
 		const char *ext = fileextention( (*i).c_str() );
 
+#if 0 /* AF */
 		if( *i == "Init.lua" ){
 			if(configtest){
 				publishLog('T', "\t'Init.lua' (Not launched : test mode)");
@@ -126,10 +128,11 @@ SubConfigDir::SubConfigDir( Config &cfg, std::string &where, lua_State *L){
 			} else
 				cfg.TrackersList.insert( std::make_pair(name, trk) );
 		}
-#ifdef DEBUG
-else 
-	if( debug )
-		printf("*d* ignoring %s (ext '%s')\n", (*i).c_str(), ext );
+#	ifdef DEBUG
+		else 
+			if( debug )
+				printf("*d* ignoring %s (ext '%s')\n", (*i).c_str(), ext );
+#	endif
 #endif
 	}
 }

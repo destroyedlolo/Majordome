@@ -19,6 +19,7 @@
 #include "Selene.h"
 #include "Helpers.h"
 #include "Version.h"
+#include "Config.h"
 
 #include <iostream>
 #include <fstream>
@@ -46,6 +47,8 @@ bool debug = false;
 bool quiet = false;
 bool trace = false;
 bool configtest = false;
+
+Config config;
 
 	/******
 	 * local configuration
@@ -257,5 +260,19 @@ int main(int ac, char **av){
 	}
 	atexit(brkcleaning);
 
-	
+	if(!quiet)
+		SelLog->Log('I', "Starting %s %f ...", basename(av[0]), VERSION);
+
+		/***
+		 * Reading user configuration 
+		 ****/
+	config.init(UserConfigRoot.c_str(), SelLua->getLuaState());	// Read user's configuration files
+
+	if(configtest){
+		SelLog->Log('E', "Testing only the configuration ... leaving.");
+		exit(EXIT_FAILURE);
+	}
+
+	if(!quiet)
+		SelLog->Log('I', "Let's go ...");
 }
