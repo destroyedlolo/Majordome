@@ -5,7 +5,6 @@
 #include <cstdarg>
 #include <cstdio>
 
-#include <libSelene.h>
 #include "Helpers.h"
 
 char *removeLF(char *s){
