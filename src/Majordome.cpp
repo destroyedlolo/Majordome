@@ -23,7 +23,6 @@
 
 #include <iostream>
 #include <fstream>
-#include <string>
 
 #include <cstdio>
 #include <cstdlib>
@@ -266,7 +265,7 @@ int main(int ac, char **av){
 		/***
 		 * Reading user configuration 
 		 ****/
-	config.init(UserConfigRoot.c_str(), SelLua->getLuaState());	// Read user's configuration files
+	config.init(UserConfigRoot, SelLua->getLuaState());	// Read user's configuration files
 
 	if(configtest){
 		SelLog->Log('E', "Testing only the configuration ... leaving.");

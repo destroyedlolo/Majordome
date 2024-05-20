@@ -20,7 +20,8 @@ static const char * fileext[] = {
 	".timer",
 	".rendezvous",
 	".tracker",
-	".lua"
+	".lua",
+	".md"
 };
 
 static int objectweight( const char *ext ){
@@ -54,8 +55,10 @@ SubConfigDir::SubConfigDir( Config &cfg, std::string &where, lua_State *L){
 		std::string completpath = where + '/' + *i;
 		const char *ext = fileextention( (*i).c_str() );
 
+		if(!strcmp(ext,".md"))	// Ignore documentation
+			;
 #if 0 /* AF */
-		if( *i == "Init.lua" ){
+		else if( *i == "Init.lua" ){
 			if(configtest){
 				publishLog('T', "\t'Init.lua' (Not launched : test mode)");
 				continue;
