@@ -27,6 +27,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>		// strerror()
+#include <cassert>
 
 #include <unistd.h> 	// getopt()
 #include <errno.h>
@@ -104,6 +105,11 @@ static void read_configuration(const char *fch){
 	}
 }
 
+	/******
+	 * technical objects
+	 *******/
+pthread_attr_t thread_attr;
+
 int main(int ac, char **av){
 	initSelene();							// Load Séléné modules
 	SelLog->configure(NULL, LOG_STDOUT);	// Early logging to STDOUT before broker initialisation
@@ -164,4 +170,14 @@ int main(int ac, char **av){
 		exit(EXIT_FAILURE);
 	}
 	read_configuration(conf_file);
+
+		/***
+		 * Initial technical objects
+		 ***/
+
+		// Creates threads as detached in order to save
+		// some resources when quiting
+	assert(!pthread_attr_init (&thread_attr));
+	assert(!pthread_attr_setdetachstate (&thread_attr, PTHREAD_CREATE_DETACHED));
+
 }
