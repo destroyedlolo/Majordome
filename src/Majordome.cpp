@@ -110,6 +110,47 @@ static void read_configuration(const char *fch){
 	 *******/
 pthread_attr_t thread_attr;
 
+	/******
+	 * MQTT's
+	 *******/
+
+MQTTClient MQTT_client;
+
+/* handle message arrival and call associated function.
+ * NOTE : up to now, only textual topics & messages are
+ * correctly handled (lengths are simply ignored)
+ *
+ * Take in account ONLY the first enabled topic matching 
+ * the receiving one, even if all tasks are disabled or
+ * already running.
+ */
+static int msgarrived(void *actx, char *topic, int tlen, MQTTClient_message *msg){
+	if(verbose && !hideTopicArrival)
+		SelLog->Log('T', "Receiving '%s'", topic);
+
+		// Convert the payload to a string
+	char cpayload[msg->payloadlen + 1];
+	memcpy(cpayload, msg->payload, msg->payloadlen);
+	cpayload[msg->payloadlen] = 0;
+
+	MQTTClient_freeMessage(&msg);
+	MQTTClient_free(topic);
+	return 1;
+}
+
+static void connlost(void *ctx, char *cause){
+	SelLog->Log('F', "Broker connection lost due to %s", cause);
+	exit(EXIT_FAILURE);
+}
+
+static void brkcleaning(void){	/* Clean broker stuffs */
+	MQTTClient_disconnect(MQTT_client, 10000);	/* 10s for the grace period */
+	MQTTClient_destroy(&MQTT_client);
+}
+
+	/******
+	 * Main loop
+	 *******/
 int main(int ac, char **av){
 	initSelene();							// Load Séléné modules
 	SelLog->configure(NULL, LOG_STDOUT);	// Early logging to STDOUT before broker initialisation
@@ -180,4 +221,41 @@ int main(int ac, char **av){
 	assert(!pthread_attr_init (&thread_attr));
 	assert(!pthread_attr_setdetachstate (&thread_attr, PTHREAD_CREATE_DETACHED));
 
+		/***
+		 * Connecting to the broker
+		 ***/
+	MQTTClient_connectOptions conn_opts = MQTTClient_connectOptions_initializer;
+	conn_opts.reliable = 0;	/* Asynchronous sending */
+	int err;
+
+	if( (err = MQTTClient_create( &MQTT_client, Broker_URL.c_str(), MQTT_ClientID.c_str(), MQTTCLIENT_PERSISTENCE_NONE, NULL)) != MQTTCLIENT_SUCCESS ){
+		SelLog->Log('F', "Can't connect to broker due to error %d", err);
+		exit(EXIT_FAILURE);
+	}
+
+	MQTTClient_setCallbacks( MQTT_client, NULL, connlost, msgarrived, NULL);
+
+	switch( err = MQTTClient_connect( MQTT_client, &conn_opts) ){
+	case MQTTCLIENT_SUCCESS : 
+		break;
+	case 1 : SelLog->Log('F', "Unable to connect : Unacceptable protocol version");
+		exit(EXIT_FAILURE);
+	case 2 : SelLog->Log('F', "Unable to connect : Identifier rejected");
+		exit(EXIT_FAILURE);
+	case 3 : SelLog->Log('F', "Unable to connect : Server unavailable");
+		exit(EXIT_FAILURE);
+	case 4 : SelLog->Log('F', "Unable to connect : Bad user name or password");
+		exit(EXIT_FAILURE);
+	case 5 : SelLog->Log('F', "Unable to connect : Not authorized");
+		exit(EXIT_FAILURE);
+	default :
+		if( !MQTTClient_isConnected( MQTT_client ) ){
+			SelLog->Log('F', "Unable to connect (unknown error : %d)", err);
+			exit(EXIT_FAILURE);
+		} else
+			SelLog->Log('W', "Connected but got an unknown error : %d)", err);
+	}
+	atexit(brkcleaning);
+
+	
 }
