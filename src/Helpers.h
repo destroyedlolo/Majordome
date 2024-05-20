@@ -8,6 +8,8 @@
 #ifndef HELPERS_H
 #define HELPERS_H
 
+#include <string>
+
 #include <MQTTClient.h> /* PAHO library needed */
 #include <lua.h>	/* Lua's state needed */
 
@@ -22,7 +24,7 @@ extern bool debug;
 extern bool trace;
 extern bool configtest;
 extern MQTTClient MQTT_client;
-extern const char *MQTT_ClientID;
+extern std::string MQTT_ClientID;
 
 extern void *luainitfunc;
 
