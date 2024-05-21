@@ -48,36 +48,36 @@ bool SubConfigDir::accept( const char *fch, std::string &full ){
 	return false;
 }
 
-SubConfigDir::SubConfigDir( Config &cfg, std::string &where, lua_State *L){
-	this->readdircontent( where );
+SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
+	this->readdircontent(where);
 
 	for( iterator i=this->begin(); i<this->end(); i++){
 		std::string completpath = where + '/' + *i;
-		const char *ext = fileextention( (*i).c_str() );
+		const char *ext = fileextention((*i).c_str());
 
 		if(!strcmp(ext,".md"))	// Ignore documentation
 			;
-#if 0 /* AF */
 		else if( *i == "Init.lua" ){
 			if(configtest){
-				publishLog('T', "\t'Init.lua' (Not launched : test mode)");
+				SelLog->Log('T', "\t'Init.lua' (Not launched : test mode)");
 				continue;
 			}
 
 			if(verbose)
-				publishLog('L', "\t'Init.lua'");
+				SelLog->Log('L', "\t'Init.lua'");
 				
-			lua_pushstring(L, where.c_str() );
+			lua_pushstring(L, where.c_str());
 			lua_setglobal(L, "SELENE_SCRIPT_DIR");
-			lua_pushstring(L, (*i).c_str() );
+			lua_pushstring(L, (*i).c_str());
 			lua_setglobal(L, "SELENE_SCRIPT_NAME");
 
 			int err = luaL_loadfile(L, completpath.c_str()) || lua_pcall(L, 0, 0, 0);
 			if(err){
-				publishLog('F', "%s : %s", completpath.c_str(), lua_tostring(L, -1));
+				SelLog->Log('F', "%s : %s", completpath.c_str(), lua_tostring(L, -1));
 				lua_pop(L, 1);  /* pop error message from the stack */
 				exit(EXIT_FAILURE);
 			}
+#if 0 /* AF */
 		} else if( !strcmp(ext,".topic") ){
 			std::string name;
 			MQTTTopic tpc( completpath, where, name );
@@ -130,13 +130,13 @@ SubConfigDir::SubConfigDir( Config &cfg, std::string &where, lua_State *L){
 				exit(EXIT_FAILURE);
 			} else
 				cfg.TrackersList.insert( std::make_pair(name, trk) );
+#endif
 		}
 #	ifdef DEBUG
 		else 
-			if( debug )
-				printf("*d* ignoring %s (ext '%s')\n", (*i).c_str(), ext );
+			if(debug)
+				SelLog->Log('D', "Ignoring %s (ext '%s')\n", (*i).c_str(), ext );
 #	endif
-#endif
 	}
 }
 

@@ -9,6 +9,7 @@
 #ifndef SELENE_H
 #define SELENE_H
 
+#include <lua.hpp>
 #include <Selene/libSelene.h>	/* Modules : the only part hardly linked */
 #include <Selene/SeleneCore.h>	/* Selene's core functionalities */
 #include <Selene/SelLog.h>		/* Logging : not really mandatory but very useful in most of the cases */
