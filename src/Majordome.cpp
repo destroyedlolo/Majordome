@@ -108,9 +108,36 @@ static void read_configuration(const char *fch){
 }
 
 	/******
-	 * technical objects
+	 * Threading
 	 *******/
 pthread_attr_t thread_attr;
+
+/* Set the environment of each newly created threads
+ * (including the main one)
+ */
+
+void threadEnvironment(lua_State *L){
+	lua_pushnumber( L, VERSION );	/* Expose version to lua side */
+	lua_setglobal( L, "MAJORDOME_VERSION" );
+
+	lua_pushstring( L, COPYRIGHT );	/* Expose copyright to lua side */
+	lua_setglobal( L, "MAJORDOME_COPYRIGHT" );
+
+	lua_pushstring( L, MQTT_ClientID.c_str() );	/* Expose ClientID to lua side */
+	lua_setglobal( L, "MAJORDOME_ClientID" );
+
+#if DEBUG
+	if(debug){
+		lua_pushinteger( L, 1 );	/* Expose ClientID to lua side */
+		lua_setglobal( L, "MAJORDOME_DEBUG" );
+	}
+#endif
+	
+	SelLua->ApplyStartupFunc(L);	// Creates metas
+	SelMQTT->createExternallyManaged(L, MQTT_client);	// Push object on the task
+	lua_setglobal( L, "MQTTBroker" );	// expose it as the broker
+}
+
 
 	/******
 	 * MQTT's
@@ -259,8 +286,10 @@ int main(int ac, char **av){
 	}
 	atexit(brkcleaning);
 
+	threadEnvironment(SelLua->getLuaState());
+
 	if(!quiet)
-		SelLog->Log('I', "Starting %s %f ...", basename(av[0]), VERSION);
+		SelLog->Log('I', "Application code for %s %f ...", basename(av[0]), VERSION);
 
 		/***
 		 * Reading user configuration 

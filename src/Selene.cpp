@@ -11,6 +11,7 @@
 struct SeleneCore *SeleneCore;
 struct SelLog *SelLog;
 struct SelLua *SelLua;
+struct SelMQTT *SelMQTT;
 
 	/* Here start 'standard' C code */
 #include <cstdlib>		/* exit(), ... */
@@ -67,5 +68,9 @@ void initSelene(void){
 
 	SelLua = (struct SelLua *)SeleneCore->loadModule("SelLua", SELLUA_VERSION, &verfound, 'F');
 	if(!SelLua)
+		exit(EXIT_FAILURE);
+
+	SelMQTT = (struct SelMQTT *)SeleneCore->loadModule("SelMQTT", SELMQTT_VERSION, &verfound, 'F');
+	if(!SelMQTT)
 		exit(EXIT_FAILURE);
 }

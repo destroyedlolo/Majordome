@@ -37,15 +37,15 @@ else
 fi
 
 echo -n "Selene : "
-if [ -d /usr/local/lib/Selene ]; then
+if [ -d /usr/local/lib/Selenex ]; then
 	echo "System installation"
 	SELDIR=/usr/local
-#elif [ -d ~/Projets/Selene.v4 ]; then
-#	echo "**DEV**DEV** V4"
-#	SELLIBDIR=~/Projets/Selene.v4
+elif [ -d ~/Projets/Selene.v7 ]; then
+	echo "**DEV**DEV** V7"
+	SELDIR=~/Projets/Selene.v7
 else
 	echo "**DEV**DEV**"
-	SELLIBDIR=~/Projets/Selene
+	SELDIR=~/Projets/Selene
 fi
 
 echo
