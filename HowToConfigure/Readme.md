@@ -45,7 +45,7 @@ Example (which is the default value) :<br>
 
 # Automation Configuration
 
-Automation configuration are grouped (for a specific Majordome instance) in a directory tree likes :
+Automation configurations are grouped (for a specific Majordome instance) in a directory tree likes :
 ```
 00_Majordome
 01_Pool
@@ -66,13 +66,27 @@ README.md
 ```
 It defines **daily rotating log** in `/tmp` with automatic purging. See [Séléné](https://github.com/destroyedlolo/Selene)'s SelLog.
 
+## Lua scripting
+
+### Defined objects
+
+Following variables are defined in launched scripts :
+- **MAJORDOME_VERSION**
+- **MAJORDOME_COPYRIGHT**
+- **MAJORDOME_ClientID** - MQTT Client identifier, must be unique per broker.
+- if compiled with DEBUG defined and if started with `-d` option, **MAJORDOME_DEBUG** is declared, otherwise, it is unset.
+
+As well as following objects :
+- all Séléné loaded modules (**SelLog**, **SelMQTT**, ...)
+- **MQTTBroker** - Broker defined in Majordome's configuration file. This object aims to let Lua scripts to `Publish()` 
+
 ## Objects
 Files without known suffix are ignored.
 
 ---
 
 ### Init.lua
-In each subdirectory, `Init.lua` (with capital 'I') is executed at startup. It's mostly used to do initialization (so its filename :yum:).
+In each subdirectory, `Init.lua` (with capital 'I') is executed at startup, during user configuration loading. It's mostly used to do initialization (so its filename :yum:).
 
 ---
 
