@@ -19,13 +19,13 @@ bool LuaExec::LoadFunc( lua_State *L, std::stringstream &buffer, const char *nam
 	if( !!(err = luaL_loadbuffer( L, buffer.str().c_str(), buffer.str().size(), name ))){
 		switch( err ){
 		case LUA_ERRMEM :
-			publishLog('F', "Memory allocation error");
+			SelLog->Log('F', "Memory allocation error");
 			return false;
 		case LUA_ERRSYNTAX :
-			publishLog('F', lua_tostring(L, -1));
+			SelLog->Log('F', lua_tostring(L, -1));
 			return false;
 		default :
-			publishLog('F', "luaL_loadbuffer() unknown error : %d", err);
+			SelLog->Log('F', "luaL_loadbuffer() unknown error : %d", err);
 			return false;
 		}
 	}
@@ -35,7 +35,7 @@ bool LuaExec::LoadFunc( lua_State *L, std::stringstream &buffer, const char *nam
 		,1
 #endif
 	) != 0){
-		publishLog('F', "lua_dump() : %d", err);
+		SelLog->Log('F', "lua_dump() : %d", err);
 		return false;
 	}
 	lua_pop(L,1);	// remove the function from the stack
@@ -87,7 +87,7 @@ static void *launchfunc(void *a){
 	struct launchargs *arg = (struct launchargs *)a;	// To avoid further casting
 
 	if(lua_pcall( arg->L, 0, 0, 0))
-		publishLog('E', "Can't execute task '%s' from '%s' : %s", arg->task->getNameC(), arg->task->getWhereC(), lua_tostring(arg->L, -1));
+		SelLog->Log('E', "Can't execute task '%s' from '%s' : %s", arg->task->getNameC(), arg->task->getWhereC(), lua_tostring(arg->L, -1));
 	lua_close(arg->L);
 	arg->task->finished();
 	free(arg);
@@ -101,7 +101,7 @@ bool LuaExec::execAsync( const char *name, const char *topic, const char *payloa
 
 	arg->L = luaL_newstate();
 	if( !arg->L ){
-		publishLog('E', "Unable to create a new Lua State for '%s' from '%s'", this->getNameC(), this->getWhereC() );
+		SelLog->Log('E', "Unable to create a new Lua State for '%s' from '%s'", this->getNameC(), this->getWhereC() );
 		this->finished();
 		free( arg );
 		return false;
@@ -112,7 +112,7 @@ bool LuaExec::execAsync( const char *name, const char *topic, const char *payloa
 
 	int err;
 	if( (err = loadsharedfunction( arg->L, this->getFunc() )) ){
-		publishLog('E', "Unable to create task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), (err == LUA_ERRSYNTAX) ? "Syntax error" : "Memory error" );
+		SelLog->Log('E', "Unable to create task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), (err == LUA_ERRSYNTAX) ? "Syntax error" : "Memory error" );
 		lua_close( arg->L );
 		this->finished();
 		free( arg );
@@ -125,7 +125,7 @@ bool LuaExec::execAsync( const char *name, const char *topic, const char *payloa
 
 	pthread_t tid;	// No need to be kept
 	if(pthread_create( &tid, &thread_attr, launchfunc,  arg) < 0){
-		publishLog('E', "Unable to create task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), strerror(errno));
+		SelLog->Log('E', "Unable to create task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), strerror(errno));
 		this->finished();
 		lua_close( arg->L );
 		free( arg );
@@ -138,7 +138,7 @@ bool LuaExec::execAsync( const char *name, const char *topic, const char *payloa
 bool LuaExec::execSync( const char *name, const char *topic, const char *payload, bool tracker, enum boolRetCode *rc ){
 	lua_State *L = luaL_newstate();
 	if( !L ){
-		publishLog('E', "Unable to create a new Lua State for '%s' from '%s'", this->getNameC(), this->getWhereC() );
+		SelLog->Log('E', "Unable to create a new Lua State for '%s' from '%s'", this->getNameC(), this->getWhereC() );
 		return false;
 	}
 
@@ -147,7 +147,7 @@ bool LuaExec::execSync( const char *name, const char *topic, const char *payload
 
 	int err;
 	if( (err = loadsharedfunction( L, this->getFunc() )) ){
-		publishLog('E', "Unable to create task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), (err == LUA_ERRSYNTAX) ? "Syntax error" : "Memory error" );
+		SelLog->Log('E', "Unable to create task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), (err == LUA_ERRSYNTAX) ? "Syntax error" : "Memory error" );
 		lua_close( L );
 		return false;
 	}
@@ -155,10 +155,10 @@ bool LuaExec::execSync( const char *name, const char *topic, const char *payload
 	this->feedState( L, name, topic, payload, tracker );
 
 	if(verbose && !this->isQuiet())
-		publishLog('T', "Sync running Task '%s' from '%s'", this->getNameC(), this->getWhereC() );
+		SelLog->Log('T', "Sync running Task '%s' from '%s'", this->getNameC(), this->getWhereC() );
 
 	if(lua_pcall( L, 0, 1, 0))
-		publishLog('E', "Can't execute task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), lua_tostring(L, -1));
+		SelLog->Log('E', "Can't execute task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), lua_tostring(L, -1));
 
 	if(rc){
 		*rc = boolRetCode::RCnil;

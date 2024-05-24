@@ -10,7 +10,7 @@
 
 #include <sstream>	// stringstream
 
-#include <libSelene.h>
+#include "Selene.h"
 
 class LuaExec : virtual public Object {
 	struct elastic_storage func;	// Function to execute

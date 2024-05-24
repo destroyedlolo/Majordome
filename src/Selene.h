@@ -15,11 +15,13 @@
 #include <Selene/SelLog.h>		/* Logging : not really mandatory but very useful in most of the cases */
 #include <Selene/SelLua.h>
 #include <Selene/SelMQTT.h>
+#include <Selene/SelElasticStorage.h>
 
 extern struct SeleneCore *SeleneCore;
 extern struct SelLog *SelLog;
 extern struct SelLua *SelLua;
 extern struct SelMQTT *SelMQTT;
+extern struct SelElasticStorage *SelElasticStorage;
 
 extern void initSelene(void);
 

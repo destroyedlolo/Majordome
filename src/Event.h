@@ -1,5 +1,6 @@
 /* Event
- * Master class to objects having action attached
+ * Master class to objects having actions attached.
+ * Used also to impersonate Rendez-Vous.
  */
 #ifndef EVENT_H
 #define EVENT_H
@@ -50,9 +51,11 @@ private:
 	StringVector trackersToDisable;	// Trackers to be disabled by this event
 
 public:
+	/* Add a tracker to Enable or Disable list */
 	void addTrackerEN( std::string t ){ this->trackersToEnable.Add(t); }
 	void addTrackerDIS( std::string t ){ this->trackersToDisable.Add(t); }
 
+	/* Enable/Disable trackers from lists */
 	void enableTrackers( void );
 	void disableTrackers( void );
 

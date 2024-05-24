@@ -12,6 +12,7 @@ struct SeleneCore *SeleneCore;
 struct SelLog *SelLog;
 struct SelLua *SelLua;
 struct SelMQTT *SelMQTT;
+struct SelElasticStorage *SelElasticStorage;
 
 	/* Here start 'standard' C code */
 #include <cstdlib>		/* exit(), ... */

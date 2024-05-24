@@ -8,6 +8,7 @@ extern "C" {
     #include "lauxlib.h"
 };
 
+#include "Selene.h"
 #include "Helpers.h"
 #include "Event.h"
 #include "Config.h"
@@ -21,7 +22,7 @@ Event::Event( const std::string &fch, std::string &where, std::string &name ){
 	 * Reading file's content
 	 */
 	if(verbose)
-		publishLog('L', "\t'%s'", fch.c_str());
+		SelLog->Log('L', "\t'%s'", fch.c_str());
 
 	std::ifstream file;
 	file.exceptions ( std::ios::eofbit | std::ios::failbit ); // No need to check failbit
@@ -35,26 +36,26 @@ Event::Event( const std::string &fch, std::string &where, std::string &name ){
 			if( !!(arg = striKWcmp( l, "name=" )) ){
 				this->name = name = arg;
 				if(verbose)
-					publishLog('C', "\t\tChanging name to '%s'", name.c_str());
+					SelLog->Log('C', "\t\tChanging name to '%s'", name.c_str());
 			} else if( l == "quiet" ){
 				if(verbose)
-					publishLog('C', "\t\tBe quiet");
+					SelLog->Log('C', "\t\tBe quiet");
 			} else if( l == "disabled" ){
 				if(verbose)
-					publishLog('C', "\t\tDisabled");
+					SelLog->Log('C', "\t\tDisabled");
 				this->disable();
 			}
 #if 0
-else publishLog('D', "Ignore '%s'", l.c_str());
+else SelLog->Log('D', "Ignore '%s'", l.c_str());
 #endif
 		}
 	} catch(const std::ifstream::failure &e){
 		if(!file.eof()){
-			publishLog('F', "%s : %s", fch.c_str(), strerror(errno) );
+			SelLog->Log('F', "%s : %s", fch.c_str(), strerror(errno) );
 			exit(EXIT_FAILURE);
 		}
 	} catch(const std::invalid_argument &e){
-		publishLog('F', "%s : invalid argument", fch.c_str() );
+		SelLog->Log('F', "%s : invalid argument", fch.c_str() );
 		exit(EXIT_FAILURE);
 	}
 
@@ -64,17 +65,17 @@ else publishLog('D', "Ignore '%s'", l.c_str());
 void Event::execTasks( Config &cfg, const char *trig_name, const char *topic, const char *payload, bool tracker, const char *trkstatus ){
 #ifdef DEBUG
 	if(debug && !this->isQuiet())
-		publishLog('D', "execTasks() : %d to run", this->list.size() );
+		SelLog->Log('D', "execTasks() : %d to run", this->list.size());
 #endif
 
-	for( Entries::iterator tsk = this->begin(); tsk != this->end(); tsk++){
+	for(Entries::iterator tsk = this->begin(); tsk != this->end(); tsk++){
 		try {
 			LuaTask &task = cfg.findTask( *tsk );
 			if( this->isQuiet() )
 				task.beQuiet();
 			task.exec( trig_name, topic, payload, tracker, trkstatus );
 		} catch (...) {
-			publishLog('F', "Internal error : can't find task \"%s\"", (*tsk).c_str() );
+			SelLog->Log('F', "Internal error : can't find task \"%s\"", (*tsk).c_str() );
 			exit(EXIT_FAILURE);
 		}
 	}
@@ -83,7 +84,7 @@ void Event::execTasks( Config &cfg, const char *trig_name, const char *topic, co
 void Event::execTasks( Config &cfg, const char *timer_name ){
 #ifdef DEBUG
 	if(debug && !this->isQuiet())
-		publishLog('D', "execTasks() : %d to run", this->list.size() );
+		SelLog->Log('D', "execTasks() : %d to run", this->list.size());
 #endif
 
 	for( Entries::iterator tsk = this->begin(); tsk != this->end(); tsk++){
@@ -93,7 +94,7 @@ void Event::execTasks( Config &cfg, const char *timer_name ){
 				task.beQuiet();
 			task.exec( timer_name );
 		} catch (...) {
-			publishLog('F', "Internal error : can't find task \"%s\"", (*tsk).c_str() );
+			publishLog('F', "Internal error : can't find task \"%s\"", (*tsk).c_str());
 			exit(EXIT_FAILURE);
 		}
 	}
@@ -102,17 +103,17 @@ void Event::execTasks( Config &cfg, const char *timer_name ){
 void Event::enableTrackers( void ){
 #ifdef DEBUG
 	if(debug && !this->isQuiet())
-		publishLog('D', "enableTrackers() : %d to enable", this->trackersToEnable.size() );
+		SelLog->Log('D', "enableTrackers() : %d to enable", this->trackersToEnable.size());
 #endif
 
-	for( Tracker::iterator trk = this->trackersToEnable.begin(); trk != this->trackersToEnable.end(); trk++){
+	for(Tracker::iterator trk = this->trackersToEnable.begin(); trk != this->trackersToEnable.end(); trk++){
 		try {
 			Tracker &tracker = config.findTracker( *trk );
 			if( this->isQuiet() )
 				tracker.beQuiet();
 			tracker.enable();
 		} catch (...) {
-			publishLog('F', "Internal error : can't find tracker \"%s\"", (*trk).c_str() );
+			SelLog->Log('F', "Internal error : can't find tracker \"%s\"", (*trk).c_str());
 			exit(EXIT_FAILURE);
 		}		
 	}
@@ -121,17 +122,17 @@ void Event::enableTrackers( void ){
 void Event::disableTrackers( void ){
 #ifdef DEBUG
 	if(debug && !this->isQuiet())
-		publishLog('D', "disableTrackers() : %d to disable", this->trackersToDisable.size() );
+		SelLog->Log('D', "disableTrackers() : %d to disable", this->trackersToDisable.size());
 #endif
 
-	for( Tracker::iterator trk = this->trackersToDisable.begin(); trk != this->trackersToDisable.end(); trk++){
+	for(Tracker::iterator trk = this->trackersToDisable.begin(); trk != this->trackersToDisable.end(); trk++){
 		try {
 			Tracker &tracker = config.findTracker( *trk );
 			if( this->isQuiet() )
 				tracker.beQuiet();
 			tracker.disable();
 		} catch (...) {
-			publishLog('F', "Internal error : can't find tracker \"%s\"", (*trk).c_str() );
+			SelLog->Log('F', "Internal error : can't find tracker \"%s\"", (*trk).c_str());
 			exit(EXIT_FAILURE);
 		}		
 	}
@@ -185,7 +186,7 @@ static int mevt_Launch( lua_State *L ){
 		event->disableTrackers();
 #ifdef DEBUG
 	} else if( debug ){
-		publishLog('D', "Event %s is disabled : no tasks launched", event->getNameC() );
+		SelLog->Log('D', "Event %s is disabled : no tasks launched", event->getNameC());
 #endif
 	}
 	return 0;

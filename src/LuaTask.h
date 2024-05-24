@@ -6,8 +6,7 @@
 #ifndef TASK_H
 #define TASK_H
 
-#include <libSelene.h>
-
+#include "Selene.h"
 #include "MayBeEmptyString.h"
 #include "Object.h"
 #include "LuaExec.h"

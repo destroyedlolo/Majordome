@@ -28,9 +28,9 @@ public:
 	void beNoisy( void ){ this->quiet = false; };
 	bool isQuiet( void ){ return this->quiet; };
 
-	std::string &getName( void ){ return this->name; };
+	std::string &getName( void ){ return this->name; };	// Object's name
 	const char *getNameC( void ){ return this->name.c_str(); };
-	std::string &getWhere( void ){ return this->where; };
+	std::string &getWhere( void ){ return this->where; }; // Object's container (it's father directory)
 	const char *getWhereC( void ){ return this->where.c_str(); };
 
 	/*
