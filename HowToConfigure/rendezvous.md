@@ -1,6 +1,6 @@
 # .rendezvous
 A Rendez-vous triggers an action from another object or from Lua code. 
-Typical usage is to synchronize automation within Majordome without having to use intermediate topic.
+Typical usage is to synchronize automation within Majordome without having to use topics only for internal synchronisation.
 
 ## Directives
 
@@ -11,10 +11,10 @@ name=toto
 ```
 
 ### quiet
-Remove some trace. This option is useful to avoid logging of very noisy topics.
+Remove some trace. Be less noisy
 
 ### disabled
-This topic starts as disabled : incoming messages are ignored.
+This rendezvous starts as disabled.
 
 ## Example
 File **test.rendezvous**
@@ -29,3 +29,11 @@ File **test.rendezvous**
 # disable this topic
 #disabled
 ```
+## Lua exposed
+
+Rendez-vous are exposed as `MajordomeRendezVous` with following methods :
+- **Launch()** - Launchs associated tasks
+- **getContainer()** - Returns rendez-vous container (the directory defining this rendez-vous)
+- **getName()** - Rendez-vous' name
+- **isEnabled()** - Is Rendez-vous enabled ?
+- **Enable()** / **Disable()** as the function's name said
