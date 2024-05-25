@@ -74,4 +74,8 @@ void initSelene(void){
 	SelMQTT = (struct SelMQTT *)SeleneCore->loadModule("SelMQTT", SELMQTT_VERSION, &verfound, 'F');
 	if(!SelMQTT)
 		exit(EXIT_FAILURE);
+
+	SelElasticStorage = (struct SelElasticStorage *)SeleneCore->loadModule("SelElasticStorage", SELELASTIC_STORAGE_VERSION, &verfound, 'F');
+	if(!SelElasticStorage)
+		exit(EXIT_FAILURE);
 }

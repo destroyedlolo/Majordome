@@ -12,7 +12,9 @@ extern "C" {
 #include "Config.h"
 #include "Helpers.h"
 #include "LuaTask.h"
+#if 0 /* AF Tracker */
 #include "Tracker.h"
+#endif
 
 LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::string &name, lua_State *L ) : once(false), running_access(PTHREAD_MUTEX_INITIALIZER), running(false), runatstartup(false){
 	if(verbose)
@@ -59,6 +61,7 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 				this->name = name = arg;
 				if(verbose)
 					SelLog->Log('C', "\t\tChanging name to '%s'", name.c_str());
+#if 0 /* AF Topic */
 			} else if( !!(arg = striKWcmp( l, "-->> listen=" ))){
 				Config::TopicElements::iterator topic;
 				if( (topic = cfg.TopicsList.find(arg)) != cfg.TopicsList.end()){
@@ -70,6 +73,8 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 					publishLog('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
 					exit(EXIT_FAILURE);
 				}
+#endif
+#if 0 /* Timer */
 			} else if( !!(arg = striKWcmp( l, "-->> when=" ))){
 				Config::TimerElements::iterator timer;
 				if( (timer = cfg.TimersList.find(arg)) != cfg.TimersList.end()){
@@ -81,6 +86,7 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 					SelLog->Log('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
 					exit(EXIT_FAILURE);
 				}
+#endif
 			} else if( !!(arg = striKWcmp( l, "-->> waitfor=" ))){
 				Config::EventElements::iterator event;
 				if( (event = cfg.EventsList.find(arg)) != cfg.EventsList.end()){
@@ -92,6 +98,7 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 					SelLog->Log('F', "\t\tRendezvous '%s' is not (yet ?) defined", arg.c_str());
 					exit(EXIT_FAILURE);
 				}
+#if 0 /* AF Tracker */
 			} else if( !!(arg = striKWcmp( l, "-->> whenDone=" ))){
 				Config::TrackerElements::iterator tracker;
 				if( (tracker = cfg.TrackersList.find(arg)) != cfg.TrackersList.end()){
@@ -125,6 +132,7 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 					SelLog->Log('F', "\t\tracker '%s' is not (yet ?) defined", arg.c_str());
 					exit(EXIT_FAILURE);
 				}
+#endif
 			} else if( l == "-->> once" ){
 				if(verbose)
 					SelLog->Log('C', "\t\tOnly one instance is allowed to run (once)");
@@ -270,7 +278,7 @@ static int mtsk_launch(lua_State *L){
 	}
 
 	int err;
-	if( (err = loadsharedfunction( L, task->getFunc() )) ){
+	if( (err = SelElasticStorage->loadsharedfunction( L, task->getFunc() )) ){
 		SelLog->Log('E', "Unable to create task '%s' from '%s' : %s", task->getNameC(), task->getWhereC(), (err == LUA_ERRSYNTAX) ? "Syntax error" : "Memory error" );
 		task->finished();
 		return 0;
@@ -327,8 +335,8 @@ static const struct luaL_Reg MajTaskM [] = {
 };
 
 int LuaTask::initLuaObject( lua_State *L ){
-	libSel_objFuncs( L, "MajordomeTask", MajTaskM );
-	libSel_libFuncs( L, "MajordomeTask", MajTaskLib );
+	SelLua->objFuncs( L, "MajordomeTask", MajTaskM );
+	SelLua->libCreateOrAddFuncs( L, "MajordomeTask", MajTaskLib );
 
 	return 1;
 }

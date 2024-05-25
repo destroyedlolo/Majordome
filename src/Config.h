@@ -14,13 +14,28 @@
 
 #include "SortDir.h"
 
+#include "LuaTask.h"
+#include "Event.h"
+
 class Config : virtual public SortDir {
 protected :
 	virtual bool accept( const char *, std::string & );
 
 public:
+	typedef std::unordered_map<std::string, Event> EventElements;
+	EventElements EventsList;
+
+	typedef std::unordered_map<std::string, LuaTask> TaskElements;
+	TaskElements TasksList;
+	
 	/* Initialise this configuration against 'where' directory's content */
 	void init(std::string &where, lua_State *L);
+
+	/* Find a task/tracker by its name 
+	 *	throw an exception if not found
+	 */
+	LuaTask &findTask( std::string & );
+//	Tracker &findTracker( std::string & );
 };
 
 extern Config config;

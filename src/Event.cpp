@@ -94,13 +94,15 @@ void Event::execTasks( Config &cfg, const char *timer_name ){
 				task.beQuiet();
 			task.exec( timer_name );
 		} catch (...) {
-			publishLog('F', "Internal error : can't find task \"%s\"", (*tsk).c_str());
+			SelLog->Log('F', "Internal error : can't find task \"%s\"", (*tsk).c_str());
 			exit(EXIT_FAILURE);
 		}
 	}
 }
 
+
 void Event::enableTrackers( void ){
+#if 0 /* AF Tracker */
 #ifdef DEBUG
 	if(debug && !this->isQuiet())
 		SelLog->Log('D', "enableTrackers() : %d to enable", this->trackersToEnable.size());
@@ -117,9 +119,11 @@ void Event::enableTrackers( void ){
 			exit(EXIT_FAILURE);
 		}		
 	}
+#endif
 }
 
 void Event::disableTrackers( void ){
+#if 0 /* AF Tracker */
 #ifdef DEBUG
 	if(debug && !this->isQuiet())
 		SelLog->Log('D', "disableTrackers() : %d to disable", this->trackersToDisable.size());
@@ -136,6 +140,7 @@ void Event::disableTrackers( void ){
 			exit(EXIT_FAILURE);
 		}		
 	}
+#endif
 }
 
 	/*****
@@ -233,9 +238,8 @@ static const struct luaL_Reg MajEventM [] = {
 };
 
 int Event::initLuaObject( lua_State *L ){
-	libSel_objFuncs( L, "MajordomeRendezVous", MajEventM );
-	libSel_libFuncs( L, "MajordomeRendezVous", MajEventLib );
+	SelLua->objFuncs( L, "MajordomeRendezVous", MajEventM );
+	SelLua->libCreateOrAddFuncs( L, "MajordomeRendezVous", MajEventLib );
 
 	return 1;
 }
-

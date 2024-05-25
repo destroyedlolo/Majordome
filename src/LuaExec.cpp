@@ -11,7 +11,7 @@ extern "C" {
 #include "LuaExec.h"
 
 LuaExec::LuaExec(){
-	assert( EStorage_init(&this->func) );	
+	assert( SelElasticStorage->init(&this->func) );	
 }
 
 bool LuaExec::LoadFunc( lua_State *L, std::stringstream &buffer, const char *name ){
@@ -30,7 +30,7 @@ bool LuaExec::LoadFunc( lua_State *L, std::stringstream &buffer, const char *nam
 		}
 	}
 
-	if(lua_dump(L, ssfc_dumpwriter, this->getFunc()
+	if(lua_dump(L, SelElasticStorage->dumpwriter, this->getFunc()
 #if LUA_VERSION_NUM > 501
 		,1
 #endif
@@ -90,7 +90,7 @@ static void *launchfunc(void *a){
 		SelLog->Log('E', "Can't execute task '%s' from '%s' : %s", arg->task->getNameC(), arg->task->getWhereC(), lua_tostring(arg->L, -1));
 	lua_close(arg->L);
 	arg->task->finished();
-	free(arg);
+	delete arg;
 	return NULL;
 }
 
@@ -103,32 +103,32 @@ bool LuaExec::execAsync( const char *name, const char *topic, const char *payloa
 	if( !arg->L ){
 		SelLog->Log('E', "Unable to create a new Lua State for '%s' from '%s'", this->getNameC(), this->getWhereC() );
 		this->finished();
-		free( arg );
+		delete arg;
 		return false;
 	}
 
 	luaL_openlibs(arg->L);
-	libSel_ApplyStartupFunc( luainitfunc, arg->L );
+	SelLua->ApplyStartupFunc(arg->L);
 
 	int err;
-	if( (err = loadsharedfunction( arg->L, this->getFunc() )) ){
+	if( (err = SelElasticStorage->loadsharedfunction( arg->L, this->getFunc() )) ){
 		SelLog->Log('E', "Unable to create task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), (err == LUA_ERRSYNTAX) ? "Syntax error" : "Memory error" );
 		lua_close( arg->L );
 		this->finished();
-		free( arg );
+		delete arg;
 		return false;
 	}
 	this->feedState( arg->L, name, topic, payload, tracker, trkstatus );
 
 	if(verbose && !this->isQuiet())
-		publishLog('T', "Async running Task '%s' from '%s'", this->getNameC(), this->getWhereC() );
+		SelLog->Log('T', "Async running Task '%s' from '%s'", this->getNameC(), this->getWhereC() );
 
 	pthread_t tid;	// No need to be kept
 	if(pthread_create( &tid, &thread_attr, launchfunc,  arg) < 0){
 		SelLog->Log('E', "Unable to create task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), strerror(errno));
 		this->finished();
 		lua_close( arg->L );
-		free( arg );
+		delete arg;
 		return false;
 	}
 
@@ -143,10 +143,10 @@ bool LuaExec::execSync( const char *name, const char *topic, const char *payload
 	}
 
 	luaL_openlibs(L);
-	libSel_ApplyStartupFunc( luainitfunc, L );
+	SelLua->ApplyStartupFunc(L);
 
 	int err;
-	if( (err = loadsharedfunction( L, this->getFunc() )) ){
+	if( (err = SelElasticStorage->loadsharedfunction( L, this->getFunc() )) ){
 		SelLog->Log('E', "Unable to create task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), (err == LUA_ERRSYNTAX) ? "Syntax error" : "Memory error" );
 		lua_close( L );
 		return false;

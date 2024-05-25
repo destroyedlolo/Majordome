@@ -41,3 +41,12 @@ void Config::init(std::string &where, lua_State *L){
 	}
 }
 
+LuaTask &Config::findTask( std::string &n ) {
+	Config::TaskElements::iterator tsk;
+
+	if( (tsk = this->TasksList.find( n )) == this->TasksList.end() )
+		throw 1;
+	else
+		return (*tsk).second;
+}
+
