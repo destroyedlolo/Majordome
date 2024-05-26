@@ -307,6 +307,7 @@ int main(int ac, char **av){
 
 	config.LaunchTimers();	// Launch slave timers
 	config.RunImmediates();	// Run immediate & overdue timers tasks
+	config.RunStartups();	// Run startup functions
 
 	pause();	// Waiting for events, nothing else to do
 }

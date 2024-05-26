@@ -53,6 +53,13 @@ void Config::RunImmediates( void ){
 	}
 }
 
+void Config::RunStartups( void ){
+	for( TaskElements::iterator i = this->TasksList.begin(); i != config.TasksList.end(); i++){
+		if( (*i).second.getRunAtStartup() )
+			(*i).second.exec(NULL);
+	}
+}
+
 LuaTask &Config::findTask( std::string &n ) {
 	Config::TaskElements::iterator tsk;
 
