@@ -239,6 +239,10 @@ int main(int ac, char **av){
 		SelLog->Log('F', "Unknown option '%c'\n%s -h\n\tfor some help\n", c, av[0]);
 		exit(EXIT_FAILURE);
 	}
+
+	if(!trace)
+		SelLog->ignoreList("T");	// Disabling trace logging
+
 	read_configuration(conf_file);
 
 		/***
@@ -305,9 +309,9 @@ int main(int ac, char **av){
 	if(!quiet)
 		SelLog->Log('I', "Let's go ...");
 
+	config.RunStartups();	// Run startup functions
 	config.LaunchTimers();	// Launch slave timers
 	config.RunImmediates();	// Run immediate & overdue timers tasks
-	config.RunStartups();	// Run startup functions
 
 	pause();	// Waiting for events, nothing else to do
 }
