@@ -22,7 +22,7 @@ Timer::Timer( const std::string &fch, std::string &where, std::string &name ) : 
 	 * Reading file's content
 	 */
 	if(verbose)
-		publishLog('L', "\t'%s'", fch.c_str());
+		SelLog->Log('L', "\t'%s'", fch.c_str());
 
 	std::ifstream file;
 	file.exceptions ( std::ios::eofbit | std::ios::failbit ); // No need to check failbit
@@ -36,45 +36,45 @@ Timer::Timer( const std::string &fch, std::string &where, std::string &name ) : 
 			if( !!(arg = striKWcmp( l, "name=" )) ){
 				this->name = name = arg;
 				if(verbose)
-					publishLog('C', "\t\tChanging name to '%s'", name.c_str());
+					SelLog->Log('C', "\t\tChanging name to '%s'", name.c_str());
 			} else if( !!(arg = striKWcmp( l, "at=" )) ){
 				unsigned long v = strtoul( arg.c_str(), NULL, 10 );
 				this->at = v / 100;
 				this->min = v % 100;
 				if(verbose)
-					publishLog('C', "\t\tRunning at %u:%u", this->at, this->min);
+					SelLog->Log('C', "\t\tRunning at %u:%u", this->at, this->min);
 			} else if( !!(arg = striKWcmp( l, "every=" )) ){
 				this->every = strtoul( arg.c_str(), NULL, 0 );
 				if(verbose)
-					publishLog('C', "\t\tRunning every %lu second%c", this->every, this->every > 1 ? 's':' ');
+					SelLog->Log('C', "\t\tRunning every %lu second%c", this->every, this->every > 1 ? 's':' ');
 			} else if( l == "immediate" ){
 				this->immediate = true;
 				if(verbose)
-					publishLog('C', "\t\tImmediate");
+					SelLog->Log('C', "\t\tImmediate");
 			} else if( l == "runifover" ){
 				this->runifover = true;
 				if(verbose)
-					publishLog('C', "\t\tRun if over");
+					SelLog->Log('C', "\t\tRun if over");
 			} else if( l == "quiet" ){
 				if(verbose)
-					publishLog('C', "\t\tBe quiet");
+					SelLog->Log('C', "\t\tBe quiet");
 				this->beQuiet();
 			} else if( l == "disabled" ){
 				if(verbose)
-					publishLog('C', "\t\tDisabled");
+					SelLog->Log('C', "\t\tDisabled");
 				this->disable();
 			}
 #if 0
-else publishLog('D', "Ignore '%s'", l.c_str());
+else SelLog->Log('D', "Ignore '%s'", l.c_str());
 #endif
 		}
 	} catch(const std::ifstream::failure &e){
 		if(!file.eof()){
-			publishLog('F', "%s : %s", fch.c_str(), strerror(errno) );
+			SelLog->Log('F', "%s : %s", fch.c_str(), strerror(errno) );
 			exit(EXIT_FAILURE);
 		}
 	} catch(const std::invalid_argument &e){
-		publishLog('F', "%s : invalid argument", fch.c_str() );
+		SelLog->Log('F', "%s : invalid argument", fch.c_str() );
 		exit(EXIT_FAILURE);
 	}
 
@@ -87,15 +87,15 @@ void Timer::launchThread( void ){
 	 */
 	pthread_attr_t thread_attr;
 	if( pthread_attr_init(&thread_attr) ){
-		publishLog('F', "Can't initialise a new thread for '%s' : %s", this->getWhereC(), strerror(errno) );
+		SelLog->Log('F', "Can't initialise a new thread for '%s' : %s", this->getWhereC(), strerror(errno) );
 		exit(EXIT_FAILURE);
 	}
 	if( pthread_attr_setdetachstate(&thread_attr, PTHREAD_CREATE_DETACHED) ){
-		publishLog('F', "Can't setdetechstate for a new thread for '%s' : %s", this->getWhereC(), strerror(errno) );
+		SelLog->Log('F', "Can't setdetechstate for a new thread for '%s' : %s", this->getWhereC(), strerror(errno) );
 		exit(EXIT_FAILURE);
 	}
 	if(pthread_create( &(this->thread), &thread_attr, this->threadedslave, this )){
-		publishLog('F', "Can't create a new thread for '%s' : %s", this->getWhereC(), strerror(errno) );
+		SelLog->Log('F', "Can't create a new thread for '%s' : %s", this->getWhereC(), strerror(errno) );
 		exit(EXIT_FAILURE);
 	}
 	pthread_attr_destroy(&thread_attr);
@@ -136,19 +136,19 @@ void *Timer::threadedslave(void *arg){
 			}
 #ifdef DEBUG
 			if( debug )
-				publishLog('D', "Timer %s : %lu second(s) to wait", me->getNameC(), sec );
+				SelLog->Log('D', "Timer %s : %lu second(s) to wait", me->getNameC(), sec );
 #endif
 			ts.tv_sec += sec;
 		} else {
-			publishLog('F', "Timer '%s' : No time defined", me->getNameC());
+			SelLog->Log('F', "Timer '%s' : No time defined", me->getNameC());
 			exit(EXIT_FAILURE);
 		}
 
 		int rc;
 		if( (rc = pthread_cond_timedwait(&(me->cond), &(me->mutex), &ts)) != ETIMEDOUT ){
-// publishLog('d', "Interrupted : %s", strerror(rc));
+// SelLog->Log('d', "Interrupted : %s", strerror(rc));
 			if( me->cmd == Commands::RESET ){
-// publishLog('d', "reset");
+// SelLog->Log('d', "reset");
 				continue;	// Rethink the timer without launching tasks
 			}
 		}
@@ -156,7 +156,7 @@ void *Timer::threadedslave(void *arg){
 #ifdef DEBUG
 		if( debug ){
 			time_t current_time = time(NULL);
-			publishLog('D', "Timer %s : it's %s", me->getNameC(), ctime(&current_time) );
+			SelLog->Log('D', "Timer %s : it's %s", me->getNameC(), ctime(&current_time) );
 		}
 #endif
 		me->execTasks();
@@ -189,12 +189,13 @@ bool Timer::inEveryMode( void ){
 
 void Timer::execTasks( void ){
 	if( this->isEnabled() ){
+#if 0 /* AF Tracker */
 		for( Entries::iterator trk = this->startTrackers.begin(); trk != this->startTrackers.end(); trk++){	// starting tracker
 			try {
 				Tracker &tracker = config.findTracker( *trk );
 				tracker.start();
 			} catch (...) {
-				publishLog('F', "Internal error : can't find tracker \"%s\"", (*trk).c_str() );
+				SelLog->Log('F', "Internal error : can't find tracker \"%s\"", (*trk).c_str() );
 				exit(EXIT_FAILURE);
 			}
 		}
@@ -204,15 +205,16 @@ void Timer::execTasks( void ){
 				Tracker &tracker = config.findTracker( *trk );
 				tracker.stop();
 			} catch (...) {
-				publishLog('F', "Internal error : can't find tracker \"%s\"", (*trk).c_str() );
+				SelLog->Log('F', "Internal error : can't find tracker \"%s\"", (*trk).c_str() );
 				exit(EXIT_FAILURE);
 			}
 		}
+#endif
 
 		Event::execTasks( config, this->getNameC() );
 #ifdef DEBUG
 	} else if( debug ) {
-		publishLog('D', "Timer %s is disabled : no tasks launched nor trackers touched", this->getNameC() );
+		SelLog->Log('D', "Timer %s is disabled : no tasks launched nor trackers touched", this->getNameC() );
 #endif
 	}
 }
@@ -396,8 +398,8 @@ static const struct luaL_Reg MajTimerM [] = {
 };
 
 int Timer::initLuaObject( lua_State *L ){
-	libSel_objFuncs( L, "MajordomeTimer", MajTimerM );
-	libSel_libFuncs( L, "MajordomeTimer", MajTimerLib );
+	SelLua->objFuncs( L, "MajordomeTimer", MajTimerM );
+	SelLua->libCreateOrAddFuncs( L, "MajordomeTimer", MajTimerLib );
 
 	return 1;
 }

@@ -77,6 +77,16 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 				lua_pop(L, 1);  /* pop error message from the stack */
 				exit(EXIT_FAILURE);
 			}
+		} else if( !strcmp(ext,".timer") ){
+			std::string name;
+			Timer tmr( completpath, where, name );
+
+			Config::TimerElements::iterator p;
+			if((p = cfg.TimersList.find(name)) != cfg.TimersList.end()){
+				SelLog->Log('F', "Timer '%s' is defined multiple times (previous one '%s')", name.c_str(), p->second.getWhere().c_str());
+				exit(EXIT_FAILURE);
+			} else
+				cfg.TimersList.insert( std::make_pair(name, tmr) ).first;
 #if 0 /* AF */
 		} else if( !strcmp(ext,".topic") ){
 			std::string name;
@@ -100,16 +110,6 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 			} else {
 				cfg.EventsList.insert( std::make_pair(name, evt) );
 			}
-		} else if( !strcmp(ext,".timer") ){
-			std::string name;
-			Timer tmr( completpath, where, name );
-
-			Config::TimerElements::iterator p;
-			if((p = cfg.TimersList.find(name)) != cfg.TimersList.end()){
-				publishLog('F', "Timer '%s' is defined multiple times (previous one '%s')", name.c_str(), p->second.getWhere().c_str());
-				exit(EXIT_FAILURE);
-			} else
-				cfg.TimersList.insert( std::make_pair(name, tmr) ).first;
 		} else if( !strcmp(ext,".lua") ){
 			std::string name;
 			LuaTask tsk( cfg, completpath, where, name, L );

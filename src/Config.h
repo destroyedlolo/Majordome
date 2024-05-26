@@ -16,18 +16,23 @@
 
 #include "LuaTask.h"
 #include "Event.h"
+#include "Timer.h"
 
 class Config : virtual public SortDir {
 protected :
 	virtual bool accept( const char *, std::string & );
 
 public:
+		/* Objects collections */
 	typedef std::unordered_map<std::string, Event> EventElements;
 	EventElements EventsList;
 
 	typedef std::unordered_map<std::string, LuaTask> TaskElements;
 	TaskElements TasksList;
 	
+	typedef std::unordered_map<std::string, Timer> TimerElements;
+	TimerElements TimersList;
+
 	/* Initialise this configuration against 'where' directory's content */
 	void init(std::string &where, lua_State *L);
 

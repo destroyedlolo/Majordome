@@ -18,6 +18,7 @@ protected:
 
 public:
 	Object() : disabled(false), quiet(false){};
+	Object& operator=(const Object&) = default;	/* avoid "defaulted move" warning */
 
 	void enable( void ){ this->disabled = false; };
 	void disable( void ){ this->disabled = true; };

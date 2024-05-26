@@ -19,7 +19,7 @@ class Event : virtual public Object, public StringVector {
 protected:
 	/* Default empty constructor to be only used by derived classes 
 	 */
-	Event(){}
+Event() = default;
 
 public:
 	/* Constructor from a file
