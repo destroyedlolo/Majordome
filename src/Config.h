@@ -36,6 +36,12 @@ public:
 	/* Initialise this configuration against 'where' directory's content */
 	void init(std::string &where, lua_State *L);
 
+	/* Launch timer slave threads */
+	void LaunchTimers( void );
+
+	/* Triggers immediate & over timers */
+	void RunImmediates( void );
+
 	/* Find a task/tracker by its name 
 	 *	throw an exception if not found
 	 */

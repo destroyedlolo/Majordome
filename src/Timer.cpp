@@ -156,7 +156,7 @@ void *Timer::threadedslave(void *arg){
 #ifdef DEBUG
 		if( debug ){
 			time_t current_time = time(NULL);
-			SelLog->Log('D', "Timer %s : it's %s", me->getNameC(), ctime(&current_time) );
+			SelLog->Log('D', "Timer %s : it's %s", me->getNameC(), SeleneCore->ctime(&current_time, NULL, 0) );
 		}
 #endif
 		me->execTasks();

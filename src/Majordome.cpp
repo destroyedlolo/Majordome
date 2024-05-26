@@ -304,4 +304,8 @@ int main(int ac, char **av){
 
 	if(!quiet)
 		SelLog->Log('I', "Let's go ...");
+
+	config.LaunchTimers();	// Launch slave timers
+
+	pause();	// Waiting for events, nothing else to do
 }

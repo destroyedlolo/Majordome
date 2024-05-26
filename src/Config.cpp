@@ -41,6 +41,18 @@ void Config::init(std::string &where, lua_State *L){
 	}
 }
 
+void Config::LaunchTimers( void ){
+	for( TimerElements::iterator i = this->TimersList.begin(); i != config.TimersList.end(); i++)
+		(*i).second.launchThread();
+}
+
+void Config::RunImmediates( void ){
+	for( TimerElements::iterator i = this->TimersList.begin(); i != config.TimersList.end(); i++){
+		if( (*i).second.getImmediate() || (*i).second.isOver() )
+			(*i).second.execTasks();
+	}
+}
+
 LuaTask &Config::findTask( std::string &n ) {
 	Config::TaskElements::iterator tsk;
 
