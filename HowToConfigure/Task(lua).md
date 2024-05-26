@@ -24,6 +24,12 @@ If a task is woken up by an MQTT topic, the following variables are created at L
 
 More than one "listen=" can be present.
 
+### -->> waitfor=
+Indicate the rendezvous to wait for.
+```
+-->> waitfor=exemple
+```
+
 ### -->> when=
 Indicates the Timer to wait for : 
 this script will be triggered when this timer is exhausted.
@@ -32,3 +38,33 @@ this script will be triggered when this timer is exhausted.
 ```
 If a task is woken up by a timer, the following variables are created at Lua side.
 - **MAJORDOME_TIMER**, name of the timer (in the example above `15s`)
+
+### -->> whenStarted=
+The script is launched when provided tracker is started (beggin *following* mode).
+```
+-->> whenStarted=tracker
+```
+**MAJORDOME_TRACKER** is created with tracker's name and **MAJORDOME_TRACKER_STATUS** with its condition.
+
+### -->> whenDone=
+The script is launched when provided tracker is done (existing *following* mode cause the condition is met).
+```
+-->> whenStarted=tracker
+```
+
+### -->> whenStopped=
+The script is launched when a tracker is stopped.
+```
+-->> whenStopped=tracker
+```
+
+### -->> once
+Only one instance is allowed to run at the same time : no concurrency.
+
+### --> quiet
+Removes some trace.
+
+### -->> disabled
+This script won't run.
+
+
