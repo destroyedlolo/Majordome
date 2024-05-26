@@ -1,5 +1,5 @@
 -- This is an example of a task script
--- In the header of the script (comment bloc at the very beginning of
+-- In the header of the script (comment block at the very beginning of
 -- the script), each line starting with -->> are Majordome's commands.
 -- Consequently, '--->>' are commented out commands.
 --
