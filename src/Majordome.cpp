@@ -285,6 +285,7 @@ int main(int ac, char **av){
 			SelLog->Log('W', "Connected but got an unknown error : %d)", err);
 	}
 	atexit(brkcleaning);
+	SelLog->initMQTT(MQTT_client, MQTT_ClientID.c_str());	// Initialize MQTT logging
 
 	threadEnvironment(SelLua->getLuaState());
 
