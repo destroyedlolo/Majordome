@@ -74,7 +74,6 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 					exit(EXIT_FAILURE);
 				}
 #endif
-#if 0 /* Timer */
 			} else if( !!(arg = striKWcmp( l, "-->> when=" ))){
 				Config::TimerElements::iterator timer;
 				if( (timer = cfg.TimersList.find(arg)) != cfg.TimersList.end()){
@@ -86,7 +85,6 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 					SelLog->Log('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
 					exit(EXIT_FAILURE);
 				}
-#endif
 			} else if( !!(arg = striKWcmp( l, "-->> waitfor=" ))){
 				Config::EventElements::iterator event;
 				if( (event = cfg.EventsList.find(arg)) != cfg.EventsList.end()){

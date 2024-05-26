@@ -65,7 +65,7 @@ else SelLog->Log('D', "Ignore '%s'", l.c_str());
 void Event::execTasks( Config &cfg, const char *trig_name, const char *topic, const char *payload, bool tracker, const char *trkstatus ){
 #ifdef DEBUG
 	if(debug && !this->isQuiet())
-		SelLog->Log('D', "execTasks() : %d to run", this->list.size());
+		SelLog->Log('D', "execTasks(topic) : %d to run", this->list.size());
 #endif
 
 	for(Entries::iterator tsk = this->begin(); tsk != this->end(); tsk++){
@@ -84,7 +84,7 @@ void Event::execTasks( Config &cfg, const char *trig_name, const char *topic, co
 void Event::execTasks( Config &cfg, const char *timer_name ){
 #ifdef DEBUG
 	if(debug && !this->isQuiet())
-		SelLog->Log('D', "execTasks() : %d to run", this->list.size());
+		SelLog->Log('D', "execTasks(timer) : %d to run", this->list.size());
 #endif
 
 	for( Entries::iterator tsk = this->begin(); tsk != this->end(); tsk++){

@@ -87,6 +87,16 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 				exit(EXIT_FAILURE);
 			} else
 				cfg.TimersList.insert( std::make_pair(name, tmr) ).first;
+		} else if( !strcmp(ext,".lua") ){
+			std::string name;
+			LuaTask tsk( cfg, completpath, where, name, L );
+	
+			Config::TaskElements::iterator prev;
+			if((prev = cfg.TasksList.find(name)) != cfg.TasksList.end()){
+				SelLog->Log('F', "Task '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second.getWhere().c_str());
+				exit(EXIT_FAILURE);
+			} else
+				cfg.TasksList.insert( std::make_pair(name, tsk) );
 #if 0 /* AF */
 		} else if( !strcmp(ext,".topic") ){
 			std::string name;
@@ -110,16 +120,6 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 			} else {
 				cfg.EventsList.insert( std::make_pair(name, evt) );
 			}
-		} else if( !strcmp(ext,".lua") ){
-			std::string name;
-			LuaTask tsk( cfg, completpath, where, name, L );
-	
-			Config::TaskElements::iterator prev;
-			if((prev = cfg.TasksList.find(name)) != cfg.TasksList.end()){
-				publishLog('F', "Task '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second.getWhere().c_str());
-				exit(EXIT_FAILURE);
-			} else
-				cfg.TasksList.insert( std::make_pair(name, tsk) );
 		} else if( !strcmp(ext,".tracker") ){
 			std::string name;
 			Tracker trk( cfg, completpath, where, name, L );
@@ -135,7 +135,7 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 #	ifdef DEBUG
 		else 
 			if(debug)
-				SelLog->Log('D', "Ignoring %s (ext '%s')\n", (*i).c_str(), ext );
+				SelLog->Log('D', "Ignoring %s (ext '%s')", (*i).c_str(), ext );
 #	endif
 	}
 }
