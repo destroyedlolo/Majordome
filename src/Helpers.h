@@ -27,6 +27,7 @@ extern MQTTClient MQTT_client;
 extern std::string MQTT_ClientID;
 
 extern void *luainitfunc;
+extern void threadEnvironment(lua_State *);
 
 	/******
 	 * technical objects

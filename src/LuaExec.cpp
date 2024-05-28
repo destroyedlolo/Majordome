@@ -48,7 +48,6 @@ bool LuaExec::LoadFunc( lua_State *L, std::stringstream &buffer, const char *nam
 	 ****/
 
 void LuaExec::feedState( lua_State *L, const char *name, const char *topic, const char *payload, bool tracker, const char *trkstatus ){
-
 	if( !name )	// No argument provide (launched at startup)
 		return;
 
@@ -108,6 +107,7 @@ bool LuaExec::execAsync( const char *name, const char *topic, const char *payloa
 	}
 
 	luaL_openlibs(arg->L);
+	threadEnvironment(arg->L);
 	SelLua->ApplyStartupFunc(arg->L);
 
 	int err;
@@ -143,6 +143,7 @@ bool LuaExec::execSync( const char *name, const char *topic, const char *payload
 	}
 
 	luaL_openlibs(L);
+	threadEnvironment(L);
 	SelLua->ApplyStartupFunc(L);
 
 	int err;
