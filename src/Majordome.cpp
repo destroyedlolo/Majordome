@@ -134,10 +134,8 @@ void threadEnvironment(lua_State *L){
 #endif
 
 	SelLua->ApplyStartupFunc(L);	// Creates metas
-#if 0	
 	SelMQTT->createExternallyManaged(L, MQTT_client);	// Push object on the task
 	lua_setglobal( L, "MQTTBroker" );	// expose it as the broker
-#endif
 }
 
 
