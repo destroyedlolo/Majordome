@@ -338,6 +338,17 @@ int main(int ac, char **av){
 	if(!quiet)
 		SelLog->Log('I', "Let's go ...");
 
+
+		/***
+		 * Add Majordom's own objects to slave thread
+		 ****/
+	SelLua->AddStartupFunc(LuaTask::initLuaObject);
+	SelLua->AddStartupFunc(Timer::initLuaObject);
+	SelLua->AddStartupFunc(MQTTTopic::initLuaObject);
+#if 0 /* AF Trackers */
+	SelLua->AddStartupFunc(LuaTask::initLuaObject);
+#endif
+
 	config.RunStartups();	// Run startup functions
 	config.SubscribeTopics();	// MQTT : activate topics receiving
 	config.LaunchTimers();	// Launch slave timers

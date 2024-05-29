@@ -397,10 +397,8 @@ static const struct luaL_Reg MajTimerM [] = {
 	{NULL, NULL}
 };
 
-int Timer::initLuaObject( lua_State *L ){
+void Timer::initLuaObject( lua_State *L ){
 	SelLua->objFuncs( L, "MajordomeTimer", MajTimerM );
 	SelLua->libCreateOrAddFuncs( L, "MajordomeTimer", MajTimerLib );
-
-	return 1;
 }
 

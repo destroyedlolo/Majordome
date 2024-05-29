@@ -354,10 +354,8 @@ static const struct luaL_Reg MajTopicM [] = {
 	{NULL, NULL}
 };
 
-int MQTTTopic::initLuaObject( lua_State *L ){
+void MQTTTopic::initLuaObject( lua_State *L ){
 	SelLua->objFuncs( L, "MajordomeMQTTTopic", MajTopicM );
 	SelLua->libCreateOrAddFuncs( L, "MajordomeMQTTTopic", MajTopicLib );
-
-	return 1;
 }
 

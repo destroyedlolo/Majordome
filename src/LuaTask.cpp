@@ -330,9 +330,7 @@ static const struct luaL_Reg MajTaskM [] = {
 	{NULL, NULL}
 };
 
-int LuaTask::initLuaObject( lua_State *L ){
+void LuaTask::initLuaObject( lua_State *L ){
 	SelLua->objFuncs( L, "MajordomeTask", MajTaskM );
 	SelLua->libCreateOrAddFuncs( L, "MajordomeTask", MajTaskLib );
-
-	return 1;
 }
