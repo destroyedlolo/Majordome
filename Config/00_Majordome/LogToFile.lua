@@ -3,5 +3,5 @@
 local _,err = SelLog.init('/tmp/'.. MAJORDOME_ClientID ..'.log_' .. os.date('%Y%m%d'), false)
 
 if err then
-	SelLog.log("*E* Log file creation : ".. err)
+	SelLog.Log("*E* Log file creation : ".. err)
 end
