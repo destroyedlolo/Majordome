@@ -61,7 +61,6 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 				this->name = name = arg;
 				if(verbose)
 					SelLog->Log('C', "\t\tChanging name to '%s'", name.c_str());
-#if 0 /* AF Topic */
 			} else if( !!(arg = striKWcmp( l, "-->> listen=" ))){
 				Config::TopicElements::iterator topic;
 				if( (topic = cfg.TopicsList.find(arg)) != cfg.TopicsList.end()){
@@ -70,10 +69,9 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 	 				topic->second.addTask( this->getName() );
 					nameused = true;
 				} else {
-					publishLog('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
+					SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
 					exit(EXIT_FAILURE);
 				}
-#endif
 			} else if( !!(arg = striKWcmp( l, "-->> when=" ))){
 				Config::TimerElements::iterator timer;
 				if( (timer = cfg.TimersList.find(arg)) != cfg.TimersList.end()){

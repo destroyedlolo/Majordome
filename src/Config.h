@@ -17,6 +17,7 @@
 #include "LuaTask.h"
 #include "Event.h"
 #include "Timer.h"
+#include "MQTTTopic.h"
 
 class Config : virtual public SortDir {
 protected :
@@ -33,8 +34,19 @@ public:
 	typedef std::unordered_map<std::string, Timer> TimerElements;
 	TimerElements TimersList;
 
+	typedef std::unordered_map<std::string, MQTTTopic> TopicElements;
+	TopicElements TopicsList;
+
 	/* Initialise this configuration against 'where' directory's content */
 	void init(std::string &where, lua_State *L);
+
+	/* Check if data overlaps
+	 *	Notez-bien : in case of clash, the program exits
+	 */
+	void SanityChecks( void );
+
+	/* Subscribe to defined MQTT topics */
+	void SubscribeTopics( void );
 
 	/* Launch timer slave threads */
 	void LaunchTimers( void );

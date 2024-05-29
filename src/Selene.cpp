@@ -13,6 +13,7 @@ struct SelLog *SelLog;
 struct SelLua *SelLua;
 struct SelMQTT *SelMQTT;
 struct SelElasticStorage *SelElasticStorage;
+struct SelSharedVar *SelSharedVar;
 
 	/* Here start 'standard' C code */
 #include <cstdlib>		/* exit(), ... */
@@ -78,5 +79,9 @@ void initSelene(void){
 
 	SelElasticStorage = (struct SelElasticStorage *)SeleneCore->loadModule("SelElasticStorage", SELELASTIC_STORAGE_VERSION, &verfound, 'F');
 	if(!SelElasticStorage)
+		exit(EXIT_FAILURE);
+
+	SelSharedVar = (struct SelSharedVar *)SeleneCore->loadModule("SelSharedVar", SELSHAREDVAR_VERSION, &verfound, 'F');
+	if(!SelSharedVar)
 		exit(EXIT_FAILURE);
 }

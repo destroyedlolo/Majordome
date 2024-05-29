@@ -16,12 +16,14 @@
 #include <Selene/SelLua.h>
 #include <Selene/SelMQTT.h>
 #include <Selene/SelElasticStorage.h>
+#include <Selene/SelSharedVar.h>
 
 extern struct SeleneCore *SeleneCore;
 extern struct SelLog *SelLog;
 extern struct SelLua *SelLua;
 extern struct SelMQTT *SelMQTT;
 extern struct SelElasticStorage *SelElasticStorage;
+extern struct SelSharedVar *SelSharedVar;
 
 extern void initSelene(void);
 

@@ -10,6 +10,7 @@ extern "C" {
     #include "lauxlib.h"
 };
 
+#include "Selene.h"
 #include "Helpers.h"
 #include "MQTTTopic.h"
 #include "Config.h"
@@ -24,7 +25,7 @@ MQTTTopic::MQTTTopic( const std::string &fch, std::string &where, std::string &n
 	 * Reading file's content
 	 */
 	if(verbose)
-		publishLog('L', "\t'%s'", fch.c_str());
+		SelLog->Log('L', "\t'%s'", fch.c_str());
 
 	std::ifstream file;
 	file.exceptions ( std::ios::eofbit | std::ios::failbit ); // No need to check failbit
@@ -38,83 +39,83 @@ MQTTTopic::MQTTTopic( const std::string &fch, std::string &where, std::string &n
 
 			if( !!(arg = striKWcmp( l, "name=" )) ){
 				if(alreadydefault){
-					publishLog('F',"'name' can't be used after 'default'");
+					SelLog->Log('F',"'name' can't be used after 'default'");
 					exit(EXIT_FAILURE);
 				}
 				this->name = name = arg;
 				if(verbose)
-					publishLog('C', "\t\tChanging name to '%s'", name.c_str());
+					SelLog->Log('C', "\t\tChanging name to '%s'", name.c_str());
 			} else if( !!(arg = striKWcmp( l, "topic=" )) ){
 				this->topic = std::regex_replace(arg, std::regex("%ClientID%"), MQTT_ClientID);
 				if(verbose)
-					publishLog('C', "\t\ttopic : '%s'", this->topic.c_str());
+					SelLog->Log('C', "\t\ttopic : '%s'", this->topic.c_str());
 			} else if( !!(arg = striKWcmp( l, "qos=" ))){
 				if((this->qos = stoi(arg)) > 2)	// If invalid
 					this->qos = 0;
 				if(verbose)
-					publishLog('C', "\t\tqos : '%d'", this->qos);
+					SelLog->Log('C', "\t\tqos : '%d'", this->qos);
 			} else if( l == "store" ){
 				if(verbose)
-					publishLog('C', "\t\tStore in a SelShared");
+					SelLog->Log('C', "\t\tStore in a SelShared");
 				this->store = true;
 			} else if( l == "numeric" ){
 				if(alreadydefault){
-					publishLog('F',"'default' must be set after 'numeric'");
+					SelLog->Log('F',"'default' must be set after 'numeric'");
 					exit(EXIT_FAILURE);
 				}
 				if(verbose)
-					publishLog('C', "\t\tStore as a numeric value");
+					SelLog->Log('C', "\t\tStore as a numeric value");
 				this->numeric = true;
 			} else if( !!(arg = striKWcmp( l, "ttl=" )) ){
 				if(alreadydefault){
-					publishLog('F',"'ttl' can't be set after 'default'");
+					SelLog->Log('F',"'ttl' can't be set after 'default'");
 					exit(EXIT_FAILURE);
 				}
 				this->ttl = strtoul( arg.c_str(), NULL, 0 );
 				if(verbose)
-					publishLog('C', "\t\tTTL = %lu", this->ttl);
+					SelLog->Log('C', "\t\tTTL = %lu", this->ttl);
 			} else if( !!(arg = striKWcmp( l, "default=" )) ){
 				alreadydefault = true;
 				if( !this->toBeStored() )
-					publishLog('E',"Default value is only useful for a stored topic");
+					SelLog->Log('E',"Default value is only useful for a stored topic");
 				else {
 					if( this->numeric ){
 						try {
 							double val = std::stod( arg );
-							soc_setn( this->getNameC(), val, this->ttl );
+							SelSharedVar->setNumber( this->getNameC(), val, this->ttl );
 
 							if(verbose)
-								publishLog('C', "\t\tdefault = %lf", val);
+								SelLog->Log('C', "\t\tdefault = %lf", val);
 						} catch( ... ){
-							publishLog('F', "Topic '%s' is expecting a number : no convertion done ", this->getNameC() );
+							SelLog->Log('F', "Topic '%s' is expecting a number : no convertion done ", this->getNameC() );
 							exit(EXIT_FAILURE);
 						}
 					} else {
-						soc_sets( this->getNameC(), arg.c_str(), this->ttl );
+						SelSharedVar->setString( this->getNameC(), arg.c_str(), this->ttl );
 						if(verbose)
-							publishLog('C', "\t\tdefault = \"%s\"", arg.c_str());
+							SelLog->Log('C', "\t\tdefault = \"%s\"", arg.c_str());
 					}
 				}
 			} else if( l == "quiet" ){
 				if(verbose)
-					publishLog('C', "\t\tBe quiet");
+					SelLog->Log('C', "\t\tBe quiet");
 				this->beQuiet();
 			} else if( l == "disabled" ){
 				if(verbose)
-					publishLog('C', "\t\tDisabled");
+					SelLog->Log('C', "\t\tDisabled");
 				this->disable();
 			}
 #if 0
-else publishLog('D', "Ignore '%s'", l.c_str());
+else SelLog->Log('D', "Ignore '%s'", l.c_str());
 #endif
 		}
 	} catch(const std::ifstream::failure &e){
 		if(!file.eof()){
-			publishLog('F', "%s : %s", fch.c_str(), strerror(errno) );
+			SelLog->Log('F', "%s : %s", fch.c_str(), strerror(errno) );
 			exit(EXIT_FAILURE);
 		}
 	} catch(const std::invalid_argument &e){
-		publishLog('F', "%s : invalid argument", fch.c_str() );
+		SelLog->Log('F', "%s : invalid argument", fch.c_str() );
 		exit(EXIT_FAILURE);
 	}
 
@@ -125,7 +126,7 @@ else publishLog('D', "Ignore '%s'", l.c_str());
 	 */
 
 	if( !this->topic ){
-		publishLog('F', "%s : No topic defined", fch.c_str() );
+		SelLog->Log('F', "%s : No topic defined", fch.c_str() );
 		exit(EXIT_FAILURE);
 	}
 	this->wildcard =
@@ -134,13 +135,13 @@ else publishLog('D', "Ignore '%s'", l.c_str());
 
 #ifdef DEBUG
 	if( this->wildcard && debug )
-		publishLog('D', "\t\tHas wildcard");
+		SelLog->Log('D', "\t\tHas wildcard");
 #endif
 }
 
 bool MQTTTopic::match( const char *intopic ){
 	if( this->isEnabled() )
-		return(!mqtttokcmp(this->getTopic(), intopic));
+		return(!SelMQTT->mqtttokcmp(this->getTopic(), intopic));
 
 	return false;
 }
@@ -152,7 +153,7 @@ bool MQTTTopic::enable( void ){
 		this->getTopic(),
 		this->getQOS()
 	)) != MQTTCLIENT_SUCCESS){
-		publishLog('E', "Can't subscribe to '%s' : error %d", this->getTopic(), err);
+		SelLog->Log('E', "Can't subscribe to '%s' : error %d", this->getTopic(), err);
 		return false;
 	}
 
@@ -166,7 +167,7 @@ bool MQTTTopic::disable( void ){
 		MQTT_client, 
 		this->getTopic()
 	)) != MQTTCLIENT_SUCCESS){
-		publishLog('E', "Can't unsubscribe to '%s' : error %d", this->getTopic(), err);
+		SelLog->Log('E', "Can't unsubscribe to '%s' : error %d", this->getTopic(), err);
 		return false;
 	}
 	this->Event::disable();
@@ -176,35 +177,39 @@ bool MQTTTopic::disable( void ){
 void MQTTTopic::execTrackers( Config &cfg, const char *trig_name, const char *topic, const char *payload ){
 #ifdef DEBUG
 	if(debug && !this->isQuiet())
-		publishLog('D', "execTrackers() : %d to run", this->trackers.size() );
+		SelLog->Log('D', "execTrackers() : %d to run", this->trackers.size() );
 #endif
 
+#if 0	/* AF Tracker */
 	for( StringVector::iterator trk = this->trackers.begin(); trk != this->trackers.end(); trk++){
 		try {
 			Tracker &tracker = cfg.findTracker( *trk );
 			tracker.exec( trig_name, topic, payload );
 		} catch (...) {
-			publishLog('F', "Internal error : can't find tracker \"%s\"", (*trk).c_str() );
+			SelLog->Log('F', "Internal error : can't find tracker \"%s\"", (*trk).c_str() );
 			exit(EXIT_FAILURE);
 		}
 	}
+#endif
 }
 
 void MQTTTopic::execTrackers( Config &cfg, const char *timer_name ){
 #ifdef DEBUG
 	if(debug && !this->isQuiet())
-		publishLog('D', "execTrackers() : %d to run", this->trackers.size() );
+		SelLog->Log('D', "execTrackers() : %d to run", this->trackers.size() );
 #endif
 
+#if 0	/* AF Tracker */
 	for( StringVector::iterator trk = this->trackers.begin(); trk != this->trackers.end(); trk++){
 		try {
 			Tracker &tracker = cfg.findTracker( *trk );
 			tracker.exec( timer_name );
 		} catch (...) {
-			publishLog('F', "Internal error : can't find tracker \"%s\"", (*trk).c_str() );
+			SelLog->Log('F', "Internal error : can't find tracker \"%s\"", (*trk).c_str() );
 			exit(EXIT_FAILURE);
 		}
 	}
+#endif
 }
 
 
@@ -257,9 +262,9 @@ static int mtpc_Publish(lua_State *L){
 	int retain =  lua_toboolean(L, 3);
 
 	if( topic->isEnabled() )
-		mqttpublish( MQTT_client, topic->getTopic(), strlen(val), (void *)val, retain );
+		SelMQTT->mqttpublish( MQTT_client, topic->getTopic(), strlen(val), (void *)val, retain );
 	else if(verbose)
-		publishLog('I', "'%s' is disabled : sending ignored", topic->getTopic());
+		SelLog->Log('I', "'%s' is disabled : sending ignored", topic->getTopic());
 
 	return 0;
 }
@@ -275,24 +280,21 @@ static int mtpc_getVal( lua_State *L ){
 
 #ifdef DEBUG
 	if( !topic->toBeStored() && debug )
-		publishLog('D', "Topic %s is not \"stored\" : getVal() will not works", topic->getNameC() );
+		SelLog->Log('D', "Topic %s is not \"stored\" : getVal() will not works", topic->getNameC() );
 #endif
 
-	struct SharedVarContent var;
-	soc_get( topic->getNameC(), &var );
+	enum SharedObjType type;
+	union SelSharedVarContent var = SelSharedVar->getValue( topic->getNameC(), &type, false );
 
-	switch( var.type ){
+	switch( type ){
 	case SOT_NUMBER:
-		lua_pushnumber( L, var.val.num );
-		soc_free( &var );
+		lua_pushnumber( L, var.num );
 		return 1;
 	case SOT_STRING:
 	case SOT_XSTRING:
-		lua_pushstring( L, var.val.str );
-		soc_free( &var );
+		lua_pushstring( L, var.str );
 		return 1;
 	default:
-		soc_free( &var );
 		return 0;
 	}
 }
@@ -304,7 +306,7 @@ static int mtpc_Launch( lua_State *L ){
 		topic->execTasks(config, topic->getNameC(), NULL, "fake");
 #ifdef DEBUG
 	else if( debug )
-		publishLog('D', "Topic %s is disabled : no tasks launched", topic->getNameC() );
+		SelLog->Log('D', "Topic %s is disabled : no tasks launched", topic->getNameC() );
 #endif	
 	return 0;
 }
@@ -353,8 +355,8 @@ static const struct luaL_Reg MajTopicM [] = {
 };
 
 int MQTTTopic::initLuaObject( lua_State *L ){
-	libSel_objFuncs( L, "MajordomeMQTTTopic", MajTopicM );
-	libSel_libFuncs( L, "MajordomeMQTTTopic", MajTopicLib );
+	SelLua->objFuncs( L, "MajordomeMQTTTopic", MajTopicM );
+	SelLua->libCreateOrAddFuncs( L, "MajordomeMQTTTopic", MajTopicLib );
 
 	return 1;
 }

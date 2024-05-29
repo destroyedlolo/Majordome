@@ -41,6 +41,77 @@ void Config::init(std::string &where, lua_State *L){
 	}
 }
 
+void Config::SanityChecks( void ){
+	 /* 
+	  * Verify topics overlapping
+	  */
+	for(TopicElements::iterator i = TopicsList.begin(); i != TopicsList.end(); i++){
+		TopicElements::iterator j = i;
+		for(j++; j != TopicsList.end(); j++){
+			if( !(i->second.hasWildcard()) && !(j->second.hasWildcard()) ){ // No wildcard
+				if( !strcmp( i->second.getTopic(), j->second.getTopic() )){
+					SelLog->Log('F', "Same MQTT topic used for topics '%s' from '%s' and '%s' from '%s'",
+						i->second.getName().c_str(), 
+						i->second.getWhere().c_str(), 
+						j->second.getName().c_str(),
+						j->second.getWhere().c_str()
+					);
+					exit(EXIT_FAILURE);
+				}
+			} else if( i->second.hasWildcard() && j->second.hasWildcard() ){	// Both contain wildcard
+			} else if( i->second.hasWildcard() ){
+				if( !SelMQTT->mqtttokcmp( i->second.getTopic(), j->second.getTopic() )){
+					SelLog->Log('F', "'%s' from '%s' hides '%s' from '%s'",
+						i->second.getName().c_str(), 
+						i->second.getWhere().c_str(), 
+						j->second.getName().c_str(),
+						j->second.getWhere().c_str()
+					);
+					exit(EXIT_FAILURE);
+				}
+			} else if( j->second.hasWildcard() ){
+				if( !SelMQTT->mqtttokcmp( j->second.getTopic(), i->second.getTopic() )){
+					SelLog->Log('W', "'%s' from '%s' overlaps '%s' from '%s'",
+						i->second.getName().c_str(), 
+						i->second.getWhere().c_str(), 
+						j->second.getName().c_str(),
+						j->second.getWhere().c_str()
+					);
+				}
+			}
+		}
+	}
+}
+
+void Config::SubscribeTopics( void ){
+	size_t nbre = TopicsList.size();
+	const char **topics = new const char * [nbre];
+	int *qoss = new int [nbre];
+
+	nbre = 0;
+	for(TopicElements::iterator i = TopicsList.begin(); i != TopicsList.end(); i++){
+		if( i->second.isEnabled() ){
+			topics[nbre] = i->second.getTopic();
+			qoss[nbre++] = i->second.getQOS();
+		}
+	}
+#ifdef DEBUG
+	if(verbose)
+		SelLog->Log('C', "Subscribing to %ld actives topics", nbre);
+#endif
+
+	if( nbre ){
+		int err;
+		if( (err = MQTTClient_subscribeMany(
+			MQTT_client,
+			nbre, (char* const*)topics, qoss
+		)) != MQTTCLIENT_SUCCESS){
+			SelLog->Log('E', "Can't subscribe to topics : error %d", err);
+			exit(EXIT_FAILURE);
+		}
+	}
+}
+
 void Config::LaunchTimers( void ){
 	for( TimerElements::iterator i = this->TimersList.begin(); i != config.TimersList.end(); i++)
 		(*i).second.launchThread();

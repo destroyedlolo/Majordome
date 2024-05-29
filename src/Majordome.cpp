@@ -162,6 +162,35 @@ static int msgarrived(void *actx, char *topic, int tlen, MQTTClient_message *msg
 	memcpy(cpayload, msg->payload, msg->payloadlen);
 	cpayload[msg->payloadlen] = 0;
 
+	for(Config::TopicElements::iterator i = config.TopicsList.begin(); i != config.TopicsList.end(); i++){
+		if( i->second.match( topic ) ){
+#ifdef DEBUG
+			if( debug && !i->second.isQuiet() ){
+				if(hideTopicArrival)
+					SelLog->Log('D', "'%s' accepted by topic '%s'", topic, i->second.getNameC() );
+				else
+					SelLog->Log('D', "Accepted by topic '%s'", i->second.getNameC() );
+			}
+#endif
+			if( i->second.toBeStored() ){	// Store it in a SharedVar
+				if( i->second.isNumeric() ){
+					try {
+						double val = std::stod( cpayload );
+						SelSharedVar->setNumber( i->second.getNameC(), val, i->second.getTTL() );
+					} catch( ... ){
+						SelLog->Log('E', "Topic '%s' is expecting a number : no convertion done ", i->second.getNameC() );
+						SelSharedVar->clear( i->second.getNameC() );
+					}
+				} else
+					SelSharedVar->setString( i->second.getNameC(), cpayload, i->second.getTTL() );
+			}
+
+			i->second.execTasks( config, i->second.getNameC(), topic, cpayload );
+			i->second.execTrackers( config, i->second.getNameC(), topic, cpayload );
+			break;
+		}
+	}
+
 	MQTTClient_freeMessage(&msg);
 	MQTTClient_free(topic);
 	return 1;
@@ -310,6 +339,7 @@ int main(int ac, char **av){
 		SelLog->Log('I', "Let's go ...");
 
 	config.RunStartups();	// Run startup functions
+	config.SubscribeTopics();	// MQTT : activate topics receiving
 	config.LaunchTimers();	// Launch slave timers
 	config.RunImmediates();	// Run immediate & overdue timers tasks
 

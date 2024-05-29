@@ -97,18 +97,17 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 				exit(EXIT_FAILURE);
 			} else
 				cfg.TasksList.insert( std::make_pair(name, tsk) );
-#if 0 /* AF */
 		} else if( !strcmp(ext,".topic") ){
 			std::string name;
 			MQTTTopic tpc( completpath, where, name );
 
 			Config::TopicElements::iterator prev;
 			if((prev = cfg.TopicsList.find(name)) != cfg.TopicsList.end()){
-				publishLog('F', "Topic '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second.getWhere().c_str());
+				SelLog->Log('F', "Topic '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second.getWhere().c_str());
 				exit(EXIT_FAILURE);
-			} else {
+			} else
 				cfg.TopicsList.insert( std::make_pair(name, tpc) );
-			}
+#if 0 /* AF */
 		} else if( !strcmp(ext,".rendezvous") ){
 			std::string name;
 			Event evt( completpath, where, name );
