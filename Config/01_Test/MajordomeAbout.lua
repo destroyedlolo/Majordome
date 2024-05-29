@@ -3,5 +3,5 @@
 -->> listen=MajordomeAbout
 --
 
-SelLog.log( 'I', "Majordome's version ".. MAJORDOME_VERSION)
-SelLog.log( 'I', MAJORDOME_COPYRIGHT)
+SelLog.Log( 'I', "Majordome's version ".. MAJORDOME_VERSION)
+SelLog.Log( 'I', MAJORDOME_COPYRIGHT)
