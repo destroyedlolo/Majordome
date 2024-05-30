@@ -6,8 +6,6 @@
 #ifndef TRACKER_H
 #define TRACKER_H
 
-#include <libSelene.h>
-
 #include "MayBeEmptyString.h"
 #include "Event.h"
 #include "LuaExec.h"

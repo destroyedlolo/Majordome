@@ -17,7 +17,7 @@ extern "C" {
 
 Tracker::Tracker( Config &cfg, const std::string &fch, std::string &where, std::string &name, lua_State *L ):status(_status::WAITING), howmany(1){
 	if(verbose)
-		publishLog('L', "\t'%s'", fch.c_str());
+		SelLog->Log('L', "\t'%s'", fch.c_str());
 
 	this->extrName( fch, name );
 	this->name = name;
@@ -49,90 +49,90 @@ Tracker::Tracker( Config &cfg, const std::string &fch, std::string &where, std::
 			MayBeEmptyString arg;
 			if( !!(arg = striKWcmp( l, "-->> name=" ))){
 				if( nameused ){
-					publishLog('F', "\t\tName can be changed only before listen, until or waitfor directives");
+					SelLog->Log('F', "\t\tName can be changed only before listen, until or waitfor directives");
 					exit(EXIT_FAILURE);
 				}
 
 				this->name = name = arg;
 				if(verbose)
-					publishLog('C', "\t\tChanging name to '%s'", name.c_str());
+					SelLog->Log('C', "\t\tChanging name to '%s'", name.c_str());
 
 			} else if( !!(arg = striKWcmp( l, "-->> listen=" ))){
 				Config::TopicElements::iterator topic;
 				if( (topic = cfg.TopicsList.find(arg)) != cfg.TopicsList.end()){
 					if(verbose)
-						publishLog('C', "\t\tAdded to topic '%s'", arg.c_str());
+						SelLog->Log('C', "\t\tAdded to topic '%s'", arg.c_str());
 	 				topic->second.addTracker( this->getName() );
 					nameused = true;
 				} else {
-					publishLog('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
+					SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
 					exit(EXIT_FAILURE);
 				}
 			} else if( !!(arg = striKWcmp( l, "-->> howmany=" ))){
 				if((this->howmany = strtoul(arg.c_str(), NULL, 0))<1)
 					this->howmany = 1;
 				if(verbose)
-					publishLog('C', "\t\tHow many: '%d'", this->howmany);
+					SelLog->Log('C', "\t\tHow many: '%d'", this->howmany);
 			} else if( !!(arg = striKWcmp( l, "-->> statustopic=" ))){
 				setStatusTopic( std::regex_replace(arg, std::regex("%ClientID%"), MQTT_ClientID) );
 				if(verbose)
-					publishLog('C', "\t\tStatus topic : '%s'", this->getStatusTopic().c_str());
+					SelLog->Log('C', "\t\tStatus topic : '%s'", this->getStatusTopic().c_str());
 			} else if( !!(arg = striKWcmp( l, "-->> start=" ))){
 				Config::TimerElements::iterator timer;
 				if( (timer = cfg.TimersList.find(arg)) != cfg.TimersList.end()){
 					if(verbose)
-						publishLog('C', "\t\tStart timer '%s'", arg.c_str());
+						SelLog->Log('C', "\t\tStart timer '%s'", arg.c_str());
 	 				timer->second.addStartTracker( this->getName() );
 					nameused = true;
 				} else {
-					publishLog('F', "\t\tTimer '%s' is not (yet ?) defined", arg.c_str());
+					SelLog->Log('F', "\t\tTimer '%s' is not (yet ?) defined", arg.c_str());
 					exit(EXIT_FAILURE);
 				}
 			} else if( !!(arg = striKWcmp( l, "-->> stop=" ))){
 				Config::TimerElements::iterator timer;
 				if( (timer = cfg.TimersList.find(arg)) != cfg.TimersList.end()){
 					if(verbose)
-						publishLog('C', "\t\tStop timer '%s'", arg.c_str());
+						SelLog->Log('C', "\t\tStop timer '%s'", arg.c_str());
 	 				timer->second.addStopTracker( this->getName() );
 					nameused = true;
 				} else {
-					publishLog('F', "\t\tTimer '%s' is not (yet ?) defined", arg.c_str());
+					SelLog->Log('F', "\t\tTimer '%s' is not (yet ?) defined", arg.c_str());
 					exit(EXIT_FAILURE);
 				}
 			} else if( !!(arg = striKWcmp( l, "-->> enableRDV=" ))){
 				Config::EventElements::iterator event;
 				if( (event = cfg.EventsList.find(arg)) != cfg.EventsList.end()){
 					if(verbose)
-						publishLog('C', "\t\tEnabling rendez-vous '%s'", arg.c_str());
+						SelLog->Log('C', "\t\tEnabling rendez-vous '%s'", arg.c_str());
 	 				event->second.addTrackerEN( this->getName() );
 					nameused = true;
 				} else {
-					publishLog('F', "\t\tRendez-vous '%s' is not (yet ?) defined", arg.c_str());
+					SelLog->Log('F', "\t\tRendez-vous '%s' is not (yet ?) defined", arg.c_str());
 					exit(EXIT_FAILURE);
 				}
 			} else if( !!(arg = striKWcmp( l, "-->> disableRDV=" ))){
 				Config::EventElements::iterator event;
 				if( (event = cfg.EventsList.find(arg)) != cfg.EventsList.end()){
 					if(verbose)
-						publishLog('C', "\t\tDisabling rendez-vous '%s'", arg.c_str());
+						SelLog->Log('C', "\t\tDisabling rendez-vous '%s'", arg.c_str());
 	 				event->second.addTrackerDIS( this->getName() );
 					nameused = true;
 				} else {
-					publishLog('F', "\t\tRendez-vous '%s' is not (yet ?) defined", arg.c_str());
+					SelLog->Log('F', "\t\tRendez-vous '%s' is not (yet ?) defined", arg.c_str());
 					exit(EXIT_FAILURE);
 				}
 			} else if( l == "-->> activated" ){
 				if(verbose)
-					publishLog('C', "\t\tActivated at startup");
+					SelLog->Log('C', "\t\tActivated at startup");
 				this->status = _status::CHECKING;
 				this->hm_counter = this->howmany;
 			} else if( l == "-->> quiet" ){
 				if(verbose)
-					publishLog('C', "\t\tBe quiet");
+					SelLog->Log('C', "\t\tBe quiet");
 				this->beQuiet();
 			} else if( l == "-->> disabled" ){
 				if(verbose)
-					publishLog('C', "\t\tDisabled");
+					SelLog->Log('C', "\t\tDisabled");
 				this->disable();
 			}
 #if 0
@@ -149,7 +149,7 @@ else printf("Ignore '%s'\n", l.c_str());
 		file.close();
 	} catch(const std::ifstream::failure &e){
 		if(!file.eof()){
-			publishLog('F', "%s : %s", fch.c_str(), strerror(errno) );
+			SelLog->Log('F', "%s : %s", fch.c_str(), strerror(errno) );
 			exit(EXIT_FAILURE);
 		}
 	}
@@ -173,7 +173,7 @@ const char *Tracker::getStatusC( void ){
 
 void Tracker::publishstatus( void ){
 	if( this->asStatusTopic() ){
-		mqttpublish( MQTT_client, this->getStatusTopic().c_str(), strlen(this->getStatusC()), (void *)this->getStatusC(), false);
+		SelMQTT->mqttpublish( MQTT_client, this->getStatusTopic().c_str(), strlen(this->getStatusC()), (void *)this->getStatusC(), false);
 	}
 }
 
@@ -189,7 +189,7 @@ void Tracker::feedState( lua_State *L, const char *name, const char *topic, cons
 		lua_setmetatable(L, -2);
 		lua_setglobal( L, "MAJORDOME_Myself" );
 	} catch( std::out_of_range &e ){	// Not found 
-		publishLog('F', "Can't find tracker '%s'", this->getNameC() );
+		SelLog->Log('F', "Can't find tracker '%s'", this->getNameC() );
 		exit(EXIT_FAILURE);
 	}
 
@@ -199,7 +199,7 @@ void Tracker::feedState( lua_State *L, const char *name, const char *topic, cons
 bool Tracker::exec( const char *name, const char *topic, const char *payload ){
 	if( !this->isEnabled() || this->status != _status::CHECKING ){
 		if(verbose)
-			publishLog('T', "Tracker '%s' from '%s' is disabled or inactive", this->getNameC(), this->getWhereC() );
+			SelLog->Log('T', "Tracker '%s' from '%s' is disabled or inactive", this->getNameC(), this->getWhereC() );
 		return false;
 	}
 
@@ -225,13 +225,13 @@ void Tracker::start( void ){
 					task.beQuiet();
 				task.exec( this->getNameC(), NULL, NULL, true, this->getStatusC() );
 			} catch (...) {
-				publishLog('F', "Internal error : can't find task \"%s\"", (*tsk).c_str() );
+				SelLog->Log('F', "Internal error : can't find task \"%s\"", (*tsk).c_str() );
 				exit(EXIT_FAILURE);
 			}
 		}
 	}
 	if(verbose)
-		publishLog('T', "Tracker '%s' is checking", this->getNameC() );
+		SelLog->Log('T', "Tracker '%s' is checking", this->getNameC() );
 	this->status = _status::CHECKING;
 	this->hm_counter = this->howmany;
 	this->publishstatus();
@@ -246,13 +246,13 @@ void Tracker::stop( void ){
 					task.beQuiet();
 				task.exec( this->getNameC(), NULL, NULL, true, this->getStatusC() );
 			} catch (...) {
-				publishLog('F', "Internal error : can't find task \"%s\"", (*tsk).c_str() );
+				SelLog->Log('F', "Internal error : can't find task \"%s\"", (*tsk).c_str() );
 				exit(EXIT_FAILURE);
 			}
 		}
 	}
 	if(verbose)
-		publishLog('T', "Tracker '%s' is waiting", this->getNameC() );
+		SelLog->Log('T', "Tracker '%s' is waiting", this->getNameC() );
 	this->status = _status::WAITING;
 	this->publishstatus();
 }
@@ -261,7 +261,7 @@ void Tracker::done( void ){
 	if( this->isEnabled() && this->getStatus() == _status::CHECKING )
 		this->execTasks(config, this->getNameC(), NULL, NULL, true, this->getStatusC()); // by definition the previous status was CHECKING
 	if(verbose)
-		publishLog('T', "Tracker '%s' is done", this->getNameC() );
+		SelLog->Log('T', "Tracker '%s' is done", this->getNameC() );
 	this->status = _status::DONE;
 	this->publishstatus();
 }
@@ -367,8 +367,8 @@ static const struct luaL_Reg MajTrackerM [] = {
 };
 
 int Tracker::initLuaObject( lua_State *L ){
-	libSel_objFuncs( L, "MajordomeTracker", MajTrackerM );
-	libSel_libFuncs( L, "MajordomeTracker", MajTrackerLib );
+	SelLua->objFuncs( L, "MajordomeTracker", MajTrackerM );
+	SelLua->libCreateOrAddFuncs( L, "MajordomeTracker", MajTrackerLib );
 
 	return 1;
 }

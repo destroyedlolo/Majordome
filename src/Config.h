@@ -18,6 +18,7 @@
 #include "Event.h"
 #include "Timer.h"
 #include "MQTTTopic.h"
+#include "Tracker.h"
 
 class Config : virtual public SortDir {
 protected :
@@ -36,6 +37,9 @@ public:
 
 	typedef std::unordered_map<std::string, MQTTTopic> TopicElements;
 	TopicElements TopicsList;
+
+	typedef std::unordered_map<std::string, Tracker> TrackerElements;
+	TrackerElements TrackersList;
 
 	/* Initialise this configuration against 'where' directory's content */
 	void init(std::string &where, lua_State *L);
