@@ -34,7 +34,7 @@ Indicate the rendezvous to wait for.
 Indicates the Timer to wait for : 
 this script will be triggered when this timer is exhausted.
 ```
--->> listen=15s
+-->> when=15s
 ```
 If a task is woken up by a timer, the following variables are created at Lua side.
 - **MAJORDOME_TIMER**, name of the timer (in the example above `15s`)
