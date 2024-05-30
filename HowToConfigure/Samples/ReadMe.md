@@ -1,1 +1,1 @@
-This directory contains several simples code to demonstrate Majordome's feature or use cases
+This directory contains several simples code to demonstrate Majordome's features
