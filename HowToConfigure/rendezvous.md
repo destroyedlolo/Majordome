@@ -29,3 +29,30 @@ File **test.rendezvous**
 # disable this topic
 #disabled
 ```
+
+File **trigger.lua**
+```
+-- This script starts at Majordome startup and trigger
+-- our rendez-vous.
+--
+-->> RunAtStartup
+
+-- Find out our rendez-vous by its name
+local rdv =  MajordomeRendezVous.find("test")
+
+-- check if it's found
+assert(rdv, "Can't find rendez-vous")
+
+-- Launch it
+SelLog.Log("Rendez-vous found, lets launch it")
+rdv:Launch()
+```
+
+File **Result.lua**
+```
+-- Task to be launched by the rendez-vous.
+--
+-->> waitfor=test
+
+SelLog.Log("Result is running")
+```
