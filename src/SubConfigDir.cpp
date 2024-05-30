@@ -107,25 +107,24 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 				exit(EXIT_FAILURE);
 			} else
 				cfg.TopicsList.insert( std::make_pair(name, tpc) );
-#if 0 /* AF */
 		} else if( !strcmp(ext,".rendezvous") ){
 			std::string name;
 			Event evt( completpath, where, name );
 
 			Config::EventElements::iterator prev;
 			if((prev = cfg.EventsList.find(name)) != cfg.EventsList.end()){
-				publishLog('F', "Event '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second.getWhere().c_str());
+				SelLog->Log('F', "Event '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second.getWhere().c_str());
 				exit(EXIT_FAILURE);
-			} else {
+			} else
 				cfg.EventsList.insert( std::make_pair(name, evt) );
-			}
+#if 0 /* AF */
 		} else if( !strcmp(ext,".tracker") ){
 			std::string name;
 			Tracker trk( cfg, completpath, where, name, L );
 	
 			Config::TrackerElements::iterator prev;
 			if((prev = cfg.TrackersList.find(name)) != cfg.TrackersList.end()){
-				publishLog('F', "Tracker '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second.getWhere().c_str());
+				SelLog->Log('F', "Tracker '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second.getWhere().c_str());
 				exit(EXIT_FAILURE);
 			} else
 				cfg.TrackersList.insert( std::make_pair(name, trk) );

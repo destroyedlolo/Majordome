@@ -237,9 +237,7 @@ static const struct luaL_Reg MajEventM [] = {
 	{NULL, NULL}
 };
 
-int Event::initLuaObject( lua_State *L ){
+void Event::initLuaObject( lua_State *L ){
 	SelLua->objFuncs( L, "MajordomeRendezVous", MajEventM );
 	SelLua->libCreateOrAddFuncs( L, "MajordomeRendezVous", MajEventLib );
-
-	return 1;
 }

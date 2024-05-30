@@ -345,6 +345,7 @@ int main(int ac, char **av){
 	SelLua->AddStartupFunc(LuaTask::initLuaObject);
 	SelLua->AddStartupFunc(Timer::initLuaObject);
 	SelLua->AddStartupFunc(MQTTTopic::initLuaObject);
+	SelLua->AddStartupFunc(Event::initLuaObject);
 #if 0 /* AF Trackers */
 	SelLua->AddStartupFunc(LuaTask::initLuaObject);
 #endif
