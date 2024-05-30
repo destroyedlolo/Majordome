@@ -72,4 +72,37 @@ Removes some trace.
 ### -->> disabled
 This script won't run.
 
+## at Lua side
 
+### Exposed variables
+As described above, following variables are subject to be created :
+- **MAJORDOME_TOPIC_NAME**, **MAJORDOME_TOPIC** and **MAJORDOME_PAYLOAD** if the task is launched by an MQTT topic.
+- **MAJORDOME_TIMER** if the task is launched by a timer
+- **MAJORDOME_TRACKER** and  **MAJORDOME_TRACKER_STATUS** if the task is launched by a  tracker.
+
+Following variables are also created :
+- **MAJORDOME_VERSION** and **MAJORDOME_COPYRIGHT** as the name said
+- **MAJORDOME_ClientID**, MQTT client identifier that must be unique for a single broker.
+- **MAJORDOME_DEBUG**, set only if Majordome has been started with `-d` and, consequently, is in debugging mode.
+
+### Exposed objects
+- **MQTTBroker**, the master broker as defined in the configuration file. Mostly used to `Publish()` data.
+- `Publish(value, retain)` to publish a MQTT message with
+  - `[string|number] value` value to be published
+  - `Boolean retain` does the value to be retained ?
+- `getTopic()` returns the associated MQTT topic
+- `getVal()` returns the last received payload (only if the topic is `stored`). Takes in account also the associated time to live.
+- `Launch()` launches tasks associated to this topic
+- `getContainer()` returns the container (directory) in which this topic as been defined
+- `getName()` returns topic's name
+- `isEnabled()` returns a boolean reflecting if the topic is enabled or not
+- `Enable()` to enable this topic
+- `Disable()` to disable this topic
+
+As well as following objects kinds :
+- **MajordomeTask**, tasks' interface
+- **MajordomeMQTTTopic**, topic's interface as defined with `.topic` file
+- **MajordomeTimer**, timer's interface
+- **MajordomeTracker**, tracker's interface
+
+See dedicated documentation for more information.
