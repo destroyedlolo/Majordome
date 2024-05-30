@@ -87,7 +87,7 @@ Following variables are also created :
 
 ### Exposed objects
 - **MQTTBroker**, the master broker as defined in the configuration file.
-- 
+
 As well as following objects kinds :
 - **MajordomeTask**, tasks' interface which implements
   - `Launch()` Launchs/executes this task
