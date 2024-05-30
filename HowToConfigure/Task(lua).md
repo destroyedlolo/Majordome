@@ -1,6 +1,11 @@
 # .lua
 **Tasks** are Lua scripts that are triggered by external events (timer, rendezvous, topic ...). They are the core of the automation in Majordome.
 
+⚠️ Notez-bien ⚠️ : each task is running is a **dedicated context** (i.e, different Lua state) and, consequently, are **strongly stateless**.
+You should assume that the environment exists only for a single invocation and will disappear as soon as the task is finished. The script should initialize any needed objects when it is starting and should commit any permanent data changes before exiting to a durable store such Séléné's shared (`SelSharedVar`, `SelSharedFunction`, Collections, ...) or publish them to the MQTT network. Variables/functions/whatever can't be shared among scripts. Again, Séléné is providing some sharing mechanisms if needed.
+
+For advanced/complex usages, you may serialize data needed to be propagated within a SelSharedVar, or, smarter, to an MQTT message. MQTT context sharing open the door to distributed processing, horizontal scalability, load balancing and fault resilience.
+
 ## Directives
 In the header of the script (comment block at the very beginning of the script), each line starting with -->> (2 dashes) are Majordome's directives.
 If you want to comment out a directive, use '--->>' (3 dashes)
