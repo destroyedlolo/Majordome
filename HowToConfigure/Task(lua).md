@@ -86,23 +86,32 @@ Following variables are also created :
 - **MAJORDOME_DEBUG**, set only if Majordome has been started with `-d` and, consequently, is in debugging mode.
 
 ### Exposed objects
-- **MQTTBroker**, the master broker as defined in the configuration file. Mostly used to `Publish()` data.
-- `Publish(value, retain)` to publish a MQTT message with
-  - `[string|number] value` value to be published
-  - `Boolean retain` does the value to be retained ?
-- `getTopic()` returns the associated MQTT topic
-- `getVal()` returns the last received payload (only if the topic is `stored`). Takes in account also the associated time to live.
-- `Launch()` launches tasks associated to this topic
-- `getContainer()` returns the container (directory) in which this topic as been defined
-- `getName()` returns topic's name
-- `isEnabled()` returns a boolean reflecting if the topic is enabled or not
-- `Enable()` to enable this topic
-- `Disable()` to disable this topic
+- **MQTTBroker**, the master broker as defined in the configuration file. This object supports the following methods :
+  - `Publish(value, retain)` to publish a MQTT message with
+    - `[string|number] value` value to be published
+    - `Boolean retain` does the value to be retained ?
+  - `getTopic()` returns the associated MQTT topic
+  - `getVal()` returns the last received payload (only if the topic is `stored`). Takes in account also the associated time to live.
+  - `Launch()` launches tasks associated to this topic
+  - `getContainer()` returns the container (directory) in which this topic as been defined
+  - `getName()` returns topic's name
+  - `isEnabled()` returns a boolean reflecting if the topic is enabled or not
+  - `Enable()` to enable this topic
+  - `Disable()` to disable this topic
 
 As well as following objects kinds :
-- **MajordomeTask**, tasks' interface
+- **MajordomeTask**, tasks' interface which implements
+  - `Launch()` Launchs/executes this task
+  - `getContainer()` returns the container (directory) in which this task as been defined
+  - `getName()` returns task's name
+  - `isEnabled()` returns a boolean reflecting if the task is enabled or not
+  - `Enable()` to enable this task
+  - `Disable()` to disable this task
+
 - **MajordomeMQTTTopic**, topic's interface as defined with `.topic` file
 - **MajordomeTimer**, timer's interface
 - **MajordomeTracker**, tracker's interface
+
+Each kind implement a `find()` method to retreive an object by its name.
 
 See dedicated documentation for more information.
