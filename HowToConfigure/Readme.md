@@ -70,11 +70,11 @@ It defines **daily rotating log** in `/tmp` with automatic purging. See [Sélén
 Objects configuration is done using plain text files and the suffix determines their kind. Files without known suffix are ignored.
 
 Supported are :
-- Timer (`.timer`) : specifies the absolute time or the interval to launch an action
-- Topic (`.topic`) :  specifies MQTT topics. For incoming topic, the payload can be forced to be a numerical value and it can be stored as a SelShared variables with an optional expiration time (*time to live*, TTL). A *quality of service* (QoS) can be specified as well
-- Rendez-vous (`.rendezvous`) : allows triggering an action without having to use an MQTT topic.
-- Tracker (`.tracker`) : a simple but powerful state box to track some activities. Start an action at after an even, track its advancement, finishing it.
-- last but not least, Tasks (`.lua`) are Lua script that are triggered by events described above. Processing data, storing them, decision-making, triggering other objects ... they are the brain of the automation.
+- [Timer](timer.md) (`.timer`) : specifies the absolute time or the interval to launch an action
+- [Topic](tipic.md) (`.topic`) :  specifies MQTT topics. For incoming topic, the payload can be forced to be a numerical value and it can be stored as a SelShared variables with an optional expiration time (*time to live*, TTL). A *quality of service* (QoS) can be specified as well
+- [Rendez-vous](rendezvous.md) (`.rendezvous`) : allows triggering an action without having to use an MQTT topic.
+- [Tracker](tracker.md) (`.tracker`) : a simple but powerful state box to track some activities. Start an action at after an even, track its advancement, finishing it.
+- last but not least, [Tasks](Task(lua).md)  (`.lua`) are Lua script that are triggered by events described above. Processing data, storing them, decision-making, triggering other objects ... they are the brain of the automation.
 
 ## Lua scripting
 
