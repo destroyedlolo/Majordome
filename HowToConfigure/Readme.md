@@ -17,7 +17,7 @@ Some examples are provided also in `Config` directory at the root of this projec
 - `-r` : enable trace messages, even more verbose, noisy
 - `-V` : silence topic arrival messages. Avoid verbosity to be polluted but incoming messages tracking which is very noisy.
 
-# General configuration file
+# Majordome own configuration file
 
 A configuration file instructs Majordome about its basic configuration and where are located automation objects.<br>
 Lines starting by a hash sign `#` are considered as comment and, as such, ignored.
@@ -45,15 +45,15 @@ Example (which is the default value) :<br>
 
 # Automation Configuration
 
-Automation configurations are grouped (for a specific Majordome instance) in a directory tree likes :
+Automation configurations are grouped (for a specific Majordome instance) in a directory tree likes specified with the `UserConfiguration=` parameter. A typical directory tree looks like :
 ```
 00_Majordome
 01_Pool
 02_LivingRoom
 ```
 
-Directories are loaded in order (00_* first, 01_* after, etc ...). As soon as declared, Majordome objects can be used in further ones.<br>
-:exclamation: **Notez-bien** :exclamation: Majordome's objects (triggers, timers, ...) are shared. But Lua side variables can't be shared among scripts. See bellow about Lua scripting.
+Directories, also known as *containers*, are loaded in order (00_* first, 01_* after, etc ...). As soon as declared, Majordome objects can be used in further ones.<br>
+:exclamation: **Notez-bien** :exclamation: If Majordome's objects (triggers, timers, ...) are shared, Lua scripts are **stateless** and Lua side variables, functions, can't be shared among scripts. See bellow about Lua scripting.
 
 An error is raised if an object is duplicated.
 
@@ -65,6 +65,16 @@ PurgeLog.lua
 README.md
 ```
 It defines **daily rotating log** in `/tmp` with automatic purging. See [Séléné](https://github.com/destroyedlolo/Selene)'s SelLog.
+
+## Objects
+Objects configuration is done using plain text files and the suffix determines their kind. Files without known suffix are ignored.
+
+Supported are :
+- Timer (`.timer`) : specifies the absolute time or the interval to launch an action
+- Topic (`.topic`) :  specifies MQTT topics. For incoming topic, the payload can be forced to be a numerical value and it can be stored as a SelShared variables with an optional expiration time (*time to live*, TTL). A *quality of service* (QoS) can be specified as well
+- Rendez-vous (`.rendezvous`) : allows triggering an action without having to use an MQTT topic.
+- Tracker (`.tracker`) : a simple but powerful state box to track some activities. Start an action at after an even, track its advancement, finishing it.
+- last but not least, Tasks (`.lua`) are Lua script that are triggered by events described above. Processing data, storing them, decision-making, triggering other objects ... they are the brain of the automation.
 
 ## Lua scripting
 
@@ -80,13 +90,7 @@ As well as following objects :
 - all Séléné loaded modules (**SelLog**, **SelMQTT**, ...)
 - **MQTTBroker** - Broker defined in Majordome's configuration file. This object aims to let Lua scripts to `Publish()` 
 
-## Objects
-Files without known suffix are ignored.
-
----
-
-### Init.lua
+## Init.lua
 In each subdirectory, `Init.lua` (with capital 'I') is executed at startup, during user configuration loading. It's mostly used to do initialization (so its filename :yum:).
 
----
 
