@@ -1,5 +1,6 @@
 # .timer
 Define a timer for recurring tasks.
+Its target can be an absolute time or a recurring interval. 
 
 ## Directives
 
