@@ -335,6 +335,12 @@ static int mtrk_getCounter(lua_State *L){
 	return 1;
 }
 
+static int mtrk_resetCounter(lua_State *L){
+	class Tracker *tracker = checkMajordomeTracker(L);
+	tracker->resetCounter();
+	return 0;
+}
+
 static int mtrk_getStatus(lua_State *L){
 	class Tracker *tracker = checkMajordomeTracker(L);
 	lua_pushstring( L, tracker->getStatusC() );
@@ -361,6 +367,7 @@ static const struct luaL_Reg MajTrackerM [] = {
 	{"Enable", mtrk_enabled},
 	{"Disable", mtrk_disable},
 	{"getCounter", mtrk_getCounter},
+	{"resetCounter", mtrk_resetCounter},
 	{"getStatus", mtrk_getStatus},
 	{"setStatus", mtrk_setStatus},
 	{NULL, NULL}

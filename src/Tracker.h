@@ -42,6 +42,7 @@ public:
 	enum _status getStatus( void ){ return this->status; }
 	const char *getStatusC( void );
 	unsigned int getCounter(void){ return this->hm_counter; }
+	void resetCounter(void){ this->hm_counter = this->howmany; }
 
 	/* Overloading of LuaExec's in order to initialise Myself object */
 	virtual void feedState( lua_State *L, const char *name, const char *topic=NULL, const char *payload=NULL, bool tracker=false, const char *trkstatus=NULL );
