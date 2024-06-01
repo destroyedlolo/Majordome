@@ -84,6 +84,7 @@ Trakers are exposed as **MajordomeTracker** with following methods :
 - `isEnabled()` returns a boolean reflecting if the task is enabled or not
 - `Enable()` to enable this task
 - `Disable()` to disable this task 
-- `getCounter()` get the *HowMany* counter
+- `getCounter()` get the *HowMany* counter (counting downward)
+- `resetCounter()` resert the *HowMany* counter
 - `getStatus()` get current tracker status
 - `setStatus()` set the current tracker status. Argument should be **CHECKING** (or **START**), **WAITING** (or **STOP**) and any other value leads to **DONE** status.
