@@ -43,6 +43,11 @@ Unique name to identify the tracker. If not set, uses the filename.
 ```
 -->> name=toto
 ```
+#### -->> howmany=
+Numbers of consecutive positive responses before the tracker status become DONE.
+
+### -->> activated
+The tracker will start in **CHECKING** mode
 
 #### -->> quiet
 Remove some trace. This option is useful to avoid logging of very noisy topics.
@@ -66,7 +71,19 @@ Timer indicating when the tracker will switch to **CHECKING** mode
 #### -->> stop=
 Timer indicating when the tracker will be reseted to **WAITING** mode
 
-#### -->> activated
-The tracker will start in **CHECKING** mode
+## at Lua side
+### Exposed variables
+- **MAJORDOME_Myself** is automatically created and correspond to the current tracker
+- **MAJORDOME_TRACKER** - tracker's name
+- **MAJORDOME_TRACKER_STATUS** - tracker's status
 
-
+### Exposed objects
+Trakers are exposed as **MajordomeTracker** with following methods :
+- `getContainer()` returns the container (directory) in which this task as been defined
+- `getName()` returns task's name
+- `isEnabled()` returns a boolean reflecting if the task is enabled or not
+- `Enable()` to enable this task
+- `Disable()` to disable this task 
+- `getCounter()` get the *HowMany* counter
+- `getStatus()` get current tracker status
+- `setStatus()` set the current tracker status. Argument should be **CHECKING** (or **START**), **WAITING** (or **STOP**) and any other value leads to **DONE** status.
