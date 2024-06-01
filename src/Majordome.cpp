@@ -78,7 +78,7 @@ static void read_configuration(const char *fch){
 				MQTT_ClientID = arg.c_str();
 				if(verbose)
 					SelLog->Log('C', "Client ID : '%s'", MQTT_ClientID.c_str());
-			} else if(!!(arg = striKWcmp( l, "UserConfiguration=" ))){
+			} else if(!!(arg = striKWcmp( l, "UserConfiguration=" )) || !!(arg = striKWcmp( l, "ApplicationDirectory=" ))){
 				UserConfigRoot = arg.c_str();
 				if(verbose)
 					SelLog->Log('C', "User configuration directory : '%s'", UserConfigRoot.c_str());

@@ -38,14 +38,14 @@ If not set, the Client ID will be `Majordome-*Hostname*-*pid*`.
 Example :<br>
 `ClientID=Majordome`
 
-### UserConfiguration
+### ApplicationDirectory (or UserConfiguration)
 Directory where to find custom configuration and automation objects.<br>
 Example (which is the default value) :<br>
-``UserConfiguration=/usr/local/etc/Majordome/``
+`ApplicationDirectory=/usr/local/etc/Majordome/`
 
 # Automation Configuration
 
-Automation configurations are grouped (for a specific Majordome instance) in a directory tree likes specified with the `UserConfiguration=` parameter. A typical directory tree looks like :
+Automation configurations are grouped (for a specific Majordome instance) in a directory tree likes specified with the `ApplicationDirectory=` parameter. A typical directory tree looks like :
 ```
 00_Majordome
 01_Pool
