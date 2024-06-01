@@ -117,7 +117,6 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 				exit(EXIT_FAILURE);
 			} else
 				cfg.EventsList.insert( std::make_pair(name, evt) );
-#if 0 /* AF */
 		} else if( !strcmp(ext,".tracker") ){
 			std::string name;
 			Tracker trk( cfg, completpath, where, name, L );
@@ -128,7 +127,6 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 				exit(EXIT_FAILURE);
 			} else
 				cfg.TrackersList.insert( std::make_pair(name, trk) );
-#endif
 		}
 #	ifdef DEBUG
 		else 

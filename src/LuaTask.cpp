@@ -12,9 +12,7 @@ extern "C" {
 #include "Config.h"
 #include "Helpers.h"
 #include "LuaTask.h"
-#if 0 /* AF Tracker */
 #include "Tracker.h"
-#endif
 
 LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::string &name, lua_State *L ) : once(false), running_access(PTHREAD_MUTEX_INITIALIZER), running(false), runatstartup(false){
 	if(verbose)
@@ -94,7 +92,6 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 					SelLog->Log('F', "\t\tRendezvous '%s' is not (yet ?) defined", arg.c_str());
 					exit(EXIT_FAILURE);
 				}
-#if 0 /* AF Tracker */
 			} else if( !!(arg = striKWcmp( l, "-->> whenDone=" ))){
 				Config::TrackerElements::iterator tracker;
 				if( (tracker = cfg.TrackersList.find(arg)) != cfg.TrackersList.end()){
@@ -128,7 +125,6 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 					SelLog->Log('F', "\t\tracker '%s' is not (yet ?) defined", arg.c_str());
 					exit(EXIT_FAILURE);
 				}
-#endif
 			} else if( l == "-->> once" ){
 				if(verbose)
 					SelLog->Log('C', "\t\tOnly one instance is allowed to run (once)");

@@ -180,7 +180,6 @@ void MQTTTopic::execTrackers( Config &cfg, const char *trig_name, const char *to
 		SelLog->Log('D', "execTrackers() : %d to run", this->trackers.size() );
 #endif
 
-#if 0	/* AF Tracker */
 	for( StringVector::iterator trk = this->trackers.begin(); trk != this->trackers.end(); trk++){
 		try {
 			Tracker &tracker = cfg.findTracker( *trk );
@@ -190,7 +189,6 @@ void MQTTTopic::execTrackers( Config &cfg, const char *trig_name, const char *to
 			exit(EXIT_FAILURE);
 		}
 	}
-#endif
 }
 
 void MQTTTopic::execTrackers( Config &cfg, const char *timer_name ){
@@ -199,7 +197,6 @@ void MQTTTopic::execTrackers( Config &cfg, const char *timer_name ){
 		SelLog->Log('D', "execTrackers() : %d to run", this->trackers.size() );
 #endif
 
-#if 0	/* AF Tracker */
 	for( StringVector::iterator trk = this->trackers.begin(); trk != this->trackers.end(); trk++){
 		try {
 			Tracker &tracker = cfg.findTracker( *trk );
@@ -209,7 +206,6 @@ void MQTTTopic::execTrackers( Config &cfg, const char *timer_name ){
 			exit(EXIT_FAILURE);
 		}
 	}
-#endif
 }
 
 

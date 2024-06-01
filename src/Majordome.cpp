@@ -346,9 +346,7 @@ int main(int ac, char **av){
 	SelLua->AddStartupFunc(Timer::initLuaObject);
 	SelLua->AddStartupFunc(MQTTTopic::initLuaObject);
 	SelLua->AddStartupFunc(Event::initLuaObject);
-#if 0 /* AF Trackers */
-	SelLua->AddStartupFunc(LuaTask::initLuaObject);
-#endif
+	SelLua->AddStartupFunc(Tracker::initLuaObject);
 
 	config.RunStartups();	// Run startup functions
 	config.SubscribeTopics();	// MQTT : activate topics receiving

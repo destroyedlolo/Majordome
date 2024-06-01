@@ -102,7 +102,6 @@ void Event::execTasks( Config &cfg, const char *timer_name ){
 
 
 void Event::enableTrackers( void ){
-#if 0 /* AF Tracker */
 #ifdef DEBUG
 	if(debug && !this->isQuiet())
 		SelLog->Log('D', "enableTrackers() : %d to enable", this->trackersToEnable.size());
@@ -119,11 +118,9 @@ void Event::enableTrackers( void ){
 			exit(EXIT_FAILURE);
 		}		
 	}
-#endif
 }
 
 void Event::disableTrackers( void ){
-#if 0 /* AF Tracker */
 #ifdef DEBUG
 	if(debug && !this->isQuiet())
 		SelLog->Log('D', "disableTrackers() : %d to disable", this->trackersToDisable.size());
@@ -140,7 +137,6 @@ void Event::disableTrackers( void ){
 			exit(EXIT_FAILURE);
 		}		
 	}
-#endif
 }
 
 	/*****

@@ -65,7 +65,7 @@ public:
 	 *	throw an exception if not found
 	 */
 	LuaTask &findTask( std::string & );
-//	Tracker &findTracker( std::string & );
+	Tracker &findTracker( std::string & );
 };
 
 extern Config config;

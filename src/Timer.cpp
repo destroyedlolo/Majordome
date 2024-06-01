@@ -189,7 +189,6 @@ bool Timer::inEveryMode( void ){
 
 void Timer::execTasks( void ){
 	if( this->isEnabled() ){
-#if 0 /* AF Tracker */
 		for( Entries::iterator trk = this->startTrackers.begin(); trk != this->startTrackers.end(); trk++){	// starting tracker
 			try {
 				Tracker &tracker = config.findTracker( *trk );
@@ -209,7 +208,6 @@ void Timer::execTasks( void ){
 				exit(EXIT_FAILURE);
 			}
 		}
-#endif
 
 		Event::execTasks( config, this->getNameC() );
 #ifdef DEBUG

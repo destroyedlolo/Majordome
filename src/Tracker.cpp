@@ -366,10 +366,8 @@ static const struct luaL_Reg MajTrackerM [] = {
 	{NULL, NULL}
 };
 
-int Tracker::initLuaObject( lua_State *L ){
+void Tracker::initLuaObject( lua_State *L ){
 	SelLua->objFuncs( L, "MajordomeTracker", MajTrackerM );
 	SelLua->libCreateOrAddFuncs( L, "MajordomeTracker", MajTrackerLib );
-
-	return 1;
 }
 
