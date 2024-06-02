@@ -86,16 +86,17 @@ The script is launched when a [**tracker**](tracker.md) status is changed.
 ### Dependancies
 Tasks usually depends on Majordome's objects ; those directives expose them at Lua level without having to manually `find()` them.
 
-#### -->> need_rendezvous=, -->> need_tracker=, -->> need_timer=
-Create corresponding object.
+> [!WARNING]
+> Only `store`d topic can be  needed or required.
 
 #### -->> need_topic=
-Creates an object if a value has been received and its value hasn't expired. Otherwise, the object remains unset.<br>
-Only `store`d topic can be  needed or required.
+Creates an object if a value has been received and its value hasn't expired. Otherwise, the object remains unset.
 
 #### -->> require_topic=
 Prevents the script to be launched if corresponding value is not valid.<br>
-Only `store`d topic can be  needed or required.
+
+#### -->> need_rendezvous=, -->> need_tracker=, -->> need_timer=
+Create corresponding object.
 
 ## at Lua side
 
