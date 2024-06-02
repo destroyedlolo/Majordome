@@ -22,7 +22,8 @@ Some examples are provided also in `Config` directory at the root of this projec
 A configuration file instructs Majordome about its basic configuration and where are located automation objects.<br>
 Lines starting by a hash sign `#` are considered as comment and, as such, ignored.
 
-:sunglasses: Thanks to `-f`, it's possible to specify the configuration file to use, consequently, it's possible to have several instances running with totally separate configuration.
+> [!TIP]
+> Thanks to `-f`, it's possible to specify the configuration file to use, consequently, it's possible to have several instances running with totally separate configuration.
 
 ## Known configuration directives
 ### Broker_URL
@@ -31,7 +32,9 @@ Example (which is the default value) :<br>
 `Broker_URL=tcp://localhost:1883`
 
 ### ClientID
-**Client ID** to uniquely identify to the broker.<br> In case you have more than one Majordome instance connected to a single broker, you **MUST** set a unique ID per instance.
+**Client ID** to uniquely identify to the broker.
+> [!CAUTION]
+> In case you have more than one Majordome instance connected to a single broker, you **MUST** set a unique ID per instance.
 
 If not set, the Client ID will be `Majordome-*Hostname*-*pid*`.
 
@@ -52,8 +55,9 @@ Automation configurations are grouped (for a specific Majordome instance) in a d
 02_LivingRoom
 ```
 
-Directories, also known as *containers*, are loaded in order (00_* first, 01_* after, etc ...). As soon as declared, Majordome objects can be used in further ones.<br>
-:exclamation: **Notez-bien** :exclamation: If Majordome's objects (triggers, timers, ...) are shared, Lua scripts are **stateless** and Lua side variables, functions, can't be shared among scripts. See bellow about Lua scripting.
+Directories, also known as *containers*, are loaded in order (00_* first, 01_* after, etc ...). As soon as declared, Majordome objects can be used in further ones.
+> [!CAUTION]
+> If Majordome's objects (triggers, timers, ...) are shared, Lua scripts are **stateless** and Lua side variables, functions, can't be shared among scripts. See bellow about Lua scripting.
 
 An error is raised if an object is duplicated.
 
