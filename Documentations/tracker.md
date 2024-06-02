@@ -47,7 +47,7 @@ Unique name to identify the tracker. If not set, uses the filename.
 #### -->> howmany=
 Numbers of consecutive positive responses before the tracker status become DONE.
 
-### -->> activated
+#### -->> activated
 The tracker will start in **CHECKING** mode
 
 #### -->> quiet
@@ -55,6 +55,14 @@ Remove some trace. This option is useful to avoid logging of very noisy topics.
 
 #### -->> disabled
 This tracker starts as disabled : stats change and incoming messages are ignored.
+
+### Timer to start/stop the tracker
+
+#### -->> start=
+Timer indicating when the tracker will switch to **CHECKING** mode
+
+#### -->> stop=
+Timer indicating when the tracker will be reseted to **WAITING** mode
 
 ### MQTT topics
 
@@ -65,12 +73,6 @@ Indicates which [Topic](topic.md) to follow to take a decision.<br>
 #### -->> statustopic=
 Report status change to the given topic.
 Notez-bien : it's not a [Majordome topic](topic.md) but a simple string where `%ClientID%` will be replaced by Majordome's MQTT client ID.
-
-#### -->> start=
-Timer indicating when the tracker will switch to **CHECKING** mode
-
-#### -->> stop=
-Timer indicating when the tracker will be reseted to **WAITING** mode
 
 ## at Lua side
 ### Exposed variables
