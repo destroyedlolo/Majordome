@@ -16,6 +16,9 @@ class Tracker : public Event, public LuaExec {	// Event contains tasks to launch
 
 	StringVector startingTasks;	// Tasks to launch when starting the tracker
 	StringVector stoppingTasks;	// Tasks to launch when stopping the tracker
+	StringVector changingTasks;	// Tasks to launch when the tracker's status is changing
+
+	void notifyChanged(void);
 
 public:
 	enum _status {
@@ -62,6 +65,7 @@ public:
 	void addDone( std::string t ){ this->Add(t); }
 	void addStarted( std::string t ){ this->startingTasks.Add(t); }
 	void addStopped( std::string t ){ this->stoppingTasks.Add(t); }
+	void addChanged( std::string t ){ this->changingTasks.Add(t); }
 
 	void setStatusTopic( std::string t ){ this->statusTopic = t; }
 	bool asStatusTopic( void ){ return !!this->statusTopic; }

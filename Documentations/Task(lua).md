@@ -63,6 +63,12 @@ The script is launched when a tracker is stopped.
 -->> whenStopped=tracker
 ```
 
+### -->> whenChanged=
+The script is launched when a tracker status is changed.
+```
+-->> whenChanged=tracker
+```
+
 ### -->> once
 Only one instance is allowed to run at the same time : no concurrency.
 

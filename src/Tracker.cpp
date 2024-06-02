@@ -216,6 +216,22 @@ bool Tracker::exec( const char *name, const char *topic, const char *payload ){
 	return r;
 }
 
+void Tracker::notifyChanged( void ){
+	if( this->isEnabled() ){
+		for( Entries::iterator tsk = this->changingTasks.begin(); tsk != this->changingTasks.end(); tsk++){
+			try {
+				LuaTask &task = config.findTask( *tsk );
+				if( this->isQuiet() )
+					task.beQuiet();
+				task.exec( this->getNameC(), NULL, NULL, true, this->getStatusC() );
+			} catch (...) {
+				SelLog->Log('F', "Internal error : can't find task \"%s\"", (*tsk).c_str() );
+				exit(EXIT_FAILURE);
+			}
+		}
+	}
+}
+
 void Tracker::start( void ){
 	if( this->isEnabled() && this->getStatus() != _status::CHECKING ){
 		for( Entries::iterator tsk = this->startingTasks.begin(); tsk != this->startingTasks.end(); tsk++){
@@ -235,6 +251,7 @@ void Tracker::start( void ){
 	this->status = _status::CHECKING;
 	this->hm_counter = this->howmany;
 	this->publishstatus();
+	this->notifyChanged();
 }
 
 void Tracker::stop( void ){
@@ -255,15 +272,19 @@ void Tracker::stop( void ){
 		SelLog->Log('T', "Tracker '%s' is waiting", this->getNameC() );
 	this->status = _status::WAITING;
 	this->publishstatus();
+	this->notifyChanged();
 }
 
 void Tracker::done( void ){
-	if( this->isEnabled() && this->getStatus() == _status::CHECKING )
+	if( this->isEnabled() && this->getStatus() == _status::CHECKING ){
 		this->execTasks(config, this->getNameC(), NULL, NULL, true, this->getStatusC()); // by definition the previous status was CHECKING
+	}
+
 	if(verbose)
 		SelLog->Log('T', "Tracker '%s' is done", this->getNameC() );
 	this->status = _status::DONE;
 	this->publishstatus();
+	this->notifyChanged();
 }
 
 	/*****

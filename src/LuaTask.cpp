@@ -125,6 +125,17 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 					SelLog->Log('F', "\t\tracker '%s' is not (yet ?) defined", arg.c_str());
 					exit(EXIT_FAILURE);
 				}
+			} else if( !!(arg = striKWcmp( l, "-->> whenChanged=" ))){
+				Config::TrackerElements::iterator tracker;
+				if( (tracker = cfg.TrackersList.find(arg)) != cfg.TrackersList.end()){
+					if(verbose)
+						SelLog->Log('C', "\t\tAdded to tracker '%s' as Changed task", arg.c_str());
+	 				tracker->second.addChanged( this->getName() );
+					nameused = true;
+				} else {
+					SelLog->Log('F', "\t\tracker '%s' is not (yet ?) defined", arg.c_str());
+					exit(EXIT_FAILURE);
+				}
 			} else if( l == "-->> once" ){
 				if(verbose)
 					SelLog->Log('C', "\t\tOnly one instance is allowed to run (once)");
