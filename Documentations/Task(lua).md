@@ -1,23 +1,37 @@
 # .lua
 **Tasks** are Lua scripts that are triggered by external events (timer, rendezvous, topic ...). They are the core of the automation in Majordome.
 
-⚠️ Notez-bien ⚠️ : each task is running is a **dedicated context** (i.e, different Lua state) and, consequently, are **strongly stateless**.
-You should assume that the environment exists only for a single invocation and will disappear as soon as the task is finished. The script should initialize any needed objects when it is starting and should commit any permanent data changes before exiting to a durable store such Séléné's shared (`SelSharedVar`, `SelSharedFunction`, Collections, ...) or publish them to the MQTT network. Variables/functions/whatever can't be shared among scripts. Again, Séléné is providing some sharing mechanisms if needed.
+> [!WARNING]
+> ⚠️ Notez-bien ⚠️ : each task is running is a **dedicated context** (i.e, different Lua state) and, consequently, are **strongly stateless**.<br>
+> You should assume that the environment exists only for a single invocation and will disappear as soon as the task is finished. The script should initialize any needed objects when it is starting and should commit any permanent data changes before exiting to a durable store such Séléné's shared (`SelSharedVar`, `SelSharedFunction`, Collections, ...) or publish them to the MQTT network. Variables/functions/whatever can't be shared among scripts. Again, Séléné is providing some sharing mechanisms if needed.
 
-For advanced/complex usages, you may serialize data needed to be propagated within a SelSharedVar, or, smarter, to an MQTT message. MQTT context sharing open the door to distributed processing, horizontal scalability, load balancing and fault resilience.
+> [!TIP]
+> For advanced/complex usages, you may serialize data needed to be propagated within a SelSharedVar, or, smarter, to an MQTT message. MQTT context sharing open the door to distributed processing, horizontal scalability, load balancing and fault resilience.
 
 ## Directives
 In the header of the script (comment block at the very beginning of the script), each line starting with -->> (2 dashes) are Majordome's directives.
 If you want to comment out a directive, use '--->>' (3 dashes)
-
-### -->> name=
+### General directives
+#### -->> name=
 Unique name to identify the topic. If not set, uses the filename.
 ```
 -->> name=Toto
 ```
+#### -->> once
+Only one instance is allowed to run at the same time : no concurrency.
 
-### -->> listen=
-Indicates MQTT topic(s) to listen to : this script will be triggered when a data
+#### --> quiet
+Removes some trace.
+
+#### -->> disabled
+This script won't run.
+
+### Triggering
+Following directives determine what will trigger this script.<br>
+Multiple directives may be present, including those of the same kind.
+
+#### -->> listen=
+Indicates [**MQTT topic**](topic.md) to listen to : this script will be launched when a data
 is received on this topic.
 ```
 -->> listen=NoStations
@@ -27,16 +41,14 @@ If a task is woken up by an MQTT topic, the following variables are created at L
 - **MAJORDOME_TOPIC**, the MQTT topic itself
 - **MAJORDOME_PAYLOAD**, message's payload.
 
-More than one "listen=" can be present.
-
-### -->> waitfor=
-Indicate the rendezvous to wait for.
+#### -->> waitfor=
+Indicate the **Rendezvous** to wait for.
 ```
 -->> waitfor=exemple
 ```
 
-### -->> when=
-Indicates the Timer to wait for : 
+#### -->> when=
+Indicates the [**Timer**](timer.md) to wait for : 
 this script will be triggered when this timer is exhausted.
 ```
 -->> when=15s
@@ -44,39 +56,31 @@ this script will be triggered when this timer is exhausted.
 If a task is woken up by a timer, the following variables are created at Lua side.
 - **MAJORDOME_TIMER**, name of the timer (in the example above `15s`)
 
-### -->> whenStarted=
-The script is launched when provided tracker is started (beggin *following* mode).
+#### -->> whenStarted=
+The script is launched when provided [**tracker**](tracker.md) is started (beggin *following* mode).
 ```
 -->> whenStarted=tracker
 ```
 **MAJORDOME_TRACKER** is created with tracker's name and **MAJORDOME_TRACKER_STATUS** with its condition.
 
-### -->> whenDone=
-The script is launched when provided tracker is done (existing *following* mode cause the condition is met).
+#### -->> whenDone=
+The script is launched when provided [**tracker**](tracker.md) is done (existing *following* mode cause the condition is met).
 ```
 -->> whenStarted=tracker
 ```
 
-### -->> whenStopped=
-The script is launched when a tracker is stopped.
+#### -->> whenStopped=
+The script is launched when a [**tracker**](tracker.md) is stopped.
 ```
 -->> whenStopped=tracker
 ```
 
-### -->> whenChanged=
-The script is launched when a tracker status is changed.
+#### -->> whenChanged=
+The script is launched when a **tracker** status is changed.
 ```
 -->> whenChanged=tracker
 ```
 
-### -->> once
-Only one instance is allowed to run at the same time : no concurrency.
-
-### --> quiet
-Removes some trace.
-
-### -->> disabled
-This script won't run.
 
 ## at Lua side
 
