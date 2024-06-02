@@ -336,7 +336,7 @@ int main(int ac, char **av){
 	}
 
 	if(!quiet)
-		SelLog->Log('I', "Let's go ...");
+		SelLog->Log('I', "Application starting ...");
 
 
 		/***
