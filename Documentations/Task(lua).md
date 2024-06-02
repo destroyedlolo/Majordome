@@ -42,7 +42,7 @@ If a task is woken up by an MQTT topic, the following variables are created at L
 - **MAJORDOME_PAYLOAD**, message's payload.
 
 #### -->> waitfor=
-Indicate the **Rendezvous** to wait for.
+Indicate the [**Rendezvous**](rendezvous.md) to wait for.
 ```
 -->> waitfor=exemple
 ```
@@ -76,7 +76,7 @@ The script is launched when a [**tracker**](tracker.md) is stopped.
 ```
 
 #### -->> whenChanged=
-The script is launched when a **tracker** status is changed.
+The script is launched when a [**tracker**](tracker.md) status is changed.
 ```
 -->> whenChanged=tracker
 ```
