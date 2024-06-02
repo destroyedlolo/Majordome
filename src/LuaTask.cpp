@@ -81,12 +81,34 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 					SelLog->Log('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
 					exit(EXIT_FAILURE);
 				}
+			} else if( !!(arg = striKWcmp( l, "-->> need_timer=" ))){
+				Config::TimerElements::iterator timer;
+				if( (timer = cfg.TimersList.find(arg)) != cfg.TimersList.end()){
+					if(verbose)
+						SelLog->Log('C', "\t\tAdded needed timer '%s'", arg.c_str());
+	 				this->addNeededTimer( this->getName() );
+					nameused = true;
+				} else {
+					SelLog->Log('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
+					exit(EXIT_FAILURE);
+				}
 			} else if( !!(arg = striKWcmp( l, "-->> waitfor=" ))){
 				Config::EventElements::iterator event;
 				if( (event = cfg.EventsList.find(arg)) != cfg.EventsList.end()){
 					if(verbose)
 						SelLog->Log('C', "\t\tAdded to rendezvous '%s'", arg.c_str());
 	 				event->second.addTask( this->getName() );
+					nameused = true;
+				} else {
+					SelLog->Log('F', "\t\tRendezvous '%s' is not (yet ?) defined", arg.c_str());
+					exit(EXIT_FAILURE);
+				}
+			} else if( !!(arg = striKWcmp( l, "-->> need_rendezvous=" ))){
+				Config::EventElements::iterator event;
+				if( (event = cfg.EventsList.find(arg)) != cfg.EventsList.end()){
+					if(verbose)
+						SelLog->Log('C', "\t\tAdded needed rendezvous '%s'", arg.c_str());
+	 				this->addNeededRendezVous( this->getName() );
 					nameused = true;
 				} else {
 					SelLog->Log('F', "\t\tRendezvous '%s' is not (yet ?) defined", arg.c_str());
@@ -131,6 +153,17 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 					if(verbose)
 						SelLog->Log('C', "\t\tAdded to tracker '%s' as Changed task", arg.c_str());
 	 				tracker->second.addChanged( this->getName() );
+					nameused = true;
+				} else {
+					SelLog->Log('F', "\t\ttracker '%s' is not (yet ?) defined", arg.c_str());
+					exit(EXIT_FAILURE);
+				}
+			} else if( !!(arg = striKWcmp( l, "-->> need_tracker=" ))){
+				Config::TrackerElements::iterator tracker;
+				if( (tracker = cfg.TrackersList.find(arg)) != cfg.TrackersList.end()){
+					if(verbose)
+						SelLog->Log('C', "\t\tAdded needed tracker '%s'", arg.c_str());
+	 				this->addNeededTracker( this->getName() );
 					nameused = true;
 				} else {
 					SelLog->Log('F', "\t\tracker '%s' is not (yet ?) defined", arg.c_str());
