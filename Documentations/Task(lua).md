@@ -30,6 +30,9 @@ This script won't run.
 Following directives determine what will trigger this script.<br>
 Multiple directives may be present, including those of the same kind.
 
+#### -->> RunAtStartup
+Run when Majordome starts.
+
 #### -->> listen=
 Indicates [**MQTT topic**](topic.md) to listen to : this script will be launched when a data
 is received on this topic.
