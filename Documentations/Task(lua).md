@@ -80,7 +80,22 @@ The script is launched when a [**tracker**](tracker.md) status is changed.
 ```
 -->> whenChanged=tracker
 ```
+### Dependancies
+Tasks usually depends on Majordome's objects ; those directives expose them at Lua level without having to manually `find()` them.
+Additionally, for [**topics**](topic.md) :
+- `-->> need_topic=` creates an object if a value has been received and its value hasn't expired. Otherwise, the object remains unset.
+- `-->> require_topic=` prevents the script to be launched if corresponding value is not valid.
 
+Only `store`d topic can be  needed or required.
+
+#### -->> need_topic=, -->> need_tracker=, -->> need_timer=
+Create corresponding object.
+
+#### -->> need_topic=
+Creates an object if a value has been received and its value hasn't expired. Otherwise, the object remains unset.
+
+#### -->> require_topic=
+Prevents the script to be launched if corresponding value is not valid.
 
 ## at Lua side
 
