@@ -1,7 +1,7 @@
 # .lua
 **Tasks** are Lua scripts that are triggered by external events (timer, rendezvous, topic ...). They are the core of the automation in Majordome.
 
-> [!WARNING]
+> [!CAUTION]
 > ⚠️ Notez-bien ⚠️ : each task is running is a **dedicated context** (i.e, different Lua state) and, consequently, are **strongly stateless**.<br>
 > You should assume that the environment exists only for a single invocation and will disappear as soon as the task is finished. The script should initialize any needed objects when it is starting and should commit any permanent data changes before exiting to a durable store such Séléné's shared (`SelSharedVar`, `SelSharedFunction`, Collections, ...) or publish them to the MQTT network. Variables/functions/whatever can't be shared among scripts. Again, Séléné is providing some sharing mechanisms if needed.
 
