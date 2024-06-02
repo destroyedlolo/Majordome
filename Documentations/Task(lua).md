@@ -83,7 +83,7 @@ The script is launched when a [**tracker**](tracker.md) status is changed.
 ### Dependancies
 Tasks usually depends on Majordome's objects ; those directives expose them at Lua level without having to manually `find()` them.
 
-#### -->> need_topic=, -->> need_tracker=, -->> need_timer=
+#### -->> need_rendezvous=, -->> need_tracker=, -->> need_timer=
 Create corresponding object.
 
 #### -->> need_topic=
