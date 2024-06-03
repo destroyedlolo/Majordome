@@ -9,6 +9,9 @@
 -- listen directive.
 --->> name=Toto
 --
+-- Add topic object creation
+-->> require_topic=Test
+--
 -- remove some trace
 -- This option is useful to avoid logging of very noisy topics
 -->> quiet

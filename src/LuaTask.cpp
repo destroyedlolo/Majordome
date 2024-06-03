@@ -70,6 +70,36 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 					SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
 					exit(EXIT_FAILURE);
 				}
+			} else if( !!(arg = striKWcmp( l, "-->> need_topic=" ))){
+				Config::TopicElements::iterator topic;
+				if( (topic = cfg.TopicsList.find(arg)) != cfg.TopicsList.end()){
+					if(!topic->second.toBeStored()){
+						SelLog->Log('F', "Can't need \"%s\" topic : not stored", arg.c_str());
+						exit(EXIT_FAILURE);
+					}
+					if(verbose)
+						SelLog->Log('C', "\t\tAdded needed topic '%s'", arg.c_str());
+	 				this->addNeededTopic(arg);
+					nameused = true;
+				} else {
+					SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
+					exit(EXIT_FAILURE);
+				}
+			} else if( !!(arg = striKWcmp( l, "-->> require_topic=" ))){
+				Config::TopicElements::iterator topic;
+				if( (topic = cfg.TopicsList.find(arg)) != cfg.TopicsList.end()){
+					if(!topic->second.toBeStored()){
+						SelLog->Log('F', "Can't required \"%s\" topic : not stored", arg.c_str());
+						exit(EXIT_FAILURE);
+					}
+					if(verbose)
+						SelLog->Log('C', "\t\tAdded required topic '%s'", arg.c_str());
+	 				this->addRequiredTopic(arg);
+					nameused = true;
+				} else {
+					SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
+					exit(EXIT_FAILURE);
+				}
 			} else if( !!(arg = striKWcmp( l, "-->> when=" ))){
 				Config::TimerElements::iterator timer;
 				if( (timer = cfg.TimersList.find(arg)) != cfg.TimersList.end()){
@@ -86,7 +116,7 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 				if( (timer = cfg.TimersList.find(arg)) != cfg.TimersList.end()){
 					if(verbose)
 						SelLog->Log('C', "\t\tAdded needed timer '%s'", arg.c_str());
-	 				this->addNeededTimer( this->getName() );
+	 				this->addNeededTimer(arg);
 					nameused = true;
 				} else {
 					SelLog->Log('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
@@ -108,7 +138,7 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 				if( (event = cfg.EventsList.find(arg)) != cfg.EventsList.end()){
 					if(verbose)
 						SelLog->Log('C', "\t\tAdded needed rendezvous '%s'", arg.c_str());
-	 				this->addNeededRendezVous( this->getName() );
+	 				this->addNeededRendezVous(arg);
 					nameused = true;
 				} else {
 					SelLog->Log('F', "\t\tRendezvous '%s' is not (yet ?) defined", arg.c_str());

@@ -14,6 +14,9 @@
 -- (more than one "listen" can be present)
 --->> listen=NoStations
 --
+-- Create this topic object
+-->> need_topic=Test
+--
 -- Indicate the Timer(s) to wait for
 -- (more than one "when" can be present)
 --->> when=15s

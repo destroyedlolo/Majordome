@@ -126,12 +126,42 @@ Tracker::Tracker( Config &cfg, const std::string &fch, std::string &where, std::
 					SelLog->Log('C', "\t\tActivated at startup");
 				this->status = _status::CHECKING;
 				this->hm_counter = this->howmany;
+			} else if( !!(arg = striKWcmp( l, "-->> need_topic=" ))){
+				Config::TopicElements::iterator topic;
+				if( (topic = cfg.TopicsList.find(arg)) != cfg.TopicsList.end()){
+					if(!topic->second.toBeStored()){
+						SelLog->Log('F', "Can't need \"%s\" topic : not stored", arg.c_str());
+						exit(EXIT_FAILURE);
+					}
+					if(verbose)
+						SelLog->Log('C', "\t\tAdded needed topic '%s'", arg.c_str());
+	 				this->addNeededTopic(arg);
+					nameused = true;
+				} else {
+					SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
+					exit(EXIT_FAILURE);
+				}
+			} else if( !!(arg = striKWcmp( l, "-->> require_topic=" ))){
+				Config::TopicElements::iterator topic;
+				if( (topic = cfg.TopicsList.find(arg)) != cfg.TopicsList.end()){
+					if(!topic->second.toBeStored()){
+						SelLog->Log('F', "Can't required \"%s\" topic : not stored", arg.c_str());
+						exit(EXIT_FAILURE);
+					}
+					if(verbose)
+						SelLog->Log('C', "\t\tAdded required topic '%s'", arg.c_str());
+	 				this->addRequiredTopic(arg);
+					nameused = true;
+				} else {
+					SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
+					exit(EXIT_FAILURE);
+				}
 			} else if( !!(arg = striKWcmp( l, "-->> need_timer=" ))){
 				Config::TimerElements::iterator timer;
 				if( (timer = cfg.TimersList.find(arg)) != cfg.TimersList.end()){
 					if(verbose)
 						SelLog->Log('C', "\t\tAdded needed timer '%s'", arg.c_str());
-	 				this->addNeededTimer( this->getName() );
+	 				this->addNeededTimer(arg);
 					nameused = true;
 				} else {
 					SelLog->Log('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
@@ -142,7 +172,7 @@ Tracker::Tracker( Config &cfg, const std::string &fch, std::string &where, std::
 				if( (event = cfg.EventsList.find(arg)) != cfg.EventsList.end()){
 					if(verbose)
 						SelLog->Log('C', "\t\tAdded needed rendezvous '%s'", arg.c_str());
-	 				this->addNeededRendezVous( this->getName() );
+	 				this->addNeededRendezVous(arg);
 					nameused = true;
 				} else {
 					SelLog->Log('F', "\t\tRendezvous '%s' is not (yet ?) defined", arg.c_str());
@@ -153,7 +183,7 @@ Tracker::Tracker( Config &cfg, const std::string &fch, std::string &where, std::
 				if( (tracker = cfg.TrackersList.find(arg)) != cfg.TrackersList.end()){
 					if(verbose)
 						SelLog->Log('C', "\t\tAdded needed tracker '%s'", arg.c_str());
-	 				this->addNeededTracker( this->getName() );
+	 				this->addNeededTracker(arg);
 					nameused = true;
 				} else {
 					SelLog->Log('F', "\t\tracker '%s' is not (yet ?) defined", arg.c_str());
