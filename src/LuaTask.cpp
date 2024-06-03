@@ -193,7 +193,7 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 				if( (tracker = cfg.TrackersList.find(arg)) != cfg.TrackersList.end()){
 					if(verbose)
 						SelLog->Log('C', "\t\tAdded needed tracker '%s'", arg.c_str());
-	 				this->addNeededTracker( this->getName() );
+	 				this->addNeededTracker( arg );
 					nameused = true;
 				} else {
 					SelLog->Log('F', "\t\tracker '%s' is not (yet ?) defined", arg.c_str());

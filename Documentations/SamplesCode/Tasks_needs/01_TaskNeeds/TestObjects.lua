@@ -57,3 +57,10 @@
 
 -- Test if the rendez-vous has been created
 print( exemple )
+
+-- Test if the tracker has been created
+print( Tracker )
+
+-- Test if the timer has been created
+-- as '25s' is not a valid variable's name, we have to use _G
+print( _G['25s'] )

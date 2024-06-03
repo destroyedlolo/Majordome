@@ -79,7 +79,6 @@ void LuaExec::feedState( lua_State *L, const char *name, const char *topic, cons
 
 bool LuaExec::feedbyNeeded( lua_State *L ){
 	for(auto &i : this->needed_rendezvous){
-puts(i.c_str());
 		try {
 			class Event &evt = config.EventsList.at( i );
 			class Event **event = (class Event **)lua_newuserdata(L, sizeof(class Event *));
@@ -91,6 +90,38 @@ puts(i.c_str());
 
 			lua_setglobal(L, i.c_str());
 		} catch( std::out_of_range &e ){	// Not found
+			return false;
+		}
+	}
+
+	for(auto &i : this->needed_tracker){
+		try {
+			class Tracker &trk = config.TrackersList.at( i );
+			class Tracker **tracker = (class Tracker **)lua_newuserdata(L, sizeof(class Tracker *));
+			assert(tracker);
+
+			*tracker = &trk;
+			luaL_getmetatable(L, "MajordomeTracker");
+			lua_setmetatable(L, -2);
+
+			lua_setglobal(L, i.c_str());
+		} catch( std::out_of_range &e ){	// Not found 
+			return false;
+		}
+	}
+
+	for(auto &i : this->needed_timer){
+		try {
+			class Timer &tmr = config.TimersList.at( i );
+			class Timer **timer = (class Timer **)lua_newuserdata(L, sizeof(class Timer *));
+			assert(timer);
+
+			*timer = &tmr;
+			luaL_getmetatable(L, "MajordomeTimer");
+			lua_setmetatable(L, -2);
+
+			lua_setglobal(L, i.c_str());
+		} catch( std::out_of_range &e ){	// Not found 
 			return false;
 		}
 	}
@@ -129,7 +160,12 @@ bool LuaExec::execAsync( const char *name, const char *topic, const char *payloa
 
 	luaL_openlibs(arg->L);
 	threadEnvironment(arg->L);
-	this->feedbyNeeded(arg->L);
+	if(!this->feedbyNeeded(arg->L)){
+		lua_close( arg->L );
+		this->finished();
+		delete arg;
+		return false;
+	}
 	SelLua->ApplyStartupFunc(arg->L);
 
 	int err;
@@ -166,7 +202,10 @@ bool LuaExec::execSync( const char *name, const char *topic, const char *payload
 
 	luaL_openlibs(L);
 	threadEnvironment(L);
-	this->feedbyNeeded(L);
+	if(!this->feedbyNeeded(L)){
+		lua_close( L );
+		return false;
+	}
 	SelLua->ApplyStartupFunc(L);
 
 	int err;
