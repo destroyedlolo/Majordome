@@ -44,17 +44,19 @@ Unique name to identify the tracker. If not set, uses the filename.
 ```
 -->> name=toto
 ```
-#### -->> howmany=
-Numbers of consecutive positive responses before the tracker status become DONE.
-
-#### -->> activated
-The tracker will start in **CHECKING** mode
-
 #### -->> quiet
 Remove some trace. This option is useful to avoid logging of very noisy topics.
 
 #### -->> disabled
 This tracker starts as disabled : stats change and incoming messages are ignored.
+
+### Tracker owns
+
+#### -->> howmany=
+Numbers of consecutive positive responses before the tracker status become DONE.
+
+#### -->> activated
+The tracker will start in **CHECKING** mode
 
 ### Timer to start/stop the tracker
 
@@ -73,6 +75,21 @@ Indicates which [Topic](topic.md) to follow to take a decision.<br>
 #### -->> statustopic=
 Report status change to the given topic.
 Notez-bien : it's not a [Majordome topic](topic.md) but a simple string where `%ClientID%` will be replaced by Majordome's MQTT client ID.
+
+### Dependancies
+Tasks usually depends on Majordome's objects ; those directives expose them at Lua level without having to manually `find()` them.
+
+> [!WARNING]
+> Only `store`d topic can be  needed or required.
+
+#### -->> need_topic=
+Creates an object if a value has been received and its value hasn't expired. Otherwise, the object remains unset.
+
+#### -->> require_topic=
+Prevents the script to be launched if corresponding value is not valid.<br>
+
+#### -->> need_rendezvous=, -->> need_tracker=, -->> need_timer=
+Create corresponding object.
 
 ## at Lua side
 ### Exposed variables
