@@ -22,12 +22,6 @@ class LuaTask : public LuaExec {
 
 	bool runatstartup;	// Launch at startup
 
-	StringVector needed_rendezvous;
-	StringVector needed_tracker;
-	StringVector needed_timer;
-	StringVector needed_topic;
-	StringVector required_topic;
-
 public:
 	/* Constructor from a file
 	 * -> file : file to load
@@ -42,12 +36,6 @@ public:
 	
 	void setRunAtStartup( bool v ){ this->runatstartup = v; }
 	bool getRunAtStartup( void ){ return this->runatstartup; }
-
-	void addNeededRendezVous( std::string t ){ this->needed_rendezvous.Add(t); }
-	void addNeededTracker( std::string t ){ this->needed_tracker.Add(t); }
-	void addNeededTimer( std::string t ){ this->needed_timer.Add(t); }
-	void addNeededTopic( std::string t ){ this->needed_topic.Add(t); }
-	void addRequiredTopic( std::string t ){ this->required_topic.Add(t); }
 
 	/* Launch this tasks if possible
 	 * Same arguments as LuaExec::exec()
