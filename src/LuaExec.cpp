@@ -77,6 +77,27 @@ void LuaExec::feedState( lua_State *L, const char *name, const char *topic, cons
 	}
 }
 
+bool LuaExec::feedbyNeeded( lua_State *L ){
+	for(auto &i : this->needed_rendezvous){
+puts(i.c_str());
+		try {
+			class Event &evt = config.EventsList.at( i );
+			class Event **event = (class Event **)lua_newuserdata(L, sizeof(class Event *));
+			assert(event);
+
+			*event = &evt;
+			luaL_getmetatable(L, "MajordomeRendezVous");
+			lua_setmetatable(L, -2);
+
+			lua_setglobal(L, i.c_str());
+		} catch( std::out_of_range &e ){	// Not found
+			return false;
+		}
+	}
+
+	return true;
+}
+
 struct launchargs {
 	lua_State *L;	// New thread Lua state
 	LuaExec *task;	// task definition
@@ -108,6 +129,7 @@ bool LuaExec::execAsync( const char *name, const char *topic, const char *payloa
 
 	luaL_openlibs(arg->L);
 	threadEnvironment(arg->L);
+	this->feedbyNeeded(arg->L);
 	SelLua->ApplyStartupFunc(arg->L);
 
 	int err;
@@ -144,6 +166,7 @@ bool LuaExec::execSync( const char *name, const char *topic, const char *payload
 
 	luaL_openlibs(L);
 	threadEnvironment(L);
+	this->feedbyNeeded(L);
 	SelLua->ApplyStartupFunc(L);
 
 	int err;

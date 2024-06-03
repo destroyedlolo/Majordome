@@ -55,3 +55,5 @@
 -- Start at Majordome startup
 -->> RunAtStartup
 
+-- Test if the rendez-vous has been created
+print( exemple )

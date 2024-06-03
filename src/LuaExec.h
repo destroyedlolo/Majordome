@@ -30,6 +30,8 @@ protected:
 	void addNeededTopic( std::string t ){ this->needed_topic.Add(t); }
 	void addRequiredTopic( std::string t ){ this->required_topic.Add(t); }
 
+	bool feedbyNeeded( lua_State * );
+
 public:
 	LuaExec();
 	struct elastic_storage *getFunc( void ){ return &(this->func); }
