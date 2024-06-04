@@ -32,6 +32,8 @@ protected:
 
 	bool feedbyNeeded( lua_State * );
 
+	bool readConfigDirective( std::string &l );
+
 public:
 	LuaExec();
 	struct elastic_storage *getFunc( void ){ return &(this->func); }

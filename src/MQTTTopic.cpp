@@ -56,7 +56,7 @@ MQTTTopic::MQTTTopic( const std::string &fch, std::string &where, std::string &n
 					SelLog->Log('C', "\t\tqos : '%d'", this->qos);
 			} else if( l == "store" ){
 				if(verbose)
-					SelLog->Log('C', "\t\tStore in a SelShared");
+					SelLog->Log('C', "\t\tStore in a SelSharedVar");
 				this->store = true;
 			} else if( l == "numeric" ){
 				if(alreadydefault){

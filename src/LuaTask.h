@@ -29,7 +29,7 @@ public:
 	 * <- name : this object's name
 	 * -> L : Lua's state
 	 */
-	LuaTask( Config &cfg, const std::string &file, std::string &where, std::string &name, lua_State *L );
+	LuaTask( const std::string &file, std::string &where, std::string &name, lua_State *L );
 
 	void setOnce( bool v ){ this->once = v; }
 	bool getOnce( void ){ return this->once; }

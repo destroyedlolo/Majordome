@@ -15,7 +15,7 @@ extern "C" {
 #include "Helpers.h"
 #include "Tracker.h"
 
-Tracker::Tracker( Config &cfg, const std::string &fch, std::string &where, std::string &name, lua_State *L ):status(_status::WAITING), howmany(1){
+Tracker::Tracker( const std::string &fch, std::string &where, std::string &name, lua_State *L ):status(_status::WAITING), howmany(1){
 	if(verbose)
 		SelLog->Log('L', "\t'%s'", fch.c_str());
 
@@ -59,7 +59,7 @@ Tracker::Tracker( Config &cfg, const std::string &fch, std::string &where, std::
 
 			} else if( !!(arg = striKWcmp( l, "-->> listen=" ))){
 				Config::TopicElements::iterator topic;
-				if( (topic = cfg.TopicsList.find(arg)) != cfg.TopicsList.end()){
+				if( (topic = config.TopicsList.find(arg)) != config.TopicsList.end()){
 					if(verbose)
 						SelLog->Log('C', "\t\tAdded to topic '%s'", arg.c_str());
 	 				topic->second.addTracker( this->getName() );
@@ -79,7 +79,7 @@ Tracker::Tracker( Config &cfg, const std::string &fch, std::string &where, std::
 					SelLog->Log('C', "\t\tStatus topic : '%s'", this->getStatusTopic().c_str());
 			} else if( !!(arg = striKWcmp( l, "-->> start=" ))){
 				Config::TimerElements::iterator timer;
-				if( (timer = cfg.TimersList.find(arg)) != cfg.TimersList.end()){
+				if( (timer = config.TimersList.find(arg)) != config.TimersList.end()){
 					if(verbose)
 						SelLog->Log('C', "\t\tStart timer '%s'", arg.c_str());
 	 				timer->second.addStartTracker( this->getName() );
@@ -90,7 +90,7 @@ Tracker::Tracker( Config &cfg, const std::string &fch, std::string &where, std::
 				}
 			} else if( !!(arg = striKWcmp( l, "-->> stop=" ))){
 				Config::TimerElements::iterator timer;
-				if( (timer = cfg.TimersList.find(arg)) != cfg.TimersList.end()){
+				if( (timer = config.TimersList.find(arg)) != config.TimersList.end()){
 					if(verbose)
 						SelLog->Log('C', "\t\tStop timer '%s'", arg.c_str());
 	 				timer->second.addStopTracker( this->getName() );
@@ -101,7 +101,7 @@ Tracker::Tracker( Config &cfg, const std::string &fch, std::string &where, std::
 				}
 			} else if( !!(arg = striKWcmp( l, "-->> enableRDV=" ))){
 				Config::EventElements::iterator event;
-				if( (event = cfg.EventsList.find(arg)) != cfg.EventsList.end()){
+				if( (event = config.EventsList.find(arg)) != config.EventsList.end()){
 					if(verbose)
 						SelLog->Log('C', "\t\tEnabling rendez-vous '%s'", arg.c_str());
 	 				event->second.addTrackerEN( this->getName() );
@@ -112,7 +112,7 @@ Tracker::Tracker( Config &cfg, const std::string &fch, std::string &where, std::
 				}
 			} else if( !!(arg = striKWcmp( l, "-->> disableRDV=" ))){
 				Config::EventElements::iterator event;
-				if( (event = cfg.EventsList.find(arg)) != cfg.EventsList.end()){
+				if( (event = config.EventsList.find(arg)) != config.EventsList.end()){
 					if(verbose)
 						SelLog->Log('C', "\t\tDisabling rendez-vous '%s'", arg.c_str());
 	 				event->second.addTrackerDIS( this->getName() );
@@ -126,69 +126,6 @@ Tracker::Tracker( Config &cfg, const std::string &fch, std::string &where, std::
 					SelLog->Log('C', "\t\tActivated at startup");
 				this->status = _status::CHECKING;
 				this->hm_counter = this->howmany;
-			} else if( !!(arg = striKWcmp( l, "-->> need_topic=" ))){
-				Config::TopicElements::iterator topic;
-				if( (topic = cfg.TopicsList.find(arg)) != cfg.TopicsList.end()){
-					if(!topic->second.toBeStored()){
-						SelLog->Log('F', "Can't need \"%s\" topic : not stored", arg.c_str());
-						exit(EXIT_FAILURE);
-					}
-					if(verbose)
-						SelLog->Log('C', "\t\tAdded needed topic '%s'", arg.c_str());
-	 				this->addNeededTopic(arg);
-					nameused = true;
-				} else {
-					SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
-					exit(EXIT_FAILURE);
-				}
-			} else if( !!(arg = striKWcmp( l, "-->> require_topic=" ))){
-				Config::TopicElements::iterator topic;
-				if( (topic = cfg.TopicsList.find(arg)) != cfg.TopicsList.end()){
-					if(!topic->second.toBeStored()){
-						SelLog->Log('F', "Can't required \"%s\" topic : not stored", arg.c_str());
-						exit(EXIT_FAILURE);
-					}
-					if(verbose)
-						SelLog->Log('C', "\t\tAdded required topic '%s'", arg.c_str());
-	 				this->addRequiredTopic(arg);
-					nameused = true;
-				} else {
-					SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
-					exit(EXIT_FAILURE);
-				}
-			} else if( !!(arg = striKWcmp( l, "-->> need_timer=" ))){
-				Config::TimerElements::iterator timer;
-				if( (timer = cfg.TimersList.find(arg)) != cfg.TimersList.end()){
-					if(verbose)
-						SelLog->Log('C', "\t\tAdded needed timer '%s'", arg.c_str());
-	 				this->addNeededTimer(arg);
-					nameused = true;
-				} else {
-					SelLog->Log('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
-					exit(EXIT_FAILURE);
-				}
-			} else if( !!(arg = striKWcmp( l, "-->> need_rendezvous=" ))){
-				Config::EventElements::iterator event;
-				if( (event = cfg.EventsList.find(arg)) != cfg.EventsList.end()){
-					if(verbose)
-						SelLog->Log('C', "\t\tAdded needed rendezvous '%s'", arg.c_str());
-	 				this->addNeededRendezVous(arg);
-					nameused = true;
-				} else {
-					SelLog->Log('F', "\t\tRendezvous '%s' is not (yet ?) defined", arg.c_str());
-					exit(EXIT_FAILURE);
-				}
-			} else if( !!(arg = striKWcmp( l, "-->> need_tracker=" ))){
-				Config::TrackerElements::iterator tracker;
-				if( (tracker = cfg.TrackersList.find(arg)) != cfg.TrackersList.end()){
-					if(verbose)
-						SelLog->Log('C', "\t\tAdded needed tracker '%s'", arg.c_str());
-	 				this->addNeededTracker(arg);
-					nameused = true;
-				} else {
-					SelLog->Log('F', "\t\tracker '%s' is not (yet ?) defined", arg.c_str());
-					exit(EXIT_FAILURE);
-				}
 			} else if( l == "-->> quiet" ){
 				if(verbose)
 					SelLog->Log('C', "\t\tBe quiet");
@@ -197,7 +134,8 @@ Tracker::Tracker( Config &cfg, const std::string &fch, std::string &where, std::
 				if(verbose)
 					SelLog->Log('C', "\t\tDisabled");
 				this->disable();
-			}
+			} else if( LuaExec::readConfigDirective(l) )
+				nameused = true;
 #if 0
 else printf("Ignore '%s'\n", l.c_str());
 #endif

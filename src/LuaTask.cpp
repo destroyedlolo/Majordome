@@ -14,7 +14,7 @@ extern "C" {
 #include "LuaTask.h"
 #include "Tracker.h"
 
-LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::string &name, lua_State *L ) : once(false), running_access(PTHREAD_MUTEX_INITIALIZER), running(false), runatstartup(false){
+LuaTask::LuaTask( const std::string &fch, std::string &where, std::string &name, lua_State *L ) : once(false), running_access(PTHREAD_MUTEX_INITIALIZER), running(false), runatstartup(false){
 	if(verbose)
 		SelLog->Log('L', "\t'%s'", fch.c_str());
 
@@ -61,7 +61,7 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 					SelLog->Log('C', "\t\tChanging name to '%s'", name.c_str());
 			} else if( !!(arg = striKWcmp( l, "-->> listen=" ))){
 				Config::TopicElements::iterator topic;
-				if( (topic = cfg.TopicsList.find(arg)) != cfg.TopicsList.end()){
+				if( (topic = config.TopicsList.find(arg)) != config.TopicsList.end()){
 					if(verbose)
 						SelLog->Log('C', "\t\tAdded to topic '%s'", arg.c_str());
 	 				topic->second.addTask( this->getName() );
@@ -70,39 +70,9 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 					SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
 					exit(EXIT_FAILURE);
 				}
-			} else if( !!(arg = striKWcmp( l, "-->> need_topic=" ))){
-				Config::TopicElements::iterator topic;
-				if( (topic = cfg.TopicsList.find(arg)) != cfg.TopicsList.end()){
-					if(!topic->second.toBeStored()){
-						SelLog->Log('F', "Can't need \"%s\" topic : not stored", arg.c_str());
-						exit(EXIT_FAILURE);
-					}
-					if(verbose)
-						SelLog->Log('C', "\t\tAdded needed topic '%s'", arg.c_str());
-	 				this->addNeededTopic(arg);
-					nameused = true;
-				} else {
-					SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
-					exit(EXIT_FAILURE);
-				}
-			} else if( !!(arg = striKWcmp( l, "-->> require_topic=" ))){
-				Config::TopicElements::iterator topic;
-				if( (topic = cfg.TopicsList.find(arg)) != cfg.TopicsList.end()){
-					if(!topic->second.toBeStored()){
-						SelLog->Log('F', "Can't required \"%s\" topic : not stored", arg.c_str());
-						exit(EXIT_FAILURE);
-					}
-					if(verbose)
-						SelLog->Log('C', "\t\tAdded required topic '%s'", arg.c_str());
-	 				this->addRequiredTopic(arg);
-					nameused = true;
-				} else {
-					SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
-					exit(EXIT_FAILURE);
-				}
 			} else if( !!(arg = striKWcmp( l, "-->> when=" ))){
 				Config::TimerElements::iterator timer;
-				if( (timer = cfg.TimersList.find(arg)) != cfg.TimersList.end()){
+				if( (timer = config.TimersList.find(arg)) != config.TimersList.end()){
 					if(verbose)
 						SelLog->Log('C', "\t\tAdded to timer '%s'", arg.c_str());
 	 				timer->second.addTask( this->getName() );
@@ -111,20 +81,9 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 					SelLog->Log('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
 					exit(EXIT_FAILURE);
 				}
-			} else if( !!(arg = striKWcmp( l, "-->> need_timer=" ))){
-				Config::TimerElements::iterator timer;
-				if( (timer = cfg.TimersList.find(arg)) != cfg.TimersList.end()){
-					if(verbose)
-						SelLog->Log('C', "\t\tAdded needed timer '%s'", arg.c_str());
-	 				this->addNeededTimer(arg);
-					nameused = true;
-				} else {
-					SelLog->Log('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
-					exit(EXIT_FAILURE);
-				}
 			} else if( !!(arg = striKWcmp( l, "-->> waitfor=" ))){
 				Config::EventElements::iterator event;
-				if( (event = cfg.EventsList.find(arg)) != cfg.EventsList.end()){
+				if( (event = config.EventsList.find(arg)) != config.EventsList.end()){
 					if(verbose)
 						SelLog->Log('C', "\t\tAdded to rendezvous '%s'", arg.c_str());
 	 				event->second.addTask( this->getName() );
@@ -133,20 +92,9 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 					SelLog->Log('F', "\t\tRendezvous '%s' is not (yet ?) defined", arg.c_str());
 					exit(EXIT_FAILURE);
 				}
-			} else if( !!(arg = striKWcmp( l, "-->> need_rendezvous=" ))){
-				Config::EventElements::iterator event;
-				if( (event = cfg.EventsList.find(arg)) != cfg.EventsList.end()){
-					if(verbose)
-						SelLog->Log('C', "\t\tAdded needed rendezvous '%s'", arg.c_str());
-	 				this->addNeededRendezVous(arg);
-					nameused = true;
-				} else {
-					SelLog->Log('F', "\t\tRendezvous '%s' is not (yet ?) defined", arg.c_str());
-					exit(EXIT_FAILURE);
-				}
 			} else if( !!(arg = striKWcmp( l, "-->> whenDone=" ))){
 				Config::TrackerElements::iterator tracker;
-				if( (tracker = cfg.TrackersList.find(arg)) != cfg.TrackersList.end()){
+				if( (tracker = config.TrackersList.find(arg)) != config.TrackersList.end()){
 					if(verbose)
 						SelLog->Log('C', "\t\tAdded to tracker '%s' as Done task", arg.c_str());
 	 				tracker->second.addDone( this->getName() );
@@ -157,7 +105,7 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 				}
 			} else if( !!(arg = striKWcmp( l, "-->> whenStarted=" ))){
 				Config::TrackerElements::iterator tracker;
-				if( (tracker = cfg.TrackersList.find(arg)) != cfg.TrackersList.end()){
+				if( (tracker = config.TrackersList.find(arg)) != config.TrackersList.end()){
 					if(verbose)
 						SelLog->Log('C', "\t\tAdded to tracker '%s' as Started task", arg.c_str());
 	 				tracker->second.addStarted( this->getName() );
@@ -168,7 +116,7 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 				}
 			} else if( !!(arg = striKWcmp( l, "-->> whenStopped=" ))){
 				Config::TrackerElements::iterator tracker;
-				if( (tracker = cfg.TrackersList.find(arg)) != cfg.TrackersList.end()){
+				if( (tracker = config.TrackersList.find(arg)) != config.TrackersList.end()){
 					if(verbose)
 						SelLog->Log('C', "\t\tAdded to tracker '%s' as Stopped task", arg.c_str());
 	 				tracker->second.addStopped( this->getName() );
@@ -179,24 +127,13 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 				}
 			} else if( !!(arg = striKWcmp( l, "-->> whenChanged=" ))){
 				Config::TrackerElements::iterator tracker;
-				if( (tracker = cfg.TrackersList.find(arg)) != cfg.TrackersList.end()){
+				if( (tracker = config.TrackersList.find(arg)) != config.TrackersList.end()){
 					if(verbose)
 						SelLog->Log('C', "\t\tAdded to tracker '%s' as Changed task", arg.c_str());
 	 				tracker->second.addChanged( this->getName() );
 					nameused = true;
 				} else {
 					SelLog->Log('F', "\t\ttracker '%s' is not (yet ?) defined", arg.c_str());
-					exit(EXIT_FAILURE);
-				}
-			} else if( !!(arg = striKWcmp( l, "-->> need_tracker=" ))){
-				Config::TrackerElements::iterator tracker;
-				if( (tracker = cfg.TrackersList.find(arg)) != cfg.TrackersList.end()){
-					if(verbose)
-						SelLog->Log('C', "\t\tAdded needed tracker '%s'", arg.c_str());
-	 				this->addNeededTracker( arg );
-					nameused = true;
-				} else {
-					SelLog->Log('F', "\t\tracker '%s' is not (yet ?) defined", arg.c_str());
 					exit(EXIT_FAILURE);
 				}
 			} else if( l == "-->> once" ){
@@ -215,7 +152,8 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 				if(verbose)
 					SelLog->Log('C', "\t\tDisabled");
 				this->disable();
-			}
+			} else if( LuaExec::readConfigDirective(l) )
+				nameused = true;
 #if 0
 else printf("Ignore '%s'\n", l.c_str());
 #endif

@@ -89,7 +89,7 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 				cfg.TimersList.insert( std::make_pair(name, tmr) ).first;
 		} else if( !strcmp(ext,".lua") ){
 			std::string name;
-			LuaTask tsk( cfg, completpath, where, name, L );
+			LuaTask tsk( completpath, where, name, L );
 	
 			Config::TaskElements::iterator prev;
 			if((prev = cfg.TasksList.find(name)) != cfg.TasksList.end()){
@@ -119,7 +119,7 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 				cfg.EventsList.insert( std::make_pair(name, evt) );
 		} else if( !strcmp(ext,".tracker") ){
 			std::string name;
-			Tracker trk( cfg, completpath, where, name, L );
+			Tracker trk( completpath, where, name, L );
 	
 			Config::TrackerElements::iterator prev;
 			if((prev = cfg.TrackersList.find(name)) != cfg.TrackersList.end()){

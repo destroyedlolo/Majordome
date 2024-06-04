@@ -169,6 +169,78 @@ bool LuaExec::feedbyNeeded( lua_State *L ){
 	return true;
 }
 
+	/* Read directives applicables to LuaExec */
+bool LuaExec::readConfigDirective( std::string &l ){
+	MayBeEmptyString arg;
+
+	if( !!(arg = striKWcmp( l, "-->> need_topic=" ))){
+		Config::TopicElements::iterator topic;
+		if( (topic = config.TopicsList.find(arg)) != config.TopicsList.end()){
+			if(!topic->second.toBeStored()){
+				SelLog->Log('F', "Can't need \"%s\" topic : not stored", arg.c_str());
+				exit(EXIT_FAILURE);
+			}
+			if(verbose)
+				SelLog->Log('C', "\t\tAdded needed topic '%s'", arg.c_str());
+			this->addNeededTopic(arg);
+			return true;
+		} else {
+			SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
+	} else if( !!(arg = striKWcmp( l, "-->> require_topic=" ))){
+		Config::TopicElements::iterator topic;
+		if( (topic = config.TopicsList.find(arg)) != config.TopicsList.end()){
+			if(!topic->second.toBeStored()){
+				SelLog->Log('F', "Can't required \"%s\" topic : not stored", arg.c_str());
+				exit(EXIT_FAILURE);
+			}
+			if(verbose)
+				SelLog->Log('C', "\t\tAdded required topic '%s'", arg.c_str());
+			this->addRequiredTopic(arg);
+			return true;
+		} else {
+			SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
+	} else if( !!(arg = striKWcmp( l, "-->> need_timer=" ))){
+		Config::TimerElements::iterator timer;
+		if( (timer = config.TimersList.find(arg)) != config.TimersList.end()){
+			if(verbose)
+				SelLog->Log('C', "\t\tAdded needed timer '%s'", arg.c_str());
+			this->addNeededTimer(arg);
+			return true;
+		} else {
+			SelLog->Log('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
+	} else if( !!(arg = striKWcmp( l, "-->> need_rendezvous=" ))){
+		Config::EventElements::iterator event;
+		if( (event = config.EventsList.find(arg)) != config.EventsList.end()){
+			if(verbose)
+				SelLog->Log('C', "\t\tAdded needed rendezvous '%s'", arg.c_str());
+			this->addNeededRendezVous(arg);
+			return true;
+		} else {
+			SelLog->Log('F', "\t\tRendezvous '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
+	} else if( !!(arg = striKWcmp( l, "-->> need_tracker=" ))){
+		Config::TrackerElements::iterator tracker;
+		if( (tracker = config.TrackersList.find(arg)) != config.TrackersList.end()){
+			if(verbose)
+				SelLog->Log('C', "\t\tAdded needed tracker '%s'", arg.c_str());
+			this->addNeededTracker( arg );
+			return true;
+		} else {
+			SelLog->Log('F', "\t\tracker '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
+	}
+
+	return false;
+}
+
 struct launchargs {
 	lua_State *L;	// New thread Lua state
 	LuaExec *task;	// task definition
