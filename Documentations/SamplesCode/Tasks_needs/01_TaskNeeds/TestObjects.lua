@@ -15,7 +15,7 @@
 --->> listen=NoStations
 --
 -- Create this topic object
--->> need_topic=Test
+-->> require_topic=Test
 --
 -- Indicate the Timer(s) to wait for
 -- (more than one "when" can be present)
@@ -64,3 +64,6 @@ print( Tracker )
 -- Test if the timer has been created
 -- as '25s' is not a valid variable's name, we have to use _G
 print( _G['25s'] )
+
+-- Test if the topic has been created
+print( Test )

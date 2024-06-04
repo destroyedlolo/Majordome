@@ -152,7 +152,7 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 	 				tracker->second.addDone( this->getName() );
 					nameused = true;
 				} else {
-					SelLog->Log('F', "\t\tracker '%s' is not (yet ?) defined", arg.c_str());
+					SelLog->Log('F', "\t\ttracker '%s' is not (yet ?) defined", arg.c_str());
 					exit(EXIT_FAILURE);
 				}
 			} else if( !!(arg = striKWcmp( l, "-->> whenStarted=" ))){
@@ -163,7 +163,7 @@ LuaTask::LuaTask( Config &cfg, const std::string &fch, std::string &where, std::
 	 				tracker->second.addStarted( this->getName() );
 					nameused = true;
 				} else {
-					SelLog->Log('F', "\t\tracker '%s' is not (yet ?) defined", arg.c_str());
+					SelLog->Log('F', "\t\ttracker '%s' is not (yet ?) defined", arg.c_str());
 					exit(EXIT_FAILURE);
 				}
 			} else if( !!(arg = striKWcmp( l, "-->> whenStopped=" ))){
