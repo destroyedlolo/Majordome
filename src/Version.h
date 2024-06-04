@@ -27,5 +27,5 @@
  *	12/05/2024 - v4.00 - LF - Migrate to SeleneV7
  */
 
-#define VERSION 4.0002
+#define VERSION 4.0003
 #define COPYRIGHT "Majordome (c) L.Faillie 2018-2024"
