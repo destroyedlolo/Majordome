@@ -9,8 +9,8 @@
 > For advanced/complex usages, you may serialize data needed to be propagated within a SelSharedVar, or, smarter, to an MQTT message. MQTT context sharing open the door to distributed processing, horizontal scalability, load balancing and fault resilience.
 
 ## Directives
-In the header of the script (comment block at the very beginning of the script), each line starting with -->> (2 dashes) are Majordome's directives.
-If you want to comment out a directive, use '--->>' (3 dashes)
+In the header of the script (comment block at the very beginning of the script), each line starting with `-->>` (2 dashes) are Majordome's directives.
+If you want to comment out a directive, use `--->>` (3 dashes)
 ### General directives
 #### -->> name=
 Unique name to identify the topic. If not set, uses the filename.
@@ -95,7 +95,7 @@ Creates an object if a value has been received and its value hasn't expired. Oth
 #### -->> require_topic=
 Prevents the script to be launched if corresponding value is not valid.<br>
 
-#### -->> need_rendezvous=, -->> need_tracker=, -->> need_timer=
+#### -->> need_rendezvous=, -->> need_tracker=, -->> need_timer=, -->> need_task
 Create corresponding object.
 
 ## at Lua side
