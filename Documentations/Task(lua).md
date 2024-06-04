@@ -116,7 +116,7 @@ Following variables are also created :
 
 As well as following objects kinds :
 - **MajordomeTask**, tasks' interface which implements
-  - `Launch()` Launchs/executes this task
+  - `Launch()` Launchs/executes this task in the same thread. Therefore, Lua variables/functions can be shared between those scripts. But don't forget that these shares will be lost if the called task executes following an event.
   - `getContainer()` returns the container (directory) in which this task as been defined
   - `getName()` returns task's name
   - `isEnabled()` returns a boolean reflecting if the task is enabled or not
