@@ -126,14 +126,6 @@ Tracker::Tracker( const std::string &fch, std::string &where, std::string &name,
 					SelLog->Log('C', "\t\tActivated at startup");
 				this->status = _status::CHECKING;
 				this->hm_counter = this->howmany;
-			} else if( l == "-->> quiet" ){
-				if(verbose)
-					SelLog->Log('C', "\t\tBe quiet");
-				this->beQuiet();
-			} else if( l == "-->> disabled" ){
-				if(verbose)
-					SelLog->Log('C', "\t\tDisabled");
-				this->disable();
 			} else if( LuaExec::readConfigDirective(l) )
 				nameused = true;
 #if 0

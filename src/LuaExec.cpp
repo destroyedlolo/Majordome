@@ -238,7 +238,7 @@ bool LuaExec::readConfigDirective( std::string &l ){
 		}
 	}
 
-	return false;
+	return Object::readConfigDirective(l);
 }
 
 struct launchargs {
