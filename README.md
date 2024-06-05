@@ -29,4 +29,4 @@ Typical use-cases :
 
 Any contributions are greatly appreciated.
 
-[^1]: **Majordome**, with the help of **Marcel** for the "*real world*" part, drive my smart house for 7 years without any glitches.
+[^1]: **Majordome**, with the help of **Marcel** for the "*real world*" part, drive my smart house for 7 years without any glitches. See `MaMaison` branch for this complete and real life implementation.
