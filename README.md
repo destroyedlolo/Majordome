@@ -10,14 +10,23 @@ A lightweight, event driven **Automation System**.
 Within **Majordome**, your application is built around a galaxy of small tasks orchestrated by efficient but resource conservative mechanisms.<br>
 You organize your code into independent and **stateless Lua functions** that are called when an event happened and/or conditions are met (*like what AWS Lambda does*). Tasks are executed only if necessary in the massively threaded Majordome engine, resulting to a as reduced as possible system footprint.
 
+Following the [KISS principle](https://en.wikipedia.org/wiki/KISS_principle), **Majordome** depends mainly on **MQTT messaging** and **timers** to trigger tasks, delegating real world communication to other dedicated components (like [Marcel](https://github.com/destroyedlolo/Marcel) in my case).
 
-**Majordome** is using **MQTT** for message exchanges and **Lua** as user script.
+---
+
+Typical use-cases :
+---
+- Smart home automation [^1]
+- SCADA automation
+- centralizing data gathering and processing, fault detection
+- your imagination is the limit ...
 
 ---
 
 [Documentations](/Documentations/) explains how to configure automation within Majordome
 
 ---
-# Contributing
 
 Any contributions are greatly appreciated.
+
+[^1]: **Majordome**, with the help of **Marcel** for the "*real world*" part, drive my smart house for 7 years without any glitches.
