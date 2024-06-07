@@ -14,3 +14,13 @@ In addition, `Control` topic quand be used to query or change tracker's status.
   * **WAITING** or **STOP** : the tracker waits for a start signal
   * **CHECKING** or **START** : the tracker checks for incoming values
   * **DONE** : expected value found
+
+--------
+
+Following config file can be used :
+
+    # URL to reach the broker
+    Broker_URL=tcp://<your_broker>:1883
+    
+    # Application directory
+    ApplicationDirectory=Documentations/SamplesCode/Tracker/
