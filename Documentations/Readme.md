@@ -97,4 +97,9 @@ As well as following objects :
 ## Init.lua
 In each subdirectory, `Init.lua` (with capital 'I') is executed at startup, during user configuration loading. It's mostly used to do initialization (so its filename :yum:).
 
+# Examples
 
+* [SamplesCode](SamplesCode/) - basic examples involving Majordome's components.
+* [UseCases](UseCases/) - advanced examples
+
+Time to time, I'll add additional examples or tutorial. In addition, `MaMaison` branch contains the code I'm using to control my house.
