@@ -2,4 +2,4 @@
 --
 -->> RunAtStartup
 
-print "Everything has been loaded"
+print("Startup.lua : Everything has been loaded")
