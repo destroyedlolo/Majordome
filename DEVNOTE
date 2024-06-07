@@ -1,7 +1,0 @@
-Each and every objects derived from 'Event' can enable or disable other objects.
-
-+ Object	: disabled, quiet, name, where
-	+ LuaExec : state, exec()
-	+ Event : Lua objects, list ot tasks to launch, tracker when EN/DIS
-		+ Timer :
-		+ MQTTTopic : start/stoptracker
