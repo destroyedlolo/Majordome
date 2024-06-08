@@ -10,3 +10,7 @@ In a package's directory, you will find (in loading order) :
 
 - **MajordomeAbout.topic** define `<ClientID>/About` topic
 - **MajordomeAbout.lua** listen this topic and display Majordome's version and copyright when a messgage is received
+
+---
+
+- **Startup.lua** executed when the application is loaded
