@@ -15,7 +15,7 @@
 class LuaExec : virtual public Object {
 	struct elastic_storage func;	// Function to execute
 
-protected:
+public:
 	enum boolRetCode { RCnil=-1, RCfalse=false, RCtrue=true };
 
 	StringVector needed_rendezvous;
@@ -23,12 +23,15 @@ protected:
 	StringVector needed_timer;
 	StringVector needed_topic;
 	StringVector required_topic;
+	StringVector needed_task;
 
+protected:
 	void addNeededRendezVous( std::string t ){ this->needed_rendezvous.Add(t); }
 	void addNeededTracker( std::string t ){ this->needed_tracker.Add(t); }
 	void addNeededTimer( std::string t ){ this->needed_timer.Add(t); }
 	void addNeededTopic( std::string t ){ this->needed_topic.Add(t); }
 	void addRequiredTopic( std::string t ){ this->required_topic.Add(t); }
+	void addNeededTask( std::string t ){ this->needed_task.Add(t); }
 
 	bool feedbyNeeded( lua_State * );
 

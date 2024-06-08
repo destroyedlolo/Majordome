@@ -45,7 +45,7 @@ void Config::SanityChecks( void ){
 	 /* 
 	  * Verify topics overlapping
 	  */
-	for(TopicElements::iterator i = TopicsList.begin(); i != TopicsList.end(); i++){
+	for(auto i = TopicsList.begin(); i != TopicsList.end(); i++){
 		TopicElements::iterator j = i;
 		for(j++; j != TopicsList.end(); j++){
 			if( !(i->second.hasWildcard()) && !(j->second.hasWildcard()) ){ // No wildcard
@@ -78,6 +78,27 @@ void Config::SanityChecks( void ){
 						j->second.getWhere().c_str()
 					);
 				}
+			}
+		}
+	}
+
+		/* Verify that needed tasks exists */
+	for(auto i = TasksList.begin(); i != TasksList.end(); i++){
+		for(auto j = i->second.needed_task.begin(); j != i->second.needed_task.end(); j++){
+			Config::TaskElements::iterator task;
+			if( (task = config.TasksList.find(j->c_str())) == config.TasksList.end()){
+				SelLog->Log('F', "Task \"%s\" needed by \"%s\" doesn't exist", j->c_str(), i->second.getNameC());
+				exit(EXIT_FAILURE);
+			}
+		}
+	}
+
+	for(auto i = TrackersList.begin(); i != TrackersList.end(); i++){
+		for(auto j = i->second.needed_task.begin(); j != i->second.needed_task.end(); j++){
+			Config::TaskElements::iterator task;
+			if( (task = config.TasksList.find(j->c_str())) == config.TasksList.end()){
+				SelLog->Log('F', "Task \"%s\" needed by \"%s\" doesn't exist", j->c_str(), i->second.getNameC());
+				exit(EXIT_FAILURE);
 			}
 		}
 	}

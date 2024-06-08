@@ -166,6 +166,22 @@ bool LuaExec::feedbyNeeded( lua_State *L ){
 		}
 	}
 
+	for(auto &i : this->needed_task){
+		try {
+			class LuaTask &tsk = config.TasksList.at( i );
+			class LuaTask **task = (class LuaTask **)lua_newuserdata(L, sizeof(class LuaTask *));
+			assert(task);
+
+			*task = &tsk;
+			luaL_getmetatable(L, "MajordomeTask");
+			lua_setmetatable(L, -2);
+
+			lua_setglobal(L, i.c_str());
+		} catch( std::out_of_range &e ){	// Not found 
+			return false;
+		}
+	}
+
 	return true;
 }
 
@@ -233,9 +249,17 @@ bool LuaExec::readConfigDirective( std::string &l ){
 			this->addNeededTracker( arg );
 			return true;
 		} else {
-			SelLog->Log('F', "\t\tracker '%s' is not (yet ?) defined", arg.c_str());
+			SelLog->Log('F', "\t\ttracker '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
+	} else if( !!(arg = striKWcmp( l, "-->> need_task=" ))){
+			/* No way to test if the task exists or not (as it could be
+			 * defined afterward. Will be part of sanity checks
+			 */
+		if(verbose)
+			SelLog->Log('C', "\t\tAdded needed task '%s'", arg.c_str());
+		this->addNeededTask( arg );
+		return true;
 	}
 
 	return Object::readConfigDirective(l);

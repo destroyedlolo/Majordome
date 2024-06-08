@@ -329,6 +329,7 @@ int main(int ac, char **av){
 		 * Reading user configuration 
 		 ****/
 	config.init(UserConfigRoot, SelLua->getLuaState());	// Read user's configuration files
+	config.SanityChecks();
 
 	if(configtest){
 		SelLog->Log('E', "Testing only the configuration ... leaving.");
