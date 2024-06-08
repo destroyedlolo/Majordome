@@ -10,16 +10,16 @@ topic=%ClientID%/About
 
 # QOS for this topic between 0 and 2
 # if outside this range, forced to 0 (which is the default value)
-qos=0
+# qos=0
 
 # Store this topic's content in a SelShared variable with the name of this topic
-store
+# store
 
 # Store it as a numeric value
-numeric
+# numeric
 
 # time to live of this variable (in Seconds)
-ttl=2
+# ttl=2
 
 # set the default value for this topic.
 # must be defined after 'name', 'numeric' and 'ttl'
