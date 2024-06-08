@@ -3,7 +3,9 @@
 --
 -->> when=MidnightOrAtLaunch
 
-local _,err = SelLog.Configure('/tmp/'.. MAJORDOME_ClientID ..'.log_' .. os.date('%Y%m%d'), false)
+Selene.exposeAdminAPI()	-- configure is part of admin API
+
+local _,err = SelLog.configure('/tmp/'.. MAJORDOME_ClientID ..'.log_' .. os.date('%Y%m%d'), false)
 
 if err then
 	SelLog.Log("*E* Log file creation : ".. err)
