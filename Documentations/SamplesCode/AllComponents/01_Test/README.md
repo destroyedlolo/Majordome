@@ -14,3 +14,8 @@ In a package's directory, you will find (in loading order) :
 ---
 
 - **Startup.lua** executed when the application is loaded
+
+---
+
+- **ClientTask.lua** is the main test tasks consuming **15s** timer and **NoStations** topic.
+
