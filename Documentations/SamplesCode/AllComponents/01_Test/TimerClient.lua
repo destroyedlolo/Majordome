@@ -1,4 +1,4 @@
--- This is an example of a task script
+-- This is an example of a task script which will respond to a timer and a topic
 -- In the header of the script (comment block at the very beginning of
 -- the script), each line starting with -->> are Majordome's commands.
 -- Consequently, '--->>' are commented out commands.
@@ -27,7 +27,7 @@
 --->> whenStopped=tracker
 --
 -- Wait for a rendez-vous (a.k.a event)
--->> waitfor=exemple
+--->> waitfor=exemple
 --
 -- If set, only one instance is allowed to run
 --->> once

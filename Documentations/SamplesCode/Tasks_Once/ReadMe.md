@@ -2,7 +2,7 @@ Demonstrates usage of `Once` directives with [tasks](../../Task(lua).md).
 
 The task is triggered every 15s, but, thanks to **Once** directive, 
 it can't be relaunched until the 20s waiting time is over. Consequently, only one instance 
-of *Run For 20s* can run at once.
+of *RunFor20s* can run at once.
 
 It's also demonstrates how to load additionnal mobules from `init.lua`.
 
