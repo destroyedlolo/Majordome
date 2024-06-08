@@ -56,19 +56,20 @@ Automation configurations are grouped (for a specific Majordome instance) in a d
 ```
 
 Directories, also known as *containers*, are loaded in order (00_* first, 01_* after, etc ...). As soon as declared, Majordome objects can be used in further ones.
-> [!CAUTION]
-> If Majordome's objects (triggers, timers, ...) are shared, Lua scripts are **stateless** and Lua side variables, functions, can't be shared among scripts. See bellow about Lua scripting.
-
 An error is raised if an object is duplicated.
 
-Have a look on `00_Majordome` provided in **Config** directory : 
-```
-LogToFile.lua
-MidnightOrAtLaunch.timer
-PurgeLog.lua
-README.md
-```
-It defines **daily rotating log** in `/tmp` with automatic purging. See [Séléné](https://github.com/destroyedlolo/Selene)'s SelLog.
+> [!TIP]
+> Have a look on `00_Majordome` provided in [Documentations/SamplesCode/AllComponents/](Documentations/SamplesCode/AllComponents/) directory. It contains some code that can be usefull in all project. 
+> ```
+> LogToFile.lua
+> MidnightOrAtLaunch.timer
+> PurgeLog.lua
+> README.md
+> ```
+> It defines **daily rotating log** in `/tmp` with automatic purging. See [Séléné](https://github.com/destroyedlolo/Selene)'s SelLog.
+
+> [!CAUTION]
+> If Majordome's objects (triggers, timers, ...) are shared, Lua scripts are **stateless** and Lua side variables, functions, can't be shared among scripts. See bellow about Lua scripting.
 
 ## Objects
 Objects configuration is done using plain text files and the suffix determines their kind. Files without known suffix are ignored.
