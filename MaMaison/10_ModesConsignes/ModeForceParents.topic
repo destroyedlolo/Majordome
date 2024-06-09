@@ -1,7 +1,0 @@
-# Consigne de mode de la chambre des parents
-
-topic=%ClientID%/Mode/Force/Parents
-store
-
-# Par défaut, mode calculé
-default=Auto
