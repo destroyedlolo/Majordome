@@ -285,7 +285,7 @@ void Tracker::done( void ){
 	 *****/
 
 static class Tracker *checkMajordomeTracker(lua_State *L){
-	class Tracker **r = (class Tracker **)luaL_testudata(L, 1, "MajordomeTracker");
+	class Tracker **r = (class Tracker **)SelLua->testudata(L, 1, "MajordomeTracker");
 	luaL_argcheck(L, r != NULL, 1, "'MajordomeTracker' expected");
 	return *r;
 }

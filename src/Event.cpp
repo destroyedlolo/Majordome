@@ -143,7 +143,7 @@ void Event::disableTrackers( void ){
 	 * Lua exposed functions
 	 *****/
 static class Event *checkMajordomeEvent(lua_State *L){
-	class Event **r = (class Event **)luaL_testudata(L, 1, "MajordomeRendezVous");
+	class Event **r = (class Event **)SelLua->testudata(L, 1, "MajordomeRendezVous");
 	luaL_argcheck(L, r != NULL, 1, "'MajordomeRendezVous' expected");
 	return *r;
 }

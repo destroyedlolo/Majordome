@@ -37,15 +37,18 @@ else
 fi
 
 echo -n "Selene : "
-if [ -d /usr/local/lib/Selenex ]; then
+if [ -f /usr/local/lib/libSelene.so.2 ]; then
 	echo "System installation"
 	SELDIR=/usr/local
+	SELLIB='-lSelene'
 elif [ -d ~/Projets/Selene.v7 ]; then
 	echo "**DEV**DEV** V7"
 	SELDIR=~/Projets/Selene.v7
+	SELLIB='-l:libSelene.so.2'
 else
 	echo "**DEV**DEV**"
 	SELDIR=~/Projets/Selene
+	SELLIB='-l:libSelene.so.2'
 fi
 
 echo
@@ -54,6 +57,6 @@ echo
 
 cd src
 
-LFMakeMaker -v +f=Makefile -cc="g++" --opts="-Wall -O2 ${DEBUG} -lpthread -lpaho-mqtt3c \
+LFMakeMaker -v +f=Makefile -cc="g++" --opts="-Wall -O2 ${DEBUG} -lpthread -lpaho-mqtt3c -ldl \
 ${LUA} ${LUALIB} \
--I$SELDIR/include -L$SELDIR/lib -lSelene" *.cpp -t=../Majordome > Makefile
+-I$SELDIR/include -L$SELDIR/lib $SELLIB" *.cpp -t=../Majordome > Makefile
