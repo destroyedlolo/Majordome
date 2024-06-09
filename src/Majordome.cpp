@@ -2,7 +2,7 @@
  * Majordome
  * 	An event based Automation System
  *
- * Copyright 2018 Laurent Faillie
+ * Copyright 2018-24 Laurent Faillie
  *
  * 		Majordome is covered by
  *		Creative Commons Attribution-NonCommercial 3.0 License
@@ -16,107 +16,128 @@
  *
  */
 
+#include "Selene.h"
+#include "Helpers.h"
+#include "Version.h"
+#include "Config.h"
+
 #include <iostream>
 #include <fstream>
 
 #include <cstdio>
 #include <cstdlib>
-#include <cstring>
+#include <cstring>		// strerror()
 #include <cassert>
 
 #include <unistd.h> 	// getopt()
 #include <errno.h>
-
-#include <libSelene.h>
-
-#include "Helpers.h"
-#include "Config.h"
-#include "Version.h"
-
-#define DEFAULT_CONFIGURATION_FILE "/usr/local/etc/Majordome.conf"
+#include <libgen.h>		// basename()
 
 using namespace std;
+
+#define DEFAULT_CONFIGURATION_FILE "/usr/local/etc/Majordome.conf"
 
 	/*****
 	 * global configuration
 	 *****/
-
 bool verbose = false;
 bool hideTopicArrival = false;	// Silence topics arrival
 bool debug = false;
 bool quiet = false;
 bool trace = false;
-
 bool configtest = false;
-const char *MQTT_ClientID = NULL;	/* MQTT client id : must be unique among a broker's clients */
-void *luainitfunc;
 
 Config config;
 
 	/******
 	 * local configuration
+	 * (feed with default values)
 	 *******/
+string MQTT_ClientID;
+static string UserConfigRoot("/usr/local/etc/Majordome");	// Where to find user configuration
+static string Broker_URL("tcp://localhost:1883");	// Broker to contact
 
-static const char *UserConfigRoot = "/usr/local/etc/Majordome";	/* Where to find user configuration */
-static const char *Broker_URL = "tcp://localhost:1883";		/* Broker's URL */
-
-static void read_configuration( const char *fch){
+static void read_configuration(const char *fch){
 	std::ifstream file;
 	file.exceptions ( std::ios::eofbit | std::ios::failbit ); // No need to check failbit
+
 	try {
 		std::string l;
 
 		file.open(fch);
-		while( std::getline( file, l) ){
+		while(std::getline( file, l)){
 			MayBeEmptyString arg;
 
 			if( l[0]=='#' )
 				continue;
-			else if( !!(arg = striKWcmp( l, "Broker_URL=" ))){
-				assert(( Broker_URL = strdup( arg.c_str() ) ));
+			else if(!!(arg = striKWcmp( l, "Broker_URL=" ))){
+				Broker_URL = arg.c_str();
 				if(verbose)
-					printf("\tBroker_URL : '%s'\n", Broker_URL);
-			} else if( !!(arg = striKWcmp( l, "ClientID=" ))){
-				assert(( MQTT_ClientID = strdup( arg.c_str() ) ));
+					SelLog->Log('C', "Broker_URL : '%s'", Broker_URL.c_str());
+			} else if(!!(arg = striKWcmp( l, "ClientID=" ))){
+				MQTT_ClientID = arg.c_str();
 				if(verbose)
-					printf("\tClient ID : '%s'\n", MQTT_ClientID);
-			} else if( !!(arg = striKWcmp( l, "UserConfiguration=" ))){
-				assert(( UserConfigRoot = strdup( arg.c_str() ) ));
+					SelLog->Log('C', "Client ID : '%s'", MQTT_ClientID.c_str());
+			} else if(!!(arg = striKWcmp( l, "UserConfiguration=" )) || !!(arg = striKWcmp( l, "ApplicationDirectory=" ))){
+				UserConfigRoot = arg.c_str();
 				if(verbose)
-					printf("\tUser configuration directory : '%s'\n", UserConfigRoot);
+					SelLog->Log('C', "User configuration directory : '%s'", UserConfigRoot.c_str());
 			} 
 		}
 	} catch(const std::ifstream::failure &e){
 		if(!file.eof()){
-			publishLog('F', "%s : %s", fch, strerror(errno) );
+			SelLog->Log('F', "%s : %s", fch, strerror(errno));
 			exit(EXIT_FAILURE);
 		}
 	}
 
 	file.close();
 
-	if(!MQTT_ClientID){
+	if(MQTT_ClientID.empty()){
 		char h[HOST_NAME_MAX];
 		if(gethostname( h, HOST_NAME_MAX )){
-			publishLog('F', "gethostname() : %s", strerror( errno ));
+			SelLog->Log('F', "gethostname() : %s", strerror(errno));
 			exit(EXIT_FAILURE);
 		}
-		char l[ strlen(h) + 20 ];
+		char l[strlen(h) + 20];
 		sprintf(l, "Majordome-%s-%u", h, getpid());
-		assert(( MQTT_ClientID = strdup( l ) ));
+		MQTT_ClientID = l;
 		if(verbose)
-			printf("MQTT Client ID : '%s' (computed)\n", MQTT_ClientID);
+			SelLog->Log('C', "MQTT Client ID : '%s' (computed)", MQTT_ClientID.c_str());
 	}
-
-	if(verbose)
-		puts("");
-
 }
 
 	/******
-	 * technical objects
+	 * Threading
 	 *******/
 pthread_attr_t thread_attr;
+
+/* Set the environment of each newly created threads
+ * (including the main one)
+ */
+
+void threadEnvironment(lua_State *L){
+	lua_pushnumber( L, VERSION );	/* Expose version to lua side */
+	lua_setglobal( L, "MAJORDOME_VERSION" );
+
+	lua_pushstring( L, COPYRIGHT );	/* Expose copyright to lua side */
+	lua_setglobal( L, "MAJORDOME_COPYRIGHT" );
+
+	lua_pushstring( L, MQTT_ClientID.c_str() );	/* Expose ClientID to lua side */
+	lua_setglobal( L, "MAJORDOME_ClientID" );
+
+#if DEBUG
+	if(debug){
+		lua_pushinteger( L, 1 );	/* Expose ClientID to lua side */
+		lua_setglobal( L, "MAJORDOME_DEBUG" );
+	}
+#endif
+
+	SelLua->ApplyStartupFunc(L);	// Creates metas
+	SelMQTT->createExternallyManaged(L, MQTT_client);	// Push object on the task
+	lua_setglobal( L, "MQTTBroker" );	// expose it as the broker
+}
+
 
 	/******
 	 * MQTT's
@@ -134,7 +155,7 @@ MQTTClient MQTT_client;
  */
 static int msgarrived(void *actx, char *topic, int tlen, MQTTClient_message *msg){
 	if(verbose && !hideTopicArrival)
-		publishLog('T', "Receiving '%s'", topic);
+		SelLog->Log('T', "Receiving '%s'", topic);
 
 		// Convert the payload to a string
 	char cpayload[msg->payloadlen + 1];
@@ -146,22 +167,22 @@ static int msgarrived(void *actx, char *topic, int tlen, MQTTClient_message *msg
 #ifdef DEBUG
 			if( debug && !i->second.isQuiet() ){
 				if(hideTopicArrival)
-					publishLog('D', "'%s' accepted by topic '%s'", topic, i->second.getNameC() );
+					SelLog->Log('D', "'%s' accepted by topic '%s'", topic, i->second.getNameC() );
 				else
-					publishLog('D', "Accepted by topic '%s'", i->second.getNameC() );
+					SelLog->Log('D', "Accepted by topic '%s'", i->second.getNameC() );
 			}
 #endif
 			if( i->second.toBeStored() ){	// Store it in a SharedVar
 				if( i->second.isNumeric() ){
 					try {
 						double val = std::stod( cpayload );
-						soc_setn( i->second.getNameC(), val, i->second.getTTL() );
+						SelSharedVar->setNumber( i->second.getNameC(), val, i->second.getTTL() );
 					} catch( ... ){
-						publishLog('E', "Topic '%s' is expecting a number : no convertion done ", i->second.getNameC() );
-						soc_clear( i->second.getNameC() );
+						SelLog->Log('E', "Topic '%s' is expecting a number : no convertion done ", i->second.getNameC() );
+						SelSharedVar->clear( i->second.getNameC() );
 					}
 				} else
-					soc_sets( i->second.getNameC(), cpayload, i->second.getTTL() );
+					SelSharedVar->setString( i->second.getNameC(), cpayload, i->second.getTTL() );
 			}
 
 			i->second.execTasks( config, i->second.getNameC(), topic, cpayload );
@@ -176,7 +197,7 @@ static int msgarrived(void *actx, char *topic, int tlen, MQTTClient_message *msg
 }
 
 static void connlost(void *ctx, char *cause){
-	publishLog('F', "Broker connection lost due to %s", cause);
+	SelLog->Log('F', "Broker connection lost due to %s", cause);
 	exit(EXIT_FAILURE);
 }
 
@@ -185,36 +206,16 @@ static void brkcleaning(void){	/* Clean broker stuffs */
 	MQTTClient_destroy(&MQTT_client);
 }
 
-
-
 	/******
 	 * Main loop
 	 *******/
-static int setGlobalVar( lua_State *L ){
-	lua_pushnumber( L, VERSION );	/* Expose version to lua side */
-	lua_setglobal( L, "MAJORDOME_VERSION" );
-
-	lua_pushstring( L, COPYRIGHT );	/* Expose copyright to lua side */
-	lua_setglobal( L, "MAJORDOME_COPYRIGHT" );
-
-	lua_pushstring( L, MQTT_ClientID );	/* Expose ClientID to lua side */
-	lua_setglobal( L, "MAJORDOME_ClientID" );
-
-#if DEBUG
-	if(debug){
-		lua_pushinteger( L, 1 );	/* Expose ClientID to lua side */
-		lua_setglobal( L, "MAJORDOME_DEBUG" );
-	}
-#endif
-		
-	return 0;
-}
-
 int main(int ac, char **av){
-	const char *conf_file = DEFAULT_CONFIGURATION_FILE;
-	int c;
+	initSelene();							// Load Séléné modules
+	SelLog->configure(NULL, LOG_STDOUT);	// Early logging to STDOUT before broker initialisation
 
-	slc_init( NULL, LOG_STDOUT );	/* Early logging to STDOUT before broker initialisation*/
+		/* Read arguments */
+	char c;
+	const char *conf_file = DEFAULT_CONFIGURATION_FILE;
 
 	while((c = getopt(ac, av, "qvVdhrf:t")) != EOF) switch(c){
 	case 'h':
@@ -240,7 +241,7 @@ int main(int ac, char **av){
 	case 't':
 		configtest = true;
 	case 'v':
-		printf("%s v%.04f\n", basename(av[0]), VERSION);
+		SelLog->Log('I', "%s v%.04f", basename(av[0]), VERSION);
 		verbose = true;
 		quiet = false;
 		break;
@@ -251,7 +252,7 @@ int main(int ac, char **av){
 		hideTopicArrival = true;
 		break;
 	case 'q':
-		if( !verbose )
+		if(!verbose)
 			quiet = true;
 		break;
 #ifdef DEBUG
@@ -264,10 +265,14 @@ int main(int ac, char **av){
 		conf_file = optarg;
 		break;
 	default:
-		publishLog('F', "Unknown option '%c'\n%s -h\n\tfor some help\n", c, av[0]);
+		SelLog->Log('F', "Unknown option '%c'\n%s -h\n\tfor some help\n", c, av[0]);
 		exit(EXIT_FAILURE);
 	}
-	read_configuration( conf_file );
+
+	if(!trace)
+		SelLog->ignoreList("T");	// Disabling trace logging
+
+	read_configuration(conf_file);
 
 		/***
 		 * Initial technical objects
@@ -285,8 +290,8 @@ int main(int ac, char **av){
 	conn_opts.reliable = 0;	/* Asynchronous sending */
 	int err;
 
-	if( (err = MQTTClient_create( &MQTT_client, Broker_URL, MQTT_ClientID, MQTTCLIENT_PERSISTENCE_NONE, NULL)) != MQTTCLIENT_SUCCESS ){
-		fprintf(stderr, "*F* can't connect to broker due to error %d\n", err);
+	if( (err = MQTTClient_create( &MQTT_client, Broker_URL.c_str(), MQTT_ClientID.c_str(), MQTTCLIENT_PERSISTENCE_NONE, NULL)) != MQTTCLIENT_SUCCESS ){
+		SelLog->Log('F', "Can't connect to broker due to error %d", err);
 		exit(EXIT_FAILURE);
 	}
 
@@ -295,73 +300,59 @@ int main(int ac, char **av){
 	switch( err = MQTTClient_connect( MQTT_client, &conn_opts) ){
 	case MQTTCLIENT_SUCCESS : 
 		break;
-	case 1 : publishLog('F', "Unable to connect : Unacceptable protocol version");
+	case 1 : SelLog->Log('F', "Unable to connect : Unacceptable protocol version");
 		exit(EXIT_FAILURE);
-	case 2 : publishLog('F', "Unable to connect : Identifier rejected");
+	case 2 : SelLog->Log('F', "Unable to connect : Identifier rejected");
 		exit(EXIT_FAILURE);
-	case 3 : publishLog('F', "Unable to connect : Server unavailable");
+	case 3 : SelLog->Log('F', "Unable to connect : Server unavailable");
 		exit(EXIT_FAILURE);
-	case 4 : publishLog('F', "Unable to connect : Bad user name or password");
+	case 4 : SelLog->Log('F', "Unable to connect : Bad user name or password");
 		exit(EXIT_FAILURE);
-	case 5 : publishLog('F', "Unable to connect : Not authorized");
+	case 5 : SelLog->Log('F', "Unable to connect : Not authorized");
 		exit(EXIT_FAILURE);
 	default :
 		if( !MQTTClient_isConnected( MQTT_client ) ){
-			publishLog('F', "Unable to connect (unknown error : %d)", err);
+			SelLog->Log('F', "Unable to connect (unknown error : %d)", err);
 			exit(EXIT_FAILURE);
 		} else
-			publishLog('W', "Connected but got an unknown error : %d)", err);
+			SelLog->Log('W', "Connected but got an unknown error : %d)", err);
 	}
 	atexit(brkcleaning);
+	SelLog->initMQTT(MQTT_client, MQTT_ClientID.c_str());	// Initialize MQTT logging
 
-		/***
-		 * Lua's stuffs
-		 ***/
-	lua_State *L = luaL_newstate();
-	luaL_openlibs(L);
-	initSeleneLibrary(L);
-
-	slc_initMQTT( MQTT_client, MQTT_ClientID );	// Initialize MQTT logging
-	semc_initializeSeleMQTT( MQTT_client, MQTT_ClientID );	// Initialize SeleMQTT
-	if(!trace)
-		slc_ignore("T");	// Disabling trace logging
-
-	luainitfunc = libSel_AddStartupFunc( NULL, setGlobalVar );
-	luainitfunc = libSel_AddStartupFunc( luainitfunc, initReducedSelene );
-	luainitfunc = libSel_AddStartupFunc( luainitfunc, initSelShared );
-	luainitfunc = libSel_AddStartupFunc( luainitfunc, initSelLog );
-	luainitfunc = libSel_AddStartupFunc( luainitfunc, initSeleMQTT );
-
-	luainitfunc = libSel_AddStartupFunc( luainitfunc, LuaTask::initLuaObject );
-	luainitfunc = libSel_AddStartupFunc( luainitfunc, Timer::initLuaObject );
-	luainitfunc = libSel_AddStartupFunc( luainitfunc, Tracker::initLuaObject );
-	luainitfunc = libSel_AddStartupFunc( luainitfunc, MQTTTopic::initLuaObject );
-	luainitfunc = libSel_AddStartupFunc( luainitfunc, Event::initLuaObject );
-
-	libSel_ApplyStartupFunc( luainitfunc, L );
+	threadEnvironment(SelLua->getLuaState());
 
 	if(!quiet)
-		publishLog('I', "Starting %s %f ...", basename(av[0]), VERSION);
+		SelLog->Log('I', "Application code for %s %f ...", basename(av[0]), VERSION);
 
 		/***
 		 * Reading user configuration 
 		 ****/
-	config.init( UserConfigRoot, L );	// Read user's configuration files
-	config.SanityChecks();	// Ensure the configuration is usable
+	config.init(UserConfigRoot, SelLua->getLuaState());	// Read user's configuration files
+	config.SanityChecks();
 
 	if(configtest){
-		publishLog('E', "Testing only the configuration ... leaving.");
+		SelLog->Log('E', "Testing only the configuration ... leaving.");
 		exit(EXIT_FAILURE);
 	}
 
 	if(!quiet)
-		publishLog('I', "Let's go ...");
+		SelLog->Log('I', "Application starting ...");
 
-	config.LaunchTimers();	// Launch slave timers
-	config.SubscribeTopics();	// MQTT : activate topics receiving
+
+		/***
+		 * Add Majordom's own objects to slave thread
+		 ****/
+	SelLua->AddStartupFunc(LuaTask::initLuaObject);
+	SelLua->AddStartupFunc(Timer::initLuaObject);
+	SelLua->AddStartupFunc(MQTTTopic::initLuaObject);
+	SelLua->AddStartupFunc(Event::initLuaObject);
+	SelLua->AddStartupFunc(Tracker::initLuaObject);
+
 	config.RunStartups();	// Run startup functions
+	config.SubscribeTopics();	// MQTT : activate topics receiving
+	config.LaunchTimers();	// Launch slave timers
 	config.RunImmediates();	// Run immediate & overdue timers tasks
 
 	pause();	// Waiting for events, nothing else to do
 }
-

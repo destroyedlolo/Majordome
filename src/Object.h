@@ -16,8 +16,11 @@ protected:
 	std::string name;
 	std::string where;
 
+	bool readConfigDirective(std::string &l);
+
 public:
 	Object() : disabled(false), quiet(false){};
+	Object& operator=(const Object&) = default;	/* avoid "defaulted move" warning */
 
 	void enable( void ){ this->disabled = false; };
 	void disable( void ){ this->disabled = true; };
@@ -28,9 +31,9 @@ public:
 	void beNoisy( void ){ this->quiet = false; };
 	bool isQuiet( void ){ return this->quiet; };
 
-	std::string &getName( void ){ return this->name; };
+	std::string &getName( void ){ return this->name; };	// Object's name
 	const char *getNameC( void ){ return this->name.c_str(); };
-	std::string &getWhere( void ){ return this->where; };
+	std::string &getWhere( void ){ return this->where; }; // Object's container (it's father directory)
 	const char *getWhereC( void ){ return this->where.c_str(); };
 
 	/*

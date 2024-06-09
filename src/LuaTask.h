@@ -6,9 +6,9 @@
 #ifndef TASK_H
 #define TASK_H
 
-#include <libSelene.h>
-
+#include "Selene.h"
 #include "MayBeEmptyString.h"
+#include "StringVector.h"
 #include "Object.h"
 #include "LuaExec.h"
 
@@ -29,7 +29,7 @@ public:
 	 * <- name : this object's name
 	 * -> L : Lua's state
 	 */
-	LuaTask( Config &cfg, const std::string &file, std::string &where, std::string &name, lua_State *L );
+	LuaTask( const std::string &file, std::string &where, std::string &name, lua_State *L );
 
 	void setOnce( bool v ){ this->once = v; }
 	bool getOnce( void ){ return this->once; }
@@ -49,6 +49,6 @@ public:
 	virtual void finished( void );
 
 	/* Create Lua's object */
-	static int initLuaObject( lua_State *L );
+	static void initLuaObject( lua_State *L );
 };
 #endif

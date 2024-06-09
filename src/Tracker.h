@@ -6,18 +6,17 @@
 #ifndef TRACKER_H
 #define TRACKER_H
 
-#include <libSelene.h>
-
 #include "MayBeEmptyString.h"
 #include "Event.h"
 #include "LuaExec.h"
-
-class Config;
 
 class Tracker : public Event, public LuaExec {	// Event contains tasks to launch when tracker changes to DONE
 
 	StringVector startingTasks;	// Tasks to launch when starting the tracker
 	StringVector stoppingTasks;	// Tasks to launch when stopping the tracker
+	StringVector changingTasks;	// Tasks to launch when the tracker's status is changing
+
+	void notifyChanged(void);
 
 public:
 	enum _status {
@@ -39,11 +38,12 @@ public:
 	 * <- name : this object's name
 	 * -> L : Lua's state
 	 */
-	Tracker( Config &cfg, const std::string &file, std::string &where, std::string &name, lua_State *L );
+	Tracker( const std::string &file, std::string &where, std::string &name, lua_State *L );
 
 	enum _status getStatus( void ){ return this->status; }
 	const char *getStatusC( void );
 	unsigned int getCounter(void){ return this->hm_counter; }
+	void resetCounter(void){ this->hm_counter = this->howmany; }
 
 	/* Overloading of LuaExec's in order to initialise Myself object */
 	virtual void feedState( lua_State *L, const char *name, const char *topic=NULL, const char *payload=NULL, bool tracker=false, const char *trkstatus=NULL );
@@ -63,6 +63,7 @@ public:
 	void addDone( std::string t ){ this->Add(t); }
 	void addStarted( std::string t ){ this->startingTasks.Add(t); }
 	void addStopped( std::string t ){ this->stoppingTasks.Add(t); }
+	void addChanged( std::string t ){ this->changingTasks.Add(t); }
 
 	void setStatusTopic( std::string t ){ this->statusTopic = t; }
 	bool asStatusTopic( void ){ return !!this->statusTopic; }
@@ -73,7 +74,7 @@ protected :
 
 public :
 		/* Create Lua's object */
-	static int initLuaObject( lua_State *L );
+	static void initLuaObject( lua_State *L );
 };
 
 #endif
