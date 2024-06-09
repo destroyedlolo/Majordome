@@ -213,7 +213,7 @@ void MQTTTopic::execTrackers( Config &cfg, const char *timer_name ){
 	 * Lua exposed functions
 	 *****/
 static class MQTTTopic *checkMajordomeMQTTTopic(lua_State *L){
-	class MQTTTopic **r = (class MQTTTopic **)luaL_testudata(L, 1, "MajordomeMQTTTopic");
+	class MQTTTopic **r = (class MQTTTopic **)SelLua->testudata(L, 1, "MajordomeMQTTTopic");
 	luaL_argcheck(L, r != NULL, 1, "'MajordomeMQTTTopic' expected");
 	return *r;
 }

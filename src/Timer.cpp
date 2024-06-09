@@ -236,7 +236,7 @@ void Timer::sendCommand( enum Commands c ){
 	 * Lua exposed functions
 	 *****/
 static class Timer *checkMajordomeTimer(lua_State *L){
-	class Timer **r = (class Timer **)luaL_testudata(L, 1, "MajordomeTimer");
+	class Timer **r = (class Timer **)SelLua->testudata(L, 1, "MajordomeTimer");
 	luaL_argcheck(L, r != NULL, 1, "'MajordomeTimer' expected");
 	return *r;
 }

@@ -231,7 +231,7 @@ void LuaTask::finished( void ){
 	 *****/
 
 static class LuaTask *checkMajordomeTask(lua_State *L){
-	class LuaTask **r = (class LuaTask **)luaL_testudata(L, 1, "MajordomeTask");
+	class LuaTask **r = (class LuaTask **)SelLua->testudata(L, 1, "MajordomeTask");
 	luaL_argcheck(L, r != NULL, 1, "'MajordomeTask' expected");
 	return *r;
 }
