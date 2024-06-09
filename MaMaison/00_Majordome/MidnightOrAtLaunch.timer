@@ -1,0 +1,5 @@
+# Timer for tasks to be launched daily at midnight or when Majordome is launched
+at=0000
+#immediate
+runifover
+#disabled

@@ -1,0 +1,13 @@
+-- Surveillance de la température du salon pour la fenêtre centrale
+--
+-->> listen=TSalon
+-->> start=DebutSurveillanceOuest
+-->> stop=FinSurveillance
+-->> enableRDV=activeSurveillanceOuest
+-->> disableRDV=desactiveSurveillanceOuest
+-->> statustopic=%ClientID%/SurveillanceSalonOuest/status
+
+if tonumber(MAJORDOME_PAYLOAD) > 21.5 then
+	SelLog.log('I', "La consigne du salon est atteinte pour la fenêtre centrale")
+	MAJORDOME_Myself:setStatus("DONE")
+end
