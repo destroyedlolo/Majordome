@@ -17,5 +17,9 @@ In a package's directory, you will find (in loading order) :
 
 ---
 
-- **ClientTask.lua** is the main test tasks consuming **15s** timer and **NoStations** topic.
+- **ClientTask.lua** is the main test tasks consuming **15s** timer and will be disabled/re-enable when a message arrives on **NoStations** topic, through **LuaTaskInterface.lua**
 
+---
+
+- **BipTask.lua** consumes **5s** and display "*bip*" when launched.
+- **TestTimerInterface.lua** will disable/re-enable **5s** timer when a message arrives on **NoStations** topic.
