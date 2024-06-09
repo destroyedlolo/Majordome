@@ -5,7 +5,6 @@
 #include <cstdarg>
 #include <cstdio>
 
-#include <libSelene.h>
 #include "Helpers.h"
 
 char *removeLF(char *s){
@@ -35,21 +34,6 @@ MayBeEmptyString striKWcmp( std::string &s, std::string &kw ){
 	if(!s.compare(0, kw.size(), kw))
 		return MayBeEmptyString( s.substr(kw.size()) );
 	return MayBeEmptyString();
-}
-
-void publishLog( char l, const char *msg, ...){
-	va_list args;
-	va_start(args, msg);
-
-	if(l=='T' && !trace)	// Don't display trace
-		return;
-
-	char tmsg[1024];	/* No simple way here to know the message size */
-	vsnprintf(tmsg, sizeof(tmsg), msg, args);
-
-	slc_log( l, tmsg );
-
-	va_end(args);
 }
 
 const char *fileextention( const char *fch ){

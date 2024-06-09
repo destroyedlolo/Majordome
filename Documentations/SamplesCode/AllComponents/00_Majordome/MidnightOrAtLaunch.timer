@@ -1,0 +1,8 @@
+# Timer to trigger an action at midnight or when Majordome is launched
+at=0000
+
+# as any hour is after midnight, it will trigger also when Majordome is launched
+runifover
+
+#immediate
+#disabled

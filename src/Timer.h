@@ -101,7 +101,7 @@ public:
 	bool getRunIfOver( void ){ return this->runifover; }
 
 	/* Create Lua's object */
-	static int initLuaObject( lua_State *L );
+	static void initLuaObject( lua_State *L );
 };
 
 #endif

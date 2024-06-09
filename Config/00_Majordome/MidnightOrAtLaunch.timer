@@ -1,5 +1,0 @@
-# Timer for time to be launched at midnight or when Majordome is launched
-at=0000
-#immediate
-runifover
-#disabled

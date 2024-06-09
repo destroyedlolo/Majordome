@@ -1,5 +1,6 @@
 /* Event
- * Master class to object that has action attached
+ * Master class to objects having actions attached.
+ * Used also to impersonate Rendez-Vous.
  */
 #ifndef EVENT_H
 #define EVENT_H
@@ -18,7 +19,7 @@ class Event : virtual public Object, public StringVector {
 protected:
 	/* Default empty constructor to be only used by derived classes 
 	 */
-	Event(){}
+Event() = default;
 
 public:
 	/* Constructor from a file
@@ -50,14 +51,16 @@ private:
 	StringVector trackersToDisable;	// Trackers to be disabled by this event
 
 public:
+	/* Add a tracker to Enable or Disable list */
 	void addTrackerEN( std::string t ){ this->trackersToEnable.Add(t); }
 	void addTrackerDIS( std::string t ){ this->trackersToDisable.Add(t); }
 
+	/* Enable/Disable trackers from lists */
 	void enableTrackers( void );
 	void disableTrackers( void );
 
 	/* Create Lua's object */
-	static int initLuaObject( lua_State *L );
+	static void initLuaObject( lua_State *L );
 };
 
 #endif

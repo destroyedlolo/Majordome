@@ -1,0 +1,60 @@
+-- This is an example of Tracker script
+-- In the header of the script (comment bloc at the very beginning of
+-- the script), each line starting with -->> are Majordome's commands.
+-- Consequently, '--->>' are commented out commands.
+--
+-- Name of this script
+-- if not set, takes the filename
+-- Notez-bien : if used, this directive MUST be defined before any
+-- listen directive.
+--->> name=Toto
+--
+-- Add topic object creation
+-->> require_topic=Test
+--
+-- remove some trace
+-- This option is useful to avoid logging of very noisy topics
+-->> quiet
+--
+-- Disable this trigger
+--->> disabled
+--
+-- Indicate MQTT topic(s) to listen to
+-- (more than one "listen" can be present)
+--->> listen=Test
+--
+--
+-- Indicate the MQTT topic to publish tracker status
+-->> statustopic=TestTracker/status
+--
+-- Timers
+-- ------
+-- At start timer's time, the tracker become active.
+--->> start=15s
+-- At stop timer's time, the tracker become inactive.
+--->> stop=25s
+--
+-- Activated at startup
+--->> activated
+--
+-- Enable / Disable by rendez-vous
+-- It's possible to attach rendez-vous to enable / disable this tracker
+-- It makes easier for a single action to enable / disable several trackers
+-- As example, in my smarthome automation, winter season disables all
+-- temperature saving tracker
+--->> enableRDV=enabletracker
+--->> disableRDV=disabletracker
+
+-- Lua side Variables
+-- ==================
+-- MAJORDOME_Myself is automatically created and correspond to the current
+-- tracker
+-- MAJORDOME_TRACKER - tracker's name
+-- MAJORDOME_TRACKER_STATUS - tracker's status
+
+print("I'm the TestTracker code", MAJORDOME_TRACKER, MAJORDOME_TOPIC, MAJORDOME_PAYLOAD)
+print("My status is :", MAJORDOME_Myself:getStatus() )
+
+if tonumber(MAJORDOME_PAYLOAD) > 10 then
+	MAJORDOME_Myself:setStatus("DONE")
+end
