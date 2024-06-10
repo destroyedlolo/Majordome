@@ -33,13 +33,13 @@ protected:
 	void addRequiredTopic( std::string t ){ this->required_topic.Add(t); }
 	void addNeededTask( std::string t ){ this->needed_task.Add(t); }
 
-	bool feedbyNeeded( lua_State * );
-
 	bool readConfigDirective( std::string &l );
 
 public:
 	LuaExec();
 	struct elastic_storage *getFunc( void ){ return &(this->func); }
+
+	bool feedbyNeeded( lua_State * );
 
 	/* Store Lua's code
 	 *

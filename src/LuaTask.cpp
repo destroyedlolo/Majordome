@@ -281,6 +281,9 @@ static int mtsk_launch(lua_State *L){
 		return 0;
 	}
 
+	if(!task->feedbyNeeded(L))
+		return 0;
+
 	int err;
 	if( (err = SelElasticStorage->loadsharedfunction( L, task->getFunc() )) ){
 		SelLog->Log('E', "Unable to create task '%s' from '%s' : %s", task->getNameC(), task->getWhereC(), (err == LUA_ERRSYNTAX) ? "Syntax error" : "Memory error" );
