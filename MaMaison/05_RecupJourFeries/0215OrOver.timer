@@ -1,8 +1,0 @@
-# Timer pour récupérer les jours fériés.
-# Ce n'est plus lancé à minuit sinon il aurait fallu faire une usine à gaz
-# pour que la trappe du chat se ferme à la bonne heure le lendemain d'un jour
-# férié.
-at=0215
-#immediate
-runifover
-#disabled

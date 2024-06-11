@@ -217,7 +217,7 @@ int main(int ac, char **av){
 	char c;
 	const char *conf_file = DEFAULT_CONFIGURATION_FILE;
 
-	while((c = getopt(ac, av, "qvVdhrf:t")) != EOF) switch(c){
+	while((c = getopt(ac, av, "qvVdhrf:t")) != (char)EOF) switch(c){
 	case 'h':
 		fprintf(stderr, "%s (%.04f)\n"
 			"A lightweight event based Automation System\n"
