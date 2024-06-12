@@ -24,6 +24,17 @@ if args[1]:upper() == "TRACKER" then
 	else
 		tracker:setStatus( args[3]:upper() )
 	end
+
+elseif args[1]:upper() == "TOPIC" then
+	local topic = MajordomeMQTTTopic.find(args[2])
+	if not topic then
+		SelLog.Log('E', "Can't find '".. args[2].."'")
+		return
+	end
+
+	SelLog.Log('D', "Topic is coming from : ".. topic:getContainer())
+	SelLog.Log('D', "Topic is ".. (topic:isEnabled() and 'Enabled' or 'Disabled') )
+
 elseif args[1]:upper() == "SAISON" then
 	local DetermineSaison = MajordomeTask.find("DetermineSaison")
 	DetermineSaison:Launch()
