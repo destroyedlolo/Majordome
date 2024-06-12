@@ -4,3 +4,4 @@ Il répondra au topic ***ClientID***/**Debug** et répondra aux commandes suivan
 
 - **TRACKER** *NomDuTracker* *(Start|Stop|Done|Status)*
 - **SAISON** - Lance la déterminaison de la saison
+- **TOPIC** - affiche le status d'un topic
