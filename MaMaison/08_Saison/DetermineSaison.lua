@@ -10,7 +10,7 @@
 SelLog.Log('I',"Détermination de la saison")
 
 -- Log les info ayant permis de déterminer la saison
-SelLog.log('M',"T°Ext = " .. TExterieur:getVal() .. " TSalon = " .. TSalon:getVal())
+SelLog.Log('M',"T°Ext = " .. TExterieur:getVal() .. " TSalon = " .. TSalon:getVal())
 
 -- Publication des saisons
 SaisonHier:Publish( Saison:getVal() )
