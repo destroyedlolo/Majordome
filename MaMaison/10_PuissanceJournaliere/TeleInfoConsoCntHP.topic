@@ -1,0 +1,6 @@
+# Compteur de consommation HP
+
+topic=TeleInfo/Consommation/values/HCHP
+store
+numeric
+quiet
