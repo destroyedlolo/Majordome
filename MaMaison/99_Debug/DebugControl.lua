@@ -14,6 +14,11 @@ for m in MAJORDOME_PAYLOAD:gmatch("%S+") do
 end
 
 if args[1]:upper() == "TRACKER" then
+	if #args < 3 then
+		SelLog.Log('E',"TRACKER command needs 2 arguments")
+		return
+	end
+
 	local tracker = MajordomeTracker.find(args[2])
 	if not tracker then
 		SelLog.Log('E', "Can't find '".. args[2].."'")
@@ -44,5 +49,5 @@ elseif args[1]:upper() == "CONSIGNES" then
 	local PublicationConsignesParDefault = MajordomeTask.find("PublicationConsignesParDefault")
 	PublicationConsignesParDefaut:Launch()
 else
-	SelLog.Log('E',"Command inconnue '"..args[1].."'")
+	SelLog.Log('E',"Unknown command '"..args[1].."'")
 end
