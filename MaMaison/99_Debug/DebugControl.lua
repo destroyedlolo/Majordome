@@ -3,6 +3,8 @@
 -- Indicate MQTT topic(s) to listen to
 -->> listen=MajordomeDebug
 --
+-->> need_task=PublicationConsignesParDefaut
+--
 -- Disable this script
 --->> disabled
 
@@ -38,6 +40,9 @@ elseif args[1]:upper() == "TOPIC" then
 elseif args[1]:upper() == "SAISON" then
 	local DetermineSaison = MajordomeTask.find("DetermineSaison")
 	DetermineSaison:Launch()
+elseif args[1]:upper() == "CONSIGNES" then
+	local PublicationConsignesParDefault = MajordomeTask.find("PublicationConsignesParDefault")
+	PublicationConsignesParDefaut:Launch()
 else
 	SelLog.Log('E',"Command inconnue '"..args[1].."'")
 end
