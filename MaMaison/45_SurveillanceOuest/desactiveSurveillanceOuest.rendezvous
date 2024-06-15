@@ -1,0 +1,4 @@
+# Désactive la surveillance (c'est l'hiver)
+#name=toto
+#quiet
+#disabled
