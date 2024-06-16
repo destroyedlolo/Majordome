@@ -1,6 +1,6 @@
 -- Calcul du mode réel pour la chambre de Joris
 -->> listen=Mode
--->> require_topic=Mode
+-->> need_topic=Mode
 -->> listen=ModeForceEnfants
 -->> need_topic=ModeForceEnfants
 -->> listen=ModeForceJoris
