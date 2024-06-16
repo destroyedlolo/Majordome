@@ -25,7 +25,7 @@ if ModeChJoris:getVal() == "Manuel" then
 	SelLog.Log('I', "Mode \"Manuel\" : 'My' du volet de la chambre de Joris ignoré")
 else	-- Vérifie en fonction de ce qui a lancer l'exécution
 	if MAJORDOME_TIMER == "ConsigneCoucherMy" then
-		if mode == "Absent" then
+		if ModeChJoris:getVal() == "Absent" then
 			SelLog.Log('I', "Mode \"Absent\" : 'My' de fin de journée du volet de la chambre de Joris ignoré")
 			return
 		end
