@@ -4,4 +4,4 @@
 -->> quiet
 -->> need_timer=CdGRepWiFi
 
-CdG:Reset()
+CdGRepWiFi:Reset()
