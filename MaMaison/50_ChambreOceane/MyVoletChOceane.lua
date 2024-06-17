@@ -9,7 +9,7 @@
 -- Suivit de la température
 -->> whenDone=SurveillanceChOceane
 --
--->> require_topic=ModeChJoris
+-->> require_topic=ModeChOceane
 
 --
 -- Récupération des objets cibles

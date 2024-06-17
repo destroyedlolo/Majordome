@@ -1,6 +1,6 @@
 -- Fin de la surveillance : on ouvre les volets s'ils ont été fermés
 -->> whenStopped=SurveillanceChOceane
--->> require_topic=ModeChJoris
+-->> require_topic=ModeChOceane
 
 --
 -- Récupération des objets cibles

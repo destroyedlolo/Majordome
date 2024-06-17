@@ -6,7 +6,7 @@
 if Mode:getVal() == "Manuel" then
 	SelLog.Log('I', "Mode \"Fermeture\" : Ouverture du volet de la cuisine ignoré")
 else
-	SelLog.Kog('A', "Fermeture du volet de la cuisine")
+	SelLog.Log('A', "Fermeture du volet de la cuisine")
 
 	local CmdVoletCuisine = MajordomeMQTTTopic.find("CmdVoletCuisine", true)
 	CmdVoletCuisine:Publish("Down")
