@@ -17,7 +17,7 @@ SaisonHier:Publish( Saison:getVal() )
 if TExterieur:getVal() < 5 then
 	Saison:Publish(  'Hiver' )
 elseif TSalon:getVal() > 21.5 and TExterieur:getVal() > 15 then
-	Saison:Publish( Saison:getTopic(), 'Ete' );
+	Saison:Publish( 'Ete' );
 else
 	Saison:Publish( 'Intersaison' );
 end
