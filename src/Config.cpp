@@ -26,6 +26,7 @@ bool Config::accept( const char *fch, std::string &full ){
 }
 
 void Config::init(std::string &where, lua_State *L){
+	this->configDir = where;
 	this->readdircontent(where);
 
 		/* Load packages */

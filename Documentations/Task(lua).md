@@ -107,7 +107,9 @@ As described above, following variables are subject to be created :
 - **MAJORDOME_TRACKER** and  **MAJORDOME_TRACKER_STATUS** if the task is launched by a  tracker.
 
 Following variables are also created :
+- **MAJORDOME_Myself** is automatically created and correspond to the current tracker
 - **MAJORDOME_VERSION** and **MAJORDOME_COPYRIGHT** as the name said
+- **MAJORDOME_CONFIGURATION_DIRECTORY**, the root of the configuration directory
 - **MAJORDOME_ClientID**, MQTT client identifier that must be unique for a single broker.
 - **MAJORDOME_DEBUG**, set only if Majordome has been started with `-d` and, consequently, is in debugging mode.
 

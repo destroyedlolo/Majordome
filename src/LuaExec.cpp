@@ -48,6 +48,9 @@ bool LuaExec::LoadFunc( lua_State *L, std::stringstream &buffer, const char *nam
 	 ****/
 
 void LuaExec::feedState( lua_State *L, const char *name, const char *topic, const char *payload, bool tracker, const char *trkstatus ){
+	lua_pushstring( L, config.getConfigDir().c_str() );
+	lua_setglobal( L, "MAJORDOME_CONFIGURATION_DIRECTORY" );
+
 	if( !name )	// No argument provide (launched at startup)
 		return;
 
