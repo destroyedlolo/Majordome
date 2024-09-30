@@ -21,6 +21,8 @@
 #include "Tracker.h"
 
 class Config : virtual public SortDir {
+	std::string configDir;
+
 protected :
 	virtual bool accept( const char *, std::string & );
 
@@ -66,6 +68,8 @@ public:
 	 */
 	LuaTask &findTask( std::string & );
 	Tracker &findTracker( std::string & );
+
+	std::string getConfigDir(){ return this->configDir; }
 };
 
 extern Config config;

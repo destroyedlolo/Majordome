@@ -48,6 +48,9 @@ bool LuaExec::LoadFunc( lua_State *L, std::stringstream &buffer, const char *nam
 	 ****/
 
 void LuaExec::feedState( lua_State *L, const char *name, const char *topic, const char *payload, bool tracker, const char *trkstatus ){
+	lua_pushstring( L, config.getConfigDir().c_str() );
+	lua_setglobal( L, "MAJORDOME_CONFIGURATION_DIRECTORY" );
+
 	if( !name )	// No argument provide (launched at startup)
 		return;
 
@@ -189,13 +192,15 @@ bool LuaExec::feedbyNeeded( lua_State *L ){
 bool LuaExec::readConfigDirective( std::string &l ){
 	MayBeEmptyString arg;
 
-	if( !!(arg = striKWcmp( l, "-->> need_topic=" ))){
+	if(!!(arg = striKWcmp( l, "-->> need_topic=" ))){
 		Config::TopicElements::iterator topic;
-		if( (topic = config.TopicsList.find(arg)) != config.TopicsList.end()){
+		if((topic = config.TopicsList.find(arg)) != config.TopicsList.end()){
+#if 0	/* getVal() will fail if not stored but doesn't prevent to need it */
 			if(!topic->second.toBeStored()){
 				SelLog->Log('F', "Can't need \"%s\" topic : not stored", arg.c_str());
 				exit(EXIT_FAILURE);
 			}
+#endif
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded needed topic '%s'", arg.c_str());
 			this->addNeededTopic(arg);
@@ -204,7 +209,7 @@ bool LuaExec::readConfigDirective( std::string &l ){
 			SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
-	} else if( !!(arg = striKWcmp( l, "-->> require_topic=" ))){
+	} else if(!!(arg = striKWcmp( l, "-->> require_topic=" ))){
 		Config::TopicElements::iterator topic;
 		if( (topic = config.TopicsList.find(arg)) != config.TopicsList.end()){
 			if(!topic->second.toBeStored()){
@@ -219,7 +224,7 @@ bool LuaExec::readConfigDirective( std::string &l ){
 			SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
-	} else if( !!(arg = striKWcmp( l, "-->> need_timer=" ))){
+	} else if(!!(arg = striKWcmp( l, "-->> need_timer=" ))){
 		Config::TimerElements::iterator timer;
 		if( (timer = config.TimersList.find(arg)) != config.TimersList.end()){
 			if(verbose)
@@ -230,7 +235,7 @@ bool LuaExec::readConfigDirective( std::string &l ){
 			SelLog->Log('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
-	} else if( !!(arg = striKWcmp( l, "-->> need_rendezvous=" ))){
+	} else if(!!(arg = striKWcmp( l, "-->> need_rendezvous=" ))){
 		Config::EventElements::iterator event;
 		if( (event = config.EventsList.find(arg)) != config.EventsList.end()){
 			if(verbose)
@@ -241,7 +246,7 @@ bool LuaExec::readConfigDirective( std::string &l ){
 			SelLog->Log('F', "\t\tRendezvous '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
-	} else if( !!(arg = striKWcmp( l, "-->> need_tracker=" ))){
+	} else if(!!(arg = striKWcmp( l, "-->> need_tracker=" ))){
 		Config::TrackerElements::iterator tracker;
 		if( (tracker = config.TrackersList.find(arg)) != config.TrackersList.end()){
 			if(verbose)
@@ -252,7 +257,7 @@ bool LuaExec::readConfigDirective( std::string &l ){
 			SelLog->Log('F', "\t\ttracker '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
-	} else if( !!(arg = striKWcmp( l, "-->> need_task=" ))){
+	} else if(!!(arg = striKWcmp( l, "-->> need_task=" ))){
 			/* No way to test if the task exists or not (as it could be
 			 * defined afterward. Will be part of sanity checks
 			 */

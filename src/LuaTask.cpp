@@ -178,6 +178,25 @@ else printf("Ignore '%s'\n", l.c_str());
 		exit(EXIT_FAILURE);
 }
 
+void LuaTask::feedState( lua_State *L, const char *name, const char *topic, const char *payload, bool tracker, const char *trkstatus ){
+
+	try {
+		class LuaTask &tsk = config.TasksList.at( this->getNameC() );
+		class LuaTask **task = (class LuaTask **)lua_newuserdata(L, sizeof(class Tracker *));
+		assert(task);
+
+		*task = &tsk;
+		luaL_getmetatable(L, "MajordomeTask");
+		lua_setmetatable(L, -2);
+		lua_setglobal( L, "MAJORDOME_Myself" );
+	} catch( std::out_of_range &e ){	// Not found 
+		SelLog->Log('F', "Can't find task '%s'", this->getNameC() );
+		exit(EXIT_FAILURE);
+	}
+
+	LuaExec::feedState(L, name, topic, payload, tracker, trkstatus);
+}
+
 	/*****
 	 * Execute the code
 	 *****/
