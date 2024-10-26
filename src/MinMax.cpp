@@ -177,12 +177,18 @@ static int mmm_isEnabled( lua_State *L ){
 static int mmm_enabled( lua_State *L ){
 	class MinMax *minmax= checkMajordomeMinMax(L);
 	minmax->enable();
-	return 1;
+	return 0;
 }
 
 static int mmm_disable( lua_State *L ){
 	class MinMax *minmax= checkMajordomeMinMax(L);
 	minmax->disable();
+	return 0;
+}
+
+static int mmm_getMin( lua_State *L ){
+	class MinMax *minmax= checkMajordomeMinMax(L);
+	lua_pushnumber( L, minmax->getMin() );
 	return 1;
 }
 
@@ -192,12 +198,7 @@ static const struct luaL_Reg MajMinMaxM [] = {
 	{"isEnabled", mmm_isEnabled},
 	{"Enable", mmm_enabled},
 	{"Disable", mmm_disable},
-/*
-	{"getCounter", mtrk_getCounter},
-	{"resetCounter", mtrk_resetCounter},
-	{"getStatus", mtrk_getStatus},
-	{"setStatus", mtrk_setStatus},
-*/
+	{"getMin", mmm_getMin},
 	{NULL, NULL}
 };
 

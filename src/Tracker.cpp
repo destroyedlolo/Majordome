@@ -328,13 +328,13 @@ static int mtrk_getName(lua_State *L){
 static int mtrk_enabled( lua_State *L ){
 	class Tracker *tracker = checkMajordomeTracker(L);
 	tracker->enable();
-	return 1;
+	return 0;
 }
 
 static int mtrk_disable( lua_State *L ){
 	class Tracker *tracker = checkMajordomeTracker(L);
 	tracker->disable();
-	return 1;
+	return 0;
 }
 
 static int mtrk_isEnabled( lua_State *L ){

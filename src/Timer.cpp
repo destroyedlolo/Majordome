@@ -363,13 +363,13 @@ static int mtmr_getName( lua_State *L ){
 static int mtmr_enabled( lua_State *L ){
 	class Timer *timer = checkMajordomeTimer(L);
 	timer->enable();
-	return 1;
+	return 0;
 }
 
 static int mtmr_disable( lua_State *L ){
 	class Timer *timer = checkMajordomeTimer(L);
 	timer->disable();
-	return 1;
+	return 0;
 }
 
 static int mtmr_isEnabled( lua_State *L ){
