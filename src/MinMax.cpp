@@ -192,6 +192,18 @@ static int mmm_getMin( lua_State *L ){
 	return 1;
 }
 
+static int mmm_getMax( lua_State *L ){
+	class MinMax *minmax= checkMajordomeMinMax(L);
+	lua_pushnumber( L, minmax->getMax() );
+	return 1;
+}
+
+static int mmm_getAverage( lua_State *L ){
+	class MinMax *minmax= checkMajordomeMinMax(L);
+	lua_pushnumber( L, minmax->getAverage() );
+	return 1;
+}
+
 static const struct luaL_Reg MajMinMaxM [] = {
 	{"getContainer", mmm_getContainer},
  	{"getName", mmm_getName},
@@ -199,6 +211,8 @@ static const struct luaL_Reg MajMinMaxM [] = {
 	{"Enable", mmm_enabled},
 	{"Disable", mmm_disable},
 	{"getMin", mmm_getMin},
+	{"getMax", mmm_getMax},
+	{"getAverage", mmm_getAverage},
 	{NULL, NULL}
 };
 
