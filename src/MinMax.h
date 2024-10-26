@@ -9,6 +9,8 @@
 #include "Event.h"
 #include "LuaExec.h"
 
+#include <math.h>
+
 class MinMax : public Event, public LuaExec {
 	bool empty;		// No value yet
 	lua_Number min,max;
@@ -33,6 +35,11 @@ public:
 
 		/* Create Lua's object */
 	static void initLuaObject( lua_State *L );
+
+		/* Accessor */
+	lua_Number getMin(){ return this->min; }
+	lua_Number getMax(){ return this->max; }
+	lua_Number getAverage(){ return(this->empty ? INFINITY : this->sum/this->nbre); }
 };
 
 #endif
