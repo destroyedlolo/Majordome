@@ -1,0 +1,4 @@
+# Retrieve power consumed
+
+topic=TeleInfo/Consommation/values/PAPP
+#store
