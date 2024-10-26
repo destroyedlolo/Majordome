@@ -208,6 +208,22 @@ void MQTTTopic::execTrackers( Config &cfg, const char *timer_name ){
 	}
 }
 
+void MQTTTopic::execMinMax( Config &cfg, const char *name, const char *topic, const char *payload ){
+#ifdef DEBUG
+	if(debug && !this->isQuiet())
+		SelLog->Log('D', "execMinMax() : %d to run", this->minmaxes.size() );
+#endif
+
+	for( StringVector::iterator trk = this->minmaxes.begin(); trk != this->minmaxes.end(); trk++){
+		try {
+			MinMax &minmax = cfg.findMinMax( *trk );
+			minmax.exec( name, topic, payload );
+		} catch (...) {
+			SelLog->Log('F', "Internal error : can't find MinMax \"%s\"", (*trk).c_str() );
+			exit(EXIT_FAILURE);
+		}
+	}
+}
 
 	/*****
 	 * Lua exposed functions

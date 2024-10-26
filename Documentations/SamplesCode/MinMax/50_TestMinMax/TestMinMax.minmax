@@ -15,4 +15,8 @@
 --
 -- Disable this trigger
 --->> disabled
+--
+-- Indicate MQTT topic(s) to listen to
+-- (more than one "listen" can be present)
+-->> listen=ConsPower
 

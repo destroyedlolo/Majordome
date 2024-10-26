@@ -10,8 +10,10 @@
 #include "LuaExec.h"
 
 class MinMax : public Event, public LuaExec {
-	bool empty;	// No value yet
+	bool empty;		// No value yet
 	lua_Number min,max;
+	size_t nbre;	// Number of handled values
+	lua_Number sum;
 
 public:
 	/* Constructor from a file
@@ -21,6 +23,13 @@ public:
 	 * -> L : Lua's state
 	 */
 	MinMax( const std::string &file, std::string &where, std::string &name, lua_State *L );
+
+	/* Launch lua script if applicable
+	 * -> name : name of the topic/timer that triggers this task
+	 * -> topic : the topic itself
+	 * <- true if it has been launched, false otherwise
+	 */
+	bool exec( const char *name, const char *topic=NULL, const char *payload=NULL );
 };
 
 #endif
