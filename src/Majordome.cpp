@@ -349,6 +349,7 @@ int main(int ac, char **av){
 	SelLua->AddStartupFunc(MQTTTopic::initLuaObject);
 	SelLua->AddStartupFunc(Event::initLuaObject);
 	SelLua->AddStartupFunc(Tracker::initLuaObject);
+	SelLua->AddStartupFunc(MinMax::initLuaObject);
 
 	config.RunStartups();	// Run startup functions
 	config.SubscribeTopics();	// MQTT : activate topics receiving

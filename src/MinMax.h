@@ -30,6 +30,9 @@ public:
 	 * <- true if it has been launched, false otherwise
 	 */
 	bool exec( const char *name, const char *topic=NULL, const char *payload=NULL );
+
+		/* Create Lua's object */
+	static void initLuaObject( lua_State *L );
 };
 
 #endif
