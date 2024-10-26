@@ -19,6 +19,7 @@
 #include "Timer.h"
 #include "MQTTTopic.h"
 #include "Tracker.h"
+#include "MinMax.h"
 
 class Config : virtual public SortDir {
 	std::string configDir;
@@ -42,6 +43,9 @@ public:
 
 	typedef std::unordered_map<std::string, Tracker> TrackerElements;
 	TrackerElements TrackersList;
+
+	typedef std::unordered_map<std::string, MinMax> MinMaxElements;
+	MinMaxElements MinMaxList;
 
 	/* Initialise this configuration against 'where' directory's content */
 	void init(std::string &where, lua_State *L);
@@ -68,6 +72,7 @@ public:
 	 */
 	LuaTask &findTask( std::string & );
 	Tracker &findTracker( std::string & );
+	MinMax &findMinMax( std::string & );
 
 	std::string getConfigDir(){ return this->configDir; }
 };

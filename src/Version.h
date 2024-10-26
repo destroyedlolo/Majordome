@@ -25,7 +25,8 @@
  *	09/12/2020 - v3.13 - LF - add getName()
  *		---
  *	12/05/2024 - v4.00 - LF - Migrate to SeleneV7
+ *	26/10/2024 - V4.01 - LF - Add MinMax
  */
 
-#define VERSION 4.0010
+#define VERSION 4.0100
 #define COPYRIGHT "Majordome (c) L.Faillie 2018-2024"

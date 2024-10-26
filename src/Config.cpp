@@ -170,3 +170,12 @@ Tracker &Config::findTracker( std::string &n ) {
 	else
 		return (*trk).second;
 }
+
+MinMax &Config::findMinMax( std::string &n ) {
+	Config::MinMaxElements::iterator obj;
+
+	if( (obj = this->MinMaxList.find( n )) == this->MinMaxList.end() )
+		throw 1;
+	else
+		return (*obj).second;
+}
