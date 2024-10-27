@@ -20,6 +20,7 @@ static const char * fileext[] = {
 	".timer",
 	".rendezvous",
 	".tracker",
+	".minmax",
 	".lua",
 	".md"
 };
@@ -127,6 +128,16 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 				exit(EXIT_FAILURE);
 			} else
 				cfg.TrackersList.insert( std::make_pair(name, trk) );
+		} else if( !strcmp(ext,".minmax") ){
+			std::string name;
+			MinMax trk( completpath, where, name, L );
+	
+			Config::MinMaxElements::iterator prev;
+			if((prev = cfg.MinMaxList.find(name)) != cfg.MinMaxList.end()){
+				SelLog->Log('F', "MinMax '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second.getWhere().c_str());
+				exit(EXIT_FAILURE);
+			} else
+				cfg.MinMaxList.insert( std::make_pair(name, trk) );
 		}
 #	ifdef DEBUG
 		else 

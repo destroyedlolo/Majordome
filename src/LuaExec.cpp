@@ -47,7 +47,7 @@ bool LuaExec::LoadFunc( lua_State *L, std::stringstream &buffer, const char *nam
 	 * Slave threads
 	 ****/
 
-void LuaExec::feedState( lua_State *L, const char *name, const char *topic, const char *payload, bool tracker, const char *trkstatus ){
+void LuaExec::feedState( lua_State *L, const char *name, const char *topic, const char *payload, bool tracker, const char *trkstatus, bool minmax ){
 	lua_pushstring( L, config.getConfigDir().c_str() );
 	lua_setglobal( L, "MAJORDOME_CONFIGURATION_DIRECTORY" );
 
@@ -61,6 +61,11 @@ void LuaExec::feedState( lua_State *L, const char *name, const char *topic, cons
 		lua_setglobal( L, "MAJORDOME_TOPIC" );
 		lua_pushstring( L, payload);	// and its payload
 		lua_setglobal( L, "MAJORDOME_PAYLOAD" );
+	}
+
+	if( minmax ){
+		lua_pushstring( L, name );	// Push the name of the tracker
+		lua_setglobal( L, "MAJORDOME_MINMAX" );
 	}
 
 	if( tracker ){	// Launched by a tracker
@@ -185,6 +190,22 @@ bool LuaExec::feedbyNeeded( lua_State *L ){
 		}
 	}
 
+	for(auto &i : this->needed_minmax){
+		try {
+			class MinMax &mm = config.MinMaxList.at( i );
+			class MinMax **minmax = (class MinMax **)lua_newuserdata(L, sizeof(class MinMax *));
+			assert(minmax);
+
+			*minmax = &mm;
+			luaL_getmetatable(L, "MajordomeMinMax");
+			lua_setmetatable(L, -2);
+
+			lua_setglobal(L, i.c_str());
+		} catch( std::out_of_range &e ){	// Not found 
+			return false;
+		}
+	}
+
 	return true;
 }
 
@@ -265,6 +286,17 @@ bool LuaExec::readConfigDirective( std::string &l ){
 			SelLog->Log('C', "\t\tAdded needed task '%s'", arg.c_str());
 		this->addNeededTask( arg );
 		return true;
+	} else if(!!(arg = striKWcmp( l, "-->> need_minmax=" ))){
+		Config::MinMaxElements::iterator minmax;
+		if( (minmax = config.MinMaxList.find(arg)) != config.MinMaxList.end()){
+			if(verbose)
+				SelLog->Log('C', "\t\tAdded needed minmax '%s'", arg.c_str());
+			this->addNeededMinMax( arg );
+			return true;
+		} else {
+			SelLog->Log('F', "\t\tminmax '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
 	}
 
 	return Object::readConfigDirective(l);

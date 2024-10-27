@@ -187,6 +187,7 @@ static int msgarrived(void *actx, char *topic, int tlen, MQTTClient_message *msg
 
 			i->second.execTasks( config, i->second.getNameC(), topic, cpayload );
 			i->second.execTrackers( config, i->second.getNameC(), topic, cpayload );
+			i->second.execMinMax( config, i->second.getNameC(), topic, cpayload );
 			break;
 		}
 	}
@@ -348,6 +349,7 @@ int main(int ac, char **av){
 	SelLua->AddStartupFunc(MQTTTopic::initLuaObject);
 	SelLua->AddStartupFunc(Event::initLuaObject);
 	SelLua->AddStartupFunc(Tracker::initLuaObject);
+	SelLua->AddStartupFunc(MinMax::initLuaObject);
 
 	config.RunStartups();	// Run startup functions
 	config.SubscribeTopics();	// MQTT : activate topics receiving

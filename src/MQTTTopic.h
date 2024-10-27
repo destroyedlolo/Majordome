@@ -14,6 +14,7 @@ class MQTTTopic : public Event {
 
 public :
 	StringVector trackers;	// Trackers to launch at message arrival
+	StringVector minmaxes;	// MinMax to launch at message arrival
 
 protected:
 	MayBeEmptyString topic;	// Topic to look for
@@ -51,6 +52,9 @@ public:
 	void addTracker( std::string t ){ this->trackers.Add(t); }
 	void execTrackers( Config &, const char *name, const char *topic, const char *payload );
 	void execTrackers( Config &, const char *name );
+
+	void addMinMax( std::string t ){ this->minmaxes.Add(t); }
+	void execMinMax( Config &, const char *name, const char *topic, const char *payload );
 
 	/* Create Lua's object */
 	static void initLuaObject( lua_State *L );

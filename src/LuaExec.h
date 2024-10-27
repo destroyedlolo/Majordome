@@ -24,6 +24,7 @@ public:
 	StringVector needed_topic;
 	StringVector required_topic;
 	StringVector needed_task;
+	StringVector needed_minmax;
 
 protected:
 	void addNeededRendezVous( std::string t ){ this->needed_rendezvous.Add(t); }
@@ -32,6 +33,7 @@ protected:
 	void addNeededTopic( std::string t ){ this->needed_topic.Add(t); }
 	void addRequiredTopic( std::string t ){ this->required_topic.Add(t); }
 	void addNeededTask( std::string t ){ this->needed_task.Add(t); }
+	void addNeededMinMax( std::string t ){ this->needed_minmax.Add(t); }
 
 	bool readConfigDirective( std::string &l );
 
@@ -58,7 +60,7 @@ public:
 	 *
 	 *  May be overloaded if some local objects have to be created
 	 */
-	virtual void feedState( lua_State *L, const char *name, const char *topic=NULL, const char *payload=NULL, bool tracker=false, const char *trkstatus=NULL );
+	virtual void feedState( lua_State *L, const char *name, const char *topic=NULL, const char *payload=NULL, bool tracker=false, const char *trkstatus=NULL, bool minmax=false );
 
 	/* Launch a task in a slave thread
 	 * -> same as feedState()

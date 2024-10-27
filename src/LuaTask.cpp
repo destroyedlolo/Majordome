@@ -335,13 +335,13 @@ static int mtsk_getName(lua_State *L){
 static int mtsk_enabled( lua_State *L ){
 	class LuaTask *task = checkMajordomeTask(L);
 	task->enable();
-	return 1;
+	return 0;
 }
 
 static int mtsk_disable( lua_State *L ){
 	class LuaTask *task = checkMajordomeTask(L);
 	task->disable();
-	return 1;
+	return 0;
 }
 
 static int mtsk_isEnabled( lua_State *L ){
