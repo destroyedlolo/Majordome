@@ -17,6 +17,10 @@
 --->> disabled
 --
 -- Indicate MQTT topic(s) to listen to
--- (more than one "listen" can be present)
+-- More than one "listen" can be present : in such case, all
+-- incomming data are considered in the same minmax
 -->> listen=ConsPower
 
+-- Bellow, optional Lua code to validate the data :
+-- - if the return code is 'false', the data is ignored
+-- - other value, or no return, the data is considered
