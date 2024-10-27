@@ -99,11 +99,11 @@ Create corresponding object.
 
 ### Exposed objects
 Trakers are exposed as **MajordomeTracker** with following methods :
-- `getContainer()` returns the container (directory) in which this task as been defined
-- `getName()` returns task's name
-- `isEnabled()` returns a boolean reflecting if the task is enabled or not
-- `Enable()` to enable this task
-- `Disable()` to disable this task 
+- `getContainer()` returns the container (directory) in which this tracker as been defined
+- `getName()` returns tracker's name
+- `isEnabled()` returns a boolean reflecting if the tracker is enabled or not
+- `Enable()` to enable this tracker
+- `Disable()` to disable this tracker 
 - `getCounter()` get the *HowMany* counter (counting downward)
 - `resetCounter()` resert the *HowMany* counter
 - `getStatus()` get current tracker status
