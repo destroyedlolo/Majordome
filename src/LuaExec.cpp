@@ -201,6 +201,21 @@ bool LuaExec::feedbyNeeded( lua_State *L ){
 		}
 	}
 
+	for(auto &i : this->needed_minmax){
+		try {
+			class NamedMinMax &mm = config.NamedMinMaxList.at( i );
+			class NamedMinMax **minmax = (class NamedMinMax **)lua_newuserdata(L, sizeof(class NamedMinMax *));
+			assert(minmax);
+
+			*minmax = &mm;
+			luaL_getmetatable(L, "MajordomeNamedMinMax");
+			lua_setmetatable(L, -2);
+
+			lua_setglobal(L, i.c_str());
+		} catch( std::out_of_range &e ){	// Not found 
+			return false;
+		}
+	}
 	return true;
 }
 
@@ -292,6 +307,17 @@ bool LuaExec::readConfigDirective( std::string &l ){
 			SelLog->Log('F', "\t\tminmax '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
+	} else if(!!(arg = striKWcmp( l, "-->> need_namedminmax=" ))){
+		Config::NamedMinMaxElements::iterator nminmax;
+		if( (nminmax = config.NamedMinMaxList.find(arg)) != config.NamedMinMaxList.end()){
+			if(verbose)
+				SelLog->Log('C', "\t\tAdded needed namedminmax '%s'", arg.c_str());
+			this->addNeededMinMax( arg );
+			return true;
+		} else {
+			SelLog->Log('F', "\t\tnamedminmax '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
 	}
 
 	return Object::readConfigDirective(l);
@@ -361,7 +387,7 @@ bool LuaExec::execAsync( const char *name, const char *topic, const char *payloa
 	return true;
 }
 
-bool LuaExec::execSync( const char *name, const char *topic, const char *payload, bool tracker, enum boolRetCode *rc ){
+bool LuaExec::execSync( const char *name, const char *topic, const char *payload, bool tracker, enum boolRetCode *rc, std::string *rs ){
 	lua_State *L = luaL_newstate();
 	if( !L ){
 		SelLog->Log('E', "Unable to create a new Lua State for '%s' from '%s'", this->getNameC(), this->getWhereC() );
@@ -395,6 +421,12 @@ bool LuaExec::execSync( const char *name, const char *topic, const char *payload
 		*rc = boolRetCode::RCnil;
 		if(lua_isboolean(L, -1))
 			*rc = lua_toboolean(L, -1) ? boolRetCode::RCtrue : boolRetCode::RCfalse;
+	}
+
+	if(rs){
+		*rs = "";
+		if(lua_isstring(L, -1))
+			*rs = lua_tostring(L, -1);
 	}
 
 	lua_close(L);

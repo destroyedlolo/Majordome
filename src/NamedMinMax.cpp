@@ -12,9 +12,9 @@ extern "C" {
 
 #include "Config.h"
 #include "Helpers.h"
-#include "MinMax.h"
+#include "NamedMinMax.h"
 
-MinMax::MinMax( const std::string &fch, std::string &where, std::string &name, lua_State *L ): empty(true){
+NamedMinMax::NamedMinMax( const std::string &fch, std::string &where, std::string &name, lua_State *L ){
 	if(verbose)
 		SelLog->Log('L', "\t'%s'", fch.c_str());
 
@@ -60,7 +60,7 @@ MinMax::MinMax( const std::string &fch, std::string &where, std::string &name, l
 				if( (topic = config.TopicsList.find(arg)) != config.TopicsList.end()){
 					if(verbose)
 						SelLog->Log('C', "\t\tAdded to topic '%s'", arg.c_str());
-	 				topic->second.addMinMax( this->getName() );
+	 				topic->second.addNamedMinMax( this->getName() );
 					nameused = true;
 				} else {
 					SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
@@ -88,40 +88,43 @@ MinMax::MinMax( const std::string &fch, std::string &where, std::string &name, l
 		exit(EXIT_FAILURE);
 }
 
-void MinMax::feedState( lua_State *L, const char *name, const char *topic, const char *payload, bool tracker, const char *trkstatus ){
+void NamedMinMax::feedState( lua_State *L, const char *name, const char *topic, const char *payload, bool tracker, const char *trkstatus ){
 	try {
-		class MinMax &mm = config.MinMaxList.at( this->getNameC() );
-		class MinMax **minmax = (class MinMax **)lua_newuserdata(L, sizeof(class MinMax *));
+		class NamedMinMax &mm = config.NamedMinMaxList.at( this->getNameC() );
+		class NamedMinMax **minmax = (class NamedMinMax **)lua_newuserdata(L, sizeof(class NamedMinMax *));
 		assert(minmax);
 
 		lua_pushstring( L, name );	// Push the name of the tracker
-		lua_setglobal( L, "MAJORDOME_MINMAX" );
+		lua_setglobal( L, "MAJORDOME_NAMEDMINMAX" );
 
 		*minmax = &mm;
-		luaL_getmetatable(L, "MajordomeMinMax");
+		luaL_getmetatable(L, "MajordomeNamedMinMax");
 		lua_setmetatable(L, -2);
 		lua_setglobal( L, "MAJORDOME_Myself" );
 	} catch( std::out_of_range &e ){	// Not found 
-		SelLog->Log('F', "Can't find minmax '%s'", this->getNameC() );
+		SelLog->Log('F', "Can't find namedminmax '%s'", this->getNameC() );
 		exit(EXIT_FAILURE);
 	}
 
 	LuaExec::feedState(L, name, topic, payload, tracker, trkstatus);
 }
 
-bool MinMax::exec( const char *name, const char *topic, const char *payload ){
+bool NamedMinMax::exec( const char *name, const char *topic, const char *payload ){
 	if( !this->isEnabled() ){
 		if(verbose)
-			SelLog->Log('T', "MinMax'%s' from '%s' is disabled", this->getNameC(), this->getWhereC() );
+			SelLog->Log('T', "NamedMinMax'%s' from '%s' is disabled", this->getNameC(), this->getWhereC() );
 		return false;
 	}
 
 	LuaExec::boolRetCode rc;
-	bool r = this->LuaExec::execSync(name, topic, payload, true, &rc);
+	std::string rs;
+	bool r = this->LuaExec::execSync(name, topic, payload, true, &rc, &rs);
 
+printf("**** %s\n", (rs.empty() ? "vide":rs.c_str()));
+#if 0
 	if( rc != LuaExec::boolRetCode::RCfalse ){
 		if(debug)
-			SelLog->Log('T', "MinMax '%s' from '%s' is accepting \"%s\"", this->getNameC(), this->getWhereC(), payload );
+			SelLog->Log('T', "NamedMinMax '%s' from '%s' is accepting \"%s\"", this->getNameC(), this->getWhereC(), payload );
 
 		double val = atof(payload);
 		if(this->empty){
@@ -139,8 +142,9 @@ bool MinMax::exec( const char *name, const char *topic, const char *payload ){
 		}
 
 		if(debug)
-			SelLog->Log('T', "MinMax '%s' min:%.0f max:%.0f", this->getNameC(), this->min, this->max);
+			SelLog->Log('T', "NamedMinMax '%s' min:%.0f max:%.0f", this->getNameC(), this->min, this->max);
 	}
+#endif
 
 	return r;
 }
@@ -149,6 +153,7 @@ bool MinMax::exec( const char *name, const char *topic, const char *payload ){
 	 * Lua exposed functions
 	 *****/
 
+#if 0
 static class MinMax *checkMajordomeMinMax(lua_State *L){
 	class MinMax **r = (class MinMax **)SelLua->testudata(L, 1, "MajordomeMinMax");
 	luaL_argcheck(L, r != NULL, 1, "'MajordomeMinMax' expected");
@@ -259,8 +264,11 @@ static const struct luaL_Reg MajMinMaxM [] = {
 	{"Reset", mmm_Clear},
 	{NULL, NULL}
 };
+#endif
 
-void MinMax::initLuaObject( lua_State *L ){
+void NamedMinMax::initLuaObject( lua_State *L ){
+#if 0
 	SelLua->objFuncs( L, "MajordomeMinMax", MajMinMaxM );
 	SelLua->libCreateOrAddFuncs( L, "MajordomeMinMax", MajMinMaxLib );
+#endif
 }

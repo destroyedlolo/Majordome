@@ -1,0 +1,36 @@
+-- This is an example of Tracker script
+-- In the header of the script (comment bloc at the very beginning of
+-- the script), each line starting with -->> are Majordome's commands.
+-- Consequently, '--->>' are commented out commands.
+--
+-- Name of this script
+-- if not set, takes the filename
+-- Notez-bien : if used, this directive MUST be defined before any
+-- listen directive.
+--->> name=Toto
+--
+-- remove some trace
+-- This option is useful to avoid logging of very noisy topics
+-->> quiet
+--
+-- Disable this trigger
+--->> disabled
+--
+-- Indicate MQTT topic(s) to listen to
+-- More than one "listen" can be present
+-- In such case, it's wise for this function to return different name.
+-->> listen=ConsPower
+-->> listen=ProdPower
+--
+-->> need_topic=ConsPower
+-->> need_topic=ProdPower
+
+-- The function bellow has to return the name of the figure
+-- (or nothing if the data has to be rejected)
+
+-- Determine which data is it
+if MAJORDOME_TOPIC == ConsPower:getTopic() then
+	return "Consumer"
+elseif MAJORDOME_TOPIC == ProdPower:getTopic() then
+	return "Producer"
+end

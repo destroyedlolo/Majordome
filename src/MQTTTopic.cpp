@@ -225,6 +225,23 @@ void MQTTTopic::execMinMax( Config &cfg, const char *name, const char *topic, co
 	}
 }
 
+void MQTTTopic::execNamedMinMax( Config &cfg, const char *name, const char *topic, const char *payload ){
+#ifdef DEBUG
+	if(debug && !this->isQuiet())
+		SelLog->Log('D', "execNamedMinMax() : %d to run", this->minmaxes.size() );
+#endif
+
+	for( StringVector::iterator trk = this->namedminmaxes.begin(); trk != this->namedminmaxes.end(); trk++){
+		try {
+			NamedMinMax &namedminmax = cfg.findNamedMinMax( *trk );
+			namedminmax.exec( name, topic, payload );
+		} catch (...) {
+			SelLog->Log('F', "Internal error : can't find NamedMinMax \"%s\"", (*trk).c_str() );
+			exit(EXIT_FAILURE);
+		}
+	}
+}
+
 	/*****
 	 * Lua exposed functions
 	 *****/
