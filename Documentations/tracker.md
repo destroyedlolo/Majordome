@@ -23,7 +23,7 @@ Status are :
 	 ||
 	Status 'WAITING' : the racker is reseted.
 
-The status can **MajordomeTracker** API or be changed by the tracker's script return code.
+The status can be set using **MajordomeTracker** API or be changed by the tracker's script return code.
 * Return code = **true** - decreases *howmany* counter and propotes status to *DONE* if the counter is over (by default, this counter is set to **1** meaning the 1st positive result is promoted to *DONE*).
 * Return code = **false** - keep in *CHECKING* status but the howmany counter is reset
 * no return code - keep the tracker as it is and *howmany* remains untouched
