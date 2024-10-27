@@ -116,35 +116,33 @@ bool NamedMinMax::exec( const char *name, const char *topic, const char *payload
 		return false;
 	}
 
-	LuaExec::boolRetCode rc;
 	std::string rs;
-	bool r = this->LuaExec::execSync(name, topic, payload, true, &rc, &rs);
+	bool r = this->LuaExec::execSync(name, topic, payload, true, NULL, &rs);
 
-printf("**** %s\n", (rs.empty() ? "vide":rs.c_str()));
-#if 0
-	if( rc != LuaExec::boolRetCode::RCfalse ){
+	if(!rs.empty()){
 		if(debug)
-			SelLog->Log('T', "NamedMinMax '%s' from '%s' is accepting \"%s\"", this->getNameC(), this->getWhereC(), payload );
+			SelLog->Log('T', "NamedMinMaxi '%s'[%s] from '%s' is accepting \"%s\"", this->getNameC(), rs.c_str(), this->getWhereC(), payload );
 
 		double val = atof(payload);
-		if(this->empty){
-			this->empty = false;
-			this->nbre = 1;
-			this->min = this->max = this->sum = val; 
-		} else {
-			if(val < this->min)
-				this->min = val;
-			if(val > this->max)
-				this->max = val;
+		auto it = this->empty.find(rs);
 
-			this->sum += val;
-			this->nbre++;
+		if(this->empty[rs] || it == this->empty.end()){
+			this->empty[rs] = false;
+			this->nbre[rs] = 1;
+			this->min[rs] = this->max[rs] = this->sum[rs] = val; 
+		} else {
+			if(val < this->min[rs])
+				this->min[rs] = val;
+			if(val > this->max[rs])
+				this->max[rs] = val;
+
+			this->sum[rs] += val;
+			this->nbre[rs]++;
 		}
 
 		if(debug)
-			SelLog->Log('T', "NamedMinMax '%s' min:%.0f max:%.0f", this->getNameC(), this->min, this->max);
+			SelLog->Log('T', "NamedMinMax '%s'[%s] min:%.0f max:%.0f", this->getNameC(), rs.c_str(), this->min[rs], this->max[rs]);
 	}
-#endif
 
 	return r;
 }
