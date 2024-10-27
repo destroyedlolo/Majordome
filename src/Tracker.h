@@ -46,7 +46,7 @@ public:
 	void resetCounter(void){ this->hm_counter = this->howmany; }
 
 	/* Overloading of LuaExec's in order to initialise Myself object */
-	virtual void feedState( lua_State *L, const char *name, const char *topic=NULL, const char *payload=NULL, bool tracker=false, const char *trkstatus=NULL );
+	virtual void feedState( lua_State *L, const char *name, const char *topic=NULL, const char *payload=NULL, bool tracker=false, const char *trkstatus=NULL, bool minmax=false );
 
 	/* Launch lua script if applicable
 	 * -> name : name of the topic/timer that triggers this task

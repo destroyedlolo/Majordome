@@ -45,6 +45,10 @@ public:
 
 	bool isEmpty(){ return this->empty; }
 	void Clear(){ this->empty = true; }
+
+	/* Overloading of LuaExec's in order to initialise Myself object */
+	virtual void feedState( lua_State *L, const char *name, const char *topic=NULL, const char *payload=NULL, bool tracker=false, const char *trkstatus=NULL, bool minmax=false );
+
 };
 
 #endif

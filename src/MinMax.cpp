@@ -87,6 +87,25 @@ MinMax::MinMax( const std::string &fch, std::string &where, std::string &name, l
 		exit(EXIT_FAILURE);
 }
 
+void MinMax::feedState( lua_State *L, const char *name, const char *topic, const char *payload, bool tracker, const char *trkstatus, bool aminmax ){
+
+	try {
+		class MinMax &mm = config.MinMaxList.at( this->getNameC() );
+		class MinMax **minmax = (class MinMax **)lua_newuserdata(L, sizeof(class MinMax *));
+		assert(minmax);
+
+		*minmax = &mm;
+		luaL_getmetatable(L, "MajordomeMinMax");
+		lua_setmetatable(L, -2);
+		lua_setglobal( L, "MAJORDOME_Myself" );
+	} catch( std::out_of_range &e ){	// Not found 
+		SelLog->Log('F', "Can't find minmax '%s'", this->getNameC() );
+		exit(EXIT_FAILURE);
+	}
+
+	LuaExec::feedState(L, name, topic, payload, tracker, trkstatus, aminmax);
+}
+
 bool MinMax::exec( const char *name, const char *topic, const char *payload ){
 	if( !this->isEnabled() ){
 		if(verbose)
@@ -234,6 +253,7 @@ static const struct luaL_Reg MajMinMaxM [] = {
 	{"getSum", mmm_getSum},
 	{"getSamplesNumber", mmm_getSamplesNumber},
 	{"Clear", mmm_Clear},
+	{"Reset", mmm_Clear},
 	{NULL, NULL}
 };
 
