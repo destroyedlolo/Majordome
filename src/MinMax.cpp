@@ -87,12 +87,15 @@ MinMax::MinMax( const std::string &fch, std::string &where, std::string &name, l
 		exit(EXIT_FAILURE);
 }
 
-void MinMax::feedState( lua_State *L, const char *name, const char *topic, const char *payload, bool tracker, const char *trkstatus, bool aminmax ){
+void MinMax::feedState( lua_State *L, const char *name, const char *topic, const char *payload, bool tracker, const char *trkstatus ){
 
 	try {
 		class MinMax &mm = config.MinMaxList.at( this->getNameC() );
 		class MinMax **minmax = (class MinMax **)lua_newuserdata(L, sizeof(class MinMax *));
 		assert(minmax);
+
+		lua_pushstring( L, name );	// Push the name of the tracker
+		lua_setglobal( L, "MAJORDOME_MINMAX" );
 
 		*minmax = &mm;
 		luaL_getmetatable(L, "MajordomeMinMax");
@@ -103,7 +106,7 @@ void MinMax::feedState( lua_State *L, const char *name, const char *topic, const
 		exit(EXIT_FAILURE);
 	}
 
-	LuaExec::feedState(L, name, topic, payload, tracker, trkstatus, aminmax);
+	LuaExec::feedState(L, name, topic, payload, tracker, trkstatus);
 }
 
 bool MinMax::exec( const char *name, const char *topic, const char *payload ){

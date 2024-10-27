@@ -170,7 +170,7 @@ void Tracker::publishstatus( void ){
 	}
 }
 
-void Tracker::feedState( lua_State *L, const char *name, const char *topic, const char *payload, bool tracker, const char *trkstatus, bool ){
+void Tracker::feedState( lua_State *L, const char *name, const char *topic, const char *payload, bool tracker, const char *trkstatus ){
 
 	try {
 		class Tracker &trk = config.TrackersList.at( this->getNameC() );

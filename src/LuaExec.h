@@ -60,7 +60,7 @@ public:
 	 *
 	 *  May be overloaded if some local objects have to be created
 	 */
-	virtual void feedState( lua_State *L, const char *name, const char *topic=NULL, const char *payload=NULL, bool tracker=false, const char *trkstatus=NULL, bool minmax=false );
+	virtual void feedState( lua_State *L, const char *name, const char *topic=NULL, const char *payload=NULL, bool tracker=false, const char *trkstatus=NULL );
 
 	/* Launch a task in a slave thread
 	 * -> same as feedState()
