@@ -153,10 +153,9 @@ printf("**** %s\n", (rs.empty() ? "vide":rs.c_str()));
 	 * Lua exposed functions
 	 *****/
 
-#if 0
-static class MinMax *checkMajordomeMinMax(lua_State *L){
-	class MinMax **r = (class MinMax **)SelLua->testudata(L, 1, "MajordomeMinMax");
-	luaL_argcheck(L, r != NULL, 1, "'MajordomeMinMax' expected");
+static class NamedMinMax *checkMajordomeNamedMinMax(lua_State *L){
+	class NamedMinMax **r = (class NamedMinMax **)SelLua->testudata(L, 1, "MajordomeNamedMinMax");
+	luaL_argcheck(L, r != NULL, 1, "'MajordomeNamedMinMax' expected");
 	return *r;
 }
 
@@ -164,12 +163,12 @@ static int mmm_find(lua_State *L){
 	const char *name = luaL_checkstring(L, 1);
 
 	try {
-		class MinMax &mm = config.MinMaxList.at( name );
-		class MinMax **minmax = (class MinMax **)lua_newuserdata(L, sizeof(class MinMax *));
+		class NamedMinMax &mm = config.NamedMinMaxList.at( name );
+		class NamedMinMax **minmax = (class NamedMinMax **)lua_newuserdata(L, sizeof(class NamedMinMax *));
 		assert(minmax);
 
 		*minmax = &mm;
-		luaL_getmetatable(L, "MajordomeMinMax");
+		luaL_getmetatable(L, "MajordomeNamedMinMax");
 		lua_setmetatable(L, -2);
 
 		return 1;
@@ -178,11 +177,12 @@ static int mmm_find(lua_State *L){
 	}
 }
 
-static const struct luaL_Reg MajMinMaxLib [] = {
+static const struct luaL_Reg MajNamedMinMaxLib [] = {
 	{"find", mmm_find},
 	{NULL, NULL}
 };
 
+#if 0
 static int mmm_getContainer(lua_State *L){
 	class MinMax *minmax= checkMajordomeMinMax(L);
 	lua_pushstring( L, minmax->getWhereC() );
@@ -249,7 +249,7 @@ static int mmm_Clear( lua_State *L ){
 	return 0;
 }
 
-static const struct luaL_Reg MajMinMaxM [] = {
+static const struct luaL_Reg MajNamedMinMaxM [] = {
 	{"getContainer", mmm_getContainer},
  	{"getName", mmm_getName},
 	{"isEnabled", mmm_isEnabled},
@@ -268,7 +268,7 @@ static const struct luaL_Reg MajMinMaxM [] = {
 
 void NamedMinMax::initLuaObject( lua_State *L ){
 #if 0
-	SelLua->objFuncs( L, "MajordomeMinMax", MajMinMaxM );
-	SelLua->libCreateOrAddFuncs( L, "MajordomeMinMax", MajMinMaxLib );
+	SelLua->objFuncs( L, "MajordomeNamedMinMax", MajNamedMinMaxM );
 #endif
+	SelLua->libCreateOrAddFuncs( L, "MajordomeNamedMinMax", MajNamedMinMaxLib );
 }
