@@ -40,7 +40,10 @@ public:
 	lua_Number getMin(){ return this->min; }
 	lua_Number getMax(){ return this->max; }
 	lua_Number getAverage(){ return(this->empty ? INFINITY : this->sum/this->nbre); }
+	lua_Number getSum(){ return this->sum; }
+	lua_Number getSamplesNumber(){ return this->nbre; }
 
+	bool isEmpty(){ return this->empty; }
 	void Clear(){ this->empty = true; }
 };
 
