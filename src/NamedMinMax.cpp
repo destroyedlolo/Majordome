@@ -242,14 +242,17 @@ static int mmm_getSamplesNumber( lua_State *L ){
 	lua_pushnumber( L, minmax->getSamplesNumber() );
 	return 1;
 }
+#endif
 
 static int mmm_Clear( lua_State *L ){
-	class MinMax *minmax= checkMajordomeMinMax(L);
-	minmax->Clear();
+	class NamedMinMax *minmax= checkMajordomeNamedMinMax(L);
+	const char *n = luaL_checkstring(L, 2);
+	minmax->Clear(n);
 	return 0;
 }
 
 static const struct luaL_Reg MajNamedMinMaxM [] = {
+#if 0
 	{"getContainer", mmm_getContainer},
  	{"getName", mmm_getName},
 	{"isEnabled", mmm_isEnabled},
@@ -260,15 +263,13 @@ static const struct luaL_Reg MajNamedMinMaxM [] = {
 	{"getAverage", mmm_getAverage},
 	{"getSum", mmm_getSum},
 	{"getSamplesNumber", mmm_getSamplesNumber},
+#endif
 	{"Clear", mmm_Clear},
 	{"Reset", mmm_Clear},
 	{NULL, NULL}
 };
-#endif
 
 void NamedMinMax::initLuaObject( lua_State *L ){
-#if 0
 	SelLua->objFuncs( L, "MajordomeNamedMinMax", MajNamedMinMaxM );
-#endif
 	SelLua->libCreateOrAddFuncs( L, "MajordomeNamedMinMax", MajNamedMinMaxLib );
 }
