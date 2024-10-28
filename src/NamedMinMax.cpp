@@ -210,32 +210,34 @@ static int mmm_disable( lua_State *L ){
 	return 0;
 }
 
-#if 0
 static int mmm_getMin( lua_State *L ){
-	class MinMax *minmax= checkMajordomeMinMax(L);
-	lua_pushnumber( L, minmax->getMin() );
+	class NamedMinMax *minmax= checkMajordomeNamedMinMax(L);
+	const char *n = luaL_checkstring(L, 2);
+	lua_pushnumber( L, minmax->getMin(n) );
 	return 1;
 }
 
 static int mmm_getMax( lua_State *L ){
-	class MinMax *minmax= checkMajordomeMinMax(L);
-	lua_pushnumber( L, minmax->getMax() );
+	class NamedMinMax *minmax= checkMajordomeNamedMinMax(L);
+	const char *n = luaL_checkstring(L, 2);
+	lua_pushnumber( L, minmax->getMax(n) );
 	return 1;
 }
 
 static int mmm_getAverage( lua_State *L ){
-	class MinMax *minmax= checkMajordomeMinMax(L);
-	lua_pushnumber( L, minmax->getAverage() );
+	class NamedMinMax *minmax= checkMajordomeNamedMinMax(L);
+	const char *n = luaL_checkstring(L, 2);
+	lua_pushnumber( L, minmax->getAverage(n) );
 	return 1;
 }
 
 static int mmm_getSum( lua_State *L ){
-	class MinMax *minmax= checkMajordomeMinMax(L);
-	lua_pushnumber( L, minmax->getSum() );
+	class NamedMinMax *minmax= checkMajordomeNamedMinMax(L);
+	const char *n = luaL_checkstring(L, 2);
+	lua_pushnumber( L, minmax->getSum(n) );
 	return 1;
 }
 
-#endif
 static int mmm_getSamplesNumber( lua_State *L ){
 	class NamedMinMax *minmax= checkMajordomeNamedMinMax(L);
 	const char *n = luaL_checkstring(L, 2);
@@ -256,12 +258,10 @@ static const struct luaL_Reg MajNamedMinMaxM [] = {
 	{"isEnabled", mmm_isEnabled},
 	{"Enable", mmm_enabled},
 	{"Disable", mmm_disable},
-#if 0
 	{"getMin", mmm_getMin},
 	{"getMax", mmm_getMax},
 	{"getAverage", mmm_getAverage},
 	{"getSum", mmm_getSum},
-#endif
 	{"getSamplesNumber", mmm_getSamplesNumber},
 	{"Clear", mmm_Clear},
 	{"Reset", mmm_Clear},
