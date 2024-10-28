@@ -25,12 +25,19 @@
 --->> disabled
 --
 
--- Get MinMax values
 print ""
-print( "Number of samples :", TestNamedMinMax:getSamplesNumber("Consumer") )
-print( "Min value :", TestNamedMinMax:getMin("Consumer") )
-print( "Max value :", TestNamedMinMax:getMax("Consumer") )
-print( "Max Average :", TestNamedMinMax:getAverage("Consumer") )
 
--- Clear storage : restart a new series
-TestNamedMinMax:Clear("Consumer")
+--	Iterate against stored values
+for _,v in ipairs( table.pack(TestNamedMinMax:FiguresNames()) ) do
+
+	print(v)
+	print "---------"
+
+	print( "Number of samples :", TestNamedMinMax:getSamplesNumber(v) )
+	print( "Min value :", TestNamedMinMax:getMin(v) )
+	print( "Max value :", TestNamedMinMax:getMax(v) )
+	print( "Max Average :", TestNamedMinMax:getAverage(v) )
+
+	-- Clear storage : restart a new series
+	TestNamedMinMax:Clear(v)
+end

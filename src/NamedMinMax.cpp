@@ -252,6 +252,25 @@ static int mmm_Clear( lua_State *L ){
 	return 0;
 }
 
+static int mmm_FiguresNames( lua_State *L ){
+	/* Instead of using Lua's iterator which will lead to race issue,
+	 * We're returning here the list of keys. After all, we are not expecting
+	 * to store zillions of keys.
+	 */
+	class NamedMinMax *minmax= checkMajordomeNamedMinMax(L);
+
+	if(minmax->empty.empty())
+		return 0;
+
+	int nbre = 0;
+	for(auto & it: minmax->empty){
+		nbre++;
+		lua_pushstring( L, it.first.c_str() );
+	}
+
+	return nbre;
+}
+
 static const struct luaL_Reg MajNamedMinMaxM [] = {
 	{"getContainer", mmm_getContainer},
  	{"getName", mmm_getName},
@@ -265,6 +284,7 @@ static const struct luaL_Reg MajNamedMinMaxM [] = {
 	{"getSamplesNumber", mmm_getSamplesNumber},
 	{"Clear", mmm_Clear},
 	{"Reset", mmm_Clear},
+	{"FiguresNames", mmm_FiguresNames},
 	{NULL, NULL}
 };
 

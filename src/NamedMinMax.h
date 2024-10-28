@@ -14,6 +14,7 @@
 #include <math.h>
 
 class NamedMinMax : public Event, public LuaExec {
+public:	// Made public only to let Lua enumerates
 	std::unordered_map<std::string, bool> empty;		// No value yet
 	std::unordered_map<std::string, lua_Number> min,max;
 	std::unordered_map<std::string, size_t> nbre;	// Number of handled values
