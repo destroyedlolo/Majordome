@@ -27,10 +27,10 @@
 
 -- Get MinMax values
 print ""
-print( "Number of samples :", TestMinMax:getSamplesNumber() )
-print( "Min value :", TestMinMax:getMin() )
-print( "Max value :", TestMinMax:getMax() )
-print( "Max Average :", TestMinMax:getAverage() )
+print( "Number of samples :", TestNamedMinMax:getSamplesNumber("Consumer") )
+print( "Min value :", TestNamedMinMax:getMin("Consumer") )
+print( "Max value :", TestNamedMinMax:getMax("Consumer") )
+print( "Max Average :", TestNamedMinMax:getAverage("Consumer") )
 
 -- Clear storage : restart a new series
-TestMinMax:Clear()
+TestNamedMinMax:Clear("Consumer")

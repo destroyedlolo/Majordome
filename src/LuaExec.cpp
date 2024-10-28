@@ -201,7 +201,7 @@ bool LuaExec::feedbyNeeded( lua_State *L ){
 		}
 	}
 
-	for(auto &i : this->needed_minmax){
+	for(auto &i : this->needed_namedminmax){
 		try {
 			class NamedMinMax &mm = config.NamedMinMaxList.at( i );
 			class NamedMinMax **minmax = (class NamedMinMax **)lua_newuserdata(L, sizeof(class NamedMinMax *));
@@ -312,7 +312,7 @@ bool LuaExec::readConfigDirective( std::string &l ){
 		if( (nminmax = config.NamedMinMaxList.find(arg)) != config.NamedMinMaxList.end()){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded needed namedminmax '%s'", arg.c_str());
-			this->addNeededMinMax( arg );
+			this->addNeededNamedMinMax( arg );
 			return true;
 		} else {
 			SelLog->Log('F', "\t\tnamedminmax '%s' is not (yet ?) defined", arg.c_str());
