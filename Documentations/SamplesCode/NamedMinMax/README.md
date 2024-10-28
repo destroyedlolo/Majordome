@@ -9,7 +9,8 @@ Max Average :    1640.0
 ---
 
 * `ConsPower.topic` : data source
-* `TestMinMax.minmax` : statistic generator for this example
+* `ProdPower.topic` : data source
+* `TestNamedMinMax.minmax` : statistic generator for this example
 * `10s.timer` : Timeframe to generate statistics on
 * `Collector.lua` : display MinMax's statistics
 
