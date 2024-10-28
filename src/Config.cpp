@@ -179,3 +179,12 @@ MinMax &Config::findMinMax( std::string &n ) {
 	else
 		return (*obj).second;
 }
+
+NamedMinMax &Config::findNamedMinMax( std::string &n ) {
+	Config::NamedMinMaxElements::iterator obj;
+
+	if( (obj = this->NamedMinMaxList.find( n )) == this->NamedMinMaxList.end() )
+		throw 1;
+	else
+		return (*obj).second;
+}

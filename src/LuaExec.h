@@ -25,6 +25,7 @@ public:
 	StringVector required_topic;
 	StringVector needed_task;
 	StringVector needed_minmax;
+	StringVector needed_namedminmax;
 
 protected:
 	void addNeededRendezVous( std::string t ){ this->needed_rendezvous.Add(t); }
@@ -34,6 +35,7 @@ protected:
 	void addRequiredTopic( std::string t ){ this->required_topic.Add(t); }
 	void addNeededTask( std::string t ){ this->needed_task.Add(t); }
 	void addNeededMinMax( std::string t ){ this->needed_minmax.Add(t); }
+	void addNeededNamedMinMax( std::string t ){ this->needed_namedminmax.Add(t); }
 
 	bool readConfigDirective( std::string &l );
 
@@ -60,7 +62,7 @@ public:
 	 *
 	 *  May be overloaded if some local objects have to be created
 	 */
-	virtual void feedState( lua_State *L, const char *name, const char *topic=NULL, const char *payload=NULL, bool tracker=false, const char *trkstatus=NULL, bool minmax=false );
+	virtual void feedState( lua_State *L, const char *name, const char *topic=NULL, const char *payload=NULL, bool tracker=false, const char *trkstatus=NULL );
 
 	/* Launch a task in a slave thread
 	 * -> same as feedState()
@@ -71,9 +73,10 @@ public:
 	/* Execute a task in the same thread
 	 * -> same as feedState()
 	 * -> return code from the function (NULL = Ignored)
+	 * -> return return string (NULL = Ignored)
 	 * <- true if it has been executed, false otherwise
 	 */
-	bool execSync( const char *name, const char *topic=NULL, const char *payload=NULL, bool tracker=false, enum boolRetCode *rc=NULL );
+	bool execSync( const char *name, const char *topic=NULL, const char *payload=NULL, bool tracker=false, enum boolRetCode *rc=NULL, std::string *rs=NULL );
 
 	/* Tell when a task is finished
 	 * (mostly for tasks with "once" parameter)

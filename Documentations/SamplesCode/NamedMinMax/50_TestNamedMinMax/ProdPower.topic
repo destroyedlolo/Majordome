@@ -1,0 +1,4 @@
+# Retrieve power consumed
+
+topic=TeleInfo/LinkyProduction/values/SINSTI
+#store
