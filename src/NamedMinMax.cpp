@@ -180,37 +180,37 @@ static const struct luaL_Reg MajNamedMinMaxLib [] = {
 	{NULL, NULL}
 };
 
-#if 0
 static int mmm_getContainer(lua_State *L){
-	class MinMax *minmax= checkMajordomeMinMax(L);
+	class NamedMinMax *minmax= checkMajordomeNamedMinMax(L);
 	lua_pushstring( L, minmax->getWhereC() );
 	return 1;
 }
 
 static int mmm_getName(lua_State *L){
-	class MinMax *minmax= checkMajordomeMinMax(L);
+	class NamedMinMax *minmax= checkMajordomeNamedMinMax(L);
 	lua_pushstring( L, minmax->getName().c_str() );
 	return 1;
 }
 
 static int mmm_isEnabled( lua_State *L ){
-	class MinMax *minmax= checkMajordomeMinMax(L);
+	class NamedMinMax *minmax= checkMajordomeNamedMinMax(L);
 	lua_pushboolean( L, minmax->isEnabled() );
 	return 1;
 }
 
 static int mmm_enabled( lua_State *L ){
-	class MinMax *minmax= checkMajordomeMinMax(L);
+	class NamedMinMax *minmax= checkMajordomeNamedMinMax(L);
 	minmax->enable();
 	return 0;
 }
 
 static int mmm_disable( lua_State *L ){
-	class MinMax *minmax= checkMajordomeMinMax(L);
+	class NamedMinMax *minmax= checkMajordomeNamedMinMax(L);
 	minmax->disable();
 	return 0;
 }
 
+#if 0
 static int mmm_getMin( lua_State *L ){
 	class MinMax *minmax= checkMajordomeMinMax(L);
 	lua_pushnumber( L, minmax->getMin() );
@@ -251,12 +251,12 @@ static int mmm_Clear( lua_State *L ){
 }
 
 static const struct luaL_Reg MajNamedMinMaxM [] = {
-#if 0
 	{"getContainer", mmm_getContainer},
  	{"getName", mmm_getName},
 	{"isEnabled", mmm_isEnabled},
 	{"Enable", mmm_enabled},
 	{"Disable", mmm_disable},
+#if 0
 	{"getMin", mmm_getMin},
 	{"getMax", mmm_getMax},
 	{"getAverage", mmm_getAverage},
