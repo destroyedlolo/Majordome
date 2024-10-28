@@ -3,7 +3,7 @@ MinMax takes incoming data from a data source (a topic), and generates some stat
 
 ## Syntax
 
-Trackers are basically **[Lua tasks](Task(lua).md)** and are following the same syntax.
+MinMax are basically **[Lua tasks](Task(lua).md)** and are following the same syntax.
 
 In the header of the script (comment block at the very beginning of the script), each line starting with `-->>` are Majordome's commands.<br>
 Consequently, `--->>` are commented out commands (notice the 3 dashes).
