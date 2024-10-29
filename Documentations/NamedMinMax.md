@@ -29,6 +29,12 @@ None
 - **MAJORDOME_NAMEDMINMAX** - NamedMinMax's name
 
 ## at Lua side
+### Lua script
+The script is expected to return the name of the data to be store. 
+Consequently, a single NamedMinMax can process several topic as shown in the provided example.
+
+In addition, it can return a value which will replace the received one.
+
 ### Exposed objects
 Statistics sequencing and retrieving are done through the **MajordomeNamedMinMax**'s API :
 - `getContainer()` returns the container (directory) in which this NamedMinMax has been defined

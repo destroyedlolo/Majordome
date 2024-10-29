@@ -117,13 +117,17 @@ bool NamedMinMax::exec( const char *name, const char *topic, const char *payload
 	}
 
 	std::string rs;
-	bool r = this->LuaExec::execSync(name, topic, payload, true, NULL, &rs);
+	lua_Number ret;
+	bool r = this->LuaExec::execSync(name, topic, payload, true, NULL, &rs, &ret);
 
 	if(!rs.empty()){
 		if(debug)
 			SelLog->Log('T', "NamedMinMaxi '%s'[%s] from '%s' is accepting \"%s\"", this->getNameC(), rs.c_str(), this->getWhereC(), payload );
 
 		double val = atof(payload);
+		if(ret == ret)	// Lua forced the value
+			val = ret;
+
 		auto it = this->empty.find(rs);
 
 		if(this->empty[rs] || it == this->empty.end()){

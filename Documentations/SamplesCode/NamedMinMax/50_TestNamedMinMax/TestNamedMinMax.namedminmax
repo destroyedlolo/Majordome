@@ -27,10 +27,11 @@
 
 -- The function bellow has to return the name of the figure
 -- (or nothing if the data has to be rejected)
+-- As a second (optional) argument, it can force the value
 
 -- Determine which data is it
 if MAJORDOME_TOPIC == ConsPower:getTopic() then
-	return "Consumer"
+	return "Consumer", MAJORDOME_PAYLOAD-1	-- The value is forced
 elseif MAJORDOME_TOPIC == ProdPower:getTopic() then
 	return "Producer"
 end

@@ -27,7 +27,8 @@
  *	12/05/2024 - v4.00 - LF - Migrate to SeleneV7
  *	26/10/2024 - V4.01 - LF - Add MinMax
  *	27/10/2024 - V4.02 - LF - Add NamedMinMax
+ *	29/10/2024 - V4.03 - LF - NamedMinMax's Lua can return a value
  */
 
-#define VERSION 4.0200
+#define VERSION 4.0300
 #define COPYRIGHT "Majordome (c) L.Faillie 2018-2024"

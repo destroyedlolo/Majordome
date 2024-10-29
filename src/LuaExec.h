@@ -73,10 +73,11 @@ public:
 	/* Execute a task in the same thread
 	 * -> same as feedState()
 	 * -> return code from the function (NULL = Ignored)
-	 * -> return return string (NULL = Ignored)
+	 * -> return string if returned (NULL = Ignored)
+	 * -> return number if returned (NULL = Ignored) :  must have a string before
 	 * <- true if it has been executed, false otherwise
 	 */
-	bool execSync( const char *name, const char *topic=NULL, const char *payload=NULL, bool tracker=false, enum boolRetCode *rc=NULL, std::string *rs=NULL );
+	bool execSync( const char *name, const char *topic=NULL, const char *payload=NULL, bool tracker=false, enum boolRetCode *rc=NULL, std::string *rs=NULL, lua_Number *n=NULL );
 
 	/* Tell when a task is finished
 	 * (mostly for tasks with "once" parameter)
