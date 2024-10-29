@@ -387,7 +387,7 @@ bool LuaExec::execAsync( const char *name, const char *topic, const char *payloa
 	return true;
 }
 
-bool LuaExec::execSync( const char *name, const char *topic, const char *payload, bool tracker, enum boolRetCode *rc, std::string *rs ){
+bool LuaExec::execSync( const char *name, const char *topic, const char *payload, bool tracker, enum boolRetCode *rc, std::string *rs, lua_Number *retn ){
 	lua_State *L = luaL_newstate();
 	if( !L ){
 		SelLog->Log('E', "Unable to create a new Lua State for '%s' from '%s'", this->getNameC(), this->getWhereC() );
@@ -414,19 +414,28 @@ bool LuaExec::execSync( const char *name, const char *topic, const char *payload
 	if(verbose && !this->isQuiet())
 		SelLog->Log('T', "Sync running Task '%s' from '%s'", this->getNameC(), this->getWhereC() );
 
-	if(lua_pcall( L, 0, 1, 0))
+	if(lua_pcall( L, 0, 2, 0))
 		SelLog->Log('E', "Can't execute task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), lua_tostring(L, -1));
 
+		/* -1 : numeric value if provided
+		 * -2 : string value or RC
+		 */
 	if(rc){
 		*rc = boolRetCode::RCnil;
-		if(lua_isboolean(L, -1))
-			*rc = lua_toboolean(L, -1) ? boolRetCode::RCtrue : boolRetCode::RCfalse;
+		if(lua_isboolean(L, -2))
+			*rc = lua_toboolean(L, -2) ? boolRetCode::RCtrue : boolRetCode::RCfalse;
 	}
 
 	if(rs){
 		*rs = "";
-		if(lua_isstring(L, -1))
-			*rs = lua_tostring(L, -1);
+		if(lua_isstring(L, -2))
+			*rs = lua_tostring(L, -2);
+	}
+
+	if(retn){
+		*retn = NAN;
+		if(lua_isnumber(L, -1))
+			*retn = lua_tonumber(L, -1);
 	}
 
 	lua_close(L);
