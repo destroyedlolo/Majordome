@@ -30,5 +30,5 @@
  *	29/10/2024 - V4.03 - LF - NamedMinMax's Lua can return a value
  */
 
-#define VERSION 4.0300
+#define VERSION 4.0301
 #define COPYRIGHT "Majordome (c) L.Faillie 2018-2024"

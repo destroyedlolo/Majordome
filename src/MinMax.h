@@ -37,11 +37,11 @@ public:
 	static void initLuaObject( lua_State *L );
 
 		/* Accessor */
-	lua_Number getMin(){ return this->min; }
-	lua_Number getMax(){ return this->max; }
+	lua_Number getMin(){ return(this->empty ? 0 : this->min); }
+	lua_Number getMax(){ return(this->empty ? 0 : this->max); }
 	lua_Number getAverage(){ return(this->empty ? INFINITY : this->sum/this->nbre); }
-	lua_Number getSum(){ return this->sum; }
-	lua_Number getSamplesNumber(){ return this->nbre; }
+	lua_Number getSum(){ return(this->empty ? 0 : this->sum); }
+	lua_Number getSamplesNumber(){return(this->empty ? 0 :  this->nbre); }
 
 	bool isEmpty(){ return this->empty; }
 	void Clear(){ this->empty = true; }
