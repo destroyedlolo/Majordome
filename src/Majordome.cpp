@@ -21,6 +21,10 @@
 #include "Version.h"
 #include "Config.h"
 
+#ifdef TOILE
+#	include "Toile/ToileVersion.h"
+#endif
+
 #include <iostream>
 #include <fstream>
 
@@ -122,6 +126,11 @@ void threadEnvironment(lua_State *L){
 
 	lua_pushstring( L, COPYRIGHT );	/* Expose copyright to lua side */
 	lua_setglobal( L, "MAJORDOME_COPYRIGHT" );
+
+#ifdef TOILE
+	lua_pushnumber( L, TOILEVERSION );	/* Expose version to lua side */
+	lua_setglobal( L, "TOILE_VERSION" );
+#endif
 
 	lua_pushstring( L, MQTT_ClientID.c_str() );	/* Expose ClientID to lua side */
 	lua_setglobal( L, "MAJORDOME_ClientID" );
@@ -226,7 +235,7 @@ int main(int ac, char **av){
 
 	while((c = getopt(ac, av, "qvVdhrf:t")) != (char)EOF) switch(c){
 	case 'h':
-		fprintf(stderr, "%s (%.04f)\n"
+		fprintf(stderr, "%s (%.04f%s)\n"
 			"A lightweight event based Automation System\n"
 			"%s\n"
 			"Known options are :\n"
@@ -241,7 +250,15 @@ int main(int ac, char **av){
 			"\t-f<file> : read <file> for configuration\n"
 			"\t\t(default is '%s')\n"
 			"\t-t : test configuration file and exit\n",
-			basename(av[0]), VERSION, COPYRIGHT, DEFAULT_CONFIGURATION_FILE
+			basename(av[0]), VERSION,
+#ifdef TOILE
+#define STRIFY_HELPER(s) #s
+#define STRIFY(x) STRIFY_HELPER(x)
+			" - Toile " STRIFY(TOILEVERSION),
+#else
+			"",
+#endif
+			COPYRIGHT, DEFAULT_CONFIGURATION_FILE
 		);
 		exit(EXIT_FAILURE);
 		break;

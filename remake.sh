@@ -4,6 +4,10 @@
 
 # configuration
 
+# If set, compile TOILE extension
+TOILE='-DTOILE'
+
+# Enable debugging messages
 DEBUG='-DDEBUG'
 
 # Environment discovering
@@ -51,12 +55,25 @@ else
 	SELLIB='-l:libSelene.so.2'
 fi
 
-echo
-echo "----------------"
-echo
-
 cd src
 
-LFMakeMaker -v +f=Makefile -cc="g++" --opts="-Wall -O2 ${DEBUG} -lpthread -lpaho-mqtt3c -ldl \
-${LUA} ${LUALIB} \
--I$SELDIR/include -L$SELDIR/lib $SELLIB" *.cpp -t=../Majordome > Makefile
+if [ -Z ${TOILE+x} ]; then
+	echo "Toile : not compiled"
+
+	echo
+	echo "----------------"
+	echo
+
+	LFMakeMaker -v +f=Makefile -cc="g++" --opts="-Wall -O2 ${DEBUG} -lpthread -lpaho-mqtt3c -ldl \
+	${LUA} ${LUALIB} \
+	-I$SELDIR/include -L$SELDIR/lib $SELLIB" *.cpp -t=../Majordome > Makefile
+else
+	echo "Toile : included"
+	echo
+	echo "----------------"
+	echo
+
+	LFMakeMaker -v +f=Makefile -cc="g++" --opts="-Wall -O2 ${DEBUG} ${TOILE} -lpthread -lpaho-mqtt3c -ldl \
+	${LUA} ${LUALIB} \
+	-I$SELDIR/include -L$SELDIR/lib $SELLIB" *.cpp Toile/*.cpp -t=../Majordome > Makefile
+fi
