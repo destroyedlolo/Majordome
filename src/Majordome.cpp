@@ -126,9 +126,14 @@ void threadEnvironment(lua_State *L){
 	lua_pushstring( L, MQTT_ClientID.c_str() );	/* Expose ClientID to lua side */
 	lua_setglobal( L, "MAJORDOME_ClientID" );
 
+	if(verbose){
+		lua_pushinteger( L, 1 );
+		lua_setglobal( L, "MAJORDOME_VERBOSE" );
+	}
+
 #if DEBUG
 	if(debug){
-		lua_pushinteger( L, 1 );	/* Expose ClientID to lua side */
+		lua_pushinteger( L, 1 );
 		lua_setglobal( L, "MAJORDOME_DEBUG" );
 	}
 #endif
