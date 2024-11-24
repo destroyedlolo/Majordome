@@ -265,7 +265,7 @@ int main(int ac, char **av){
 	case 't':
 		configtest = true;
 	case 'v':
-		SelLog->Log('I', "%s v%.04f", basename(av[0]), VERSION);
+		SelLog->Log('I', "%s v%.04f %s", basename(av[0]), VERSION, " - Toile v" STRIFY(TOILEVERSION));
 		verbose = true;
 		quiet = false;
 		break;
