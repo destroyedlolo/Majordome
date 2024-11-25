@@ -164,7 +164,7 @@ void SubConfigDir::sort( void ){
 			int va = objectweight( fileextention( a.c_str() ));
 			int vb = objectweight( fileextention( b.c_str() ));
 
-			return(va < vb);
+			return(va > vb);
 		}
 	);
 }
