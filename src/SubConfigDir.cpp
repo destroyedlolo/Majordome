@@ -12,6 +12,10 @@
 #include "Helpers.h"
 #include "SubConfigDir.h"
 
+#ifdef TOILE
+#	include "Toile/Toile.h"
+#endif
+
 /* Determine object weight based on its file extension 
  * Some space are left for modules extensions (like Toile's)
  */
@@ -27,10 +31,17 @@ static const SubConfigDir::extweight fileext[] = {
 };
 
 static uint8_t objectweight( const char *ext ){
+	uint8_t ret = 0x00;
 	for(SubConfigDir::extweight i : fileext){
 		if(!strcmp(ext, i.ext))
 			return i.weight;
 	}
+
+#if TOILE
+	if((ret = Toile::objectweight(ext)))
+		return ret;
+#endif
+
 	return 0x00;
 }
 
