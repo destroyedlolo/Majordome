@@ -12,26 +12,37 @@
 #include "Helpers.h"
 #include "SubConfigDir.h"
 
+#ifdef TOILE
+#	include "Toile/Toile.h"
+#endif
+
 /* Determine object weight based on its file extension 
- * (reverse ordered by weight)
+ * Some space are left for modules extensions (like Toile's)
  */
-static const char * fileext[] = {
-	".topic",
-	".timer",
-	".rendezvous",
-	".tracker",
-	".minmax",
-	".namedminmax",
-	".lua",
-	".md"
+static const SubConfigDir::extweight fileext[] = {
+	{ ".topic", 0xc0 },
+	{ ".timer", 0xc0 },
+	{ ".rendezvous", 0xc0 },
+	{ ".tracker", 0x80 },
+	{ ".minmax", 0x80 },
+	{ ".namedminmax", 0x80 },
+	{ ".lua", 0x40 },
+	{ ".md", 0x01 }	// ignored, documentation only
 };
 
-static int objectweight( const char *ext ){
-	for(unsigned int i = 0; i<sizeof(fileext)/sizeof(const char *); i++){
-		if(!strcmp(ext, fileext[i]))
-			return (int)i;
+static uint8_t objectweight( const char *ext ){
+	uint8_t ret = 0x00;
+	for(SubConfigDir::extweight i : fileext){
+		if(!strcmp(ext, i.ext))
+			return i.weight;
 	}
-	return -1;
+
+#if TOILE
+	if((ret = Toile::objectweight(ext)))
+		return ret;
+#endif
+
+	return 0x00;
 }
 
 bool SubConfigDir::accept( const char *fch, std::string &full ){
@@ -40,7 +51,7 @@ bool SubConfigDir::accept( const char *fch, std::string &full ){
 		bool res = false;
 
 		if(ext)
-			res = (objectweight(ext) != -1 );
+			res = objectweight(ext);
 
 		if(!res)
 			SelLog->Log('E', "'%s' is rejected", fch);
@@ -164,7 +175,7 @@ void SubConfigDir::sort( void ){
 			int va = objectweight( fileextention( a.c_str() ));
 			int vb = objectweight( fileextention( b.c_str() ));
 
-			return(va < vb);
+			return(va > vb);
 		}
 	);
 }

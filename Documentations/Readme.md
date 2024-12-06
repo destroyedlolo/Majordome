@@ -90,6 +90,7 @@ Following variables are defined in launched scripts :
 - **MAJORDOME_VERSION**
 - **MAJORDOME_COPYRIGHT**
 - **MAJORDOME_ClientID** - MQTT Client identifier, must be unique per broker.
+- **MAJORDOME_VERBOSE** - declared if started with `-v` option, unset otherwise.
 - if compiled with DEBUG defined and if started with `-d` option, **MAJORDOME_DEBUG** is declared, otherwise, it is unset.
 
 As well as following objects :

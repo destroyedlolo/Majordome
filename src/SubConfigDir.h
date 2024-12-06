@@ -10,6 +10,12 @@
 #include "SortDir.h"
 
 class SubConfigDir : virtual public SortDir {
+public :
+	struct extweight {
+		const char *const ext;
+		uint8_t weight;
+	};
+
 protected :
 	virtual bool accept( const char *, std::string & );
 
