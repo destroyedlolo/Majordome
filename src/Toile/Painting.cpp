@@ -88,11 +88,6 @@ bool Painting::exec(){	/* From LuaExec::execSync() */
 
 	luaL_openlibs(L);
 	threadEnvironment(L);
-	if(!this->feedbyNeeded(L)){
-		lua_close( L );
-		return false;
-	}
-	SelLua->ApplyStartupFunc(L);
 
 	int err;
 	if( (err = SelElasticStorage->loadsharedfunction( L, this->getFunc() )) ){
@@ -101,5 +96,24 @@ bool Painting::exec(){	/* From LuaExec::execSync() */
 		return false;
 	}
 
+	if(verbose && !this->isQuiet())
+		SelLog->Log('T', "Running Painting '%s' from '%s'", this->getNameC(), this->getWhereC() );
 
+	if(lua_pcall( L, 0, 1, 0))
+		SelLog->Log('E', "Can't execute Painting '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), lua_tostring(L, -1));
+
+		/* Notez-Bien : we are checking only for userdata but there is strictly
+		 * no way to ensure it's a SelGenericSurface derivate.
+		 * Providing bullshits leads to crashing.
+		 */
+	struct SelGenericSurface *srf = (struct SelGenericSurface *)lua_touserdata(L, -1);
+	if(!srf || !checkCapabilities((SelModule *)srf, SELCAP_RENDERER)){
+		SelLog->Log('E', "Not suitable object returned by Painting code");
+		return false;
+	}
+	this->surface = srf;
+
+		/* cleaning */
+	lua_close(L);
+	return true;
 }

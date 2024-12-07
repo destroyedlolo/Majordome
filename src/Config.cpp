@@ -188,3 +188,14 @@ NamedMinMax &Config::findNamedMinMax( std::string &n ) {
 	else
 		return (*obj).second;
 }
+
+#ifdef TOILE
+Painting &Config::findPainting( std::string &n ) {
+	Config::PaintingElements::iterator obj;
+
+	if( (obj = this->PaintingList.find( n )) == this->PaintingList.end() )
+		throw 1;
+	else
+		return (*obj).second;
+}
+#endif

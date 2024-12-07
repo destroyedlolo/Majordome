@@ -7,6 +7,8 @@
 #ifndef PAINTING_H
 #define PAINTING_H
 
+class Painting;	// Avoid nested includes
+
 #include "../Config.h"
 #include "../Helpers.h"
 #include "../Object.h"
@@ -14,7 +16,7 @@
 
 #include <Selene/SelGenericSurface.h>
 
-class Painting : virtual public Object, public LuaExec {
+class Painting : public LuaExec {
 	struct SelGenericSurface *surface;
 
 public:

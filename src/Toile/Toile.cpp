@@ -24,5 +24,17 @@ uint8_t Toile::objectweight( const char *ext ){
 }
 
 bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &where, const char *ext, lua_State *L){
+	if( !strcmp(ext,".painting") ){
+		std::string name;
+		Painting paint( completpath, where, name, L );
+	
+		Config::PaintingElements::iterator prev;
+		if((prev = cfg.PaintingList.find(name)) != cfg.PaintingList.end()){
+			SelLog->Log('F', "Painting '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second.getWhere().c_str());
+			exit(EXIT_FAILURE);
+		} else
+			cfg.PaintingList.insert( std::make_pair(name, paint) );
+		return true;
+	}
 	return false;
 }

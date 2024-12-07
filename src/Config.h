@@ -21,6 +21,9 @@
 #include "Tracker.h"
 #include "MinMax.h"
 #include "NamedMinMax.h"
+#ifdef TOILE
+#	include "Toile/Painting.h"
+#endif
 
 class Config : virtual public SortDir {
 	std::string configDir;
@@ -51,6 +54,11 @@ public:
 	typedef std::unordered_map<std::string, NamedMinMax> NamedMinMaxElements;
 	NamedMinMaxElements NamedMinMaxList;
 
+#ifdef TOILE
+	typedef std::unordered_map<std::string, Painting> PaintingElements;
+	PaintingElements PaintingList;
+#endif
+
 	/* Initialise this configuration against 'where' directory's content */
 	void init(std::string &where, lua_State *L);
 
@@ -78,6 +86,9 @@ public:
 	Tracker &findTracker( std::string & );
 	MinMax &findMinMax( std::string & );
 	NamedMinMax &findNamedMinMax( std::string & );
+#ifdef TOILE
+	Painting &findPainting( std::string & );
+#endif
 
 	std::string getConfigDir(){ return this->configDir; }
 };
