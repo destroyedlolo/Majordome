@@ -3,7 +3,7 @@
 #include <cstring>
 
 #include "Toile.h"
-#include "Painting.h"
+#include "Renderer.h"
 
 
 /* Determine object weight based on its file extension.
@@ -12,7 +12,7 @@
 #include "../SubConfigDir.h"
 
 static const SubConfigDir::extweight fileext[] = {
-	{ ".painting", 0xc0 }
+	{ ".renderer", 0xc0 }
 };
 
 uint8_t Toile::objectweight( const char *ext ){
@@ -24,17 +24,28 @@ uint8_t Toile::objectweight( const char *ext ){
 }
 
 bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &where, const char *ext, lua_State *L){
-	if( !strcmp(ext,".painting") ){
+	if( !strcmp(ext,".renderer") ){
 		std::string name;
-		Painting paint( completpath, where, name, L );
+		Renderer paint( completpath, where, name, L );
 	
-		Config::PaintingElements::iterator prev;
-		if((prev = cfg.PaintingList.find(name)) != cfg.PaintingList.end()){
-			SelLog->Log('F', "Painting '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second.getWhere().c_str());
+		Config::RendererElements::iterator prev;
+		if((prev = cfg.RendererList.find(name)) != cfg.RendererList.end()){
+			SelLog->Log('F', "Renderer '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second.getWhere().c_str());
 			exit(EXIT_FAILURE);
 		} else
-			cfg.PaintingList.insert( std::make_pair(name, paint) );
+			cfg.RendererList.insert( std::make_pair(name, paint) );
 		return true;
 	}
 	return false;
+}
+
+bool Toile::execRenderer(){
+	for(auto &i: config.RendererList){
+		if(!i.second.exec()){
+			if(i.second.getFatal())
+				return false;
+		}
+	}
+
+	return true;
 }

@@ -22,7 +22,7 @@
 #include "MinMax.h"
 #include "NamedMinMax.h"
 #ifdef TOILE
-#	include "Toile/Painting.h"
+#	include "Toile/Renderer.h"
 #endif
 
 class Config : virtual public SortDir {
@@ -55,8 +55,8 @@ public:
 	NamedMinMaxElements NamedMinMaxList;
 
 #ifdef TOILE
-	typedef std::unordered_map<std::string, Painting> PaintingElements;
-	PaintingElements PaintingList;
+	typedef std::unordered_map<std::string, Renderer> RendererElements;
+	RendererElements RendererList;
 #endif
 
 	/* Initialise this configuration against 'where' directory's content */
@@ -87,7 +87,7 @@ public:
 	MinMax &findMinMax( std::string & );
 	NamedMinMax &findNamedMinMax( std::string & );
 #ifdef TOILE
-	Painting &findPainting( std::string & );
+	Renderer &findRenderer( std::string & );
 #endif
 
 	std::string getConfigDir(){ return this->configDir; }

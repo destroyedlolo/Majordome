@@ -11,6 +11,7 @@
 namespace Toile {
 	uint8_t objectweight( const char *ext );
 	bool readConfigToile(Config &cfg, std::string &completpath, std::string &where, const char *ext, lua_State *L);
+	bool execRenderer();
 }
 
 #endif

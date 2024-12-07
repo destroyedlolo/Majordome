@@ -190,10 +190,10 @@ NamedMinMax &Config::findNamedMinMax( std::string &n ) {
 }
 
 #ifdef TOILE
-Painting &Config::findPainting( std::string &n ) {
-	Config::PaintingElements::iterator obj;
+Renderer &Config::findRenderer( std::string &n ) {
+	Config::RendererElements::iterator obj;
 
-	if( (obj = this->PaintingList.find( n )) == this->PaintingList.end() )
+	if( (obj = this->RendererList.find( n )) == this->RendererList.end() )
 		throw 1;
 	else
 		return (*obj).second;

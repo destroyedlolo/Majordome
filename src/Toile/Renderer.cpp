@@ -1,8 +1,8 @@
-/* Painting object
+/* Renderer object
  * 	Embodies a low-level rendering device.
  */
 
-#include "Painting.h"
+#include "Renderer.h"
 
 #include <iostream>
 #include <fstream>
@@ -16,7 +16,7 @@ extern "C" {
     #include "lauxlib.h"
 };
 
-Painting::Painting( const std::string &fch, std::string &where, std::string &name, lua_State *L ): surface(NULL), fatal(false){
+Renderer::Renderer( const std::string &fch, std::string &where, std::string &name, lua_State *L ): surface(NULL), fatal(false){
 	if(verbose)
 		SelLog->Log('L', "\t'%s'", fch.c_str());
 
@@ -83,7 +83,7 @@ Painting::Painting( const std::string &fch, std::string &where, std::string &nam
 		exit(EXIT_FAILURE);
 }
 
-bool Painting::exec(){	/* From LuaExec::execSync() */
+bool Renderer::exec(){	/* From LuaExec::execSync() */
 	lua_State *L = luaL_newstate();
 	if( !L ){
 		SelLog->Log('E', "Unable to create a new Lua State for '%s' from '%s'", this->getNameC(), this->getWhereC() );
@@ -101,10 +101,10 @@ bool Painting::exec(){	/* From LuaExec::execSync() */
 	}
 
 	if(verbose && !this->isQuiet())
-		SelLog->Log('T', "Running Painting '%s' from '%s'", this->getNameC(), this->getWhereC() );
+		SelLog->Log('T', "Running Renderer '%s' from '%s'", this->getNameC(), this->getWhereC() );
 
 	if(lua_pcall( L, 0, 1, 0))
-		SelLog->Log('E', "Can't execute Painting '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), lua_tostring(L, -1));
+		SelLog->Log('E', "Can't execute Renderer '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), lua_tostring(L, -1));
 
 		/* Notez-Bien : we are checking only for userdata but there is strictly
 		 * no way to ensure it's a SelGenericSurface derivate.
@@ -112,7 +112,7 @@ bool Painting::exec(){	/* From LuaExec::execSync() */
 		 */
 	struct SelGenericSurface *srf = (struct SelGenericSurface *)lua_touserdata(L, -1);
 	if(!srf || !checkCapabilities((SelModule *)srf, SELCAP_RENDERER)){
-		SelLog->Log('E', "Not suitable object returned by Painting code");
+		SelLog->Log('E', "Not suitable object returned by Renderer code");
 		return false;
 	}
 	this->surface = srf;

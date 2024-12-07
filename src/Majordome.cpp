@@ -22,6 +22,7 @@
 #include "Config.h"
 
 #ifdef TOILE
+#	include "Toile/Toile.h"
 #	include "Toile/ToileVersion.h"
 #endif
 
@@ -378,6 +379,12 @@ int main(int ac, char **av){
 	SelLua->AddStartupFunc(MinMax::initLuaObject);
 	SelLua->AddStartupFunc(NamedMinMax::initLuaObject);
 
+#ifdef TOILE
+	if(!Toile::execRenderer()){
+		SelLog->Log('F', "At least fatal renderer failed");
+		exit(EXIT_FAILURE);
+	}
+#endif
 	config.RunStartups();	// Run startup functions
 	config.SubscribeTopics();	// MQTT : activate topics receiving
 	config.LaunchTimers();	// Launch slave timers

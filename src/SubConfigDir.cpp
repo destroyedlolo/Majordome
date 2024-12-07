@@ -64,7 +64,7 @@ bool SubConfigDir::accept( const char *fch, std::string &full ){
 SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 	this->readdircontent(where);
 
-	for( iterator i=this->begin(); i<this->end(); i++){
+	for(auto i=this->begin(); i<this->end(); i++){
 		std::string completpath = where + '/' + *i;
 		const char *ext = fileextention((*i).c_str());
 
