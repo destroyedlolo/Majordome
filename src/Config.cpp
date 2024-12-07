@@ -30,7 +30,7 @@ void Config::init(std::string &where, lua_State *L){
 	this->readdircontent(where);
 
 		/* Load packages */
-	for( iterator i=this->begin(); i<this->end(); i++){
+	for(auto i=this->begin(); i<this->end(); i++){
 		if(!quiet)
 			SelLog->Log('L', "Loading '%s'", (*i).c_str());
 
@@ -84,21 +84,21 @@ void Config::SanityChecks( void ){
 	}
 
 		/* Verify that needed tasks exists */
-	for(auto i = TasksList.begin(); i != TasksList.end(); i++){
-		for(auto j = i->second.needed_task.begin(); j != i->second.needed_task.end(); j++){
+	for(auto &i : this->TasksList){
+		for(auto &j : i.second.needed_task){
 			Config::TaskElements::iterator task;
-			if( (task = config.TasksList.find(j->c_str())) == config.TasksList.end()){
-				SelLog->Log('F', "Task \"%s\" needed by \"%s\" doesn't exist", j->c_str(), i->second.getNameC());
+			if( (task = config.TasksList.find(j.c_str())) == config.TasksList.end()){
+				SelLog->Log('F', "Task \"%s\" needed by \"%s\" doesn't exist", j.c_str(), i.second.getNameC());
 				exit(EXIT_FAILURE);
 			}
 		}
 	}
 
-	for(auto i = TrackersList.begin(); i != TrackersList.end(); i++){
-		for(auto j = i->second.needed_task.begin(); j != i->second.needed_task.end(); j++){
+	for(auto &i : this->TrackersList){
+		for(auto &j : i.second.needed_task){
 			Config::TaskElements::iterator task;
-			if( (task = config.TasksList.find(j->c_str())) == config.TasksList.end()){
-				SelLog->Log('F', "Task \"%s\" needed by \"%s\" doesn't exist", j->c_str(), i->second.getNameC());
+			if( (task = config.TasksList.find(j.c_str())) == config.TasksList.end()){
+				SelLog->Log('F', "Task \"%s\" needed by \"%s\" doesn't exist", j.c_str(), i.second.getNameC());
 				exit(EXIT_FAILURE);
 			}
 		}
@@ -111,10 +111,10 @@ void Config::SubscribeTopics( void ){
 	int *qoss = new int [nbre];
 
 	nbre = 0;
-	for(TopicElements::iterator i = TopicsList.begin(); i != TopicsList.end(); i++){
-		if( i->second.isEnabled() ){
-			topics[nbre] = i->second.getTopic();
-			qoss[nbre++] = i->second.getQOS();
+	for(auto &i : TopicsList){
+		if( i.second.isEnabled() ){
+			topics[nbre] = i.second.getTopic();
+			qoss[nbre++] = i.second.getQOS();
 		}
 	}
 #ifdef DEBUG
@@ -135,21 +135,21 @@ void Config::SubscribeTopics( void ){
 }
 
 void Config::LaunchTimers( void ){
-	for( TimerElements::iterator i = this->TimersList.begin(); i != config.TimersList.end(); i++)
-		(*i).second.launchThread();
+	for(auto &i : this->TimersList)
+		i.second.launchThread();
 }
 
 void Config::RunImmediates( void ){
-	for( TimerElements::iterator i = this->TimersList.begin(); i != config.TimersList.end(); i++){
-		if( (*i).second.getImmediate() || (*i).second.isOver() )
-			(*i).second.execTasks();
+	for(auto &i : this->TimersList){
+		if( i.second.getImmediate() || i.second.isOver() )
+			i.second.execTasks();
 	}
 }
 
 void Config::RunStartups( void ){
-	for( TaskElements::iterator i = this->TasksList.begin(); i != config.TasksList.end(); i++){
-		if( (*i).second.getRunAtStartup() )
-			(*i).second.exec(NULL);
+	for(auto &i : this->TasksList){
+		if( i.second.getRunAtStartup() )
+			i.second.exec(NULL);
 	}
 }
 
