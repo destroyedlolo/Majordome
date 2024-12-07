@@ -48,9 +48,6 @@ bool LuaExec::LoadFunc( lua_State *L, std::stringstream &buffer, const char *nam
 	 ****/
 
 void LuaExec::feedState( lua_State *L, const char *name, const char *topic, const char *payload, bool tracker, const char *trkstatus ){
-	lua_pushstring( L, config.getConfigDir().c_str() );
-	lua_setglobal( L, "MAJORDOME_CONFIGURATION_DIRECTORY" );
-
 	if( !name )	// No argument provide (launched at startup)
 		return;
 
@@ -360,7 +357,6 @@ bool LuaExec::execAsync( const char *name, const char *topic, const char *payloa
 		delete arg;
 		return false;
 	}
-	SelLua->ApplyStartupFunc(arg->L);
 
 	int err;
 	if( (err = SelElasticStorage->loadsharedfunction( arg->L, this->getFunc() )) ){
@@ -400,7 +396,6 @@ bool LuaExec::execSync( const char *name, const char *topic, const char *payload
 		lua_close( L );
 		return false;
 	}
-	SelLua->ApplyStartupFunc(L);
 
 	int err;
 	if( (err = SelElasticStorage->loadsharedfunction( L, this->getFunc() )) ){
