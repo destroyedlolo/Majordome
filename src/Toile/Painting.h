@@ -18,6 +18,7 @@ class Painting;	// Avoid nested includes
 
 class Painting : public LuaExec {
 	struct SelGenericSurface *surface;
+	bool fatal;
 
 public:
 	/* constructor from file

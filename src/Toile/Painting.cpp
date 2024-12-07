@@ -16,7 +16,7 @@ extern "C" {
     #include "lauxlib.h"
 };
 
-Painting::Painting( const std::string &fch, std::string &where, std::string &name, lua_State *L ): surface(NULL){
+Painting::Painting( const std::string &fch, std::string &where, std::string &name, lua_State *L ): surface(NULL), fatal(false){
 	if(verbose)
 		SelLog->Log('L', "\t'%s'", fch.c_str());
 
@@ -57,6 +57,10 @@ Painting::Painting( const std::string &fch, std::string &where, std::string &nam
 				this->name = name = arg;
 				if(verbose)
 					SelLog->Log('C', "\t\tChanging name to '%s'", name.c_str());
+			} else if( l == "-->> Fatal" ){
+				if(verbose)
+					SelLog->Log('C', "\t\tFailure is fatal");
+				this->fatal = true;
 			} else if( LuaExec::readConfigDirective(l) )
 				nameused = true;
 		} while(true);
