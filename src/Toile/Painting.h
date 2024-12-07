@@ -26,6 +26,8 @@ public:
 	 */
 	Painting( const std::string &file, std::string &where, std::string &name, lua_State *L );
 
+	/* Run the Lua code to build the renderer */
+	bool exec();
 };
 
 #endif
