@@ -103,19 +103,22 @@ bool Renderer::exec(){	/* From LuaExec::execSync() */
 	if(verbose && !this->isQuiet())
 		SelLog->Log('T', "Running Renderer '%s' from '%s'", this->getNameC(), this->getWhereC() );
 
-	if(lua_pcall( L, 0, 1, 0))
+	if(lua_pcall( L, 0, 1, 0)){
 		SelLog->Log('E', "Can't execute Renderer '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), lua_tostring(L, -1));
+		return false;
+	}
 
 		/* Notez-Bien : we are checking only for userdata but there is strictly
 		 * no way to ensure it's a SelGenericSurface derivate.
 		 * Providing bullshits leads to crashing.
 		 */
-	struct SelGenericSurface *srf = (struct SelGenericSurface *)lua_touserdata(L, -1);
-	if(!srf || !checkCapabilities((SelModule *)srf, SELCAP_RENDERER)){
+	struct SelGenericSurfaceLua *srf = (struct SelGenericSurfaceLua *)lua_touserdata(L, -1);
+
+	if(!srf || !checkCapabilities((SelObject *)srf->storage, SELCAP_RENDERER)){
 		SelLog->Log('E', "Not suitable object returned by Renderer code");
 		return false;
 	}
-	this->surface = srf;
+	this->surface = srf->storage;
 
 		/* cleaning */
 	lua_close(L);
