@@ -42,9 +42,9 @@ using namespace std;
 
 #define DEFAULT_CONFIGURATION_FILE "/usr/local/etc/Majordome.conf"
 
-	/*****
+	/* ****
 	 * global configuration
-	 *****/
+	 * ****/
 bool verbose = false;
 bool hideTopicArrival = false;	// Silence topics arrival
 bool debug = false;
@@ -54,10 +54,10 @@ bool configtest = false;
 
 Config config;
 
-	/******
+	/* *****
 	 * local configuration
 	 * (feed with default values)
-	 *******/
+	 * ******/
 string MQTT_ClientID;
 static string UserConfigRoot("/usr/local/etc/Majordome");	// Where to find user configuration
 static string Broker_URL("tcp://localhost:1883");	// Broker to contact
@@ -112,9 +112,9 @@ static void read_configuration(const char *fch){
 	}
 }
 
-	/******
+	/* *****
 	 * Threading
-	 *******/
+	 * ******/
 pthread_attr_t thread_attr;
 
 /* Set the environment of each newly created threads
@@ -226,9 +226,33 @@ static void brkcleaning(void){	/* Clean broker stuffs */
 	MQTTClient_destroy(&MQTT_client);
 }
 
-	/******
+	/* ***
+	 * Majordome's own API
+	 */
+
+static int mjd_letsgo(lua_State *L){
+	SelLog->Log('D', "Late dependencies building");
+	
+	SelLua->lateBuildingDependancies(L);
+	SelLua->ApplyStartupFunc(L);
+
+	SelLog->Log('D', "Let's go ...");
+
+	return 0;
+}
+
+static const struct luaL_Reg MajordomeLib [] = {
+	{"LetsGo", mjd_letsgo},
+	{NULL, NULL}
+};
+
+static void initMajordomeObject( lua_State *L ){
+	SelLua->libCreateOrAddFuncs( L, "Majordome", MajordomeLib );
+}
+
+	/* *****
 	 * Main loop
-	 *******/
+	 * ******/
 int main(int ac, char **av){
 	initSelene();							// Load Séléné modules
 	SelLog->configure(NULL, LOG_STDOUT);	// Early logging to STDOUT before broker initialisation
@@ -301,19 +325,19 @@ int main(int ac, char **av){
 		SelLog->ignoreList("T");	// Disabling trace logging
 
 	read_configuration(conf_file);
-
-		/***
+ 
+		/* **
 		 * Initial technical objects
-		 ***/
+		 * **/
 
 		// Creates threads as detached in order to save
 		// some resources when quiting
 	assert(!pthread_attr_init (&thread_attr));
 	assert(!pthread_attr_setdetachstate (&thread_attr, PTHREAD_CREATE_DETACHED));
 
-		/***
+		/* **
 		 * Connecting to the broker
-		 ***/
+		 * **/
 	MQTTClient_connectOptions conn_opts = MQTTClient_connectOptions_initializer;
 	conn_opts.reliable = 0;	/* Asynchronous sending */
 	int err;
@@ -353,9 +377,9 @@ int main(int ac, char **av){
 	if(!quiet)
 		SelLog->Log('I', "Application code for %s %f ...", basename(av[0]), VERSION);
 
-		/***
+		/* **
 		 * Reading user configuration 
-		 ****/
+		 * ***/
 	config.init(UserConfigRoot, SelLua->getLuaState());	// Read user's configuration files
 	config.SanityChecks();
 
@@ -368,9 +392,10 @@ int main(int ac, char **av){
 		SelLog->Log('I', "Application starting ...");
 
 
-		/***
+		/* **
 		 * Add Majordom's own objects to slave thread
-		 ****/
+		 * ***/
+	SelLua->AddStartupFunc(initMajordomeObject);
 	SelLua->AddStartupFunc(LuaTask::initLuaObject);
 	SelLua->AddStartupFunc(Timer::initLuaObject);
 	SelLua->AddStartupFunc(MQTTTopic::initLuaObject);
