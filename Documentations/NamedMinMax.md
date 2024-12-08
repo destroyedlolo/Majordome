@@ -26,10 +26,10 @@ None
 
 ## at Lua side
 ### Lua script
-The script is expected to return the name of the data to be store. 
-Consequently, a single NamedMinMax can process several topics as shown in the provided example.
+The script is expected to return the name of the data collection to store to.
+Consequently, a single NamedMinMax can process several topics, as shown in the provided example.
 
-In addition, it can return a value which will replace the received one.
+In addition, it can return a value that will replace the received one.
 
 ### Exposed variables
 - **MAJORDOME_Myself** is automatically created and correspond to the current NamedMinMax
