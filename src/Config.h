@@ -21,6 +21,7 @@
 #include "Tracker.h"
 #include "MinMax.h"
 #include "NamedMinMax.h"
+#include "Shutdown.h"
 #ifdef TOILE
 #	include "Toile/Renderer.h"
 #endif

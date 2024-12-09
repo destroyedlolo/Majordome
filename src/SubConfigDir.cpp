@@ -27,6 +27,7 @@ static const SubConfigDir::extweight fileext[] = {
 	{ ".minmax", 0x80 },
 	{ ".namedminmax", 0x80 },
 	{ ".lua", 0x40 },
+	{ ".shutdown", 0x40 },
 	{ ".md", 0x01 }	// ignored, documentation only
 };
 
