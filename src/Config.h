@@ -40,6 +40,9 @@ public:
 	typedef std::unordered_map<std::string, LuaTask> TaskElements;
 	TaskElements TasksList;
 	
+	typedef std::unordered_map<std::string, Shutdown> ShutdownElements;
+	ShutdownElements ShutdownsList;
+	
 	typedef std::unordered_map<std::string, Timer> TimerElements;
 	TimerElements TimersList;
 
