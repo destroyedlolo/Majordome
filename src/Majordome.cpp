@@ -251,9 +251,12 @@ static void initMajordomeObject( lua_State *L ){
 	SelLua->libCreateOrAddFuncs( L, "Majordome", MajordomeLib );
 }
 
-void bye(int){
-	config.RunShutdowns();
+void quit(int){
 	exit(EXIT_SUCCESS);
+}
+
+void bye(void){
+	config.RunShutdowns();
 }
 
 	/* *****
@@ -421,8 +424,9 @@ int main(int ac, char **av){
 	config.LaunchTimers();	// Launch slave timers
 	config.RunImmediates();	// Run immediate & overdue timers tasks
 
-	signal(SIGINT,bye);
-	signal(SIGUSR1,bye);
+	signal(SIGINT,quit);
+	signal(SIGUSR1,quit);
+	atexit(bye);
 
 	pause();	// Waiting for events, nothing else to do
 }
