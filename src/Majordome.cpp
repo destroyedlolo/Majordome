@@ -33,6 +33,7 @@
 #include <cstdlib>
 #include <cstring>		// strerror()
 #include <cassert>
+#include <csignal>
 
 #include <unistd.h> 	// getopt()
 #include <errno.h>
@@ -250,8 +251,9 @@ static void initMajordomeObject( lua_State *L ){
 	SelLua->libCreateOrAddFuncs( L, "Majordome", MajordomeLib );
 }
 
-void bye(void){
+void bye(int){
 	config.RunShutdowns();
+	exit(EXIT_SUCCESS);
 }
 
 	/* *****
@@ -419,7 +421,8 @@ int main(int ac, char **av){
 	config.LaunchTimers();	// Launch slave timers
 	config.RunImmediates();	// Run immediate & overdue timers tasks
 
-	atexit(bye);
+	signal(SIGINT,bye);
+	signal(SIGUSR1,bye);
 
 	pause();	// Waiting for events, nothing else to do
 }

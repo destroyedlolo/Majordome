@@ -100,28 +100,34 @@ void Shutdown::exec( void ){
 	if( !this->isEnabled() ){
 		if(verbose)
 			SelLog->Log('T', "Shutdown '%s' from '%s' is disabled", this->getNameC(), this->getWhereC() );
-		return false;
+		return;
 	}
 
 	lua_State *L = luaL_newstate();
 	if( !L ){
 		SelLog->Log('E', "Unable to create a new Lua State for '%s' from '%s'", this->getNameC(), this->getWhereC() );
-		return false;
+		return;
 	}
 
 	luaL_openlibs(L);
 	threadEnvironment(L);
-	if(!this->feedbyNeeded(L)){
+	if(!this->feedbyNeeded(L, false)){
 		lua_close( L );
-		return false;
+		return;
 	}
 
 	int err;
 	if( (err = SelElasticStorage->loadsharedfunction( L, this->getFunc() )) ){
-		SelLog->Log('E', "Unable to create task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), (err == LUA_ERRSYNTAX) ? "Syntax error" : "Memory error" );
+		SelLog->Log('E', "Unable to create Shutdown '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), (err == LUA_ERRSYNTAX) ? "Syntax error" : "Memory error" );
 		lua_close( L );
-		return false;
+		return;
 	}
 
+	if(verbose && !this->isQuiet())
+		SelLog->Log('T', "Running Shutdown '%s' from '%s'", this->getNameC(), this->getWhereC() );
 
+	if(lua_pcall( L, 0, 0, 0))
+		SelLog->Log('E', "Can't execute Shutdown '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), lua_tostring(L, -1));
+
+	lua_close(L);
 }

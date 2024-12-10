@@ -155,7 +155,7 @@ void Config::RunStartups( void ){
 
 void Config::RunShutdowns( void ){
 	for(auto &i : this->ShutdownsList){
-		i.second.exec(NULL);
+		i.second.exec();
 	}
 }
 

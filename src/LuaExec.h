@@ -43,7 +43,7 @@ public:
 	LuaExec();
 	struct elastic_storage *getFunc( void ){ return &(this->func); }
 
-	bool feedbyNeeded( lua_State * );
+	bool feedbyNeeded( lua_State *, bool require=true );
 
 	/* Store Lua's code
 	 *
