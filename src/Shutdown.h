@@ -18,6 +18,8 @@ public:
 	 * -> L : Lua's state
 	 */
 	Shutdown( const std::string &file, std::string &where, std::string &name, lua_State *L );
+
+	void exec( void );
 };
 
 #endif

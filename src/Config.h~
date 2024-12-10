@@ -83,9 +83,6 @@ public:
 		/* Run startup functions */
 	void RunStartups( void );
 
-		/* Run shutdowns */
-	void RunShutdowns( void );
-
 	/* Find a task/tracker by its name 
 	 *	throw an exception if not found
 	 */

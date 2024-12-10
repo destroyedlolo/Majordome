@@ -250,6 +250,10 @@ static void initMajordomeObject( lua_State *L ){
 	SelLua->libCreateOrAddFuncs( L, "Majordome", MajordomeLib );
 }
 
+void bye(void){
+	config.RunShutdowns();
+}
+
 	/* *****
 	 * Main loop
 	 * ******/
@@ -414,6 +418,8 @@ int main(int ac, char **av){
 	config.SubscribeTopics();	// MQTT : activate topics receiving
 	config.LaunchTimers();	// Launch slave timers
 	config.RunImmediates();	// Run immediate & overdue timers tasks
+
+	atexit(bye);
 
 	pause();	// Waiting for events, nothing else to do
 }

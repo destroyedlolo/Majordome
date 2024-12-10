@@ -96,3 +96,32 @@ else printf("Ignore '%s'\n", l.c_str());
 		exit(EXIT_FAILURE);
 }
 
+void Shutdown::exec( void ){
+	if( !this->isEnabled() ){
+		if(verbose)
+			SelLog->Log('T', "Shutdown '%s' from '%s' is disabled", this->getNameC(), this->getWhereC() );
+		return false;
+	}
+
+	lua_State *L = luaL_newstate();
+	if( !L ){
+		SelLog->Log('E', "Unable to create a new Lua State for '%s' from '%s'", this->getNameC(), this->getWhereC() );
+		return false;
+	}
+
+	luaL_openlibs(L);
+	threadEnvironment(L);
+	if(!this->feedbyNeeded(L)){
+		lua_close( L );
+		return false;
+	}
+
+	int err;
+	if( (err = SelElasticStorage->loadsharedfunction( L, this->getFunc() )) ){
+		SelLog->Log('E', "Unable to create task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), (err == LUA_ERRSYNTAX) ? "Syntax error" : "Memory error" );
+		lua_close( L );
+		return false;
+	}
+
+
+}
