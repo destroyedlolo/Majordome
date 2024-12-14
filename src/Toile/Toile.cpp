@@ -26,6 +26,7 @@ uint8_t Toile::objectweight( const char *ext ){
 bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &where, const char *ext, lua_State *L){
 	if( !strcmp(ext,".renderer") ){
 		std::string name;
+if(debug) puts("*D*** Toile::readConfigToile()");
 		Renderer paint( completpath, where, name, L );
 	
 		Config::RendererElements::iterator prev;
@@ -34,8 +35,10 @@ bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &
 			exit(EXIT_FAILURE);
 		} else
 			cfg.RendererList.insert( std::make_pair(name, paint) );
+if(debug) puts("*D**F Toile::readConfigToile() true");
 		return true;
 	}
+if(debug) puts("*D**F Toile::readConfigToile() false");
 	return false;
 }
 

@@ -34,6 +34,9 @@ public:
 
 	/* Run the Lua code to build the renderer */
 	bool exec();
+
+	/* Accessors */
+	struct SelGenericSurface *getSurface(){ return this->surface; }
 };
 
 #endif

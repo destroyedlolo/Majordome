@@ -63,6 +63,7 @@ bool SubConfigDir::accept( const char *fch, std::string &full ){
 }
 
 SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
+if(debug) puts("*D**** SubConfigDir::SubConfigDir");
 	this->readdircontent(where);
 
 	for(auto i=this->begin(); i<this->end(); i++){
@@ -113,14 +114,20 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 				cfg.TasksList.insert( std::make_pair(name, tsk) );
 		} else if( !strcmp(ext,".shutdown") ){
 			std::string name;
+if(debug) puts("*D***** constr Shutdown");
 			Shutdown tsk( completpath, where, name, L );
+if(debug) puts("*D****F constr Shutdown");
 	
 			Config::ShutdownElements::iterator prev;
 			if((prev = cfg.ShutdownsList.find(name)) != cfg.ShutdownsList.end()){
+if(debug) puts("*D***** find()");
 				SelLog->Log('F', "Shutdown '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second.getWhere().c_str());
 				exit(EXIT_FAILURE);
-			} else
+			} else {
+if(debug) puts("*D***** insert()");
 				cfg.ShutdownsList.insert( std::make_pair(name, tsk) );
+if(debug) puts("*D****F insert()");
+}
 		} else if( !strcmp(ext,".topic") ){
 			std::string name;
 			MQTTTopic tpc( completpath, where, name );
@@ -182,6 +189,7 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 				SelLog->Log('D', "Ignoring %s (ext '%s')", (*i).c_str(), ext );
 #	endif
 	}
+if(debug) puts("*D****F SubConfigDir::SubConfigDir");
 }
 
 void SubConfigDir::sort( void ){

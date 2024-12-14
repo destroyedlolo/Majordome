@@ -1,0 +1,22 @@
+-- This is an example of shutdown script
+--
+-- This one will turn off the I2C LCD screen.
+--
+-- In the header of the script (comment bloc at the very beginning of
+-- the script), each line starting with -->> are Majordome's commands.
+-- Consequently, '--->>' are commented out commands.
+--
+-- Name of this script
+-- if not set, takes the filename
+--->> name=Toto
+--
+-- remove some trace
+-- This option is useful to avoid logging of very noisy topics
+--->> quiet
+--
+-->> need_renderer=LCD
+
+-- LCD:Backlight(false)
+LCD:Shutdown()
+
+print "on part"

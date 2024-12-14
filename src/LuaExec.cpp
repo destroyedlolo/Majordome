@@ -1,5 +1,6 @@
 #include <cstring>
 #include <cassert>
+#include <iostream>
 
 extern "C" {
     #include "lualib.h"
@@ -215,6 +216,33 @@ bool LuaExec::feedbyNeeded( lua_State *L, bool require ){
 			return false;
 		}
 	}
+
+#ifdef TOILE
+	for(auto &i : this->needed_renderer){
+		try {
+if(debug) puts("*D* 0");
+			class Renderer &rd = config.RendererList.at( i );
+if(debug) puts("*D* 1");
+			class Renderer **renderer = (class Renderer **)lua_newuserdata(L, sizeof(class Renderer *));
+if(debug) puts("*D* 2");
+			assert(renderer);
+if(debug) puts("*D* 3");
+
+			*renderer = &rd;
+if(debug) puts("*D* 4");
+if(debug) printf("****** surface : %p\n", rd.getSurface());
+			std::cout << rd.getSurface()->cb->LuaObjectName() << std::endl;
+if(debug) puts("*D* 5");
+			luaL_getmetatable(L, rd.getSurface()->cb->LuaObjectName() );
+			lua_setmetatable(L, -2);
+
+			lua_setglobal(L, i.c_str());
+		} catch( std::out_of_range &e ){	// Not found 
+			return false;
+		}
+	}
+#endif
+
 	return true;
 }
 
