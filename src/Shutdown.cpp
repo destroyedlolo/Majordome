@@ -71,7 +71,8 @@ Shutdown::Shutdown( const std::string &fch, std::string &where, std::string &nam
 				if(verbose)
 					SelLog->Log('C', "\t\tDisabled");
 				this->disable();
-			}
+			} else if( LuaExec::readConfigDirective(l) )
+				nameused = true;
 #if 0
 else printf("Ignore '%s'\n", l.c_str());
 #endif
