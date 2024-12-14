@@ -317,6 +317,19 @@ bool LuaExec::readConfigDirective( std::string &l ){
 			SelLog->Log('F', "\t\tnamedminmax '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
+#ifdef TOILE
+	} else if(!!(arg = striKWcmp( l, "-->> need_renderer=" ))){
+		Config::RendererElements::iterator renderer;
+		if( (renderer = config.RendererList.find(arg)) != config.RendererList.end()){
+			if(verbose)
+				SelLog->Log('C', "\t\tAdded needed renderer '%s'", arg.c_str());
+			this->addNeededRenderer( arg );
+			return true;
+		} else {
+			SelLog->Log('F', "\t\tRenderer '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
+#endif
 	}
 
 	return Object::readConfigDirective(l);

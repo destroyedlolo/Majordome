@@ -26,6 +26,9 @@ public:
 	StringVector needed_task;
 	StringVector needed_minmax;
 	StringVector needed_namedminmax;
+#ifdef TOILE
+	StringVector needed_renderer;
+#endif
 
 protected:
 	void addNeededRendezVous( std::string t ){ this->needed_rendezvous.Add(t); }
@@ -36,6 +39,10 @@ protected:
 	void addNeededTask( std::string t ){ this->needed_task.Add(t); }
 	void addNeededMinMax( std::string t ){ this->needed_minmax.Add(t); }
 	void addNeededNamedMinMax( std::string t ){ this->needed_namedminmax.Add(t); }
+
+#ifdef TOILE
+	void addNeededRenderer( std::string t ){ this->needed_renderer.Add(t); }
+#endif
 
 	bool readConfigDirective( std::string &l );
 
