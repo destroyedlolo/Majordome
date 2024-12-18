@@ -33,13 +33,25 @@ local lcd = SelLCD.Init(1, 0x27, true, false)
 if not lcd then
 	lcd = SelLCD.Init(2, 0x27, true, false)
 end
---lcd:SetTiming(500, 100)
+lcd:SetTiming(500, 0)
 
-	-- put some stuffs on the display
-	-- testing purposes
+	-- Turn on a clean display
 lcd:Clear()
 lcd:Backlight(true)
 lcd:DisplayCtl(true, false, false)	-- On, but no cursor
+
+--[[
+	-- put some stuffs on the display
+	-- testing purposes
 lcd:WriteString("Majordome : ".. string.format("%.4f", MAJORDOME_VERSION))
+
+lcd:SetCursor(0,2)
+lcd:WriteString("Bla bla")
+
+lcd:SetCursor(0,3)
+for c=33,52 do
+	lcd:WriteString(string.char(c))
+end
+--]]
 
 return lcd

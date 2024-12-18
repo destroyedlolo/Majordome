@@ -16,7 +16,7 @@
 --
 -->> need_renderer=LCD
 
--- LCD:Backlight(false)
+LCD:Backlight(false)
 LCD:Shutdown()
 
 print "on part"
