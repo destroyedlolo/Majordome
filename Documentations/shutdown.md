@@ -33,3 +33,6 @@ Prevents the script to be launched if corresponding value is not valid.<br>
 
 #### -->> need_rendezvous=, -->> need_tracker=, -->> need_timer=, -->> need_task=, -->> need_minmax
 Create corresponding object.
+
+#### -->> need_renderer
+Only **Toile** plug-in has been compiled
