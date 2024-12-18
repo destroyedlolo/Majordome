@@ -220,19 +220,13 @@ bool LuaExec::feedbyNeeded( lua_State *L, bool require ){
 #ifdef TOILE
 	for(auto &i : this->needed_renderer){
 		try {
-if(debug) puts("*D* 0");
 			class Renderer &rd = config.RendererList.at( i );
-if(debug) puts("*D* 1");
-			class Renderer **renderer = (class Renderer **)lua_newuserdata(L, sizeof(class Renderer *));
-if(debug) puts("*D* 2");
+			class SelGenericSurfaceLua *renderer = (class SelGenericSurfaceLua *)lua_newuserdata(L, sizeof(class SelGenericSurfaceLua));
 			assert(renderer);
-if(debug) puts("*D* 3");
 
-			*renderer = &rd;
-if(debug) puts("*D* 4");
-if(debug) printf("****** surface : %p\n", rd.getSurface());
+			renderer->storage = rd.getSurface();
+if(debug) printf("****** surface : %p\n", renderer->storage);
 			std::cout << rd.getSurface()->cb->LuaObjectName() << std::endl;
-if(debug) puts("*D* 5");
 			luaL_getmetatable(L, rd.getSurface()->cb->LuaObjectName() );
 			lua_setmetatable(L, -2);
 
