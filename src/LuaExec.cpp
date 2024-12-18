@@ -226,7 +226,6 @@ bool LuaExec::feedbyNeeded( lua_State *L, bool require ){
 
 			renderer->storage = rd.getSurface();
 if(debug) printf("****** surface : %p\n", renderer->storage);
-			std::cout << rd.getSurface()->cb->LuaObjectName() << std::endl;
 			luaL_getmetatable(L, rd.getSurface()->cb->LuaObjectName() );
 			lua_setmetatable(L, -2);
 
