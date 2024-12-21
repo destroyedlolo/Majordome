@@ -302,7 +302,11 @@ int main(int ac, char **av){
 	case 't':
 		configtest = true;
 	case 'v':
+#ifdef TOILE
 		SelLog->Log('I', "%s v%.04f %s", basename(av[0]), VERSION, " - Toile v" STRIFY(TOILEVERSION));
+#else
+		SelLog->Log('I', "%s v%.04f", basename(av[0]), VERSION);
+#endif
 		verbose = true;
 		quiet = false;
 		break;
