@@ -12,7 +12,9 @@
 #include "../SubConfigDir.h"
 
 static const SubConfigDir::extweight fileext[] = {
-	{ ".Renderer", 0xc0 }
+	{ ".Renderer", 0xc0 },
+/*	{ ".Painting", 0x80 }, */
+	{ ".Decoration", 0x60 }
 };
 
 uint8_t Toile::objectweight( const char *ext ){
