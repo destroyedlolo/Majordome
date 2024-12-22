@@ -12,7 +12,9 @@
 #include "../SubConfigDir.h"
 
 static const SubConfigDir::extweight fileext[] = {
-	{ ".renderer", 0xc0 }
+	{ ".Renderer", 0xc0 },
+/*	{ ".Painting", 0x80 }, */
+	{ ".Decoration", 0x60 }
 };
 
 uint8_t Toile::objectweight( const char *ext ){
@@ -24,9 +26,9 @@ uint8_t Toile::objectweight( const char *ext ){
 }
 
 bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &where, const char *ext, lua_State *L){
-	if( !strcmp(ext,".renderer") ){
+	if( !strcmp(ext,".Renderer") ){
 		std::string name;
-if(debug) puts("*D*** Toile::readConfigToile()");
+		if(debug) puts("*D*** Toile::readConfigToile()");
 		Renderer paint( completpath, where, name, L );
 	
 		Config::RendererElements::iterator prev;
@@ -35,10 +37,10 @@ if(debug) puts("*D*** Toile::readConfigToile()");
 			exit(EXIT_FAILURE);
 		} else
 			cfg.RendererList.insert( std::make_pair(name, paint) );
-if(debug) puts("*D**F Toile::readConfigToile() true");
+		if(debug) puts("*D**F Toile::readConfigToile() true");
 		return true;
 	}
-if(debug) puts("*D**F Toile::readConfigToile() false");
+	if(debug) puts("*D**F Toile::readConfigToile() false");
 	return false;
 }
 
