@@ -1,0 +1,32 @@
+-- This is an example of Decoration script
+--
+-- Decoration paints a surface.
+--
+-- In the header of the script (comment bloc at the very beginning of
+-- the script), each line starting with -->> are Majordome's commands.
+-- Consequently, '--->>' are commented out commands.
+--
+-- Name of this script
+-- if not set, takes the filename
+--->> name=LCD
+--
+-- On which object this decoration will be applied ?
+-- On a Surface object
+---> ApplyOn=
+-- On a Renderer
+--> ApplyOnRenderer=LCD
+--
+-- remove some trace
+-- This option is useful to avoid logging of very noisy topics
+--->> quiet
+
+lcd:WriteString("Majordome : ".. string.format("%.4f", MAJORDOME_VERSION))
+
+lcd:SetCursor(0,2)
+lcd:WriteString("Bla bla")
+
+lcd:SetCursor(0,3)
+for c=33,52 do
+	lcd:WriteString(string.char(c))
+end
+--]]

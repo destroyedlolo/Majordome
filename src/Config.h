@@ -24,6 +24,7 @@
 #include "Shutdown.h"
 #ifdef TOILE
 #	include "Toile/Renderer.h"
+#	include "Toile/Decoration.h"
 #endif
 
 class Config : virtual public SortDir {
@@ -61,6 +62,9 @@ public:
 #ifdef TOILE
 	typedef std::unordered_map<std::string, Renderer> RendererElements;
 	RendererElements RendererList;
+
+	typedef std::unordered_map<std::string, Decoration> DecorationElements;
+	DecorationElements DecorationList;
 #endif
 
 	/* Initialise this configuration against 'where' directory's content */
@@ -95,6 +99,7 @@ public:
 	NamedMinMax &findNamedMinMax( std::string & );
 #ifdef TOILE
 	Renderer &findRenderer( std::string & );
+	Decoration &findDecoration( std::string & );
 #endif
 
 	std::string getConfigDir(){ return this->configDir; }

@@ -4,6 +4,7 @@
 
 #include "Toile.h"
 #include "Renderer.h"
+#include "Decoration.h"
 
 
 /* Determine object weight based on its file extension.
@@ -39,8 +40,18 @@ bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &
 			cfg.RendererList.insert( std::make_pair(name, paint) );
 		if(debug) puts("*D**F Toile::readConfigToile() true");
 		return true;
+	} else if( !strcmp(ext,".Decoration") ){
+		std::string name;
+		Decoration paint( completpath, where, name, L );
+	
+		Config::DecorationElements::iterator prev;
+		if((prev = cfg.DecorationList.find(name)) != cfg.DecorationList.end()){
+			SelLog->Log('F', "Decoration '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second.getWhere().c_str());
+			exit(EXIT_FAILURE);
+		} else
+			cfg.DecorationList.insert( std::make_pair(name, paint) );
+		return true;
 	}
-	if(debug) puts("*D**F Toile::readConfigToile() false");
 	return false;
 }
 
