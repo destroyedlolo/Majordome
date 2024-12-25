@@ -12,9 +12,9 @@
 --
 -- On which object this decoration will be applied ?
 -- On a Surface object
----> ApplyOn=
+--->> ApplyOn=
 -- On a Renderer
---> ApplyOnRenderer=LCD
+-->> ApplyOnRenderer=LCD
 --
 -- remove some trace
 -- This option is useful to avoid logging of very noisy topics
