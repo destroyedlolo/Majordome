@@ -418,7 +418,7 @@ int main(int ac, char **av){
 	SelLua->AddStartupFunc(NamedMinMax::initLuaObject);
 
 #ifdef TOILE
-	if(!Toile::execRenderer()){
+	if(!Toile::execRenderers()){
 		SelLog->Log('F', "At least fatal renderer failed");
 		exit(EXIT_FAILURE);
 	}
@@ -431,6 +431,10 @@ int main(int ac, char **av){
 	signal(SIGINT,quit);
 	signal(SIGUSR1,quit);
 	atexit(bye);
+
+#ifdef TOILE
+	Toile::RefreshRenderers();
+#endif
 
 	pause();	// Waiting for events, nothing else to do
 }
