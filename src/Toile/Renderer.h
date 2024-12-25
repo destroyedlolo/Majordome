@@ -20,6 +20,8 @@ class Renderer : public LuaExec {
 	struct SelGenericSurface *surface;
 	bool fatal;
 
+	StringVector decorations;
+
 public:
 	/* constructor from file
 	 * -> file : file to load
@@ -37,6 +39,8 @@ public:
 
 	/* Accessors */
 	struct SelGenericSurface *getSurface(){ return this->surface; }
+
+	void addDecoration( std::string t ){ this->decorations.Add(t); }
 };
 
 #endif

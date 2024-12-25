@@ -57,6 +57,18 @@ Decoration::Decoration( const std::string &fch, std::string &where, std::string 
 				this->name = name = arg;
 				if(verbose)
 					SelLog->Log('C', "\t\tChanging name to '%s'", name.c_str());
+			} else if(!!(arg = striKWcmp( l, "-->> -->> ApplyOnRenderer=" ))){
+					// Search the renderer to apply on
+				Config::RendererElements::iterator renderer;
+				if( (renderer = config.RendererList.find(arg)) != config.RendererList.end()){
+					if(verbose)
+						SelLog->Log('C', "\t\tAdded to renderer '%s'", arg.c_str());
+					nameused = true;
+					renderer->second.addDecoration( this->name );
+				} else {
+					SelLog->Log('F', "\t\tRenderer '%s' is not (yet ?) defined", arg.c_str());
+					exit(EXIT_FAILURE);
+				}
 			} else if( LuaExec::readConfigDirective(l) )
 				nameused = true;
 		} while(true);
