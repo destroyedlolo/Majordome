@@ -305,7 +305,7 @@ int main(int ac, char **av){
 #ifdef TOILE
 		SelLog->Log('I', "%s v%.04f %s", basename(av[0]), VERSION, " - Toile v" STRIFY(TOILEVERSION));
 #else
-		SelLog->Log('I', "%s v%.04f", basename(av[0]), VERSION );
+		SelLog->Log('I', "%s v%.04f", basename(av[0]), VERSION);
 #endif
 		verbose = true;
 		quiet = false;
@@ -418,7 +418,7 @@ int main(int ac, char **av){
 	SelLua->AddStartupFunc(NamedMinMax::initLuaObject);
 
 #ifdef TOILE
-	if(!Toile::execRenderer()){
+	if(!Toile::execRenderers()){
 		SelLog->Log('F', "At least fatal renderer failed");
 		exit(EXIT_FAILURE);
 	}
@@ -431,6 +431,10 @@ int main(int ac, char **av){
 	signal(SIGINT,quit);
 	signal(SIGUSR1,quit);
 	atexit(bye);
+
+#ifdef TOILE
+	Toile::RefreshRenderers();
+#endif
 
 	pause();	// Waiting for events, nothing else to do
 }

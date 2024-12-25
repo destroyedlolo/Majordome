@@ -4,7 +4,9 @@
 
 #include "Toile.h"
 #include "Renderer.h"
+#include "Decoration.h"
 
+#include <iostream>
 
 /* Determine object weight based on its file extension.
  * Will be merged with SubConfigDir ones (and other modules if any.
@@ -39,12 +41,22 @@ bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &
 			cfg.RendererList.insert( std::make_pair(name, paint) );
 		if(debug) puts("*D**F Toile::readConfigToile() true");
 		return true;
+	} else if( !strcmp(ext,".Decoration") ){
+		std::string name;
+		Decoration paint( completpath, where, name, L );
+	
+		Config::DecorationElements::iterator prev;
+		if((prev = cfg.DecorationList.find(name)) != cfg.DecorationList.end()){
+			SelLog->Log('F', "Decoration '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second.getWhere().c_str());
+			exit(EXIT_FAILURE);
+		} else
+			cfg.DecorationList.insert( std::make_pair(name, paint) );
+		return true;
 	}
-	if(debug) puts("*D**F Toile::readConfigToile() false");
 	return false;
 }
 
-bool Toile::execRenderer(){
+bool Toile::execRenderers(){
 	for(auto &i: config.RendererList){
 		if(!i.second.exec()){
 			if(i.second.getFatal())
@@ -53,4 +65,12 @@ bool Toile::execRenderer(){
 	}
 
 	return true;
+}
+
+void Toile::RefreshRenderers(){
+	for(auto &i: config.RendererList){
+		for(auto &r: i.second.DecorationsList){
+			std::cout << r << std::endl;
+		}
+	}
 }

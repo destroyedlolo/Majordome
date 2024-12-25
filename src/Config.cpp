@@ -204,4 +204,13 @@ Renderer &Config::findRenderer( std::string &n ) {
 	else
 		return (*obj).second;
 }
+
+Decoration &Config::findDecoration( std::string &n ) {
+	Config::DecorationElements::iterator obj;
+
+	if( (obj = this->DecorationList.find( n )) == this->DecorationList.end() )
+		throw 1;
+	else
+		return (*obj).second;
+}
 #endif

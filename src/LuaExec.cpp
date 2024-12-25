@@ -239,7 +239,11 @@ if(debug) printf("****** surface : %p\n", renderer->storage);
 	return true;
 }
 
-	/* Read directives applicables to LuaExec */
+	/* Read directives applicable to LuaExec.
+	 * These directives may apply to all LuaExec derivates.
+	 * Facing unknown directive, this method will fail. Consequently,
+	 * it has to be called at last.
+	 */
 bool LuaExec::readConfigDirective( std::string &l ){
 	MayBeEmptyString arg;
 
@@ -351,6 +355,9 @@ bool LuaExec::readConfigDirective( std::string &l ){
 			exit(EXIT_FAILURE);
 		}
 #endif
+	} else if(!! striKWcmp( l, "-->> ")){
+		SelLog->Log('F', "Unknown directive '%s'", l.c_str());
+		exit(EXIT_FAILURE);
 	}
 
 	return Object::readConfigDirective(l);

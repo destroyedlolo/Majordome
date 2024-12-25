@@ -21,6 +21,8 @@ class Renderer : public LuaExec {
 	bool fatal;
 
 public:
+	StringVector DecorationsList;	// List of decorations to apply
+
 	/* constructor from file
 	 * -> file : file to load
 	 * -> where : file's directory
@@ -37,6 +39,8 @@ public:
 
 	/* Accessors */
 	struct SelGenericSurface *getSurface(){ return this->surface; }
+
+	void addDecoration( std::string t ){ this->DecorationsList.Add(t); }
 };
 
 #endif
