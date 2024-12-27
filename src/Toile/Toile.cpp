@@ -28,9 +28,12 @@ uint8_t Toile::objectweight( const char *ext ){
 }
 
 bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &where, const char *ext, lua_State *L){
+	if(debug) puts("*D*** Toile::readConfigToile()");
+
 	if( !strcmp(ext,".Renderer") ){
+		if(debug) puts("*D**F Toile::readConfigToile() - Renderer");
+
 		std::string name;
-		if(debug) puts("*D*** Toile::readConfigToile()");
 		Renderer paint( completpath, where, name, L );
 	
 		Config::RendererElements::iterator prev;
@@ -39,9 +42,12 @@ bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &
 			exit(EXIT_FAILURE);
 		} else
 			cfg.RendererList.insert( std::make_pair(name, paint) );
-		if(debug) puts("*D**F Toile::readConfigToile() true");
+	
+		if(debug) puts("*D**F Toile::readConfigToile() - Renderer - true");
 		return true;
 	} else if( !strcmp(ext,".Decoration") ){
+		if(debug) puts("*D**F Toile::readConfigToile() - Decoration");
+
 		std::string name;
 		Decoration paint( completpath, where, name, L );
 	
@@ -51,8 +57,12 @@ bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &
 			exit(EXIT_FAILURE);
 		} else
 			cfg.DecorationList.insert( std::make_pair(name, paint) );
+
+		if(debug) puts("*D**F Toile::readConfigToile() - Decoration - true");
 		return true;
 	}
+
+	if(debug) puts("*D**F Toile::readConfigToile() false");
 	return false;
 }
 
@@ -68,9 +78,10 @@ bool Toile::execRenderers(){
 }
 
 void Toile::RefreshRenderers(){
-	for(auto &i: config.RendererList){
-		for(auto &r: i.second.DecorationsList){
-			std::cout << r << std::endl;
+	for(auto &r: config.RendererList){
+		for(auto &dn: r.second.DecorationsList){
+			auto &d = config.findDecoration(dn);
+			d.exec(r.second);
 		}
 	}
 }

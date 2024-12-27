@@ -20,13 +20,14 @@
 -- This option is useful to avoid logging of very noisy topics
 --->> quiet
 
-lcd:WriteString("Majordome : ".. string.format("%.4f", MAJORDOME_VERSION))
+-- The surface to apply on is embodied as MAJORDOME_RENDERER
 
-lcd:SetCursor(0,2)
-lcd:WriteString("Bla bla")
+MAJORDOME_RENDERER:WriteString("Majordome : ".. string.format("%.4f", MAJORDOME_VERSION))
 
-lcd:SetCursor(0,3)
+MAJORDOME_RENDERER:SetCursor(0,2)
+MAJORDOME_RENDERER:WriteString("Bla bla")
+
+MAJORDOME_RENDERER:SetCursor(0,3)
 for c=33,52 do
-	lcd:WriteString(string.char(c))
+	MAJORDOME_RENDERER:WriteString(string.char(c))
 end
---]]

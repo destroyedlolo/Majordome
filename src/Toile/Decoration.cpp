@@ -9,6 +9,7 @@
 #include <sstream>	// stringstream
 
 #include <cstring>
+#include <cassert>
 
 extern "C" {
     #include "lualib.h"
@@ -57,7 +58,7 @@ Decoration::Decoration( const std::string &fch, std::string &where, std::string 
 				this->name = name = arg;
 				if(verbose)
 					SelLog->Log('C', "\t\tChanging name to '%s'", name.c_str());
-			} else if(!!(arg = striKWcmp( l, "-->> -->> ApplyOnRenderer=" ))){
+			} else if(!!(arg = striKWcmp( l, "-->> ApplyOnRenderer=" ))){
 					// Search the renderer to apply on
 				Config::RendererElements::iterator renderer;
 				if( (renderer = config.RendererList.find(arg)) != config.RendererList.end()){
@@ -88,4 +89,41 @@ Decoration::Decoration( const std::string &fch, std::string &where, std::string 
 
 	if( !this->LoadFunc( L, buffer, this->name.c_str() ))
 		exit(EXIT_FAILURE);
+}
+
+void Decoration::exec(Renderer &rd){	/* From LuaExec::execSync() */
+	lua_State *L = luaL_newstate();
+	if( !L ){
+		SelLog->Log('E', "Unable to create a new Lua State for '%s' from '%s'", this->getNameC(), this->getWhereC() );
+		return;
+	}
+
+	luaL_openlibs(L);
+	threadEnvironment(L);
+
+	class SelGenericSurfaceLua *renderer = (class SelGenericSurfaceLua *)lua_newuserdata(L, sizeof(class SelGenericSurfaceLua));
+	assert(renderer);
+
+	renderer->storage = rd.getSurface();
+	luaL_getmetatable(L, rd.getSurface()->cb->LuaObjectName() );
+	lua_setmetatable(L, -2);
+	lua_setglobal( L, "MAJORDOME_RENDERER" );
+
+	int err;
+	if( (err = SelElasticStorage->loadsharedfunction( L, this->getFunc() )) ){
+		SelLog->Log('E', "Unable to create Decoration '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), (err == LUA_ERRSYNTAX) ? "Syntax error" : "Memory error" );
+		lua_close( L );
+		return;
+	}
+
+	if(verbose && !this->isQuiet())
+		SelLog->Log('T', "Running Decoration '%s' from '%s'", this->getNameC(), this->getWhereC() );
+
+	if(lua_pcall( L, 0, 0, 0)){
+		SelLog->Log('E', "Can't execute Decoration '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), lua_tostring(L, -1));
+		return;
+	}
+		/* cleaning */
+	lua_close(L);
+	return;
 }

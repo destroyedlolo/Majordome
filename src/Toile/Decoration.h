@@ -26,6 +26,8 @@ public:
 	 */
 	Decoration( const std::string &file, std::string &where, std::string &name, lua_State *L );
 	
+	/* Run the Lua code to build the renderer */
+	void exec(Renderer &);
 };
 
 #endif

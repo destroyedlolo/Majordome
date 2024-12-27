@@ -32,7 +32,7 @@ if(debug) puts("*D**** Renderer::Renderer()");
 	std::stringstream buffer;
 	std::ifstream file;
 	file.exceptions ( std::ios::eofbit | std::ios::failbit );
-if(debug) puts("*D*01");
+// if(debug) puts("*D*01");
 	try {
 		std::ifstream file(fch);
 		std::streampos pos;
@@ -41,17 +41,17 @@ if(debug) puts("*D*01");
 
 		do {
 			std::string l;
-if(debug) puts("*D*02");
+// if(debug) puts("*D*02");
 			pos = file.tellg();
-if(debug) puts("*D*03");
+// if(debug) puts("*D*03");
 
 			std::getline( file, l);
-if(debug) puts("*D*04");
+// if(debug) puts("*D*04");
 			if( l.compare(0, 2, "--") ){	// End of comments
 				file.seekg( pos );
 				break;
 			}
-if(debug) puts("*D*05");
+// if(debug) puts("*D*05");
 
 			MayBeEmptyString arg;
 			if( !!(arg = striKWcmp( l, "-->> name=" ))){
@@ -69,7 +69,7 @@ if(debug) puts("*D*05");
 				this->fatal = true;
 			} else if( LuaExec::readConfigDirective(l) )
 				nameused = true;
-if(debug) puts("*D*06");
+// if(debug) puts("*D*06");
 		} while(true);
 
 		/*
@@ -77,21 +77,21 @@ if(debug) puts("*D*06");
 		 * an Lua's script
 		 */
 
-if(debug) puts("*D*07");
+// if(debug) puts("*D*07");
 		buffer << file.rdbuf();
-if(debug) puts("*D*08");
+// if(debug) puts("*D*08");
 		file.close();
-if(debug) puts("*D*09");
+// if(debug) puts("*D*09");
 	} catch(const std::ifstream::failure &e){
-if(debug) puts("*D*c0");
+// if(debug) puts("*D*c0");
 		if(!file.eof()){
 			SelLog->Log('F', "%s : %s", fch.c_str(), strerror(errno) );
 			exit(EXIT_FAILURE);
 		}
-if(debug) puts("*D*c1");
+// if(debug) puts("*D*c1");
 	}
 
-if(debug) puts("*D*10");
+// if(debug) puts("*D*10");
 	if( !this->LoadFunc( L, buffer, this->name.c_str() ))
 		exit(EXIT_FAILURE);
 if(debug) puts("*D***F Renderer::Renderer()");
@@ -111,7 +111,7 @@ if(debug) puts("*D* exec 1");
 
 	int err;
 	if( (err = SelElasticStorage->loadsharedfunction( L, this->getFunc() )) ){
-		SelLog->Log('E', "Unable to create task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), (err == LUA_ERRSYNTAX) ? "Syntax error" : "Memory error" );
+		SelLog->Log('E', "Unable to Renderer task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), (err == LUA_ERRSYNTAX) ? "Syntax error" : "Memory error" );
 		lua_close( L );
 		return false;
 	}
