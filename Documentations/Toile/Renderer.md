@@ -32,7 +32,7 @@ The script is expected to return a Séléné renderer object. Any other return (
 > Renderers are tightly linked to Selene and the underlying hardware. Most of the time, it requires some customizations at the operating system level and access to Séléné administrative API.
 
 ## Examples
-Cet exemple de code crée un moteur de rendu vers un écran textuel LCD 16x2 accessible par un bus I2C.
+This example of code is creating a renderer for a textual LCD 16x2 screen (well, work as well with any size).
 
 ```lua
 -- LCD 1602 renderer
