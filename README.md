@@ -1,3 +1,8 @@
+> [!IMPORTANT]  
+> **Toile** branch is currently on heavy development. It's not yet fully tested and stable (i.e. subject to changes).
+
+----
+
 A lightweight, event driven **Automation System**.
 
 ![icon](https://github.com/destroyedlolo/HomeDashboard/blob/master/SeleniteDFB/Images/Majordome.png)
