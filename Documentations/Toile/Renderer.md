@@ -1,4 +1,4 @@
-# .renderer
+# .Renderer
 Renderers are links to physical devices to build user interfaces (UI) with **Majordome**.<br>
 Typical examples are going from small textual LCDs to large graphical screens,
 but also vocal generators ... whatever [Séléné](https://github.com/destroyedlolo/Selene) can interact with.
