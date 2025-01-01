@@ -24,6 +24,7 @@
 #include "Shutdown.h"
 #ifdef TOILE
 #	include "Toile/Renderer.h"
+#	include "Toile/Painting.h"
 #	include "Toile/Decoration.h"
 #endif
 
@@ -63,6 +64,9 @@ public:
 	typedef std::unordered_map<std::string, Renderer> RendererElements;
 	RendererElements RendererList;
 
+	typedef std::unordered_map<std::string, Painting> PaintingElements;
+	PaintingElements PaintingList;
+
 	typedef std::unordered_map<std::string, Decoration> DecorationElements;
 	DecorationElements DecorationList;
 #endif
@@ -99,6 +103,7 @@ public:
 	NamedMinMax &findNamedMinMax( std::string & );
 #ifdef TOILE
 	Renderer &findRenderer( std::string & );
+	Painting &findPainting( std::string & );
 	Decoration &findDecoration( std::string & );
 #endif
 

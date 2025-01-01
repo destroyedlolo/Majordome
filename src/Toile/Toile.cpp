@@ -4,6 +4,7 @@
 
 #include "Toile.h"
 #include "Renderer.h"
+#include "Painting.h"
 #include "Decoration.h"
 
 #include <iostream>
@@ -15,7 +16,7 @@
 
 static const SubConfigDir::extweight fileext[] = {
 	{ ".Renderer", 0xc0 },
-/*	{ ".Painting", 0x80 }, */
+	{ ".Painting", 0x80 },
 	{ ".Decoration", 0x60 }
 };
 
@@ -59,6 +60,21 @@ bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &
 			cfg.DecorationList.insert( std::make_pair(name, paint) );
 
 		if(debug) puts("*D**F Toile::readConfigToile() - Decoration - true");
+		return true;
+	} else if( !strcmp(ext,".Painting") ){
+		if(debug) puts("*D**F Toile::readConfigToile() - Painting");
+
+		std::string name;
+		Painting paint( completpath, where, name, L );
+	
+		Config::PaintingElements::iterator prev;
+		if((prev = cfg.PaintingList.find(name)) != cfg.PaintingList.end()){
+			SelLog->Log('F', "Painting '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second.getWhere().c_str());
+			exit(EXIT_FAILURE);
+		} else
+			cfg.PaintingList.insert( std::make_pair(name, paint) );
+
+		if(debug) puts("*D**F Toile::readConfigToile() - Painting - true");
 		return true;
 	}
 
