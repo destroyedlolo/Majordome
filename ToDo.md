@@ -1,17 +1,21 @@
-#Milestones
+# Milestones
 
-## LCD
+## General
+- [ ] Ensure inherance
+
+## Devices
+### LCD
 
 - [ ] Subsurface
 - [ ] Field
 - [ ] Layer / Mask
 
-## OLed
+### OLed
 
-## Curses
+### Curses
 
-## DRM
+### DRM
 
 ---
 
-Add -->> needed_xxx support for Renderer, Decoration
+- Add -->> needed_xxx support for Renderer, Decoration
