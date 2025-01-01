@@ -1,7 +1,6 @@
 This example will :
-
-    Open a 2004 LCD I2C screen (**.Renderer**)
-    Display some messages on it (**.Decoration**)
+- Open a 2004 LCD I2C screen (**.Renderer**)
+- Display some messages on it (**.Decoration**)
 
 And then, when you interrupt the process (i.e. `Control-C`), will cleanly turn off the screen (**.shutdown**).
 
