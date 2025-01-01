@@ -61,7 +61,8 @@ Decoration::Decoration( const std::string &fch, std::string &where, std::string 
 					SelLog->Log('F', "\t\tRenderer '%s' is not (yet ?) defined", arg.c_str());
 					exit(EXIT_FAILURE);
 				}
-			} else if( LuaExec::readConfigDirective(l, nameused) )
+			} else if( Object::readConfigDirective(l, nameused) )
+				// Don't use LuaExec's as "need_??" is not used
 				nameused = true;
 		} while(true);
 

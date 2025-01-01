@@ -13,3 +13,30 @@ void Object::extrName( const std::string &fch, std::string &name){
 		name.erase(period_idx);
 }
 
+bool Object::readConfigDirective(std::string &l, bool &nameused){
+	MayBeEmptyString arg;
+
+	if( !!(arg = striKWcmp( l, "-->> name=" ))){
+		if( nameused ){
+			SelLog->Log('F', "\t\tName can be changed only before any other directives");
+			exit(EXIT_FAILURE);
+		}
+
+		this->name = name = arg;
+		if(verbose)
+			SelLog->Log('C', "\t\tChanging name to '%s'", name.c_str());
+	} else if( l == "-->> quiet" ){
+		if(verbose)
+			SelLog->Log('C', "\t\tBe quiet");
+		this->beQuiet();
+	} else if( l == "-->> disabled" ){
+		if(verbose)
+			SelLog->Log('C', "\t\tDisabled");
+		this->disable();
+	} else if(!! striKWcmp( l, "-->> ")){
+		SelLog->Log('F', "Unknown directive '%s'", l.c_str());
+		exit(EXIT_FAILURE);
+	}
+
+	return false;
+}

@@ -370,12 +370,9 @@ bool LuaExec::readConfigDirective( std::string &l, bool &nameused ){
 			exit(EXIT_FAILURE);
 		}
 #endif
-	} else if(!! striKWcmp( l, "-->> ")){
-		SelLog->Log('F', "Unknown directive '%s'", l.c_str());
-		exit(EXIT_FAILURE);
 	}
 
-	return false;
+	return Object::readConfigDirective(l, nameused);
 }
 
 struct launchargs {
