@@ -47,17 +47,7 @@ Tracker::Tracker( const std::string &fch, std::string &where, std::string &name,
 			}
 
 			MayBeEmptyString arg;
-			if( !!(arg = striKWcmp( l, "-->> name=" ))){
-				if( nameused ){
-					SelLog->Log('F', "\t\tName can be changed only before listen, until or waitfor directives");
-					exit(EXIT_FAILURE);
-				}
-
-				this->name = name = arg;
-				if(verbose)
-					SelLog->Log('C', "\t\tChanging name to '%s'", name.c_str());
-
-			} else if( !!(arg = striKWcmp( l, "-->> listen=" ))){
+			if( !!(arg = striKWcmp( l, "-->> listen=" ))){
 				Config::TopicElements::iterator topic;
 				if( (topic = config.TopicsList.find(arg)) != config.TopicsList.end()){
 					if(verbose)
@@ -126,7 +116,7 @@ Tracker::Tracker( const std::string &fch, std::string &where, std::string &name,
 					SelLog->Log('C', "\t\tActivated at startup");
 				this->status = _status::CHECKING;
 				this->hm_counter = this->howmany;
-			} else if( LuaExec::readConfigDirective(l) )
+			} else if( LuaExec::readConfigDirective(l, nameused) )
 				nameused = true;
 #if 0
 else printf("Ignore '%s'\n", l.c_str());

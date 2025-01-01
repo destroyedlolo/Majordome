@@ -13,17 +13,3 @@ void Object::extrName( const std::string &fch, std::string &name){
 		name.erase(period_idx);
 }
 
-	/* Read directives applicables to Object */
-bool Object::readConfigDirective(std::string &l){
-	if( l == "-->> quiet" ){
-		if(verbose)
-			SelLog->Log('C', "\t\tBe quiet");
-		this->beQuiet();
-	} else if( l == "-->> disabled" ){
-		if(verbose)
-			SelLog->Log('C', "\t\tDisabled");
-		this->disable();
-	}
-
-	return false;
-}

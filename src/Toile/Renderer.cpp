@@ -53,21 +53,14 @@ if(debug) puts("*D**** Renderer::Renderer()");
 			}
 // if(debug) puts("*D*05");
 
-			MayBeEmptyString arg;
-			if( !!(arg = striKWcmp( l, "-->> name=" ))){
-				if( nameused ){
-					SelLog->Log('F', "\t\tName can be changed only before listen, until or waitfor directives");
-					exit(EXIT_FAILURE);
-				}
-
-				this->name = name = arg;
-				if(verbose)
-					SelLog->Log('C', "\t\tChanging name to '%s'", name.c_str());
+			if( l == "-->> disabled" ){
+				SelLog->Log('F', "\t\tDisabled is not supported with renderer");
+				exit(EXIT_FAILURE);
 			} else if( l == "-->> Fatal" ){
 				if(verbose)
 					SelLog->Log('C', "\t\tFailure is fatal");
 				this->fatal = true;
-			} else if( LuaExec::readConfigDirective(l) )
+			} else if( LuaExec::readConfigDirective(l, nameused) )
 				nameused = true;
 // if(debug) puts("*D*06");
 		} while(true);

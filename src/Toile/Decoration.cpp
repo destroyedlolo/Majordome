@@ -49,16 +49,7 @@ Decoration::Decoration( const std::string &fch, std::string &where, std::string 
 				break;
 			}
 			MayBeEmptyString arg;
-			if( !!(arg = striKWcmp( l, "-->> name=" ))){
-				if( nameused ){
-					SelLog->Log('F', "\t\tName can be changed only before ApplyOn= directive");
-					exit(EXIT_FAILURE);
-				}
-
-				this->name = name = arg;
-				if(verbose)
-					SelLog->Log('C', "\t\tChanging name to '%s'", name.c_str());
-			} else if(!!(arg = striKWcmp( l, "-->> ApplyOnRenderer=" ))){
+			if(!!(arg = striKWcmp( l, "-->> ApplyOnRenderer=" ))){
 					// Search the renderer to apply on
 				Config::RendererElements::iterator renderer;
 				if( (renderer = config.RendererList.find(arg)) != config.RendererList.end()){
@@ -70,7 +61,7 @@ Decoration::Decoration( const std::string &fch, std::string &where, std::string 
 					SelLog->Log('F', "\t\tRenderer '%s' is not (yet ?) defined", arg.c_str());
 					exit(EXIT_FAILURE);
 				}
-			} else if( LuaExec::readConfigDirective(l) )
+			} else if( LuaExec::readConfigDirective(l, nameused) )
 				nameused = true;
 		} while(true);
 

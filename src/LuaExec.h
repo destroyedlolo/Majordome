@@ -44,7 +44,16 @@ protected:
 	void addNeededRenderer( std::string t ){ this->needed_renderer.Add(t); }
 #endif
 
-	bool readConfigDirective( std::string &l );
+	/* Read directives applicable to LuaExec.
+	 * These directives may apply to all LuaExec derivates.
+	 * Facing unknown directive, this method will fail. Consequently,
+	 * it has to be called at last.
+	 *
+	 * -> l : directive line to parse
+	 * -> nameused : is the name already used ?
+	 * <- true if a directive requiring the name has been understood
+	 */
+	bool readConfigDirective( std::string &l, bool &nameused );
 
 public:
 	LuaExec();

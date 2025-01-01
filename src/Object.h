@@ -16,8 +16,6 @@ protected:
 	std::string name;
 	std::string where;
 
-	bool readConfigDirective(std::string &l);
-
 public:
 	Object() : disabled(false), quiet(false){};
 	Object& operator=(const Object&) = default;	/* avoid "defaulted move" warning */

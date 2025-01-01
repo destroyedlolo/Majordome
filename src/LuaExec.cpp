@@ -239,15 +239,30 @@ if(debug) printf("****** surface : %p\n", renderer->storage);
 	return true;
 }
 
-	/* Read directives applicable to LuaExec.
-	 * These directives may apply to all LuaExec derivates.
-	 * Facing unknown directive, this method will fail. Consequently,
-	 * it has to be called at last.
-	 */
-bool LuaExec::readConfigDirective( std::string &l ){
+bool LuaExec::readConfigDirective( std::string &l, bool &nameused ){
 	MayBeEmptyString arg;
 
-	if(!!(arg = striKWcmp( l, "-->> need_topic=" ))){
+	if( !!(arg = striKWcmp( l, "-->> name=" ))){
+		if( nameused ){
+			SelLog->Log('F', "\t\tName can be changed only before any other directives");
+			exit(EXIT_FAILURE);
+		}
+
+		this->name = name = arg;
+		if(verbose)
+			SelLog->Log('C', "\t\tChanging name to '%s'", name.c_str());
+		return false;
+	} else if( l == "-->> quiet" ){
+		if(verbose)
+			SelLog->Log('C', "\t\tBe quiet");
+		this->beQuiet();
+		return false;
+	} else if( l == "-->> disabled" ){
+		if(verbose)
+			SelLog->Log('C', "\t\tDisabled");
+		this->disable();
+		return false;
+	} else if(!!(arg = striKWcmp( l, "-->> need_topic=" ))){
 		Config::TopicElements::iterator topic;
 		if((topic = config.TopicsList.find(arg)) != config.TopicsList.end()){
 #if 0	/* getVal() will fail if not stored but doesn't prevent to need it */
@@ -360,7 +375,7 @@ bool LuaExec::readConfigDirective( std::string &l ){
 		exit(EXIT_FAILURE);
 	}
 
-	return Object::readConfigDirective(l);
+	return false;
 }
 
 struct launchargs {

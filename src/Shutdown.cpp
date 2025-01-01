@@ -54,24 +54,7 @@ Shutdown::Shutdown( const std::string &fch, std::string &where, std::string &nam
 			}
 
 			MayBeEmptyString arg;
-			if( !!(arg = striKWcmp( l, "-->> name=" ))){
-				if( nameused ){
-					SelLog->Log('F', "\t\tName can be changed only before listen, until or waitfor directives");
-					exit(EXIT_FAILURE);
-				}
-
-				this->name = name = arg;
-				if(verbose)
-					SelLog->Log('C', "\t\tChanging name to '%s'", name.c_str());
-			} else if( l == "-->> quiet" ){
-				if(verbose)
-					SelLog->Log('C', "\t\tBe quiet");
-				this->beQuiet();
-			} else if( l == "-->> disabled" ){
-				if(verbose)
-					SelLog->Log('C', "\t\tDisabled");
-				this->disable();
-			} else if( LuaExec::readConfigDirective(l) )
+			if( LuaExec::readConfigDirective(l, nameused) )
 				nameused = true;
 #if 0
 else printf("Ignore '%s'\n", l.c_str());
