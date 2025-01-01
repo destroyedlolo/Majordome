@@ -99,7 +99,7 @@ void Decoration::exec(Renderer &rd){	/* From LuaExec::execSync() */
 	renderer->storage = rd.getSurface();
 	luaL_getmetatable(L, rd.getSurface()->cb->LuaObjectName() );
 	lua_setmetatable(L, -2);
-	lua_setglobal( L, "MAJORDOME_RENDERER" );
+	lua_setglobal( L, "MAJORDOME_PAINTING" );
 
 	int err;
 	if( (err = SelElasticStorage->loadsharedfunction( L, this->getFunc() )) ){
