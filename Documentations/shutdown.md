@@ -22,7 +22,7 @@ Removes some trace.
 #### -->> disabled
 This script won't run.
 
-### Importing objects
+### Dependancies
 Those directives expose them at Lua level without having to manually `find()` them.
 
 #### -->> need_topic=
