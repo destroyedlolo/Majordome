@@ -17,14 +17,15 @@ Unique name to identify the topic. If not set, uses the filename.
 ```
 -->> name=Toto
 ```
-#### -->> once
-Only one instance is allowed to run at the same time : no concurrency.
-
 #### --> quiet
 Removes some trace.
 
 #### -->> disabled
 This script won't run.
+
+### Task's
+#### -->> once
+Only one instance is allowed to run at the same time : no concurrency.
 
 ### Triggering
 Following directives determine what will trigger this script.<br>
