@@ -1,0 +1,23 @@
+-- This is an example of Painting (sub surface)
+--
+-- In the header of the script (comment bloc at the very beginning of
+-- the script), each line starting with -->> are Majordome's commands.
+-- Consequently, '--->>' are commented out commands.
+--
+-- Name of this Painting
+-- if not set, takes the filename
+--->> name=Toto
+--
+-- Disable this painting
+-->> disabled
+--
+-- remove some trace
+-- This option is useful to avoid logging of very noisy topics
+-->> quiet
+--
+-- Origine of the surface
+-- 0,0 by default
+-->> Origine=5,1
+-- Size of the surface
+-->> Size=10,2
+
