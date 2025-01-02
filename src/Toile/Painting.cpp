@@ -21,6 +21,9 @@ Painting::Painting( const std::string &fch, std::string &where, std::string &nam
 	this->name = name;
 	this->where = where;
 
+	uint16_t x=0, y=0;
+	uint16_t w=0, h=0;
+
 	/*
 	 * Reading file's content
 	 */
@@ -44,6 +47,7 @@ Painting::Painting( const std::string &fch, std::string &where, std::string &nam
 				file.seekg( pos );
 				break;
 			}
+
 			MayBeEmptyString arg;
 			if(!!(arg = striKWcmp( l, "-->> Renderer Parent=" ))){
 				if(this->parentR || this->parentP){
@@ -62,6 +66,20 @@ Painting::Painting( const std::string &fch, std::string &where, std::string &nam
 					SelLog->Log('F', "\t\tRenderer '%s' is not (yet ?) defined", arg.c_str());
 					exit(EXIT_FAILURE);
 				}
+			} else if(!!(arg = striKWcmp( l, "-->> Origin=" ))){
+				int r = sscanf(arg.c_str(), "%hu,%hu", &x, &y);
+				if(r != 2)
+					SelLog->Log('W', "Wasn't able to read Origine='s arguments");
+
+				if(verbose)
+					SelLog->Log('C', "\t\tPainting's origin : %u,%u", x,y);
+			} else if(!!(arg = striKWcmp( l, "-->> Size=" ))){
+				int r = sscanf(arg.c_str(), "%hux%hu", &w, &h);
+				if(r != 2)
+					SelLog->Log('W', "Wasn't able to read Size='s arguments");
+
+				if(verbose)
+					SelLog->Log('C', "\t\tPainting's Size : %ux%u", w,h);
 			} else if( Object::readConfigDirective(l, nameused) )
 				// Don't use LuaExec's as "need_??" is not used
 				nameused = true;
@@ -74,5 +92,24 @@ Painting::Painting( const std::string &fch, std::string &where, std::string &nam
 			exit(EXIT_FAILURE);
 		}
 	}
+
+
+		/* ***
+		 * Sanity checks
+		 * ***/
+	if(!this->parentR && !this->parentP){
+		SelLog->Log('F', "[Painting \"%s\"] No parent defined", this->name.c_str());
+		exit(EXIT_FAILURE);
+	}
+
 }
 
+#if 0
+	if(this->parentR){
+		printf(">>> ParentR : '%s'\n", this->parentR->getSurface()->cb->LuaObjectName());
+	} else if(this->parentP){
+	} else {
+		SelLog->Log('F', "[Painting \"%s\"] No parent defined", this->name.c_str());
+		exit(EXIT_FAILURE);
+	}
+#endif

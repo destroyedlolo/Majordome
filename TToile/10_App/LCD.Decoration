@@ -19,7 +19,7 @@
 -- remove some trace
 -- This option is useful to avoid logging of very noisy topics
 --->> quiet
--->> disabled
+--->> disabled
 
 -- The surface to apply on is embodied as MAJORDOME_PAINTING
 
