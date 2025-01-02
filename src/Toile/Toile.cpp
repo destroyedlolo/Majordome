@@ -47,7 +47,7 @@ bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &
 		if(debug) puts("*D**F Toile::readConfigToile() - Renderer - true");
 		return true;
 	} else if( !strcmp(ext,".Decoration") ){
-		if(debug) puts("*D**F Toile::readConfigToile() - Decoration");
+		if(debug) puts("*D** Toile::readConfigToile() - Decoration");
 
 		std::string name;
 		Decoration paint( completpath, where, name, L );
@@ -88,6 +88,9 @@ bool Toile::execRenderers(){
 			if(i.second.getFatal())
 				return false;
 		}
+
+		for(auto &paint: i.second.PaintingList)
+			paint->initFromParent();
 	}
 
 	return true;

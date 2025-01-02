@@ -24,10 +24,9 @@ class Renderer : public LuaExec {
 	struct SelGenericSurface *surface;
 	bool fatal;
 
-	std::vector<Painting *> PaintingList;
-
 public:
-	StringVector DecorationsList;	// List of decorations to apply
+	StringVector DecorationsList;			// List of decorations to apply
+	std::vector<Painting *> PaintingList;	// List of painting
 
 	/* constructor from file
 	 * -> file : file to load

@@ -101,10 +101,9 @@ Painting::Painting( const std::string &fch, std::string &where, std::string &nam
 		SelLog->Log('F', "[Painting \"%s\"] No parent defined", this->name.c_str());
 		exit(EXIT_FAILURE);
 	}
-
 }
 
-#if 0
+void Painting::initFromParent(){
 	if(this->parentR){
 		printf(">>> ParentR : '%s'\n", this->parentR->getSurface()->cb->LuaObjectName());
 	} else if(this->parentP){
@@ -112,4 +111,4 @@ Painting::Painting( const std::string &fch, std::string &where, std::string &nam
 		SelLog->Log('F', "[Painting \"%s\"] No parent defined", this->name.c_str());
 		exit(EXIT_FAILURE);
 	}
-#endif
+}
