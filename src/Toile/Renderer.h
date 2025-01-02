@@ -14,11 +14,17 @@ class Renderer;	// Avoid nested includes
 #include "../Object.h"
 #include "../LuaExec.h"
 
+#include "Painting.h"
+
 #include <Selene/SelGenericSurface.h>
+
+#include <vector>
 
 class Renderer : public LuaExec {
 	struct SelGenericSurface *surface;
 	bool fatal;
+
+	std::vector< std::reference_wrapper<Painting *> > PaintingList;
 
 public:
 	StringVector DecorationsList;	// List of decorations to apply
@@ -41,6 +47,7 @@ public:
 	struct SelGenericSurface *getSurface(){ return this->surface; }
 
 	void addDecoration( std::string t ){ this->DecorationsList.Add(t); }
+	void addPainting( Painting *p ){ this->PaintingList.push_back(p); }
 };
 
 #endif

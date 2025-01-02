@@ -13,7 +13,7 @@
 #include <cstring>
 #include <cassert>
 
-Painting::Painting( const std::string &fch, std::string &where, std::string &name, lua_State *L ){
+Painting::Painting( const std::string &fch, std::string &where, std::string &name, lua_State *L ): surface(NULL), parentR(NULL), parentP(NULL){
 	if(verbose)
 		SelLog->Log('L', "\t'%s'", fch.c_str());
 
@@ -45,14 +45,19 @@ Painting::Painting( const std::string &fch, std::string &where, std::string &nam
 				break;
 			}
 			MayBeEmptyString arg;
-			if(!!(arg = striKWcmp( l, "-->> ApplyOnRenderer=" ))){
-					// Search the renderer to apply on
+			if(!!(arg = striKWcmp( l, "-->> Renderer Parent=" ))){
+				if(this->parentR || this->parentP){
+					SelLog->Log('F', "\t\tA Painting can't have multiple parents");
+					exit(EXIT_FAILURE);
+				}
+	
+					// Search the parent renderer
 				Config::RendererElements::iterator renderer;
 				if( (renderer = config.RendererList.find(arg)) != config.RendererList.end()){
 					if(verbose)
-						SelLog->Log('C', "\t\tAdded to renderer '%s'", arg.c_str());
-					nameused = true;
-					renderer->second.addDecoration( this->name );
+						SelLog->Log('C', "\t\tThe Parent is Renderer '%s'", arg.c_str());
+					this->parentR = &(renderer->second);
+					renderer->second.addPainting( this );
 				} else {
 					SelLog->Log('F', "\t\tRenderer '%s' is not (yet ?) defined", arg.c_str());
 					exit(EXIT_FAILURE);

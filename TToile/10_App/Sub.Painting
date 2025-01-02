@@ -8,6 +8,11 @@
 -- if not set, takes the filename
 --->> name=Toto
 --
+-- Parent of this Painting
+-- Only one can be present
+-->> Renderer Parent=LCD
+--->> Painting Parent=another painting
+--
 -- Disable this painting
 -->> disabled
 --
@@ -17,7 +22,7 @@
 --
 -- Origine of the surface
 -- 0,0 by default
--->> Origine=5,1
+--->> Origine=5,1
 -- Size of the surface
--->> Size=10,2
+--->> Size=10,2
 

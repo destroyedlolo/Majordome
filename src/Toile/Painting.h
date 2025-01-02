@@ -12,10 +12,16 @@ class Painting;	// Avoid nested includes
 #include "../Config.h"
 #include "../Helpers.h"
 #include "../Object.h"
+#include "Renderer.h"
 
 #include <Selene/SelGenericSurface.h>
 
 class Painting : public Object {
+	struct SelGenericSurface *surface;
+
+	Renderer *parentR;	// The parent is a renderer
+	Painting *parentP;	// The parent is a painting
+
 public:
 	/* constructor from file
 	 * -> file : file to load
