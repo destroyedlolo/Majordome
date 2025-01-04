@@ -129,7 +129,7 @@ void Painting::initFromParent(){
 
 	if(this->parentR){
 		printf(">>> (%p) ParentR : %p, srf : %p\n", this, this->parentR, this->parentR->getSurface());
-//		printf(">>> ParentR : '%s'\n", this->parentR->getSurface()->cb->LuaObjectName());
+		printf(">>> ParentR : '%s'\n", this->parentR->getSurface()->cb->LuaObjectName());
 	} else if(this->parentP){
 	} else {
 		SelLog->Log('F', "[Painting \"%s\"] No parent defined", this->name.c_str());

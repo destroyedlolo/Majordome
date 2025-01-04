@@ -14,6 +14,22 @@ namespace Toile {
 
 	bool execRenderers();		// Exec Renderers own code
 	void RefreshRenderers();	// Exec Renderers' Decoration
+
+	struct Coordinates {
+		uint16_t x;
+		uint16_t y;
+
+		Coordinates(): x(0), y(0){};
+	};
+
+	struct SurfaceGeometry {
+		uint16_t x;
+		uint16_t y;
+		uint16_t width;
+		uint16_t height;
+
+		SurfaceGeometry(): x(0), y(0), width(0), height(0){};
+	};
 }
 
 #endif

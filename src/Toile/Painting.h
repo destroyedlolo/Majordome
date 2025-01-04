@@ -9,10 +9,12 @@
 
 class Painting;	// Avoid nested includes
 
+#include "Toile.h"
+#include "Renderer.h"
+
 #include "../Config.h"
 #include "../Helpers.h"
 #include "../Object.h"
-#include "Renderer.h"
 
 #include <Selene/SelGenericSurface.h>
 
@@ -36,6 +38,7 @@ public:
 #endif
 
 	/* Try to initialize missing fields from its parent
+	 * Then create the subsurface.
 	 * Fails in case of error.
 	 */
 	void initFromParent();
