@@ -61,6 +61,9 @@ public:
 	NamedMinMaxElements NamedMinMaxList;
 
 #ifdef TOILE
+		/* Storing pointers here as we'll having lot of 
+		 * cross references in object
+		 */
 	typedef std::unordered_map<std::string, Renderer *> RendererElements;
 	RendererElements RendererList;
 
