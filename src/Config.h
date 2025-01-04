@@ -61,7 +61,7 @@ public:
 	NamedMinMaxElements NamedMinMaxList;
 
 #ifdef TOILE
-	typedef std::unordered_map<std::string, Renderer> RendererElements;
+	typedef std::unordered_map<std::string, Renderer *> RendererElements;
 	RendererElements RendererList;
 
 	typedef std::unordered_map<std::string, Painting> PaintingElements;
@@ -102,7 +102,7 @@ public:
 	MinMax &findMinMax( std::string & );
 	NamedMinMax &findNamedMinMax( std::string & );
 #ifdef TOILE
-	Renderer &findRenderer( std::string & );
+	Renderer *findRenderer( std::string & );
 	Painting &findPainting( std::string & );
 	Decoration &findDecoration( std::string & );
 #endif

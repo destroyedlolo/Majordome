@@ -220,13 +220,13 @@ bool LuaExec::feedbyNeeded( lua_State *L, bool require ){
 #ifdef TOILE
 	for(auto &i : this->needed_renderer){
 		try {
-			class Renderer &rd = config.RendererList.at( i );
+			class Renderer *rd = config.RendererList.at( i );
 			class SelGenericSurfaceLua *renderer = (class SelGenericSurfaceLua *)lua_newuserdata(L, sizeof(class SelGenericSurfaceLua));
 			assert(renderer);
 
-			renderer->storage = rd.getSurface();
+			renderer->storage = rd->getSurface();
 if(debug) printf("****** surface : %p\n", renderer->storage);
-			luaL_getmetatable(L, rd.getSurface()->cb->LuaObjectName() );
+			luaL_getmetatable(L, rd->getSurface()->cb->LuaObjectName() );
 			lua_setmetatable(L, -2);
 
 			lua_setglobal(L, i.c_str());

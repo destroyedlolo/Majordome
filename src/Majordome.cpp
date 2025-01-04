@@ -425,7 +425,7 @@ int main(int ac, char **av){
 
 #	ifdef	DEBUG
 	for(auto &r : config.RendererList)
-		r.second.dump();
+		r.second->dump();
 
 	for(auto &r : config.PaintingList)
 		r.second.dump();

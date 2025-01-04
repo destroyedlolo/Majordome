@@ -35,11 +35,11 @@ bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &
 		if(debug) puts("*D**F Toile::readConfigToile() - Renderer");
 
 		std::string name;
-		Renderer paint( completpath, where, name, L );
+		auto paint = new Renderer( completpath, where, name, L );
 	
 		Config::RendererElements::iterator prev;
 		if((prev = cfg.RendererList.find(name)) != cfg.RendererList.end()){
-			SelLog->Log('F', "Renderer '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second.getWhere().c_str());
+			SelLog->Log('F', "Renderer '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhere().c_str());
 			exit(EXIT_FAILURE);
 		} else
 			cfg.RendererList.insert( std::make_pair(name, paint) );
@@ -84,12 +84,12 @@ bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &
 
 bool Toile::execRenderers(){
 	for(auto &i: config.RendererList){
-		if(!i.second.exec()){
-			if(i.second.getFatal())
+		if(!i.second->exec()){
+			if(i.second->getFatal())
 				return false;
 		}
 
-		for(auto &paint: i.second.PaintingList)
+		for(auto &paint: i.second->PaintingList)
 			paint->initFromParent();
 	}
 
@@ -98,9 +98,9 @@ bool Toile::execRenderers(){
 
 void Toile::RefreshRenderers(){
 	for(auto &r: config.RendererList){
-		for(auto &dn: r.second.DecorationsList){
+		for(auto &dn: r.second->DecorationsList){
 			auto &d = config.findDecoration(dn);
-			d.exec(r.second);
+			d.exec(*(r.second));
 		}
 	}
 }

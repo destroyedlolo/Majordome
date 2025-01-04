@@ -56,7 +56,7 @@ Decoration::Decoration( const std::string &fch, std::string &where, std::string 
 					if(verbose)
 						SelLog->Log('C', "\t\tAdded to renderer '%s'", arg.c_str());
 					nameused = true;
-					renderer->second.addDecoration( this->name );
+					renderer->second->addDecoration( this->name );
 				} else {
 					SelLog->Log('F', "\t\tRenderer '%s' is not (yet ?) defined", arg.c_str());
 					exit(EXIT_FAILURE);

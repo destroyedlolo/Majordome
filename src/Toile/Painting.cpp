@@ -68,8 +68,8 @@ Painting::Painting( const std::string &fch, std::string &where, std::string &nam
 #else
 						SelLog->Log('C', "\t\tThe Parent is Renderer '%s'", arg.c_str());
 #endif
-					this->parentR = &(renderer->second);
-					renderer->second.addPainting( this );
+					this->parentR = renderer->second;
+					renderer->second->addPainting( this );
 				} else {
 					SelLog->Log('F', "\t\tRenderer '%s' is not (yet ?) defined", arg.c_str());
 					exit(EXIT_FAILURE);
