@@ -125,8 +125,10 @@ void Painting::initFromParent(){
 		SelLog->Log('F', "Painting::initFromParent()");
 
 	if(this->parentR){
-		printf(">>> (%p) ParentR : %p, srf : %p\n", this, this->parentR, this->parentR->getSurface());
 		printf(">>> ParentR : '%s'\n", this->parentR->getSurface()->cb->LuaObjectName());
+		if(!this->geometry.w || !this->geometry.h){	// size not set
+
+		}
 	} else if(this->parentP){
 	} else {
 		SelLog->Log('F', "[Painting \"%s\"] No parent defined", this->name.c_str());
