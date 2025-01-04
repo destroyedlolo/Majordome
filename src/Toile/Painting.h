@@ -24,6 +24,8 @@ class Painting : public Object {
 	Renderer *parentR;	// The parent is a renderer
 	Painting *parentP;	// The parent is a painting
 
+	Toile::SurfaceGeometry geometry;
+
 public:
 	/* constructor from file
 	 * -> file : file to load

@@ -6,7 +6,12 @@
 
 #include <cstdint>
 
-#include "../Config.h"
+// Can't be included as creating rouding dependancies
+// #include "../Config.h"
+
+#include <string>
+#include <lua.hpp>	/* Lua's state needed */
+class Config;
 
 namespace Toile {
 	uint8_t objectweight( const char *ext );
@@ -25,10 +30,10 @@ namespace Toile {
 	struct SurfaceGeometry {
 		uint16_t x;
 		uint16_t y;
-		uint16_t width;
-		uint16_t height;
+		uint16_t w;
+		uint16_t h;
 
-		SurfaceGeometry(): x(0), y(0), width(0), height(0){};
+		SurfaceGeometry(): x(0), y(0), w(0), h(0){};
 	};
 }
 

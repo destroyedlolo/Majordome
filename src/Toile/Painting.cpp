@@ -25,9 +25,6 @@ Painting::Painting( const std::string &fch, std::string &where, std::string &nam
 	this->name = name;
 	this->where = where;
 
-	uint16_t x=0, y=0;
-	uint16_t w=0, h=0;
-
 	/*
 	 * Reading file's content
 	 */
@@ -75,19 +72,19 @@ Painting::Painting( const std::string &fch, std::string &where, std::string &nam
 					exit(EXIT_FAILURE);
 				}
 			} else if(!!(arg = striKWcmp( l, "-->> Origin=" ))){
-				int r = sscanf(arg.c_str(), "%hu,%hu", &x, &y);
+				int r = sscanf(arg.c_str(), "%hu,%hu", &(this->geometry.x), &(this->geometry.y));
 				if(r != 2)
 					SelLog->Log('W', "Wasn't able to read Origine='s arguments");
 
 				if(verbose)
-					SelLog->Log('C', "\t\tPainting's origin : %u,%u", x,y);
+					SelLog->Log('C', "\t\tPainting's origin : %u,%u", this->geometry.x,this->geometry.y);
 			} else if(!!(arg = striKWcmp( l, "-->> Size=" ))){
-				int r = sscanf(arg.c_str(), "%hux%hu", &w, &h);
+				int r = sscanf(arg.c_str(), "%hux%hu", &(this->geometry.w), &(this->geometry.h));
 				if(r != 2)
 					SelLog->Log('W', "Wasn't able to read Size='s arguments");
 
 				if(verbose)
-					SelLog->Log('C', "\t\tPainting's Size : %ux%u", w,h);
+					SelLog->Log('C', "\t\tPainting's Size : %ux%u", this->geometry.w,this->geometry.h);
 			} else if( Object::readConfigDirective(l, nameused) )
 				// Don't use LuaExec's as "need_??" is not used
 				nameused = true;
