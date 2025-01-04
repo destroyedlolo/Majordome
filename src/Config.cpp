@@ -205,7 +205,7 @@ Renderer *Config::findRenderer( std::string &n ) {
 		return (*obj).second;
 }
 
-Decoration &Config::findDecoration( std::string &n ) {
+Decoration *Config::findDecoration( std::string &n ) {
 	Config::DecorationElements::iterator obj;
 
 	if( (obj = this->DecorationList.find( n )) == this->DecorationList.end() )
@@ -214,7 +214,7 @@ Decoration &Config::findDecoration( std::string &n ) {
 		return (*obj).second;
 }
 
-Painting &Config::findPainting( std::string &n ) {
+Painting *Config::findPainting( std::string &n ) {
 	Config::PaintingElements::iterator obj;
 
 	if( (obj = this->PaintingList.find( n )) == this->PaintingList.end() )

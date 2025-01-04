@@ -428,7 +428,7 @@ int main(int ac, char **av){
 		r.second->dump();
 
 	for(auto &r : config.PaintingList)
-		r.second.dump();
+		r.second->dump();
 #	endif
 #endif
 	config.RunStartups();	// Run startup functions
