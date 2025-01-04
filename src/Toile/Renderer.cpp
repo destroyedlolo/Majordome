@@ -17,8 +17,13 @@ extern "C" {
 };
 
 Renderer::Renderer( const std::string &fch, std::string &where, std::string &name, lua_State *L ): surface(NULL), fatal(false){
-	if(verbose)
+	if(verbose){
 		SelLog->Log('L', "\t'%s'", fch.c_str());
+#if DEBUG
+		SelLog->Log('D', "\t\tid : (%p)", this);
+#endif
+	}
+
 
 	this->extrName( fch, name );
 	this->name = name;
@@ -91,6 +96,9 @@ if(debug) puts("*D***F Renderer::Renderer()");
 }
 
 bool Renderer::exec(){	/* From LuaExec::execSync() */
+	if(debug)
+		SelLog->Log('D', "Renderer::exec()");
+
 	lua_State *L = luaL_newstate();
 	if( !L ){
 		SelLog->Log('E', "Unable to create a new Lua State for '%s' from '%s'", this->getNameC(), this->getWhereC() );
@@ -132,9 +140,22 @@ if(debug) puts("*D* exec 5");
 		return false;
 	}
 	this->surface = srf->storage;
-if(debug) printf("*D****** surface : %p\n", srf->storage);
+if(debug) printf("*D****** surface : %p (%p)\n", srf->storage, this->getSurface());
 
 		/* cleaning */
 	lua_close(L);
+
+	if(debug)
+		SelLog->Log('D', "Renderer::exec() - End");
+
 	return true;
 }
+
+#ifdef DEBUG
+void Renderer::dump(){
+	std::cout << "Renderer::dump() of " << static_cast<void*>(this) << std::endl;
+	std::cout << "\tName : " << this->getName() << std::endl;
+	std::cout << "\tWhere : " << this->getWhere() << std::endl;
+	std::cout << "\tsurface : " << static_cast<void*>(this->getSurface()) << std::endl;
+}
+#endif

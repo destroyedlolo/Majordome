@@ -31,6 +31,10 @@ public:
 	 */
 	Painting( const std::string &file, std::string &where, std::string &name, lua_State *L );
 
+#ifdef DEBUG
+	void dump();
+#endif
+
 	/* Try to initialize missing fields from its parent
 	 * Fails in case of error.
 	 */

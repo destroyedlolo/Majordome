@@ -422,6 +422,14 @@ int main(int ac, char **av){
 		SelLog->Log('F', "At least fatal renderer failed");
 		exit(EXIT_FAILURE);
 	}
+
+#	ifdef	DEBUG
+	for(auto &r : config.RendererList)
+		r.second.dump();
+
+	for(auto &r : config.PaintingList)
+		r.second.dump();
+#	endif
 #endif
 	config.RunStartups();	// Run startup functions
 	config.SubscribeTopics();	// MQTT : activate topics receiving

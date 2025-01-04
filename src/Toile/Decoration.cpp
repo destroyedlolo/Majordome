@@ -84,6 +84,9 @@ Decoration::Decoration( const std::string &fch, std::string &where, std::string 
 }
 
 void Decoration::exec(Renderer &rd){	/* From LuaExec::execSync() */
+	if(debug)
+		SelLog->Log('D', "Decoration::exec()");
+
 	lua_State *L = luaL_newstate();
 	if( !L ){
 		SelLog->Log('E', "Unable to create a new Lua State for '%s' from '%s'", this->getNameC(), this->getWhereC() );
@@ -117,5 +120,9 @@ void Decoration::exec(Renderer &rd){	/* From LuaExec::execSync() */
 	}
 		/* cleaning */
 	lua_close(L);
+
+	if(debug)
+		SelLog->Log('D', "Decoration::exec() - End");
+
 	return;
 }
