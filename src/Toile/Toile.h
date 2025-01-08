@@ -21,17 +21,17 @@ namespace Toile {
 	void RefreshRenderers();	// Exec Renderers' Decoration
 
 	struct Coordinates {
-		uint16_t x;
-		uint16_t y;
+		uint32_t x;
+		uint32_t y;
 
 		Coordinates(): x(0), y(0){};
 	};
 
 	struct SurfaceGeometry {
-		uint16_t x;
-		uint16_t y;
-		uint16_t w;
-		uint16_t h;
+		uint32_t x;
+		uint32_t y;
+		uint32_t w;
+		uint32_t h;
 
 		SurfaceGeometry(): x(0), y(0), w(0), h(0){};
 	};

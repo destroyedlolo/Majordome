@@ -72,14 +72,14 @@ Painting::Painting( const std::string &fch, std::string &where, std::string &nam
 					exit(EXIT_FAILURE);
 				}
 			} else if(!!(arg = striKWcmp( l, "-->> Origin=" ))){
-				int r = sscanf(arg.c_str(), "%hu,%hu", &(this->geometry.x), &(this->geometry.y));
+				int r = sscanf(arg.c_str(), "%u,%u", &(this->geometry.x), &(this->geometry.y));
 				if(r != 2)
 					SelLog->Log('W', "Wasn't able to read Origine='s arguments");
 
 				if(verbose)
 					SelLog->Log('C', "\t\tPainting's origin : %u,%u", this->geometry.x,this->geometry.y);
 			} else if(!!(arg = striKWcmp( l, "-->> Size=" ))){
-				int r = sscanf(arg.c_str(), "%hux%hu", &(this->geometry.w), &(this->geometry.h));
+				int r = sscanf(arg.c_str(), "%ux%u", &(this->geometry.w), &(this->geometry.h));
 				if(r != 2)
 					SelLog->Log('W', "Wasn't able to read Size='s arguments");
 
@@ -122,12 +122,18 @@ void Painting::dump(){
 
 void Painting::initFromParent(){
 	if(debug)
-		SelLog->Log('F', "Painting::initFromParent()");
+		SelLog->Log('D', "Painting::initFromParent()");
 
 	if(this->parentR){
-		printf(">>> ParentR : '%s'\n", this->parentR->getSurface()->cb->LuaObjectName());
+		if(debug)
+			SelLog->Log('D', "[Painting \"%s\"] ParentR's type : '%s'", this->name.c_str(), this->parentR->getSurface()->cb->LuaObjectName());
 		if(!this->geometry.w || !this->geometry.h){	// size not set
-
+			uint32_t w,h;
+			if(!this->parentR->getSurface()->cb->getSize(this->parentR->getSurface(), &w,&h)){
+				SelLog->Log('F', "[Painting \"%s\"] Getting the geometry from parent is not supported");
+				exit(EXIT_FAILURE);
+			} else
+				SelLog->Log('D', "[Painting \"%s\"] Get geometry from parent : %lux%lu", this->name.c_str(), w,h);
 		}
 	} else if(this->parentP){
 	} else {
@@ -136,5 +142,5 @@ void Painting::initFromParent(){
 	}
 
 	if(debug)
-		SelLog->Log('F', "Painting::initFromParent() - End");
+		SelLog->Log('D', "Painting::initFromParent() - End");
 }
