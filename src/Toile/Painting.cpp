@@ -122,9 +122,9 @@ void Painting::dump(){
 
 #endif
 
-void Painting::initFromParent(){
+void Painting::exec(){
 	if(debug)
-		SelLog->Log('D', "Painting::initFromParent()");
+		SelLog->Log('D', "Painting::exec()");
 
 	if(this->parentR){
 		if(debug)
@@ -159,6 +159,11 @@ void Painting::initFromParent(){
 		exit(EXIT_FAILURE);
 	}
 
+	for(auto &dn: this->DecorationsList){
+		auto d = config.findDecoration(dn);
+		d->exec(*this);
+	}
+
 	if(debug)
-		SelLog->Log('D', "Painting::initFromParent() - End");
+		SelLog->Log('D', "Painting::exec() - End");
 }

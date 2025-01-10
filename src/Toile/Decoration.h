@@ -27,7 +27,9 @@ public:
 	Decoration( const std::string &file, std::string &where, std::string &name, lua_State *L );
 	
 	/* Run the Lua code to build the renderer */
-	void exec(Renderer &);
+	void exec(struct SelGenericSurface *);
+	void exec(Renderer &rd);
+	void exec(Painting &pt);
 };
 
 #endif

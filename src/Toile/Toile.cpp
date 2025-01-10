@@ -89,8 +89,9 @@ bool Toile::execRenderers(){
 				return false;
 		}
 
+			// Initialize subsurfaces
 		for(auto &paint: i.second->PaintingList)
-			paint->initFromParent();
+			paint->exec();
 	}
 
 	return true;

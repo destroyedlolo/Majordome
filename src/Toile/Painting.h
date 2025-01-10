@@ -27,6 +27,8 @@ class Painting : public Object {
 	Toile::SurfaceGeometry geometry;
 
 public:
+	StringVector DecorationsList;
+
 	/* constructor from file
 	 * -> file : file to load
 	 * -> where : file's directory
@@ -43,6 +45,11 @@ public:
 	 * Then create the subsurface.
 	 * Fails in case of error.
 	 */
-	void initFromParent();
+	void exec();
+
+	/* Accessors */
+	struct SelGenericSurface *getSurface(){ return this->surface; }
+
+	void addDecoration( std::string t ){ this->DecorationsList.Add(t); }
 };
 #endif

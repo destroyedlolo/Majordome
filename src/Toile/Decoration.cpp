@@ -61,6 +61,18 @@ Decoration::Decoration( const std::string &fch, std::string &where, std::string 
 					SelLog->Log('F', "\t\tRenderer '%s' is not (yet ?) defined", arg.c_str());
 					exit(EXIT_FAILURE);
 				}
+			} else if(!!(arg = striKWcmp( l, "-->> ApplyOn=" ))){
+					// Search the Painting to apply on
+				Config::PaintingElements::iterator paint;
+				if( (paint = config.PaintingList.find(arg)) != config.PaintingList.end()){
+					if(verbose)
+						SelLog->Log('C', "\t\tAdded to Painting '%s'", arg.c_str());
+					nameused = true;
+					paint->second->addDecoration( this->name );
+				} else {
+					SelLog->Log('F', "\t\tPainting '%s' is not (yet ?) defined", arg.c_str());
+					exit(EXIT_FAILURE);
+				}
 			} else if( Object::readConfigDirective(l, nameused) )
 				// Don't use LuaExec's as "need_??" is not used
 				nameused = true;
@@ -83,9 +95,9 @@ Decoration::Decoration( const std::string &fch, std::string &where, std::string 
 		exit(EXIT_FAILURE);
 }
 
-void Decoration::exec(Renderer &rd){	/* From LuaExec::execSync() */
+void Decoration::exec(struct SelGenericSurface *srf){	/* From LuaExec::execSync() */
 	if(debug)
-		SelLog->Log('D', "Decoration::exec()");
+		SelLog->Log('D', "Decoration::exec(Renderer)");
 
 	lua_State *L = luaL_newstate();
 	if( !L ){
@@ -99,8 +111,8 @@ void Decoration::exec(Renderer &rd){	/* From LuaExec::execSync() */
 	class SelGenericSurfaceLua *renderer = (class SelGenericSurfaceLua *)lua_newuserdata(L, sizeof(class SelGenericSurfaceLua));
 	assert(renderer);
 
-	renderer->storage = rd.getSurface();
-	luaL_getmetatable(L, rd.getSurface()->cb->LuaObjectName() );
+	renderer->storage = srf;
+	luaL_getmetatable(L, srf->cb->LuaObjectName() );
 	lua_setmetatable(L, -2);
 	lua_setglobal( L, "MAJORDOME_PAINTING" );
 
@@ -126,3 +138,7 @@ void Decoration::exec(Renderer &rd){	/* From LuaExec::execSync() */
 
 	return;
 }
+
+void Decoration::exec(Renderer &rd){ this->exec(rd.getSurface()); };
+void Decoration::exec(Painting &pt){ this->exec(pt.getSurface()); };
+

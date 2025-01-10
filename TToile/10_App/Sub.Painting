@@ -16,9 +16,12 @@
 -- Origine of the surface
 -- 0,0 by default
 -->> Origin=5,1
+--
 -- Size of the surface
 -- If not set, trying to get it from parent
 --->> Size=16x2
+-- Notez-Bien :
+--	- set to the size of the parent if the origin is outsize parent surface
 --
 -- Disable this painting
 --->> disabled
