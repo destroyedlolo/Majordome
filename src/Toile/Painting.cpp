@@ -116,6 +116,8 @@ void Painting::dump(){
 	std::cout << "\tsurface : " << static_cast<void*>(this->surface) << std::endl;
 	std::cout << "\tparentR : " << static_cast<void*>(this->parentR) << std::endl;
 	std::cout << "\tparentP : " << static_cast<void*>(this->parentP) << std::endl;
+	std::cout << "\tOrigin : " << this->geometry.x << "x" << this->geometry.y << std::endl;
+	std::cout << "\tSize : " << this->geometry.w << "x" << this->geometry.h << std::endl;
 }
 
 #endif
@@ -130,10 +132,26 @@ void Painting::initFromParent(){
 		if(!this->geometry.w || !this->geometry.h){	// size not set
 			uint32_t w,h;
 			if(!this->parentR->getSurface()->cb->getSize(this->parentR->getSurface(), &w,&h)){
-				SelLog->Log('F', "[Painting \"%s\"] Getting the geometry from parent is not supported");
+				SelLog->Log('F', "[Painting \"%s\"] Getting the geometry from parent is not supported", this->name.c_str());
 				exit(EXIT_FAILURE);
 			} else
 				SelLog->Log('D', "[Painting \"%s\"] Get geometry from parent : %lux%lu", this->name.c_str(), w,h);
+
+			if(this->geometry.x >= w || this->geometry.y >= h){
+				SelLog->Log('W', "[Painting \"%s\"] Origin outsize its parent", this->name.c_str());
+				this->geometry.w = w;
+				this->geometry.h = h;
+			} else {
+				this->geometry.w = w - this->geometry.x;
+				this->geometry.h = h - this->geometry.y;
+			}
+
+			SelLog->Log('D', "[Painting \"%s\"] Guessed geometry : %lux%lu", this->name.c_str(), this->geometry.w,this->geometry.h);
+		}
+
+		if(!this->parentR->getSurface()->cb->subSurface(this->parentR->getSurface(), this->geometry.x, this->geometry.y, this->geometry.w, this->geometry.h, this->parentR->getSurface()->cb->getPrimary(this->parentR->getSurface()))){
+			SelLog->Log('F', "[Painting \"%s\"] Can't create subsurface", this->name.c_str());
+			exit(EXIT_FAILURE);
 		}
 	} else if(this->parentP){
 	} else {
