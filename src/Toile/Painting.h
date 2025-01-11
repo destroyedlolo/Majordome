@@ -41,15 +41,29 @@ public:
 	void dump();
 #endif
 
-	/* Try to initialize missing fields from its parent
-	 * Then create the subsurface.
-	 * Fails in case of error.
-	 */
-	void exec();
+	/* ***
+	 * Accessors
+	 * ***/
 
-	/* Accessors */
 	struct SelGenericSurface *getSurface(){ return this->surface; }
 
+
+	/* ***
+	 * Childs' management
+	 * ***/
+
 	void addDecoration( std::string t ){ this->DecorationsList.Add(t); }
+
+
+	/* ***
+	 * Renderer own's 
+	 */
+
+		// Try to initialize missing fields from its parent
+	 	// Then create the subsurface.
+	 	// Fails in case of error.
+	void exec();
+	void refresh();		// Refresh Painting's own decoration
+	void refreshAll();	// Refresh Painting and its childs
 };
 #endif

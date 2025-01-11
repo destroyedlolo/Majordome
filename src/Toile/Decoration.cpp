@@ -99,6 +99,12 @@ void Decoration::exec(struct SelGenericSurface *srf){	/* From LuaExec::execSync(
 	if(debug)
 		SelLog->Log('D', "Decoration::exec(%p)", srf);
 
+		/* Put the cursor to its origin
+		 * The surface is not cleared : if needed it has to be done
+		 * explicitly !
+		 */
+	srf->cb->Home(srf);
+
 	lua_State *L = luaL_newstate();
 	if( !L ){
 		SelLog->Log('E', "Unable to create a new Lua State for '%s' from '%s'", this->getNameC(), this->getWhereC() );

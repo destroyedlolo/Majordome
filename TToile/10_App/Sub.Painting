@@ -19,7 +19,7 @@
 --
 -- Size of the surface
 -- If not set, trying to get it from parent
---->> Size=16x2
+-->> Size=10x2
 -- Notez-Bien :
 --	- set to the size of the parent if the origin is outsize parent surface
 --

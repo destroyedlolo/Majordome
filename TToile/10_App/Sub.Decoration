@@ -25,5 +25,10 @@
 
 -- The surface to apply on is embodied as MAJORDOME_PAINTING
 
+-- the surface need to be manually cleared
+-- otherwise, the "behind" is still displayed (transparency)
+MAJORDOME_PAINTING:Clear()
+
+-- write something
 MAJORDOME_PAINTING:WriteString("truc");
 

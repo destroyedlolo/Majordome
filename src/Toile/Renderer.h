@@ -40,17 +40,30 @@ public:
 	void dump();
 #endif
 
-	/* Accessor */
+
+	/* ***
+	 * Accessors
+	 * ***/
+
 	bool getFatal(){ return this->fatal; }
-
-	/* Run the Lua code to build the renderer */
-	bool exec();
-
-	/* Accessors */
 	struct SelGenericSurface *getSurface(){ return this->surface; }
+
+
+	/* ***
+	 * Childs' management
+	 * ***/
 
 	void addDecoration( std::string t ){ this->DecorationsList.Add(t); }
 	void addPainting( Painting *p ){ this->PaintingList.push_back(p); }
+
+
+	/* ***
+	 * Renderer own's 
+	 */
+
+	bool exec(); 		// Run the Lua code to build the renderer
+	void refresh();		// Refresh renderer's own decoration
+	void refreshAll();	// Refresh renderer and its childs
 };
 
 #endif

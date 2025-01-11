@@ -1,4 +1,4 @@
--- This is an example of Decoration script
+-- Fill the primary background
 --
 -- Decoration paints a surface.
 --
@@ -25,12 +25,11 @@
 
 -- The surface to apply on is embodied as MAJORDOME_PAINTING
 
-MAJORDOME_PAINTING:WriteString("Majordome : ".. string.format("%.4f", MAJORDOME_VERSION))
+local w,h = MAJORDOME_PAINTING:GetSize()
 
-MAJORDOME_PAINTING:SetCursor(0,2)
-MAJORDOME_PAINTING:WriteString("Bla bla")
-
-MAJORDOME_PAINTING:SetCursor(0,3)
-for c=33,52 do
-	MAJORDOME_PAINTING:WriteString(string.char(c))
+for j = 1,h do
+	MAJORDOME_PAINTING:SetCursor(0,j-1)
+	for i = 0,w do
+		MAJORDOME_PAINTING:WriteString( string.char(255) )
+	end
 end

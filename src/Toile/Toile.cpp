@@ -98,10 +98,6 @@ bool Toile::execRenderers(){
 }
 
 void Toile::RefreshRenderers(){
-	for(auto &r: config.RendererList){
-		for(auto &dn: r.second->DecorationsList){
-			auto d = config.findDecoration(dn);
-			d->exec(*(r.second));
-		}
-	}
+	for(auto &r: config.RendererList)
+		r.second->refreshAll();
 }

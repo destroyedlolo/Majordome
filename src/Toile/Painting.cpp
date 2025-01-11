@@ -159,11 +159,23 @@ void Painting::exec(){
 		exit(EXIT_FAILURE);
 	}
 
+	if(debug)
+		SelLog->Log('D', "Painting::exec() - End");
+}
+
+void Painting::refresh(){
 	for(auto &dn: this->DecorationsList){
 		auto d = config.findDecoration(dn);
 		d->exec(*this);
 	}
+}
 
-	if(debug)
-		SelLog->Log('D', "Painting::exec() - End");
+void Painting::refreshAll(){
+	this->refresh();
+
+#if 0
+		// refresh childs
+	for(auto &paint: this->PaintingList)
+		paint->refreshAll();
+#endif
 }

@@ -159,3 +159,18 @@ void Renderer::dump(){
 	std::cout << "\tsurface : " << static_cast<void*>(this->getSurface()) << std::endl;
 }
 #endif
+
+void Renderer::refresh(){
+	for(auto &dn: this->DecorationsList){
+		auto d = config.findDecoration(dn);
+		d->exec(*this);
+	}
+}
+
+void Renderer::refreshAll(){
+	this->refresh();
+
+		// Refresh subsurface
+	for(auto &paint: this->PaintingList)
+		paint->refreshAll();
+}
