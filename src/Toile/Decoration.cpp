@@ -97,7 +97,7 @@ Decoration::Decoration( const std::string &fch, std::string &where, std::string 
 
 void Decoration::exec(struct SelGenericSurface *srf){	/* From LuaExec::execSync() */
 	if(debug)
-		SelLog->Log('D', "Decoration::exec(Renderer)");
+		SelLog->Log('D', "Decoration::exec(%p)", srf);
 
 	lua_State *L = luaL_newstate();
 	if( !L ){

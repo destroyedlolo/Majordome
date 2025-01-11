@@ -149,7 +149,7 @@ void Painting::exec(){
 			SelLog->Log('D', "[Painting \"%s\"] Guessed geometry : %lux%lu", this->name.c_str(), this->geometry.w,this->geometry.h);
 		}
 
-		if(!this->parentR->getSurface()->cb->subSurface(this->parentR->getSurface(), this->geometry.x, this->geometry.y, this->geometry.w, this->geometry.h, this->parentR->getSurface()->cb->getPrimary(this->parentR->getSurface()))){
+		if(!(this->surface = this->parentR->getSurface()->cb->subSurface(this->parentR->getSurface(), this->geometry.x, this->geometry.y, this->geometry.w, this->geometry.h, this->parentR->getSurface()->cb->getPrimary(this->parentR->getSurface())))){
 			SelLog->Log('F', "[Painting \"%s\"] Can't create subsurface", this->name.c_str());
 			exit(EXIT_FAILURE);
 		}

@@ -25,5 +25,5 @@
 
 -- The surface to apply on is embodied as MAJORDOME_PAINTING
 
--- MAJORDOME_PAINTING:WriteString("truc");
+MAJORDOME_PAINTING:WriteString("truc");
 
