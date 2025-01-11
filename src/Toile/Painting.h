@@ -29,6 +29,7 @@ public:
 	StringVector DecorationsList;
 
 	Painting():surface(NULL), parentR(NULL), parentP(NULL){};
+	Painting(const std::string &fch, std::string &where, std::string &name): Object(fch, where, name), surface(NULL), parentR(NULL), parentP(NULL){};
 
 	/* constructor from file
 	 * -> file : file to load
