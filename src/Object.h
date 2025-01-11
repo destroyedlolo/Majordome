@@ -20,6 +20,8 @@ protected:
 
 public:
 	Object() : disabled(false), quiet(false){};
+	Object(const std::string &fch, std::string &where, std::string &name);
+
 	Object& operator=(const Object&) = default;	/* avoid "defaulted move" warning */
 
 	void enable( void ){ this->disabled = false; };

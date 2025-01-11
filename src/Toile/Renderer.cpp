@@ -16,7 +16,7 @@ extern "C" {
     #include "lauxlib.h"
 };
 
-Renderer::Renderer( const std::string &fch, std::string &where, std::string &name, lua_State *L ): surface(NULL), fatal(false){
+Renderer::Renderer( const std::string &fch, std::string &where, std::string &name, lua_State *L ) : Object(fch, where, name), surface(NULL), fatal(false){
 	if(verbose){
 		SelLog->Log('L', "\t'%s'", fch.c_str());
 #if DEBUG

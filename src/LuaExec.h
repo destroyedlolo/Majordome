@@ -9,6 +9,8 @@
 #define LUAEXEC_H
 
 #include <sstream>	// stringstream
+#include <string>
+#include <unordered_map>
 
 #include "Selene.h"
 

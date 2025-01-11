@@ -8,8 +8,9 @@
 #define RENDERER_H
 
 class Renderer;	// Avoid nested includes
+class Config;
 
-#include "../Config.h"
+// #include "../Config.h"
 #include "../Helpers.h"
 #include "../Object.h"
 #include "../LuaExec.h"

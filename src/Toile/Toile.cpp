@@ -6,6 +6,7 @@
 #include "Renderer.h"
 #include "Painting.h"
 #include "Decoration.h"
+#include "Field.h"
 
 #include <iostream>
 

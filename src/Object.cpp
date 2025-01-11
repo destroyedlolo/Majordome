@@ -2,6 +2,15 @@
 #include "Selene.h"
 #include "Helpers.h"
 
+Object::Object(const std::string &fch, std::string &where, std::string &name) : disabled(false), quiet(false){
+	if(verbose)
+		SelLog->Log('L', "\t'%s'", fch.c_str());
+
+	this->extrName( fch, name );
+	this->name = name;
+	this->where = where;
+}
+
 void Object::extrName( const std::string &fch, std::string &name){
 	name = fch;
 	const size_t last_slash_idx = name.find_last_of("/");	// Filename only

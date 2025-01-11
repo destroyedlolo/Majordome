@@ -9,7 +9,7 @@
 
 class Painting;	// Avoid nested includes
 
-#include "Toile.h"
+// #include "Toile.h"
 #include "Renderer.h"
 
 #include "../Config.h"
@@ -28,6 +28,8 @@ class Painting : public Object {
 
 public:
 	StringVector DecorationsList;
+
+	Painting():surface(NULL), parentR(NULL), parentP(NULL){};
 
 	/* constructor from file
 	 * -> file : file to load
