@@ -6,9 +6,6 @@
 
 #include <cstdint>
 
-// Can't be included as creating rouding dependancies
-// #include "../Config.h"
-
 #include <string>
 #include <lua.hpp>	/* Lua's state needed */
 class Config;

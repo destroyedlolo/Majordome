@@ -7,13 +7,12 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
-class Renderer;	// Avoid nested includes
-class Config;
-
-// #include "../Config.h"
 #include "../Helpers.h"
 #include "../Object.h"
 #include "../LuaExec.h"
+
+class Config;
+class Renderer;	// Avoid nested includes
 
 #include "Painting.h"
 

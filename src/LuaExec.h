@@ -9,10 +9,10 @@
 #define LUAEXEC_H
 
 #include <sstream>	// stringstream
-#include <string>
-#include <unordered_map>
+#include <lua.hpp>	/* Lua's state needed */
 
 #include "Selene.h"
+#include "StringVector.h"
 
 class LuaExec : virtual public Object {
 	struct elastic_storage func;	// Function to execute

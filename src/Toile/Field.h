@@ -6,14 +6,14 @@
 #ifndef FIELD_H
 #define FIELD_H
 
-class Field;
-
 #include "Painting.h"
 
+#if 0
 class Field : public Painting {
 public:
 	Field( const std::string &file, std::string &where, std::string &name, lua_State *L );
 
 };
+#endif
 
 #endif

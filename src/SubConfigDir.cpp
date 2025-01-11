@@ -11,10 +11,10 @@
 #include "Selene.h"
 #include "Helpers.h"
 #include "SubConfigDir.h"
-
 #ifdef TOILE
 #	include "Toile/Toile.h"
 #endif
+#include "Config.h"
 
 /* Determine object weight based on its file extension 
  * Some space are left for modules extensions (like Toile's)

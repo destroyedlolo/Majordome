@@ -6,8 +6,9 @@
 #ifndef SUBCONFIGDIR_H
 #define SUBCONFIGDIR_H
 
-#include "Config.h"
 #include "SortDir.h"
+
+class Config;
 
 class SubConfigDir : virtual public SortDir {
 public :

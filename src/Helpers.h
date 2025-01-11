@@ -11,7 +11,7 @@
 #include <string>
 
 #include <MQTTClient.h> /* PAHO library needed */
-#include <lua.h>	/* Lua's state needed */
+#include <lua.hpp>	/* Lua's state needed */
 
 #include "MayBeEmptyString.h"
 

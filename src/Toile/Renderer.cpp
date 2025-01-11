@@ -3,6 +3,8 @@
  */
 
 #include "Renderer.h"
+#include "../LuaExec.h"
+#include "../Config.h"
 
 #include <iostream>
 #include <fstream>
@@ -10,11 +12,6 @@
 
 #include <cstring>
 #include <cassert>
-
-extern "C" {
-    #include "lualib.h"
-    #include "lauxlib.h"
-};
 
 Renderer::Renderer( const std::string &fch, std::string &where, std::string &name, lua_State *L ) : Object(fch, where, name), surface(NULL), fatal(false){
 	if(verbose){

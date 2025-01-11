@@ -9,10 +9,9 @@
 
 class Painting;	// Avoid nested includes
 
-// #include "Toile.h"
+#include "Toile.h"
 #include "Renderer.h"
 
-#include "../Config.h"
 #include "../Helpers.h"
 #include "../Object.h"
 
