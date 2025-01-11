@@ -6,8 +6,10 @@
 ## Devices
 ### LCD
 
-- [ ] Subsurface
+- [x] Subsurface
+- [ ] Sub subsurface
 - [ ] Field
+- [ ] Series
 - [ ] Layer / Mask
 
 ### OLed
