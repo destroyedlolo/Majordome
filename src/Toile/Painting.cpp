@@ -46,45 +46,7 @@ Painting::Painting( const std::string &fch, std::string &where, std::string &nam
 				break;
 			}
 
-			MayBeEmptyString arg;
-			if(!!(arg = striKWcmp( l, "-->> Renderer Parent=" ))){
-				if(this->parentR || this->parentP){
-					SelLog->Log('F', "\t\tA Painting can't have multiple parents");
-					exit(EXIT_FAILURE);
-				}
-	
-					// Search the parent renderer
-				Config::RendererElements::iterator renderer;
-				if( (renderer = config.RendererList.find(arg)) != config.RendererList.end()){
-					if(verbose)
-#ifdef DEBUG
-						SelLog->Log('C', "\t\tThe Parent is Renderer '%s' (%p)", arg.c_str(), &(renderer->second));
-#else
-						SelLog->Log('C', "\t\tThe Parent is Renderer '%s'", arg.c_str());
-#endif
-					this->parentR = renderer->second;
-					renderer->second->addPainting( this );
-				} else {
-					SelLog->Log('F', "\t\tRenderer '%s' is not (yet ?) defined", arg.c_str());
-					exit(EXIT_FAILURE);
-				}
-			} else if(!!(arg = striKWcmp( l, "-->> Origin=" ))){
-				int r = sscanf(arg.c_str(), "%u,%u", &(this->geometry.x), &(this->geometry.y));
-				if(r != 2)
-					SelLog->Log('W', "Wasn't able to read Origine='s arguments");
-
-				if(verbose)
-					SelLog->Log('C', "\t\tPainting's origin : %u,%u", this->geometry.x,this->geometry.y);
-			} else if(!!(arg = striKWcmp( l, "-->> Size=" ))){
-				int r = sscanf(arg.c_str(), "%ux%u", &(this->geometry.w), &(this->geometry.h));
-				if(r != 2)
-					SelLog->Log('W', "Wasn't able to read Size='s arguments");
-
-				if(verbose)
-					SelLog->Log('C', "\t\tPainting's Size : %ux%u", this->geometry.w,this->geometry.h);
-			} else if( Object::readConfigDirective(l, nameused) )
-				// Don't use LuaExec's as "need_??" is not used
-				nameused = true;
+			this->readConfigDirective(l, nameused);
 		} while(true);
 
 		file.close();
@@ -103,6 +65,48 @@ Painting::Painting( const std::string &fch, std::string &where, std::string &nam
 		SelLog->Log('F', "[Painting \"%s\"] No parent defined", this->name.c_str());
 		exit(EXIT_FAILURE);
 	}
+}
+
+void Painting::readConfigDirective( std::string &l, bool &nameused ){
+	MayBeEmptyString arg;
+	if(!!(arg = striKWcmp( l, "-->> Renderer Parent=" ))){
+		if(this->parentR || this->parentP){
+			SelLog->Log('F', "\t\tA Painting can't have multiple parents");
+			exit(EXIT_FAILURE);
+		}
+	
+			// Search the parent renderer
+		Config::RendererElements::iterator renderer;
+		if( (renderer = config.RendererList.find(arg)) != config.RendererList.end()){
+			if(verbose)
+#ifdef DEBUG
+				SelLog->Log('C', "\t\tThe Parent is Renderer '%s' (%p)", arg.c_str(), &(renderer->second));
+#else
+				SelLog->Log('C', "\t\tThe Parent is Renderer '%s'", arg.c_str());
+#endif
+			this->parentR = renderer->second;
+			renderer->second->addPainting( this );
+		} else {
+			SelLog->Log('F', "\t\tRenderer '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
+	} else if(!!(arg = striKWcmp( l, "-->> Origin=" ))){
+		int r = sscanf(arg.c_str(), "%u,%u", &(this->geometry.x), &(this->geometry.y));
+		if(r != 2)
+			SelLog->Log('W', "Wasn't able to read Origine='s arguments");
+
+		if(verbose)
+			SelLog->Log('C', "\t\tPainting's origin : %u,%u", this->geometry.x,this->geometry.y);
+	} else if(!!(arg = striKWcmp( l, "-->> Size=" ))){
+				int r = sscanf(arg.c_str(), "%ux%u", &(this->geometry.w), &(this->geometry.h));
+		if(r != 2)
+			SelLog->Log('W', "Wasn't able to read Size='s arguments");
+
+		if(verbose)
+			SelLog->Log('C', "\t\tPainting's Size : %ux%u", this->geometry.w,this->geometry.h);
+	} else if( Object::readConfigDirective(l, nameused) )
+		// Don't use LuaExec's as "need_??" is not used
+		nameused = true;
 }
 
 #ifdef DEBUG
