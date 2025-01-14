@@ -42,15 +42,7 @@ Renderer::Renderer( const std::string &fch, std::string &where, std::string &nam
 				break;
 			}
 
-			if( l == "-->> disabled" ){
-				SelLog->Log('F', "\t\tDisabled is not supported with renderer");
-				exit(EXIT_FAILURE);
-			} else if( l == "-->> Fatal" ){
-				if(verbose)
-					SelLog->Log('C', "\t\tFailure is fatal");
-				this->fatal = true;
-			} else if( LuaExec::readConfigDirective(l, nameused) )
-				nameused = true;
+			this->readConfigDirective(l, nameused);
 		} while(true);
 
 		/*
@@ -70,6 +62,18 @@ Renderer::Renderer( const std::string &fch, std::string &where, std::string &nam
 	if( !this->LoadFunc( L, buffer, this->name.c_str() ))
 		exit(EXIT_FAILURE);
 
+}
+
+void Renderer::readConfigDirective( std::string &l, bool &nameused ){
+	if( l == "-->> disabled" ){
+		SelLog->Log('F', "\t\tDisabled is not supported with renderer");
+		exit(EXIT_FAILURE);
+	} else if( l == "-->> Fatal" ){
+		if(verbose)
+			SelLog->Log('C', "\t\tFailure is fatal");
+		this->fatal = true;
+	} else if( LuaExec::readConfigDirective(l, nameused) )
+		nameused = true;
 }
 
 bool Renderer::exec(){	/* From LuaExec::execSync() */

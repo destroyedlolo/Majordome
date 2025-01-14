@@ -40,6 +40,14 @@ public:
 	void dump();
 #endif
 
+	/* Read directives.
+	 * These directives may apply to all derivates.
+	 * Facing unknown directive, LuaExec's is called as well.
+	 *
+	 * -> l : directive line to parse
+	 * -> nameused : is the name already used ?
+	 */
+	void readConfigDirective( std::string &l, bool &nameused );
 
 	/* ***
 	 * Accessors
