@@ -18,6 +18,7 @@ class Painting;	// Avoid nested includes
 #include <Selene/SelGenericSurface.h>
 
 class Painting : public Object {
+protected:
 	struct SelGenericSurface *surface;
 
 	Renderer *parentR;	// The parent is a renderer
