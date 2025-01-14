@@ -35,7 +35,7 @@ public:
 	 * -> L : Lua's state
 	 */
 	Renderer( const std::string &file, std::string &where, std::string &name, lua_State *L );
-
+	
 #ifdef DEBUG
 	void dump();
 #endif

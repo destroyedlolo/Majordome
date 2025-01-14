@@ -16,7 +16,6 @@
 
 Painting::Painting( const std::string &fch, std::string &where, std::string &name, lua_State *L ): Object(fch, where, name), surface(NULL), parentR(NULL), parentP(NULL){
 	if(verbose){
-		SelLog->Log('L', "\t'%s'", fch.c_str());
 #if DEBUG
 		SelLog->Log('D', "\t\tid : (%p)", this);
 #endif
