@@ -45,7 +45,6 @@ public:
 	 *
 	 * -> l : directive line to parse
 	 * -> nameused : is the name already used ?
-	 * <- true if a directive requiring the name has been understood
 	 */
 	void readConfigDirective( std::string &l, bool &nameused );
 
