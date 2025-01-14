@@ -14,13 +14,10 @@
 #include <cassert>
 
 Renderer::Renderer( const std::string &fch, std::string &where, std::string &name, lua_State *L ) : Object(fch, where, name), surface(NULL), fatal(false){
-	if(verbose){
 #if DEBUG
+	if(verbose)
 		SelLog->Log('D', "\t\tid : (%p)", this);
 #endif
-	}
-
-	if(debug) puts("*D**** Renderer::Renderer()");
 
 	/*
 	 * Reading file's content
@@ -73,7 +70,6 @@ Renderer::Renderer( const std::string &fch, std::string &where, std::string &nam
 	if( !this->LoadFunc( L, buffer, this->name.c_str() ))
 		exit(EXIT_FAILURE);
 
-	if(debug) puts("*D***F Renderer::Renderer()");
 }
 
 bool Renderer::exec(){	/* From LuaExec::execSync() */

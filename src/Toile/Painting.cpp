@@ -15,11 +15,10 @@
 #include <cassert>
 
 Painting::Painting( const std::string &fch, std::string &where, std::string &name, lua_State *L ): Object(fch, where, name), surface(NULL), parentR(NULL), parentP(NULL){
-	if(verbose){
 #if DEBUG
+	if(verbose)
 		SelLog->Log('D', "\t\tid : (%p)", this);
 #endif
-	}
 
 	/*
 	 * Reading file's content
