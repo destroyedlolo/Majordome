@@ -61,10 +61,21 @@ Field::Field( const std::string &fch, std::string &where, std::string &name, lua
 		SelLog->Log('F', "[Painting \"%s\"] No parent defined", this->name.c_str());
 		exit(EXIT_FAILURE);
 	}
+
+	if(!this->geometry.h){
+		this->geometry.h = 1;
+		if(verbose)
+			SelLog->Log('C', "\t\tHeight defaulted to : 1");
+	}
 }
 
 void Field::readConfigDirective( std::string &l, bool &nameused ){
-	/* } else */ Painting::readConfigDirective(l, nameused);
+	MayBeEmptyString arg;
+	if(!!(arg = striKWcmp( l, "-->> Sample=" ))){
+		this->geometry.w = arg.length();
+		if(verbose)
+			SelLog->Log('C', "\t\tWidth guessed to : %u", this->geometry.w);
+	} else Painting::readConfigDirective(l, nameused);
 }
 
 

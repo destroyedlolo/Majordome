@@ -13,7 +13,7 @@
 -->> Renderer Parent=LCD
 --->> Painting Parent=another painting
 --
--- Origine of the surface
+-- Origin of the surface
 -- 0,0 by default
 -->> Origin=5,1
 --

@@ -18,6 +18,7 @@
 static const SubConfigDir::extweight fileext[] = {
 	{ ".Renderer", 0xc0 },
 	{ ".Painting", 0x80 },
+	{ ".Field", 0x80 },
 	{ ".Decoration", 0x60 }
 };
 
@@ -76,6 +77,21 @@ bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &
 			cfg.PaintingList.insert( std::make_pair(name, paint) );
 
 		if(debug) puts("*D**F Toile::readConfigToile() - Painting - true");
+		return true;
+	} else if( !strcmp(ext,".Field") ){
+		if(debug) puts("*D**F Toile::readConfigToile() - Field");
+
+		std::string name;
+		auto paint = new Field( completpath, where, name, L );
+	
+		Config::PaintingElements::iterator prev;
+		if((prev = cfg.PaintingList.find(name)) != cfg.PaintingList.end()){
+			SelLog->Log('F', "Field '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhere().c_str());
+			exit(EXIT_FAILURE);
+		} else
+			cfg.PaintingList.insert( std::make_pair(name, paint) );
+
+		if(debug) puts("*D**F Toile::readConfigToile() - Field - true");
 		return true;
 	}
 

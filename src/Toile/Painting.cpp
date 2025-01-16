@@ -94,14 +94,14 @@ void Painting::readConfigDirective( std::string &l, bool &nameused ){
 			SelLog->Log('W', "Wasn't able to read Origine='s arguments");
 
 		if(verbose)
-			SelLog->Log('C', "\t\tPainting's origin : %u,%u", this->geometry.x,this->geometry.y);
+			SelLog->Log('C', "\t\tOrigin : %u,%u", this->geometry.x,this->geometry.y);
 	} else if(!!(arg = striKWcmp( l, "-->> Size=" ))){
 				int r = sscanf(arg.c_str(), "%ux%u", &(this->geometry.w), &(this->geometry.h));
 		if(r != 2)
 			SelLog->Log('W', "Wasn't able to read Size='s arguments");
 
 		if(verbose)
-			SelLog->Log('C', "\t\tPainting's Size : %ux%u", this->geometry.w,this->geometry.h);
+			SelLog->Log('C', "\t\tSize : %ux%u", this->geometry.w,this->geometry.h);
 	} else if( Object::readConfigDirective(l, nameused) )
 		// Don't use LuaExec's as "need_??" is not used
 		nameused = true;
