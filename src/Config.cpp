@@ -45,4 +45,6 @@ void Config::init(std::string &where, lua_State *L){
 	}
 }
 
-
+void Config::SanityChecks( void ){
+/* TODO */
+}

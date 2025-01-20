@@ -172,6 +172,7 @@ static int msgarrived(void *actx, char *topic, int tlen, MQTTClient_message *msg
 	memcpy(cpayload, msg->payload, msg->payloadlen);
 	cpayload[msg->payloadlen] = 0;
 
+/* TODO message handling */
 
 	MQTTClient_freeMessage(&msg);
 	MQTTClient_free(topic);
@@ -322,5 +323,12 @@ int main(int ac, char **av){
 
 	threadEnvironment(SelLua->getLuaState());
 	config.init(UserConfigRoot, SelLua->getLuaState());	// Read user's configuration files
+	config.SanityChecks();
+
+	if(configtest){
+		SelLog->Log('E', "Testing only the configuration ... leaving.");
+		exit(EXIT_FAILURE);
+	}
+
 
 }

@@ -16,6 +16,7 @@
 #include "Config.h"
 
 #include <algorithm>
+#include <cstring>
 
 /* Determine object weight based on its file extension 
  * Some space are left for modules extensions (like Toile's)
@@ -29,15 +30,15 @@ static const SubConfigDir::extweight fileext[] = {
 	{ ".minmax", 0x80 },
 	{ ".namedminmax", 0x80 },
 	{ ".shutdown", 0x50 },
-	{ ".lua", 0x40 },
 #endif
+	{ ".lua", 0x40 },
 	{ ".md", 0x01 }	// ignored, documentation only
 };
 
 static uint8_t objectweight( const char *ext ){
 	uint8_t ret = 0x00;
 	for(SubConfigDir::extweight i : fileext){
-		if(ext == i.ext)
+		if(!strcmp(ext, i.ext))
 			return i.weight;
 	}
 
@@ -72,8 +73,28 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 		std::string completpath = where + '/' + *i;
 		std::string ext = fileextention((*i).c_str());
 
-		if(ext == ".md"){	// Ignore documentation
+		if(ext == ".md")	// Ignore documentation
 			;
+		else if( *i == "Init.lua" ){
+			if(configtest){
+				SelLog->Log('T', "\t'Init.lua' (Not launched : test mode)");
+				continue;
+			}
+
+			if(verbose)
+				SelLog->Log('L', "\t'Init.lua'");
+				
+			lua_pushstring(L, where.c_str());
+			lua_setglobal(L, "SELENE_SCRIPT_DIR");
+			lua_pushstring(L, (*i).c_str());
+			lua_setglobal(L, "SELENE_SCRIPT_NAME");
+
+			int err = luaL_loadfile(L, completpath.c_str()) || lua_pcall(L, 0, 0, 0);
+			if(err){
+				SelLog->Log('F', "%s : %s", completpath.c_str(), lua_tostring(L, -1));
+				lua_pop(L, 1);  /* pop error message from the stack */
+				exit(EXIT_FAILURE);
+			}
 #	ifdef DEBUG
 		} else 
 			if(debug)
