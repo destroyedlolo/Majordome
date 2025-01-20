@@ -321,6 +321,6 @@ int main(int ac, char **av){
 		SelLog->Log('I', "Application code for %s %f ...", basename(av[0]), VERSION);
 
 	threadEnvironment(SelLua->getLuaState());
-//	config.init(UserConfigRoot, SelLua->getLuaState());	// Read user's configuration files
+	config.init(UserConfigRoot, SelLua->getLuaState());	// Read user's configuration files
 
 }

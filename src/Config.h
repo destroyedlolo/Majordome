@@ -16,6 +16,9 @@
 class Config : public SortDir { 
 	std::string configDir;
 
+protected :
+	virtual bool accept( const char *, std::string & );
+
 public:
 	/* Initialise this configuration against 'where' directory's content */
 	void init(std::string &where, lua_State *L);
