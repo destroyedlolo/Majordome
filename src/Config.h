@@ -11,6 +11,7 @@
 #include "SortDir.h"
 
 #include <lua.hpp>	/* Lua's state needed */
+#include <string>
 
 class Config : public SortDir { 
 	std::string configDir;

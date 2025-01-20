@@ -25,7 +25,7 @@ void SortDir::readdircontent( const char *where ){
 		full += p->d_name;
 
 		if( this->accept( p->d_name, full ) )
-			this->Add(  p->d_name );
+			this->Add( p->d_name );
 	}
 
 	closedir(dir);
