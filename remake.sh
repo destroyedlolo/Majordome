@@ -5,7 +5,8 @@
 # configuration
 
 # If set, compile TOILE extension
-TOILE='-DTOILE'
+# Not yet !
+# TOILE='-DTOILE'
 
 # Enable debugging messages
 DEBUG='-DDEBUG'
