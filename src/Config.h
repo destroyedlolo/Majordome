@@ -10,8 +10,11 @@
 
 #include "SortDir.h"
 
+#include "LuaTask.h"
+
 #include <lua.hpp>	/* Lua's state needed */
 #include <string>
+#include <unordered_map>
 
 class Config : public SortDir { 
 	std::string configDir;
@@ -29,7 +32,12 @@ public:
 	void SanityChecks( void );
 
 		/* Accessors */
-	std::string getConfigDir(){ return this->configDir; }
+	std::string getConfigDir(){ return this->configDir; };
+
+		/* Objects collections */
+	typedef std::unordered_map<std::string, LuaTask> TaskElements;
+	TaskElements TasksList;
+	
 };
 
 extern Config config;
