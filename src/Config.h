@@ -1,0 +1,27 @@
+/* Application configuration handling
+ *
+ * 26/07/2018 - LF - First version
+ * 27/07/2018 - LF - handle all Configuration aspects
+ * 20/05/2024 - LF - Migrate to v4
+ * 20/01/2025 - LF - Migrate to v6
+ */
+#ifndef CONFIG_H
+#define CONFIG_H
+
+#include "SortDir.h"
+
+#include <lua.hpp>	/* Lua's state needed */
+
+class Config : public SortDir { 
+	std::string configDir;
+
+public:
+	/* Initialise this configuration against 'where' directory's content */
+	void init(std::string &where, lua_State *L);
+
+		/* Accessors */
+	std::string getConfigDir(){ return this->configDir; }
+};
+
+extern Config config;
+#endif
