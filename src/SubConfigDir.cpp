@@ -17,6 +17,7 @@
 
 #include <algorithm>
 #include <cstring>
+#include <cassert>
 
 /* Determine object weight based on its file extension 
  * Some space are left for modules extensions (like Toile's)
@@ -97,11 +98,12 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 			}
 		} else if( ext == ".lua"){
 			std::string name;
-			LuaTask tsk( completpath, where, name, L );
+			auto tsk = new LuaTask( completpath, where, name, L );
+			assert(tsk);
 	
 			Config::TaskElements::iterator prev;
 			if((prev = cfg.TasksList.find(name)) != cfg.TasksList.end()){
-				SelLog->Log('F', "Task '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second.getWhere().c_str());
+				SelLog->Log('F', "Task '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhere().c_str());
 				exit(EXIT_FAILURE);
 			} else
 				cfg.TasksList.insert( std::make_pair(name, tsk) );

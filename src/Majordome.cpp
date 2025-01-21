@@ -149,6 +149,31 @@ void threadEnvironment(lua_State *L){
 }
 
 
+	/* ***
+	 * Majordome's Lua own API
+	 */
+
+static int mjd_letsgo(lua_State *L){
+	SelLog->Log('D', "Late dependencies building");
+	
+	SelLua->lateBuildingDependancies(L);
+	SelLua->ApplyStartupFunc(L);
+
+	SelLog->Log('D', "Let's go ...");
+
+	return 0;
+}
+
+static const struct luaL_Reg MajordomeLib [] = {
+	{"LetsGo", mjd_letsgo},
+	{NULL, NULL}
+};
+
+static void initMajordomeObject( lua_State *L ){
+	SelLua->libCreateOrAddFuncs( L, "Majordome", MajordomeLib );
+}
+
+
 	/******
 	 * MQTT's
 	 *******/
@@ -330,10 +355,18 @@ int main(int ac, char **av){
 		exit(EXIT_FAILURE);
 	}
 
+		/* **
+		 * Add Majordom's own objects to slave thread
+		 * ***/
+	SelLua->AddStartupFunc(initMajordomeObject);
+	SelLua->AddStartupFunc(LuaTask::initLuaInterface);
 
 		/* **
 		 * After this point, we're running application's code
 		 * **/
+
+	if(!quiet)
+		SelLog->Log('I', "Application starting ...");
 
 
 }

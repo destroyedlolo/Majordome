@@ -35,7 +35,7 @@ public:
 	std::string getConfigDir(){ return this->configDir; };
 
 		/* Objects collections */
-	typedef std::unordered_map<std::string, LuaTask> TaskElements;
+	typedef std::unordered_map<std::string, LuaTask *> TaskElements;
 	TaskElements TasksList;
 	
 };

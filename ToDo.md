@@ -20,4 +20,6 @@
 
 ---
 
-- Add -->> needed_xxx support for Renderer (not needed for Decoration ??)
+Add a new Object :
+- Majordome.cpp : SelLua->AddStartupFunc()
+- LuaExec.h : needed / required
