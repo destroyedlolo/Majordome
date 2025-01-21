@@ -33,6 +33,9 @@ Multiple directives may be present, including those of the same kind.
 
 #### -->> RunAtStartup
 Run when Majordome starts.
+> [!IMPORTANT]  
+> Startup tasks run **before** any other actions, i.e., before topics are subscribed, timers started, ...
+> On the other hand, [**Timer**](timer.md)'s immediate functions are launched after everything is configured.
 
 #### -->> listen=
 Indicates [**MQTT topic**](topic.md) to listen to : this script will be launched when a data
