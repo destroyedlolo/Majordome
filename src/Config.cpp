@@ -48,3 +48,11 @@ void Config::init(std::string &where, lua_State *L){
 void Config::SanityChecks( void ){
 /* TODO */
 }
+
+void Config::RunStartups( void ){
+	for(auto &i : this->TasksList){
+//		if( i.second->getRunAtStartup() )
+//			i.second->exec(NULL);
+	}
+}
+

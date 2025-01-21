@@ -11,11 +11,12 @@
 #include "StringVector.h"
 #include "Selene.h"
 #include "Object.h"
+#include "ModuleInterface.h"
 
 #include <sstream>	// stringstream
 #include <lua.hpp>	/* Lua's state needed */
 
-class LuaExec : virtual public Object {
+class LuaExec : virtual public ModuleInterface, virtual public Object {
 	struct elastic_storage func;	// Storage for the function to execute
 
 public:
@@ -61,6 +62,8 @@ public:
 	LuaExec(const std::string &fch, std::string &where, std::string &name);
 	struct elastic_storage *getFunc( void ){ return &(this->func); }
 
+	lua_State *createLuaState(void);
+
 	/* Store Lua's code
 	 *
 	 * -> L : Lua's state
@@ -74,6 +77,19 @@ public:
 	 * (mostly for tasks with "once" parameter)
 	 */
 	virtual void finished( void ){}
+
+	virtual bool canRun( void );
+
+	/* Feed Lua State as per needs
+	 * -> require : do we have to include required as well
+	 */
+	bool feedbyNeeded( lua_State *, bool require=true );
+
+	/* Execute Lua code
+	 * -> async : run asynchronously
+	 * <- can we run it ?
+	 */
+	virtual bool exec(lua_State *L, bool async = false);
 };
 
 #endif

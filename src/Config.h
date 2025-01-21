@@ -23,6 +23,8 @@ protected :
 	virtual bool accept( const char *, std::string & );
 
 public:
+	template <class T> class ObjCollection : public std::unordered_map<std::string, T> {};
+
 	/* Initialise this configuration against 'where' directory's content */
 	void init(std::string &where, lua_State *L);
 
@@ -35,9 +37,12 @@ public:
 	std::string getConfigDir(){ return this->configDir; };
 
 		/* Objects collections */
-	typedef std::unordered_map<std::string, LuaTask *> TaskElements;
-	TaskElements TasksList;
-	
+	typedef ObjCollection<LuaTask *> TaskCollection;
+	TaskCollection TasksList;
+
+		/* Execution */
+	void RunStartups( void );	// Executes RunAtStartup marked tasks
+	void RunShutdowns( void );
 };
 
 extern Config config;

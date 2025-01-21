@@ -40,8 +40,12 @@ public:
 	static void initLuaInterface( lua_State *L );
 
 	/* Execution */
-	bool canRun( void );	// Check if this task can run
-	void finished( void );	// tell this task finished
+	virtual bool canRun( void );	// Check if this task can run
+	void finished( void );			// tell this task finished
+
+	void feedState(lua_State *L);
+	virtual bool exec(bool async = false);
+	virtual bool exec(lua_State *L, bool async = false);
 
 	/* TODO */
 };

@@ -74,12 +74,17 @@ void LuaTask::readConfigDirective( std::string &l, bool &nameused ){
 	 * ***/
 
 bool LuaTask::canRun( void ){
-	if( !this->once )
+	if(!this->LuaExec::canRun())
+		return false;
+
+	if( !this->once )	// Nothing else can prevent it to run
 		return true;
 
 	pthread_mutex_lock( &this->running_access );
 	if( this->running ){
 		pthread_mutex_unlock( &this->running_access );
+		if(verbose)
+			SelLog->Log('T', "Task '%s' from '%s' is already running", this->getNameC(), this->getWhereC() );		
 		return false;
 	}
 	this->running = true;
@@ -94,6 +99,54 @@ void LuaTask::finished( void ){
 		this->running = false;
 		pthread_mutex_unlock( &this->running_access );
 	}
+}
+
+void LuaTask::feedState(lua_State *L){
+	try {
+		class LuaTask *tsk = config.TasksList.at( this->getNameC() );
+		class LuaTask **task = (class LuaTask **)lua_newuserdata(L, sizeof(class Tracker *));
+		assert(task);
+
+		*task = tsk;
+		luaL_getmetatable(L, "MajordomeTask");
+		lua_setmetatable(L, -2);
+		lua_setglobal( L, "MAJORDOME_Myself" );
+	} catch( std::out_of_range &e ){	// Not found 
+		SelLog->Log('F', "Can't find task '%s'", this->getNameC() );
+		exit(EXIT_FAILURE);
+	}
+}
+
+bool LuaTask::exec(bool async){
+	lua_State *L = LuaExec::createLuaState();
+	if(!L)	// Can't create the state
+		return false;
+
+	return this->exec(L, async);
+}
+
+bool LuaTask::exec(lua_State *L, bool async){
+		/* Detecting ending is not implemented for async running.
+		 * So currently, "once" is not reliable with async.
+		 */
+	if(async && this->once)
+		SelLog->Log('E', "Running once '%s' asynchronously", this->getNameC() );
+
+
+	if(!this->canRun())
+		return false;
+
+		/* Feed environment with generals */
+	threadEnvironment(L);
+	if(!this->feedbyNeeded(L)){
+		lua_close( L );
+		return false;
+	}
+	
+	bool ret = this->LuaExec::exec(L, async);
+
+	this->finished();
+	return ret;
 }
 
 	/* ****

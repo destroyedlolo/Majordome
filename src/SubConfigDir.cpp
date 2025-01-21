@@ -101,7 +101,7 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 			auto tsk = new LuaTask( completpath, where, name, L );
 			assert(tsk);
 	
-			Config::TaskElements::iterator prev;
+			Config::TaskCollection::iterator prev;
 			if((prev = cfg.TasksList.find(name)) != cfg.TasksList.end()){
 				SelLog->Log('F', "Task '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhere().c_str());
 				exit(EXIT_FAILURE);

@@ -22,4 +22,5 @@
 
 Add a new Object :
 - Majordome.cpp : SelLua->AddStartupFunc()
-- LuaExec.h : needed / required
+- LuaExec.h : needed / required / feed
+- LuaExec.cpp : feedbyNeeded()

@@ -368,5 +368,5 @@ int main(int ac, char **av){
 	if(!quiet)
 		SelLog->Log('I', "Application starting ...");
 
-
+	config.RunStartups();	// Run startup functions
 }
