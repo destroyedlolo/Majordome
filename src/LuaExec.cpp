@@ -60,6 +60,16 @@ bool LuaExec::LoadFunc( lua_State *L, std::stringstream &buffer, const char *nam
 void LuaExec::readConfigDirective( std::string &l, bool &nameused ){
 	MayBeEmptyString arg;
 
+	if(!!(arg = striKWcmp( l, "-->> need_task=" ))){
+			/* No way to test if the task exists or not (as it could be
+			 * defined afterward. Will be part of sanity checks
+			 */
+		if(verbose)
+			SelLog->Log('C', "\t\tAdded needed task '%s'", arg.c_str());
+		this->addNeededTask( arg );
+		return;
+	}
+
 /* TODO */
 	return Object::readConfigDirective(l, nameused);
 }
@@ -91,6 +101,7 @@ bool LuaExec::feedbyNeeded( lua_State *L, bool require ){
 
 			lua_setglobal(L, i.c_str());
 		} catch( std::out_of_range &e ){	// Not found 
+			SelLog->Log('E', "[%s] Needed task '%s' doesn't exist", this->getNameC(), i.c_str() );
 			return false;
 		}
 	}
