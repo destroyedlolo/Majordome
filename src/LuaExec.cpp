@@ -191,7 +191,5 @@ bool LuaExec::execSync(lua_State *L, enum boolRetCode *rc, std::string *rs, lua_
 			*retn = lua_tonumber(L, -1);
 	}
 
-	lua_close(L);
-
 	return true;
 }

@@ -183,42 +183,20 @@ static const struct luaL_Reg MajTaskLib [] = {
 	{NULL, NULL}
 };
 
-#if 0 /* TODO */
 static int mtsk_launch(lua_State *L){
 	class LuaTask *task = checkMajordomeTask(L);
 
-	if( !task->isEnabled() ){
-		if(verbose)
-			SelLog->Log('T', "Task '%s' from '%s' is disabled", task->getNameC(), task->getWhereC() );
-		return 0;
-	}
-
-	if( !task->canRun() ){
-		if(verbose)
-			SelLog->Log('T', "Task '%s' from '%s' is already running", task->getNameC(), task->getWhereC() );
-		return 0;
-	}
-
-	if(!task->feedbyNeeded(L))
+	if( !task->canRun() )
 		return 0;
 
-	int err;
-	if( (err = SelElasticStorage->loadsharedfunction( L, task->getFunc() )) ){
-		SelLog->Log('E', "Unable to create task '%s' from '%s' : %s", task->getNameC(), task->getWhereC(), (err == LUA_ERRSYNTAX) ? "Syntax error" : "Memory error" );
-		task->finished();
+	if(!task->feedbyNeeded(L))	// Feed with local needs
 		return 0;
-	}
 
-	if(verbose)
-		SelLog->Log('T', "running Task '%s' from '%s'", task->getNameC(), task->getWhereC() );
-
-	if(lua_pcall( L, 0, 0, 0))
-		SelLog->Log('E', "Unable to create task '%s' from '%s' : %s", task->getNameC(), task->getWhereC(), lua_tostring(L, -1));
-
+	task->execSync(L);
 	task->finished();
+
 	return 0;
 }
-#endif
 
 static int mtsk_getContainer(lua_State *L){
 	class LuaTask *task = checkMajordomeTask(L);
@@ -251,7 +229,7 @@ static int mtsk_isEnabled( lua_State *L ){
 }
 
 static const struct luaL_Reg MajTaskM [] = {
-//	{"Launch", mtsk_launch},
+	{"Launch", mtsk_launch},
 	{"getContainer", mtsk_getContainer},
 	{"getName", mtsk_getName},
 	{"isEnabled", mtsk_isEnabled},

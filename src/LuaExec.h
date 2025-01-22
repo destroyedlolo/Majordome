@@ -85,11 +85,18 @@ public:
 	 */
 	bool feedbyNeeded( lua_State *, bool require=true );
 
-	/* Execute Lua code
-	 * <- have we run it ?
+	/* Asynchronously execute Lua code.
+	 * Run in a new thread with a dedicated State.
+	 * Consequently, global objects are not accessible.
 	 */
 	bool execAsync(lua_State *L);
-	bool execSync(lua_State *L, enum boolRetCode *rc, std::string *rs, lua_Number *retn);
+
+	/* Synchronously execute Lua code.
+	 * Run with the same State as its caller.
+	 * Globals objects are accessible and call code will create objects in
+	 * the State.
+	 */
+	bool execSync(lua_State *L, enum boolRetCode *rc = NULL, std::string *rs = NULL, lua_Number *retn = NULL);	
 };
 
 #endif
