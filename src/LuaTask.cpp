@@ -36,7 +36,7 @@ LuaTask::LuaTask( const std::string &fch, std::string &where, std::string &name,
 				break;
 			}
 
-			this->readConfigDirective(l, nameused);
+			this->readConfigDirective(l, name, nameused);
 		} while(true);
 
 
@@ -58,7 +58,7 @@ LuaTask::LuaTask( const std::string &fch, std::string &where, std::string &name,
 		exit(EXIT_FAILURE);
 }
 
-void LuaTask::readConfigDirective( std::string &l, bool &nameused ){
+void LuaTask::readConfigDirective( std::string &l, std::string &name, bool &nameused ){
 	MayBeEmptyString arg;
 
 	if( l == "-->> RunAtStartup" ){
@@ -66,7 +66,7 @@ void LuaTask::readConfigDirective( std::string &l, bool &nameused ){
 			SelLog->Log('C', "\t\tRun at startup");
 		this->setRunAtStartup( true );
 	} else 
-		LuaExec::readConfigDirective(l, nameused);
+		LuaExec::readConfigDirective(l, name, nameused);
 }
 
 	/* ***

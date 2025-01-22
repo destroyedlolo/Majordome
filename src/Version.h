@@ -35,4 +35,4 @@
  */
 
 #define VERSION 6.0000
-#define COPYRIGHT "Majordome (c) L.Faillie 2018-2026"
+#define COPYRIGHT "Majordome (c) L.Faillie 2018-2025"

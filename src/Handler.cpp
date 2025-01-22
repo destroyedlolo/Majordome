@@ -22,6 +22,12 @@ bool Handler::exec(lua_State *L){
 		return false;
 	}
 
+	/* ***
+	 * Right now, the tasks is marked as running 
+	 * ***/
+
+	this->feedState(L);
+
 	bool ret = this->LuaExec::execAsync(L);
 
 	return ret;

@@ -22,7 +22,7 @@ void Object::extrName( const std::string &fch, std::string &name){
 		name.erase(period_idx);
 }
 
-void Object::readConfigDirective(std::string &l, bool &nameused){
+void Object::readConfigDirective(std::string &l, std::string &name, bool &nameused){
 	MayBeEmptyString arg;
 
 	if( !!(arg = striKWcmp( l, "-->> name=" ))){

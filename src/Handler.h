@@ -18,6 +18,8 @@ public :
 		 */
 	virtual bool exec(void);	// Create the Lua's State, feed with basic object and then call exec(lua_State *L)
 	virtual bool exec(lua_State *L);
+
+	virtual void feedState(lua_State *L) = 0;	// Feed Lua's state with objects owns
 };
 
 #endif

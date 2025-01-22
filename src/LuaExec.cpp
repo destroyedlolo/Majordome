@@ -57,7 +57,7 @@ bool LuaExec::LoadFunc( lua_State *L, std::stringstream &buffer, const char *nam
 	return true;
 }
 
-void LuaExec::readConfigDirective( std::string &l, bool &nameused ){
+void LuaExec::readConfigDirective( std::string &l, std::string &name, bool &nameused ){
 	MayBeEmptyString arg;
 
 	if(!!(arg = striKWcmp( l, "-->> need_task=" ))){
@@ -71,7 +71,7 @@ void LuaExec::readConfigDirective( std::string &l, bool &nameused ){
 	}
 
 /* TODO */
-	return Object::readConfigDirective(l, nameused);
+	return Object::readConfigDirective(l, name, nameused);
 }
 
 bool LuaExec::canRun( void ){

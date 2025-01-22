@@ -28,7 +28,7 @@ public:
 	 */
 	LuaTask( const std::string &file, std::string &where, std::string &name, lua_State *L );
 
-	virtual void readConfigDirective( std::string &l, bool &nameused );
+	virtual void readConfigDirective( std::string &l, std::string &name, bool &nameused );
 
 	void setOnce( bool v ){ this->once = v; }
 	bool getOnce( void ){ return this->once; }
@@ -43,7 +43,7 @@ public:
 	virtual bool canRun( void );	// Check if this task can run
 	void finished( void );			// tell this task finished
 
-	void feedState(lua_State *L);
+	virtual void feedState(lua_State *L);
 
 	/* TODO */
 };

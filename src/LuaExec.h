@@ -55,7 +55,7 @@ protected:
 #endif
 #endif
 
-	virtual void readConfigDirective( std::string &l, bool &nameused );
+	virtual void readConfigDirective( std::string &l, std::string &name, bool &nameused );
 
 public:
 	LuaExec(const std::string &fch, std::string &where, std::string &name);
