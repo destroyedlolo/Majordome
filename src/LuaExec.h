@@ -11,12 +11,11 @@
 #include "StringVector.h"
 #include "Selene.h"
 #include "Object.h"
-#include "ModuleInterface.h"
 
 #include <sstream>	// stringstream
 #include <lua.hpp>	/* Lua's state needed */
 
-class LuaExec : virtual public ModuleInterface, virtual public Object {
+class LuaExec : virtual public Object {
 	struct elastic_storage func;	// Storage for the function to execute
 
 public:

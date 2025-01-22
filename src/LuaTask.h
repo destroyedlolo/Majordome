@@ -7,11 +7,10 @@
 #define TASK_H
 
 #include "LuaExec.h"
-#include "ModuleInterface.h"
 
 class Config;
 
-class LuaTask : virtual public ModuleInterface, public LuaExec {
+class LuaTask : public LuaExec {
 	bool once;	// can run only once
 
 	pthread_mutex_t running_access;	// we want an access to "running"
