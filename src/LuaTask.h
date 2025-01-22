@@ -7,10 +7,11 @@
 #define TASK_H
 
 #include "LuaExec.h"
+#include "Handler.h"
 
 class Config;
 
-class LuaTask : public LuaExec {
+class LuaTask : virtual public Handler {
 	bool once;	// can run only once
 
 	pthread_mutex_t running_access;	// we want an access to "running"
@@ -43,10 +44,6 @@ public:
 	void finished( void );			// tell this task finished
 
 	void feedState(lua_State *L);
-
-	/* Notez-bien : executing a task is ALWAYS asynchronous */
-	virtual bool exec(void);
-	virtual bool exec(lua_State *L);
 
 	/* TODO */
 };

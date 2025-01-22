@@ -77,6 +77,9 @@ public:
 	 */
 	virtual void finished( void ){}
 
+	/* Determine if the code can run (true) or not (false)
+	 * No cleaning is done.
+	 */
 	virtual bool canRun( void );
 
 	/* Feed Lua State as per needs

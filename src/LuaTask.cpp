@@ -8,7 +8,7 @@
 #include <cstring>
 #include <cassert>
 
-LuaTask::LuaTask( const std::string &fch, std::string &where, std::string &name, lua_State *L ) : Object(fch, where, name), LuaExec(fch, where, name), once(false), running_access(PTHREAD_MUTEX_INITIALIZER), running(false), runatstartup(false){
+LuaTask::LuaTask( const std::string &fch, std::string &where, std::string &name, lua_State *L ) : Object(fch, where, name), LuaExec(fch, where, name), Handler(fch, where, name), once(false), running_access(PTHREAD_MUTEX_INITIALIZER), running(false), runatstartup(false){
 	/*
 	 * Reading file's content
 	 */
@@ -117,31 +117,6 @@ void LuaTask::feedState(lua_State *L){
 	}
 }
 
-bool LuaTask::exec(void){
-	lua_State *L = LuaExec::createLuaState();
-	if(!L)	// Can't create the state
-		return false;
-
-	return this->exec(L);
-}
-
-bool LuaTask::exec(lua_State *L){
-	if(!this->canRun())
-		return false;
-
-		/* Starting this point "running" is set */
-
-	threadEnvironment(L);	// Feed environment with generals
-	if(!this->feedbyNeeded(L)){
-		this->finished();
-		lua_close( L );
-		return false;
-	}
-	
-	bool ret = this->LuaExec::execAsync(L);
-
-	return ret;
-}
 
 	/* ****
 	 * Lua exposed functions
