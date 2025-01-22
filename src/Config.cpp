@@ -51,8 +51,8 @@ void Config::SanityChecks( void ){
 
 void Config::RunStartups( void ){
 	for(auto &i : this->TasksList){
-//		if( i.second->getRunAtStartup() )
-//			i.second->exec(NULL);
+		if( i.second->getRunAtStartup() )
+			i.second->exec();
 	}
 }
 

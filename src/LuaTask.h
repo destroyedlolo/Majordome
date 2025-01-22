@@ -44,8 +44,10 @@ public:
 	void finished( void );			// tell this task finished
 
 	void feedState(lua_State *L);
-	virtual bool exec(bool async = false);
-	virtual bool exec(lua_State *L, bool async = false);
+
+	/* Notez-bien : executing a task is ALWAYS asynchronous */
+	virtual bool exec(void);
+	virtual bool exec(lua_State *L);
 
 	/* TODO */
 };

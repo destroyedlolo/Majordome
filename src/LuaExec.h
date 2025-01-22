@@ -86,10 +86,10 @@ public:
 	bool feedbyNeeded( lua_State *, bool require=true );
 
 	/* Execute Lua code
-	 * -> async : run asynchronously
-	 * <- can we run it ?
+	 * <- have we run it ?
 	 */
-	virtual bool exec(lua_State *L, bool async = false);
+	bool execAsync(lua_State *L);
+	bool execSync(lua_State *L, enum boolRetCode *rc, std::string *rs, lua_Number *retn);
 };
 
 #endif

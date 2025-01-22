@@ -4,6 +4,7 @@
 
 #include <cstring>
 #include <cassert>
+#include <cmath>
 
 /*
 extern "C" {
@@ -97,7 +98,89 @@ bool LuaExec::feedbyNeeded( lua_State *L, bool require ){
 	return true;
 }
 
-bool LuaExec::exec(lua_State *L, bool async){
-	/* TODO */
-	return false;
+	/* Executing */
+
+struct launchargs {
+	lua_State *L;	// New thread Lua state
+	LuaExec *task;	// task definition
+};
+
+static void *launchfunc(void *a){
+	struct launchargs *arg = (struct launchargs *)a;	// To avoid further casting
+
+	if(lua_pcall( arg->L, 0, 0, 0))
+		SelLog->Log('E', "Can't execute task '%s' from '%s' : %s", arg->task->getNameC(), arg->task->getWhereC(), lua_tostring(arg->L, -1));
+	lua_close(arg->L);
+	arg->task->finished();
+	delete arg;
+	return NULL;
+}
+
+bool LuaExec::execAsync( lua_State *L ){
+	struct launchargs *arg = new launchargs; // Create the new thread
+	arg->task = this;
+	arg->L = L;
+
+	int err;
+	if( (err = SelElasticStorage->loadsharedfunction( arg->L, this->getFunc() )) ){
+		SelLog->Log('E', "Unable to create task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), (err == LUA_ERRSYNTAX) ? "Syntax error" : "Memory error" );
+		this->finished();
+		lua_close( arg->L );
+		delete arg;
+		return false;
+	}
+
+	if(verbose && !this->isQuiet())
+		SelLog->Log('T', "Async running Task '%s' from '%s'", this->getNameC(), this->getWhereC() );
+
+	pthread_t tid;	// No need to be kept
+	if(pthread_create( &tid, &thread_attr, launchfunc,  arg) < 0){
+		SelLog->Log('E', "Unable to create task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), strerror(errno));
+		this->finished();
+		lua_close( arg->L );
+		delete arg;
+		return false;
+	}
+
+	return true;
+}
+
+bool LuaExec::execSync(lua_State *L, enum boolRetCode *rc, std::string *rs, lua_Number *retn){
+	int err;
+	if( (err = SelElasticStorage->loadsharedfunction( L, this->getFunc() )) ){
+		SelLog->Log('E', "Unable to create task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), (err == LUA_ERRSYNTAX) ? "Syntax error" : "Memory error" );
+		lua_close( L );
+		return false;
+	}
+
+	if(verbose && !this->isQuiet())
+		SelLog->Log('T', "Sync running Task '%s' from '%s'", this->getNameC(), this->getWhereC() );
+
+	if(lua_pcall( L, 0, 2, 0))
+		SelLog->Log('E', "Can't execute task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), lua_tostring(L, -1));
+
+		/* -1 : numeric value if provided
+		 * -2 : string value or RC
+		 */
+	if(rc){
+		*rc = boolRetCode::RCnil;
+		if(lua_isboolean(L, -2))
+			*rc = lua_toboolean(L, -2) ? boolRetCode::RCtrue : boolRetCode::RCfalse;
+	}
+
+	if(rs){
+		*rs = "";
+		if(lua_isstring(L, -2))
+			*rs = lua_tostring(L, -2);
+	}
+
+	if(retn){
+		*retn = NAN;
+		if(lua_isnumber(L, -1))
+			*retn = lua_tonumber(L, -1);
+	}
+
+	lua_close(L);
+
+	return true;
 }
