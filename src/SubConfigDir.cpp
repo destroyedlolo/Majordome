@@ -26,7 +26,9 @@ static const SubConfigDir::extweight fileext[] = {
 #if 0
 	{ ".topic", 0xc0 },
 	{ ".timer", 0xc0 },
+#endif
 	{ ".rendezvous", 0xc0 },
+#if 0
 	{ ".tracker", 0x80 },
 	{ ".minmax", 0x80 },
 	{ ".namedminmax", 0x80 },
@@ -96,7 +98,7 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 				lua_pop(L, 1);  /* pop error message from the stack */
 				exit(EXIT_FAILURE);
 			}
-		} else if( ext == ".lua"){
+		} else if(ext == ".lua"){
 			std::string name;
 			auto tsk = new LuaTask( completpath, where, name, L );
 			assert(tsk);
@@ -107,6 +109,16 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 				exit(EXIT_FAILURE);
 			} else
 				cfg.TasksList.insert( std::make_pair(name, tsk) );
+		} else if(ext == ".rendezvous"){
+			std::string name;
+			auto evt = new Event( completpath, where, name );
+
+			Config::EventCollection::iterator prev;
+			if((prev = cfg.EventsList.find(name)) != cfg.EventsList.end()){
+				SelLog->Log('F', "Event '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhereC());
+				exit(EXIT_FAILURE);
+			} else
+				cfg.EventsList.insert( std::make_pair(name, evt) );
 #	ifdef DEBUG
 		} else 
 			if(debug)

@@ -21,9 +21,10 @@ public:
 	 */
 	Event( const std::string &file, std::string &where, std::string &name  );
 
+	void addHandler( Handler *h ){ this->push_back(h); }
 
 	/* Create Lua's object */
-	static void initLuaObject( lua_State *L );
+	static void initLuaInterface( lua_State *L );
 };
 
 #endif

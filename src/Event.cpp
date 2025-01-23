@@ -1,5 +1,6 @@
 #include "Event.h"
 #include "Config.h"
+#include "Helpers.h"
 
 #include <iostream>
 #include <fstream>
@@ -89,14 +90,17 @@ static const struct luaL_Reg MajEventLib [] = {
 	{NULL, NULL}
 };
 
-#if 0
 static int mevt_Launch( lua_State *L ){
 	class Event *event = checkMajordomeEvent(L);
 
 	if( event->isEnabled() ){
-		event->execTasks(config, event->getNameC(), NULL, "fake");
-		event->enableTrackers();
-		event->disableTrackers();
+#ifdef DEBUG
+		if(debug && !event->isQuiet())
+			SelLog->Log('D', "[%s] Handlers called", event->getNameC());
+#endif
+	for(auto &i : *event)
+		i->exec();
+		
 #ifdef DEBUG
 	} else if( debug ){
 		SelLog->Log('D', "Event %s is disabled : no tasks launched", event->getNameC());
@@ -104,7 +108,6 @@ static int mevt_Launch( lua_State *L ){
 	}
 	return 0;
 }
-#endif
 
 static int mevt_getContainer( lua_State *L ){
 	class Event *event = checkMajordomeEvent(L);
@@ -137,7 +140,7 @@ static int mevt_isEnabled( lua_State *L ){
 }
 
 static const struct luaL_Reg MajEventM [] = {
-//	{"Launch", mevt_Launch},
+	{"Launch", mevt_Launch},
 	{"getContainer", mevt_getContainer},
 	{"getName", mevt_getName},
 	{"isEnabled", mevt_isEnabled},
@@ -146,7 +149,7 @@ static const struct luaL_Reg MajEventM [] = {
 	{NULL, NULL}
 };
 
-void Event::initLuaObject( lua_State *L ){
+void Event::initLuaInterface( lua_State *L ){
 	SelLua->objFuncs( L, "MajordomeRendezVous", MajEventM );
 	SelLua->libCreateOrAddFuncs( L, "MajordomeRendezVous", MajEventLib );
 }

@@ -360,6 +360,7 @@ int main(int ac, char **av){
 		 * ***/
 	SelLua->AddStartupFunc(initMajordomeObject);
 	SelLua->AddStartupFunc(LuaTask::initLuaInterface);
+	SelLua->AddStartupFunc(Event::initLuaInterface);
 
 		/* **
 		 * After this point, we're running application's code

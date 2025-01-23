@@ -68,7 +68,18 @@ void LuaExec::readConfigDirective( std::string &l, std::string &name, bool &name
 			SelLog->Log('C', "\t\tAdded needed task '%s'", arg.c_str());
 		this->addNeededTask( arg );
 		return;
-	}
+	} else if(!!(arg = striKWcmp( l, "-->> need_rendezvous=" ))){
+		Config::EventCollection::iterator event;
+		if( (event = config.EventsList.find(arg)) != config.EventsList.end()){
+			if(verbose)
+				SelLog->Log('C', "\t\tAdded needed rendezvous '%s'", arg.c_str());
+			this->addNeededRendezVous(arg);
+			return;
+		} else {
+			SelLog->Log('F', "\t\tRendezvous '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
+}
 
 /* TODO */
 	return Object::readConfigDirective(l, name, nameused);
@@ -102,6 +113,22 @@ bool LuaExec::feedbyNeeded( lua_State *L, bool require ){
 			lua_setglobal(L, i.c_str());
 		} catch( std::out_of_range &e ){	// Not found 
 			SelLog->Log('E', "[%s] Needed task '%s' doesn't exist", this->getNameC(), i.c_str() );
+			return false;
+		}
+	}
+
+	for(auto &i : this->needed_rendezvous){
+		try {
+			class Event *evt = config.EventsList.at( i );
+			class Event **event = (class Event **)lua_newuserdata(L, sizeof(class Event *));
+			assert(event);
+
+			*event = evt;
+			luaL_getmetatable(L, "MajordomeRendezVous");
+			lua_setmetatable(L, -2);
+
+			lua_setglobal(L, i.c_str());
+		} catch( std::out_of_range &e ){	// Not found
 			return false;
 		}
 	}
