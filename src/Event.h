@@ -8,8 +8,9 @@
 #include <vector>
 
 #include "Handler.h"
+#include "Object.h"
 
-class Event : public Handler, public std::vector<Handler *> {
+class Event : public Object, public std::vector<Handler *> {
 	// The vector contains the collection of handler to launch
 
 public:
@@ -21,6 +22,8 @@ public:
 	Event( const std::string &file, std::string &where, std::string &name  );
 
 
+	/* Create Lua's object */
+	static void initLuaObject( lua_State *L );
 };
 
 #endif

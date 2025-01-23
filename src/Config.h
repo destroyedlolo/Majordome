@@ -11,6 +11,7 @@
 #include "SortDir.h"
 
 #include "LuaTask.h"
+#include "Event.h"
 
 #include <lua.hpp>	/* Lua's state needed */
 #include <string>
@@ -39,6 +40,9 @@ public:
 		/* Objects collections */
 	typedef ObjCollection<LuaTask *> TaskCollection;
 	TaskCollection TasksList;
+
+	typedef ObjCollection<Event *> EventCollection;
+	EventCollection EventsList;
 
 		/* Execution */
 	void RunStartups( void );	// Executes RunAtStartup marked tasks
