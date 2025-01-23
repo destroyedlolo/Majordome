@@ -4,17 +4,20 @@ Typical usage is to synchronize automation within Majordome without having to us
 
 ## Directives
 
-### name=
-Unique name to identify the rendez-vous. If not set, uses the filename.
-```
-name=toto
-```
+> [!IMPORTANT]  
+> As of v6.0 onward, The syntax has changed for **Rendezvous** and is not any more compatible with previous versions.
 
-### quiet
-Remove some trace. This option is useful to avoid logging of very noisy topics.
+### General directives
+#### -->> name=
+Unique name to identify the topic. If not set, uses the filename.
+```
+-->> name=Toto
+```
+#### --> quiet
+Removes some trace.
 
-### disabled
-This topic starts as disabled : incoming messages are ignored.
+#### -->> disabled
+This script won't run.
 
 ## Example
 File **test.rendezvous**
