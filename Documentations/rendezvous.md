@@ -9,7 +9,7 @@ Typical usage is to synchronize automation within Majordome without having to us
 
 ### General directives
 #### -->> name=
-Unique name to identify the topic. If not set, uses the filename.
+Unique name to identify the rendez-vous. If not set, uses the filename.
 ```
 -->> name=Toto
 ```
