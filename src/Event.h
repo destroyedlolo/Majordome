@@ -24,6 +24,9 @@ public:
 
 	void addHandler( Handler *h ){ this->push_back(h); }
 
+	/* Handlers execution */
+	void launchHandlers(void);
+
 	/* Create Lua's object */
 	static void initLuaInterface( lua_State *L );
 };
