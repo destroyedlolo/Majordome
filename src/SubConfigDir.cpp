@@ -23,8 +23,8 @@
  * Some space are left for modules extensions (like Toile's)
  */
 static const SubConfigDir::extweight fileext[] = {
-#if 0
 	{ ".topic", 0xc0 },
+#if 0
 	{ ".timer", 0xc0 },
 #endif
 	{ ".rendezvous", 0xc0 },
@@ -109,6 +109,16 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 				exit(EXIT_FAILURE);
 			} else
 				cfg.TasksList.insert( std::make_pair(name, tsk) );
+		} else if(ext == ".topic"){
+			std::string name;
+			auto tpc = new MQTTTopic( completpath, where, name );
+
+			Config::TopicCollection::iterator prev;
+			if((prev = cfg.TopicsList.find(name)) != cfg.TopicsList.end()){
+				SelLog->Log('F', "Topic '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhereC());
+				exit(EXIT_FAILURE);
+			} else
+				cfg.TopicsList.insert( std::make_pair(name, tpc) );
 		} else if(ext == ".rendezvous"){
 			std::string name;
 			auto evt = new Event( completpath, where, name );

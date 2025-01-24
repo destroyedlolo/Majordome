@@ -79,7 +79,7 @@ void LuaExec::readConfigDirective( std::string &l, std::string &name, bool &name
 			SelLog->Log('F', "\t\tRendezvous '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
-}
+	}
 
 /* TODO */
 	return Object::readConfigDirective(l, name, nameused);

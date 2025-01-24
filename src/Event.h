@@ -10,7 +10,7 @@
 #include "Handler.h"
 #include "Object.h"
 
-class Event : public Object, public std::vector<Handler *> {
+class Event : virtual public Object, public std::vector<Handler *> {
 	// The vector contains the collection of handler to launch
 
 public:
@@ -20,6 +20,7 @@ public:
 	 * <- name : this object's name
 	 */
 	Event( const std::string &file, std::string &where, std::string &name  );
+	Event(){};
 
 	void addHandler( Handler *h ){ this->push_back(h); }
 

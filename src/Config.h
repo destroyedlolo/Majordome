@@ -12,6 +12,7 @@
 
 #include "LuaTask.h"
 #include "Event.h"
+#include "MQTTTopic.h"
 
 #include <lua.hpp>	/* Lua's state needed */
 #include <string>
@@ -43,6 +44,9 @@ public:
 
 	typedef ObjCollection<Event *> EventCollection;
 	EventCollection EventsList;
+
+	typedef ObjCollection<MQTTTopic *> TopicCollection;
+	TopicCollection TopicsList;
 
 		/* Execution */
 	void RunStartups( void );	// Executes RunAtStartup marked tasks
