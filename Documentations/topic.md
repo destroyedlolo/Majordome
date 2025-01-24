@@ -105,7 +105,7 @@ MQTTTopic are exposed as **MajordomeMQTTTopic** object that supports the followi
     - `Boolean retain` does the value to be retained ?
   - `getTopic()` returns the associated MQTT topic
   - `getVal()` returns the last received payload (only if the topic is `stored`). Takes in account also the associated time to live.
-  - `Launch()` launches tasks associated to this topic
+  - `Launch()` launches tasks associated to this topic (they will run in the same thread and with the same State)
   - `getContainer()` returns the container (directory) in which this topic as been defined
   - `getName()` returns topic's name
   - `isEnabled()` returns a boolean reflecting if the topic is enabled or not

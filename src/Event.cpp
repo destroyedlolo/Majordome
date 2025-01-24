@@ -50,7 +50,7 @@ Event::Event(const std::string &fch, std::string &where, std::string &name) :
 	}
 }
 
-void Event::launchHandlers(void){
+void Event::execHandlers(void){
 	if(this->isEnabled()){
 #ifdef DEBUG
 		if(debug && !this->isQuiet())
@@ -59,6 +59,23 @@ void Event::launchHandlers(void){
 
 		for(auto &i : *this)
 			i->exec();
+
+#ifdef DEBUG
+	} else if( debug ){
+		SelLog->Log('D', "Event %s is disabled : no tasks launched", this->getNameC());
+	}
+#endif
+}
+
+void Event::execHandlers(lua_State *L){
+	if(this->isEnabled()){
+#ifdef DEBUG
+		if(debug && !this->isQuiet())
+			SelLog->Log('D', "[%s] Handlers called", this->getNameC());
+#endif
+
+		for(auto &i : *this)
+			i->exec(L);
 
 #ifdef DEBUG
 	} else if( debug ){
@@ -109,7 +126,7 @@ static const struct luaL_Reg MajEventLib [] = {
 static int mevt_Launch( lua_State *L ){
 	class Event *event = checkMajordomeEvent(L);
 
-	event->launchHandlers();
+	event->execHandlers(L);
 		
 	return 0;
 }

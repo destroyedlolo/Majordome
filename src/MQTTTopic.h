@@ -37,6 +37,9 @@ public:
 	bool toBeStored( void ){ return this->store; };
 	bool isNumeric( void ){ return this->numeric; };
 	unsigned long int getTTL( void ){ return this->ttl; };
+
+	/* Create Lua's object */
+	static void initLuaInterface( lua_State *L );
 };
 
 #endif

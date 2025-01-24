@@ -24,11 +24,14 @@ public:
 
 	void addHandler( Handler *h ){ this->push_back(h); }
 
-	/* Handlers execution */
-	void launchHandlers(void);
+	/* Handlers execution
+	 * (runs sequentially)
+	 */
+	void execHandlers(void);		// fresh State but in the same thread
+	void execHandlers(lua_State *);	// same thread, same State
 
 	/* Create Lua's object */
-	static void initLuaInterface( lua_State *L );
+	static void initLuaInterface(lua_State *L);
 };
 
 #endif

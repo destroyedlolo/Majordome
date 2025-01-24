@@ -108,3 +108,151 @@ void MQTTTopic::readConfigDirective( std::string &l, std::string &name, bool &na
 		Object::readConfigDirective(l, name, nameused);
 }
 
+	/*****
+	 * Lua exposed functions
+	 *****/
+static class MQTTTopic *checkMajordomeMQTTTopic(lua_State *L){
+	class MQTTTopic **r = (class MQTTTopic **)SelLua->testudata(L, 1, "MajordomeMQTTTopic");
+	luaL_argcheck(L, r != NULL, 1, "'MajordomeMQTTTopic' expected");
+	return *r;
+}
+
+static int mtpc_find(lua_State *L){
+/* Find a topic
+ * 1 : topic to find
+ * 2: true if it has to fail if not found
+ */
+	const char *name = luaL_checkstring(L, 1);
+	int tofail=  lua_toboolean(L, 2);
+
+	try {
+		class MQTTTopic *tpc = config.TopicsList.at( name );
+		class MQTTTopic **topic = (class MQTTTopic **)lua_newuserdata(L, sizeof(class MQTTTopic *));
+		assert(topic);
+
+		*topic = tpc;
+		luaL_getmetatable(L, "MajordomeMQTTTopic");
+		lua_setmetatable(L, -2);
+
+		return 1;
+	} catch( std::out_of_range &e ){	// Not found
+		if( tofail )
+			return luaL_error( L, "Can't find \"%s\" topic", name );
+		return 0;
+	}
+}
+
+static const struct luaL_Reg MajTopicLib [] = {
+	{"find", mtpc_find},
+	{NULL, NULL}
+};
+
+static int mtpc_Publish(lua_State *L){
+/* Publish to a topic
+ *	2 : value
+ *	3 : retain
+ */
+	class MQTTTopic *topic = checkMajordomeMQTTTopic(L);
+	const char *val = luaL_checkstring(L, 2);
+	int retain =  lua_toboolean(L, 3);
+
+	if( topic->isEnabled() )
+		SelMQTT->mqttpublish( MQTT_client, topic->getTopic(), strlen(val), (void *)val, retain );
+	else if(verbose)
+		SelLog->Log('I', "'%s' is disabled : sending ignored", topic->getTopic());
+
+	return 0;
+}
+
+static int mtpc_getTopic( lua_State *L ){
+	class MQTTTopic *topic = checkMajordomeMQTTTopic(L);
+	lua_pushstring( L, topic->getTopic() );
+	return 1;
+}
+
+static int mtpc_getVal( lua_State *L ){
+	class MQTTTopic *topic = checkMajordomeMQTTTopic(L);
+
+#ifdef DEBUG
+	if( !topic->toBeStored() && debug )
+		SelLog->Log('D', "Topic %s is not \"stored\" : getVal() will not works", topic->getNameC() );
+#endif
+
+	enum SharedObjType type;
+	union SelSharedVarContent var = SelSharedVar->getValue( topic->getNameC(), &type, false );
+
+	switch( type ){
+	case SOT_NUMBER:
+		lua_pushnumber( L, var.num );
+		return 1;
+	case SOT_STRING:
+	case SOT_XSTRING:
+		lua_pushstring( L, var.str );
+		return 1;
+	default:
+		return 0;
+	}
+}
+
+static int mtpc_getContainer( lua_State *L ){
+	class MQTTTopic *topic = checkMajordomeMQTTTopic(L);
+	lua_pushstring( L, topic->getWhereC() );
+	return 1;
+}
+
+static int mtpc_getName( lua_State *L ){
+	class MQTTTopic *topic = checkMajordomeMQTTTopic(L);
+	lua_pushstring( L, topic->getName().c_str() );
+	return 1;
+}
+
+static int mtpc_enabled( lua_State *L ){
+	class MQTTTopic *topic = checkMajordomeMQTTTopic(L);
+	topic->enable();
+	return 0;
+}
+
+static int mtpc_disable( lua_State *L ){
+	class MQTTTopic *topic = checkMajordomeMQTTTopic(L);
+	topic->disable();
+	return 0;
+}
+
+static int mtpc_isEnabled( lua_State *L ){
+	class MQTTTopic *topic = checkMajordomeMQTTTopic(L);
+	lua_pushboolean( L, topic->isEnabled() );
+	return 1;
+}
+
+#if 0
+static int mtpc_Launch( lua_State *L ){
+	class MQTTTopic *topic = checkMajordomeMQTTTopic(L);
+
+	if( topic->isEnabled() )
+		topic->execTasks(config, topic->getNameC(), NULL, "fake");
+#ifdef DEBUG
+	else if( debug )
+		SelLog->Log('D', "Topic %s is disabled : no tasks launched", topic->getNameC() );
+#endif	
+	return 0;
+}
+#endif
+
+static const struct luaL_Reg MajTopicM [] = {
+	{"Publish", mtpc_Publish},
+	{"getTopic", mtpc_getTopic},
+	{"getVal", mtpc_getVal},
+	{"getContainer", mtpc_getContainer},
+	{"getName", mtpc_getName},
+	{"isEnabled", mtpc_isEnabled},
+	{"Enable", mtpc_enabled},
+	{"Disable", mtpc_disable},
+//	{"Launch", mtpc_Launch},
+	{NULL, NULL}
+};
+
+void MQTTTopic::initLuaInterface( lua_State *L ){
+	SelLua->objFuncs( L, "MajordomeMQTTTopic", MajTopicM );
+	SelLua->libCreateOrAddFuncs( L, "MajordomeMQTTTopic", MajTopicLib );
+}
+
