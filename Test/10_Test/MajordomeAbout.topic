@@ -28,7 +28,7 @@
 --
 -- remove some trace
 -- This option is useful to avoid logging of very noisy topics
--->> quiet
+--->> quiet
 --
 -- disable this topic
--->> disabled
+--->> disabled

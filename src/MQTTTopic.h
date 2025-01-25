@@ -39,6 +39,15 @@ public:
 	bool isNumeric( void ){ return this->numeric; };
 	unsigned long int getTTL( void ){ return this->ttl; };
 
+	/* check if an incoming topic matches this one
+	 * -> intopic : incoming topic
+	 * <- matching (bool) or not (false)
+	 */
+	bool match( const char *intopic );
+
+	/* A message arrived */
+	void execHandlers(MQTTTopic &, const char *topic, const char *msg);
+
 	/* Create Lua's object */
 	static void initLuaInterface( lua_State *L );
 };

@@ -99,7 +99,7 @@ void Config::SubscribeTopics( void ){
 		 * It will be up to code to ignore disabled.
 		 */
 	nbre = 0;
-	for(auto &i : TopicsList){
+	for(auto &i : this->TopicsList){
 		topics[nbre] = i.second->getTopicC();
 		qoss[nbre++] = i.second->getQOS();
 	}

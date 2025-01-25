@@ -198,6 +198,35 @@ static int msgarrived(void *actx, char *topic, int tlen, MQTTClient_message *msg
 	cpayload[msg->payloadlen] = 0;
 
 /* TODO message handling */
+	for(auto &i : config.TopicsList){
+		if(i.second->isEnabled()){
+			if(i.second->match( topic )){
+#ifdef DEBUG
+				if( debug && !i.second->isQuiet() ){
+					if(hideTopicArrival)
+						SelLog->Log('D', "'%s' accepted by topic '%s'", topic, i.second->getNameC() );
+					else
+						SelLog->Log('D', "Accepted by topic '%s'", i.second->getNameC() );
+				}
+#endif
+
+				if( i.second->toBeStored() ){	// Store it in a SharedVar
+					if( i.second->isNumeric() ){
+						try {
+							double val = std::stod( cpayload );
+							SelSharedVar->setNumber( i.second->getNameC(), val, i.second->getTTL() );
+						} catch( ... ){
+							SelLog->Log('E', "Topic '%s' is expecting a number : no convertion done ", i.second->getNameC() );
+							SelSharedVar->clear( i.second->getNameC() );
+						}
+					} else
+						SelSharedVar->setString( i.second->getNameC(), cpayload, i.second->getTTL() );
+				}
+			}
+
+			i.second->execHandlers(*i.second, topic, cpayload);
+		}
+	}
 
 	MQTTClient_freeMessage(&msg);
 	MQTTClient_free(topic);
@@ -223,7 +252,8 @@ void quit(int){
 }
 
 void bye(void){
-	config.RunShutdowns();
+	/* ToDo */
+//	config.RunShutdowns();
 }
 
 int main(int ac, char **av){
