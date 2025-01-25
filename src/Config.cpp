@@ -90,6 +90,36 @@ void Config::SanityChecks( void ){
 /* TODO */
 }
 
+void Config::SubscribeTopics( void ){
+	size_t nbre = TopicsList.size();
+	const char **topics = new const char * [nbre];
+	int *qoss = new int [nbre];
+
+		/* Note : we're subscribing to all topics, including disabled ones.
+		 * It will be up to code to ignore disabled.
+		 */
+	nbre = 0;
+	for(auto &i : TopicsList){
+		topics[nbre] = i.second->getTopicC();
+		qoss[nbre++] = i.second->getQOS();
+	}
+#ifdef DEBUG
+	if(verbose)
+		SelLog->Log('C', "Subscribing to %ld topics", nbre);
+#endif
+
+	if( nbre ){
+		int err;
+		if( (err = MQTTClient_subscribeMany(
+			MQTT_client,
+			nbre, (char* const*)topics, qoss
+		)) != MQTTCLIENT_SUCCESS){
+			SelLog->Log('E', "Can't subscribe to topics : error %d", err);
+			exit(EXIT_FAILURE);
+		}
+	}
+}
+
 void Config::RunStartups( void ){
 	for(auto &i : this->TasksList){
 		if( i.second->getRunAtStartup() )

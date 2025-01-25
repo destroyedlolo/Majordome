@@ -217,6 +217,15 @@ static void brkcleaning(void){	/* Clean broker stuffs */
 	/* *****
 	 * Main loop
 	 * ******/
+
+void quit(int){
+	exit(EXIT_SUCCESS);
+}
+
+void bye(void){
+	config.RunShutdowns();
+}
+
 int main(int ac, char **av){
 	initSelene();							// Load Séléné modules
 	SelLog->configure(NULL, LOG_STDOUT);	// Early logging to STDOUT before broker initialisation
@@ -371,4 +380,14 @@ int main(int ac, char **av){
 		SelLog->Log('I', "Application starting ...");
 
 	config.RunStartups();	// Run startup functions
+	config.SubscribeTopics();	// MQTT : activate topics receiving
+
+	/* TODO */
+
+		/* Shutdown's */
+	signal(SIGINT,quit);
+	signal(SIGUSR1,quit);
+	atexit(bye);
+
+	pause();	// Waiting for events, nothing else to do
 }

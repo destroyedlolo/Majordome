@@ -35,6 +35,9 @@ public:
 	 */
 	void SanityChecks( void );
 
+	/* Subscribe to defined MQTT topics */
+	void SubscribeTopics( void );
+
 		/* Accessors */
 	std::string getConfigDir(){ return this->configDir; };
 
