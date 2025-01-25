@@ -4,7 +4,7 @@ Define **MQTT topic**
 ## Directives
 
 > [!IMPORTANT]  
-> As of v6.0 onward, The syntax has changed for **Rendezvous** and is not any more compatible with previous versions.
+> As of v6.0 onward, The syntax has changed for **Topic** and is not any more compatible with previous versions.
 
 ### General directives
 #### -->> name=
