@@ -2,9 +2,18 @@
 #include "Handler.h"
 
 bool Handler::exec(void){
-	lua_State *L = LuaExec::createLuaState();
-	if(!L)	// Can't create the state
+	if(!this->canRun())
 		return false;
+
+	/* ***
+	 * Right now, the tasks is marked as running 
+	 * ***/
+
+	lua_State *L = LuaExec::createLuaState();
+	if(!L){	// Can't create the state
+		this->finished();
+		return false;
+	}
 
 	threadEnvironment(L);	// Feed environment with generals
 	if(!this->feedbyNeeded(L)){
@@ -13,14 +22,14 @@ bool Handler::exec(void){
 		return false;
 	}
 
-	return this->exec(L);
+	this->feedState(L);
+
+	return this->LuaExec::execAsync(L);
 }
 
-bool Handler::exec(lua_State *L){
-	if(!this->canRun()){
-		lua_close( L );
+bool Handler::exec(lua_State *L, enum boolRetCode *rc, std::string *rs, lua_Number *retn){
+	if(!this->canRun())
 		return false;
-	}
 
 	/* ***
 	 * Right now, the tasks is marked as running 
@@ -28,7 +37,5 @@ bool Handler::exec(lua_State *L){
 
 	this->feedState(L);
 
-	bool ret = this->LuaExec::execAsync(L);
-
-	return ret;
+	return this->LuaExec::execSync(L, rc,rs,retn);
 }
