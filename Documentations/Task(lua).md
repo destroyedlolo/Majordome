@@ -105,17 +105,20 @@ Create corresponding object.
 ## at Lua side
 
 ### Exposed variables
-As described above, following variables are subject to be created :
-- **MAJORDOME_TOPIC_NAME**, **MAJORDOME_TOPIC** and **MAJORDOME_PAYLOAD** if the task is launched by an MQTT topic.
-- **MAJORDOME_TIMER** if the task is launched by a timer
-- **MAJORDOME_TRACKER** and  **MAJORDOME_TRACKER_STATUS** if the task is launched by a  tracker.
-
-Following variables are also created :
-- **MAJORDOME_Myself** is automatically created and correspond to the current tracker
+#### Majordom's variables
+Following variables are created :
 - **MAJORDOME_VERSION** and **MAJORDOME_COPYRIGHT** as the name said
 - **MAJORDOME_CONFIGURATION_DIRECTORY**, the root of the configuration directory
 - **MAJORDOME_ClientID**, MQTT client identifier that must be unique for a single broker.
 - **MAJORDOME_DEBUG**, set only if Majordome has been started with `-d` and, consequently, is in debugging mode.
+
+- **MAJORDOME_Myself** is automatically created and correspond to the current task
+
+#### Who launched this task ?
+Following variables are created depending who triggering this task
+- **MAJORDOME_TOPIC_NAME**, **MAJORDOME_TOPIC** and **MAJORDOME_PAYLOAD** if the task is launched by an [MQTT topic](topic.md).
+- **MAJORDOME_TIMER** : name of the triggering [timer](timer.md)
+- **MAJORDOME_TRACKER** and  **MAJORDOME_TRACKER_STATUS** if the task is launched by a  tracker.
 
 ### Exposed objects
 - **MQTTBroker**, the master broker as defined in the configuration file.
