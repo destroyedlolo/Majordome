@@ -57,6 +57,18 @@ void Timer::readConfigDirective( std::string &l, std::string &name, bool &nameus
 		this->min = v % 100;
 		if(verbose)
 			SelLog->Log('C', "\t\tRunning at %u:%u", this->at, this->min);
-	} else 
+	} else if( !!(arg = striKWcmp( l, "-->> every=" )) ){
+		this->every = strtoul( arg.c_str(), NULL, 0 );
+		if(verbose)
+			SelLog->Log('C', "\t\tRunning every %lu second%c", this->every, this->every > 1 ? 's':' ');
+	} else if( l == "-->> immediate" ){
+		this->immediate = true;
+		if(verbose)
+			SelLog->Log('C', "\t\tImmediate");
+	} else if( l == "-->> runifover" ){
+		this->runifover = true;
+		if(verbose)
+			SelLog->Log('C', "\t\tRun if over");
+ 	} else 
 		Object::readConfigDirective(l, name, nameused);
 }
