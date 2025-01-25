@@ -6,9 +6,11 @@
 -- listen directive.
 --->> name=Toto
 --
+-->> need_timer=30s
+--
 -- Indicate the Timer(s) to wait for
 -- (more than one "when" can be present)
--->> when=30s
+--->> when=30s
 --
 -- If set, only one instance is allowed to run
 --->> once

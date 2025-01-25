@@ -105,6 +105,17 @@ void LuaExec::readConfigDirective( std::string &l, std::string &name, bool &name
 			SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
+	} else if(!!(arg = striKWcmp( l, "-->> need_timer=" ))){
+		Config::TimerCollection::iterator timer;
+		if( (timer = config.TimersList.find(arg)) != config.TimersList.end()){
+			if(verbose)
+				SelLog->Log('C', "\t\tAdded needed timer '%s'", arg.c_str());
+			this->addNeededTimer(arg);
+			return;
+		} else {
+			SelLog->Log('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
 	}
 
 /* TODO */
