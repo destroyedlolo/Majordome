@@ -1,9 +1,9 @@
 #include "Helpers.h"
 #include "Handler.h"
 
-bool Handler::exec(void){
+lua_State *Handler::prepareExec(void){
 	if(!this->canRun())
-		return false;
+		return NULL;
 
 	/* ***
 	 * Right now, the tasks is marked as running 
@@ -12,17 +12,26 @@ bool Handler::exec(void){
 	lua_State *L = LuaExec::createLuaState();
 	if(!L){	// Can't create the state
 		this->finished();
-		return false;
+		return NULL;
 	}
 
 	threadEnvironment(L);	// Feed environment with generals
 	if(!this->feedbyNeeded(L)){
 		this->finished();
 		lua_close( L );
-		return false;
+		return NULL;
 	}
 
 	this->feedState(L);
+
+	return L;
+}
+
+bool Handler::exec(void){
+	lua_State *L;
+
+	if(!(L = this->prepareExec()))
+		return false;
 
 	return this->LuaExec::execAsync(L);
 }
