@@ -28,7 +28,7 @@ public:
 	 */
 	MQTTTopic( const std::string &file, std::string &where, std::string &name  );
 	
-	virtual void readConfigDirective( std::string &l, std::string &name, bool &nameused );
+	void readConfigDirective( std::string &l, std::string &name, bool &nameused );
 
 		/* Accessors */
 	std::string &getTopic( void ){ return this->topic; };

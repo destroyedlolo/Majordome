@@ -24,9 +24,7 @@
  */
 static const SubConfigDir::extweight fileext[] = {
 	{ ".topic", 0xc0 },
-#if 0
 	{ ".timer", 0xc0 },
-#endif
 	{ ".rendezvous", 0xc0 },
 #if 0
 	{ ".tracker", 0x80 },
@@ -119,6 +117,16 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 				exit(EXIT_FAILURE);
 			} else
 				cfg.TopicsList.insert( std::make_pair(name, tpc) );
+		} else if(ext == ".timer" ){
+			std::string name;
+			auto tmr = new Timer( completpath, where, name );
+
+			Config::TimerCollection::iterator p;
+			if((p = cfg.TimersList.find(name)) != cfg.TimersList.end()){
+				SelLog->Log('F', "Timer '%s' is defined multiple times (previous one '%s')", name.c_str(), p->second->getWhereC());
+				exit(EXIT_FAILURE);
+			} else
+				cfg.TimersList.insert( std::make_pair(name, tmr) ).first;
 		} else if(ext == ".rendezvous"){
 			std::string name;
 			auto evt = new Event( completpath, where, name );

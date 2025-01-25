@@ -25,10 +25,11 @@ Rendez-vous Lua interface
 ---
 
 Add a new Object :
-- Majordome.cpp : SelLua->AddStartupFunc()
+- Config.h
 - SubConfigDir : extension
 - LuaExec.h : needed / required / feed
 - LuaExec.cpp : feedbyNeeded()
+- Majordome.cpp : SelLua->AddStartupFunc()
 
 ---
 

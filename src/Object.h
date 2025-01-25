@@ -24,7 +24,7 @@ protected:
 		 * NOTEZ-BIEN : this function will FAIL if the directive is not 
 		 * 		recognized ; it has to be called lastly.
 		 */
-	virtual void readConfigDirective(std::string &l, std::string &name, bool &nameused);
+	void readConfigDirective(std::string &l, std::string &name, bool &nameused);
 
 public:
 	Object() : disabled(false), quiet(false){};
