@@ -26,12 +26,12 @@ public:
 		 * ***/
 
 	StringVector needed_topic;
+	StringVector required_topic;
 	StringVector needed_task;
 	StringVector needed_rendezvous;
 #if 0	/* TODO */
 	StringVector needed_tracker;
 	StringVector needed_timer;
-	StringVector required_topic;
 	StringVector needed_minmax;
 	StringVector needed_namedminmax;
 #ifdef TOILE
@@ -41,12 +41,12 @@ public:
 
 protected:
 	void addNeededTopic( std::string t ){ this->needed_topic.Add(t); }
+	void addRequiredTopic( std::string t ){ this->required_topic.Add(t); }
 	void addNeededTask( std::string t ){ this->needed_task.Add(t); }
 	void addNeededRendezVous( std::string t ){ this->needed_rendezvous.Add(t); }
 #if 0	/* TODO */
 	void addNeededTracker( std::string t ){ this->needed_tracker.Add(t); }
 	void addNeededTimer( std::string t ){ this->needed_timer.Add(t); }
-	void addRequiredTopic( std::string t ){ this->required_topic.Add(t); }
 	void addNeededMinMax( std::string t ){ this->needed_minmax.Add(t); }
 	void addNeededNamedMinMax( std::string t ){ this->needed_namedminmax.Add(t); }
 

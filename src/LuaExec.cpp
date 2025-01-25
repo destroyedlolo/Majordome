@@ -79,6 +79,32 @@ void LuaExec::readConfigDirective( std::string &l, std::string &name, bool &name
 			SelLog->Log('F', "\t\tRendezvous '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
+	} else if(!!(arg = striKWcmp( l, "-->> need_topic=" ))){
+		Config::TopicCollection::iterator topic;
+		if( (topic = config.TopicsList.find(arg)) != config.TopicsList.end()){
+			if(verbose)
+				SelLog->Log('C', "\t\tAdded needed topic '%s'", arg.c_str());
+			this->addNeededTopic(arg);
+			return;
+		} else {
+			SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
+	} else if(!!(arg = striKWcmp( l, "-->> require_topic=" ))){
+		Config::TopicCollection::iterator topic;
+		if( (topic = config.TopicsList.find(arg)) != config.TopicsList.end()){
+			if(!topic->second->toBeStored()){
+				SelLog->Log('F', "Can't required \"%s\" topic : not stored", arg.c_str());
+				exit(EXIT_FAILURE);
+			}
+			if(verbose)
+				SelLog->Log('C', "\t\tAdded required topic '%s'", arg.c_str());
+			this->addRequiredTopic(arg);
+			return;
+		} else {
+			SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
 	}
 
 /* TODO */
@@ -97,7 +123,29 @@ bool LuaExec::canRun( void ){
 
 bool LuaExec::feedbyNeeded( lua_State *L, bool require ){
 	if(require){
-		/* TODO */
+		for(auto &i : this->required_topic){
+			try {
+				class MQTTTopic *tpc = config.TopicsList.at( i );
+
+				enum SharedObjType type;
+				SelSharedVar->getValue( tpc->getNameC(), &type, false );
+				if(type == SOT_UNKNOWN){
+					SelLog->Log('T', "Required topic \"%s\" not set : task/trigger will not be launched", this->getNameC());
+					return false;
+				}
+
+				class MQTTTopic **topic = (class MQTTTopic **)lua_newuserdata(L, sizeof(class MQTTTopic *));
+				assert(topic);
+
+				*topic = tpc;
+				luaL_getmetatable(L, "MajordomeMQTTTopic");
+				lua_setmetatable(L, -2);
+
+				lua_setglobal(L, i.c_str());
+			} catch( std::out_of_range &e ){	// Not found
+				return false;
+			}
+		}
 	}
 
 	for(auto &i : this->needed_task){
@@ -125,6 +173,22 @@ bool LuaExec::feedbyNeeded( lua_State *L, bool require ){
 
 			*event = evt;
 			luaL_getmetatable(L, "MajordomeRendezVous");
+			lua_setmetatable(L, -2);
+
+			lua_setglobal(L, i.c_str());
+		} catch( std::out_of_range &e ){	// Not found
+			return false;
+		}
+	}
+
+	for(auto &i : this->needed_topic){
+		try {
+			class MQTTTopic *tpc = config.TopicsList.at( i );
+			class MQTTTopic **topic = (class MQTTTopic **)lua_newuserdata(L, sizeof(class MQTTTopic *));
+			assert(topic);
+
+			*topic = tpc;
+			luaL_getmetatable(L, "MajordomeMQTTTopic");
 			lua_setmetatable(L, -2);
 
 			lua_setglobal(L, i.c_str());
