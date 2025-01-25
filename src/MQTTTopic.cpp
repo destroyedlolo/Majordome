@@ -9,7 +9,7 @@
 #include <cstring>
 #include <cassert>
 
-MQTTTopic::MQTTTopic(const std::string &fch, std::string &where, std::string &name) : Object(fch, where, name), alreadydefault(false){
+MQTTTopic::MQTTTopic(const std::string &fch, std::string &where, std::string &name) : Object(fch, where, name), alreadydefault(false), qos(0), wildcard(false), store(false), numeric(false), ttl(0){
 
 	/*
 	 * Reading file's content
@@ -48,6 +48,23 @@ MQTTTopic::MQTTTopic(const std::string &fch, std::string &where, std::string &na
 			exit(EXIT_FAILURE);
 		}
 	}
+
+	/*
+	 * Sanity checks
+	 */
+
+	if( !this->topic ){
+		SelLog->Log('F', "%s : No topic defined", fch.c_str() );
+		exit(EXIT_FAILURE);
+	}
+	this->wildcard =
+		this->topic.find('#') != std::string::npos ||
+		this->topic.find('+') != std::string::npos;
+
+#ifdef DEBUG
+	if( this->wildcard && debug )
+		SelLog->Log('D', "\t\tHas wildcard");
+#endif
 }
 
 void MQTTTopic::readConfigDirective( std::string &l, std::string &name, bool &nameused ){
@@ -157,7 +174,7 @@ static int mtpc_Publish(lua_State *L){
 	int retain =  lua_toboolean(L, 3);
 
 	if( topic->isEnabled() )
-		SelMQTT->mqttpublish( MQTT_client, topic->getTopic(), strlen(val), (void *)val, retain );
+		SelMQTT->mqttpublish( MQTT_client, topic->getTopicC(), strlen(val), (void *)val, retain );
 	else if(verbose)
 		SelLog->Log('I', "'%s' is disabled : sending ignored", topic->getTopic());
 
@@ -166,7 +183,7 @@ static int mtpc_Publish(lua_State *L){
 
 static int mtpc_getTopic( lua_State *L ){
 	class MQTTTopic *topic = checkMajordomeMQTTTopic(L);
-	lua_pushstring( L, topic->getTopic() );
+	lua_pushstring( L, topic->getTopicC() );
 	return 1;
 }
 

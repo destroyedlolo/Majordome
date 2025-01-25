@@ -65,13 +65,24 @@ void LuaTask::readConfigDirective( std::string &l, std::string &name, bool &name
 		if(verbose)
 			SelLog->Log('C', "\t\tRun at startup");
 		this->setRunAtStartup( true );
+	} else if( !!(arg = striKWcmp( l, "-->> listen=" ))){
+		Config::TopicCollection::iterator topic;
+		if( (topic = config.TopicsList.find(arg)) != config.TopicsList.end()){
+			if(verbose)
+				SelLog->Log('C', "\t\tAdded to topic '%s'", arg.c_str());
+			topic->second->addHandler( dynamic_cast<Handler *>(this) );
+//			nameused = true;
+		} else {
+			SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
 	} else if( !!(arg = striKWcmp( l, "-->> waitfor=" ))){
 		Config::EventCollection::iterator event;
 		if( (event = config.EventsList.find(arg)) != config.EventsList.end()){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded to rendezvous '%s'", arg.c_str());
 			event->second->addHandler( dynamic_cast<Handler *>(this) );
-			nameused = true;
+//			nameused = true;
 		} else {
 			SelLog->Log('F', "\t\tRendezvous '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);

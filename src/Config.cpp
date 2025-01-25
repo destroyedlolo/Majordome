@@ -46,6 +46,47 @@ void Config::init(std::string &where, lua_State *L){
 }
 
 void Config::SanityChecks( void ){
+	 /* 
+	  * Verify topics overlapping
+	  */
+
+	for(auto i = TopicsList.begin(); i != TopicsList.end(); i++){
+		TopicCollection::iterator j = i;
+		for(j++; j != TopicsList.end(); j++){
+			if( !(i->second->hasWildcard()) && !(j->second->hasWildcard()) ){ // No wildcard
+				if( i->second->getTopic() == j->second->getTopic() ){
+					SelLog->Log('F', "Same MQTT topic used for topics '%s' from '%s' and '%s' from '%s'",
+						i->second->getName().c_str(), 
+						i->second->getWhere().c_str(), 
+						j->second->getName().c_str(),
+						j->second->getWhere().c_str()
+					);
+					exit(EXIT_FAILURE);
+				}
+			} else if( i->second->hasWildcard() && j->second->hasWildcard() ){	// Both contain wildcard
+			} else if( i->second->hasWildcard() ){
+				if( !SelMQTT->mqtttokcmp( i->second->getTopicC(), j->second->getTopicC() )){
+					SelLog->Log('F', "'%s' from '%s' hides '%s' from '%s'",
+						i->second->getName().c_str(), 
+						i->second->getWhere().c_str(), 
+						j->second->getName().c_str(),
+						j->second->getWhere().c_str()
+					);
+					exit(EXIT_FAILURE);
+				}
+			} else if( j->second->hasWildcard() ){
+				if( !SelMQTT->mqtttokcmp( j->second->getTopicC(), i->second->getTopicC() )){
+					SelLog->Log('W', "'%s' from '%s' overlaps '%s' from '%s'",
+						i->second->getName().c_str(), 
+						i->second->getWhere().c_str(), 
+						j->second->getName().c_str(),
+						j->second->getWhere().c_str()
+					);
+				}
+			}
+		}
+	}
+
 /* TODO */
 }
 

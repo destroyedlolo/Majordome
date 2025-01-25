@@ -31,7 +31,8 @@ public:
 	virtual void readConfigDirective( std::string &l, std::string &name, bool &nameused );
 
 		/* Accessors */
-	const char *getTopic( void ){ return this->topic.c_str(); };
+	std::string &getTopic( void ){ return this->topic; };
+	const char *getTopicC( void ){ return this->topic.c_str(); };
 	unsigned int getQOS( void ){ return this->qos; };
 	bool hasWildcard( void ){ return this->wildcard; };
 	bool toBeStored( void ){ return this->store; };
