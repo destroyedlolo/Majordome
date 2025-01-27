@@ -415,12 +415,14 @@ int main(int ac, char **av){
 	config.LaunchTimers();	// Launch slave timers
 	config.RunImmediates();	// Run immediate & overdue timers tasks
 
-	/* TODO */
-
 		/* Shutdown's */
 	signal(SIGINT,quit);
 	signal(SIGUSR1,quit);
 	atexit(bye);
+
+#ifdef TOILE
+	Toile::RefreshRenderers();
+#endif
 
 	pause();	// Waiting for events, nothing else to do
 }
