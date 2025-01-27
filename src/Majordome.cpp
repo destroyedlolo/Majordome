@@ -413,6 +413,7 @@ int main(int ac, char **av){
 	config.RunStartups();	// Run startup functions
 	config.SubscribeTopics();	// MQTT : activate topics receiving
 	config.LaunchTimers();	// Launch slave timers
+	config.RunImmediates();	// Run immediate & overdue timers tasks
 
 	/* TODO */
 
