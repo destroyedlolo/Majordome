@@ -6,6 +6,7 @@
 
 #include <sys/time.h>
 #include <cstring>
+#include <cassert>
 
 Timer::Timer( const std::string &fch, std::string &where, std::string &name ) : Object(fch, where, name), every(0), at((unsigned short)-1), immediate(false), runifover(false), cond(PTHREAD_COND_INITIALIZER), mutex(PTHREAD_MUTEX_INITIALIZER) {
 
@@ -119,9 +120,11 @@ void *Timer::threadedslave(void *arg){
 
 		int rc;
 		if( (rc = pthread_cond_timedwait(&(me->cond), &(me->mutex), &ts)) != ETIMEDOUT ){
-// SelLog->Log('d', "Interrupted : %s", strerror(rc));
+			/* If interrupted, it's meaning we got a command
+			 * Notez-bien : only RESET is coded here, LAUNCH only break the
+			 * timedwait and let remaining code (handlers launching) executes.
+			 */
 			if( me->cmd == Commands::RESET ){
-// SelLog->Log('d', "reset");
 				continue;	// Rethink the timer without launching tasks
 			}
 		}
@@ -181,3 +184,192 @@ void Timer::execHandlers(void){
 
 	/* TODO start/stop */
 }
+
+	/* ***
+	 * Locking
+	 * ***/
+
+void Timer::lock( void ){
+	pthread_mutex_lock( &(this->mutex) );
+}
+
+void Timer::unlock( void ){
+	pthread_mutex_unlock( &(this->mutex) );
+}
+
+void Timer::sendCommand( enum Commands c ){
+	this->lock();
+	this->cmd = c;
+	pthread_cond_signal( &(this->cond) );
+	this->unlock();
+}
+
+	/* ****
+	 * Lua exposed functions
+	 * ****/
+
+static class Timer *checkMajordomeTimer(lua_State *L){
+	class Timer **r = (class Timer **)SelLua->testudata(L, 1, "MajordomeTimer");
+	luaL_argcheck(L, r != NULL, 1, "'MajordomeTimer' expected");
+	return *r;
+}
+
+static int mtmr_find(lua_State *L){
+	const char *name = luaL_checkstring(L, 1);
+
+	try {
+		class Timer *tmr = config.TimersList.at( name );
+		class Timer **timer = (class Timer **)lua_newuserdata(L, sizeof(class Timer *));
+		assert(timer);
+
+		*timer = tmr;
+		luaL_getmetatable(L, "MajordomeTimer");
+		lua_setmetatable(L, -2);
+
+		return 1;
+	} catch( std::out_of_range &e ){	// Not found 
+		return 0;
+	}
+}
+
+static const struct luaL_Reg MajTimerLib [] = {
+	{"find", mtmr_find},
+	{NULL, NULL}
+};
+
+static int mtmr_getEvery( lua_State *L ){
+	class Timer *timer = checkMajordomeTimer(L);
+	lua_pushnumber( L, (lua_Number)timer->getEvery() );
+	return 1;
+}
+
+static int mtmr_setEvery( lua_State *L ){
+	class Timer *timer = checkMajordomeTimer(L);
+	timer->setEvery( luaL_checkinteger(L, 2) );
+	return 0;
+}
+
+static int mtmr_getAt( lua_State *L ){
+	class Timer *timer = checkMajordomeTimer(L);
+	timer->lock();	// As "at" is stored in 2 fields, we have to avoid race condition
+	lua_Number r = timer->getAt() + timer->getMin()/100.0;
+	lua_pushnumber( L, r );
+	timer->unlock();
+	return 1;
+}
+
+static int mtmr_getAtHM( lua_State *L ){
+	class Timer *timer = checkMajordomeTimer(L);
+	timer->lock();	// As "at" is stored in 2 fields, we have to avoid race condition
+	lua_pushnumber( L, timer->getAt() );
+	lua_pushnumber( L, timer->getMin() );
+	timer->unlock();
+	return 2;
+}
+
+static void internal_setAt( class Timer *timer, unsigned short h, unsigned short m ){
+	h += m/60;
+	m %= 60;
+
+	timer->lock();	// As "at" is stored in 2 fields, we have to avoid race condition
+	timer->setAt( h );
+	timer->setMin( m );
+	timer->unlock();
+
+	if( !timer->inEveryMode() )	// The timer need to be recalculed only if in 'at' mode
+		timer->sendCommand( Timer::Commands::RESET );
+}
+
+static int mtmr_setAt( lua_State *L ){
+	class Timer *timer = checkMajordomeTimer(L);
+	lua_Number v = luaL_checknumber(L, 2);
+	v += 0.0005;	// Avoid FFP rounding
+
+	unsigned short h = (unsigned short)v;
+	internal_setAt( timer, h, (v - h) * 100 );
+	return 0;
+}
+
+static int mtmr_setAtHM( lua_State *L ){
+	class Timer *timer = checkMajordomeTimer(L);
+	short h = luaL_checkinteger(L, 2);
+	short m = luaL_checkinteger(L, 3);
+
+	while( m<0 ){	// If it's in previous hour
+		h--;
+		m += 60;
+	}
+
+	internal_setAt( timer, h, m );
+	return 0;
+}
+
+static int mtmr_Reset( lua_State *L ){
+	class Timer *timer = checkMajordomeTimer(L);
+
+	if( timer->inEveryMode() )	// Only usefull in Every mode
+		timer->sendCommand( Timer::Commands::RESET );
+
+	return 0;
+}
+
+static int mtmr_Launch( lua_State *L ){
+	class Timer *timer = checkMajordomeTimer(L);
+
+	timer->sendCommand( Timer::Commands::LAUNCH );
+
+	return 0;
+}
+
+static int mtmr_getContainer( lua_State *L ){
+	class Timer *timer = checkMajordomeTimer(L);
+	lua_pushstring( L, timer->getWhereC() );
+	return 1;
+}
+
+static int mtmr_getName( lua_State *L ){
+	class Timer *timer = checkMajordomeTimer(L);
+	lua_pushstring( L, timer->getName().c_str() );
+	return 1;
+}
+
+static int mtmr_enabled( lua_State *L ){
+	class Timer *timer = checkMajordomeTimer(L);
+	timer->enable();
+	return 0;
+}
+
+static int mtmr_disable( lua_State *L ){
+	class Timer *timer = checkMajordomeTimer(L);
+	timer->disable();
+	return 0;
+}
+
+static int mtmr_isEnabled( lua_State *L ){
+	class Timer *timer = checkMajordomeTimer(L);
+	lua_pushboolean( L, timer->isEnabled() );
+	return 1;
+}
+
+static const struct luaL_Reg MajTimerM [] = {
+	{"getEvery", mtmr_getEvery},
+	{"setEvery", mtmr_setEvery},
+	{"getAt", mtmr_getAt},
+	{"getAtHM", mtmr_getAtHM},
+	{"setAt", mtmr_setAt},
+	{"setAtHM", mtmr_setAtHM},
+	{"Reset", mtmr_Reset},
+	{"Launch", mtmr_Launch},
+	{"getContainer", mtmr_getContainer},
+	{"getName", mtmr_getName},
+	{"isEnabled", mtmr_isEnabled},
+	{"Enable", mtmr_enabled},
+	{"Disable", mtmr_disable},
+	{NULL, NULL}
+};
+
+void Timer::initLuaInterface( lua_State *L ){
+	SelLua->objFuncs( L, "MajordomeTimer", MajTimerM );
+	SelLua->libCreateOrAddFuncs( L, "MajordomeTimer", MajTimerLib );
+}
+

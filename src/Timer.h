@@ -21,17 +21,6 @@ class Timer : public Event {	// Event contains tasks to launch
 	bool runifover;	// run immediately if the 'At' hour is already passed
 
 	pthread_t thread;
-	pthread_cond_t cond;
-	pthread_mutex_t mutex;
-
-public:
-	enum Commands {
-	LAUNCH,	// Launch tasks now
-	RESET,	// Reset the timer without launching tasks
-	};
-
-private :
-	enum Commands cmd;
 	static void *threadedslave(void *);
 
 public:
@@ -70,6 +59,36 @@ public:
 	bool getRunIfOver( void ){ return this->runifover; }
 
 	bool isOver( void );	// Tell if this absolute timer is passed and has runifover
+	bool inEveryMode( void ){ return( !!this->every ); }
+
+		/* Lua's communication
+		 * As timers are running in separate threads an IPC kind of
+		 * channel has to be used.
+		 */
+
+public:
+	enum Commands {
+	LAUNCH,	// Launch tasks now
+	RESET,	// Reset the timer without launching tasks
+	};
+
+private:
+
+	/* IPC signaling */
+	pthread_cond_t cond;
+	pthread_mutex_t mutex;
+
+	enum Commands cmd;
+
+public:
+		// Avoid race condition (for multi-fields value, like "at")
+	void lock( void );
+	void unlock( void );
+
+	void sendCommand( enum Commands );
+
+	/* Create Lua's object */
+	static void initLuaInterface(lua_State *L);
 };
 
 #endif

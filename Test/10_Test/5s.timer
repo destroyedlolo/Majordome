@@ -6,11 +6,11 @@
 --
 -- repeating delay (in seconds)
 -- ignored if null
--->> every=30
+-->> every=5
 --
 -- This timer is set to an absolute time, 
 -- format HHMM
--->> at=2256
+--->> at=2256
 --
 -- NOTEZ-BIEN : every has precedence on at.
 -- If both are present, only every is took in account
