@@ -87,6 +87,17 @@ void LuaTask::readConfigDirective( std::string &l, std::string &name, bool &name
 			SelLog->Log('F', "\t\tRendezvous '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
+	} else if( !!(arg = striKWcmp( l, "-->> when=" ))){
+		Config::TimerCollection::iterator timer;
+		if( (timer = config.TimersList.find(arg)) != config.TimersList.end()){
+			if(verbose)
+				SelLog->Log('C', "\t\tAdded to timer '%s'", arg.c_str());
+			timer->second->addHandler( dynamic_cast<Handler *>(this) );
+//			nameused = true;
+		} else {
+			SelLog->Log('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
 	} else 
 		LuaExec::readConfigDirective(l, name, nameused);
 }

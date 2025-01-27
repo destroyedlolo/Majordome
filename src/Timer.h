@@ -32,6 +32,7 @@ public:
 
 private :
 	enum Commands cmd;
+	static void *threadedslave(void *);
 
 public:
 	/* Constructor from a file
@@ -42,6 +43,11 @@ public:
 	Timer( const std::string &file, std::string &where, std::string &name  );
 
 	void readConfigDirective( std::string &l, std::string &name, bool &nameused );
+
+	/* Timers are handled through a dedicated thread ...
+	 * A pointer to this object is passed to it.
+	 */
+	void launchThread( void );
 };
 
 #endif

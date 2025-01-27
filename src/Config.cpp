@@ -127,3 +127,7 @@ void Config::RunStartups( void ){
 	}
 }
 
+void Config::LaunchTimers( void ){
+	for(auto &i : this->TimersList)
+		i.second->launchThread();
+}

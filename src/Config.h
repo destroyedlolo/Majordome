@@ -36,9 +36,6 @@ public:
 	 */
 	void SanityChecks( void );
 
-	/* Subscribe to defined MQTT topics */
-	void SubscribeTopics( void );
-
 		/* Accessors */
 	std::string getConfigDir(){ return this->configDir; };
 
@@ -54,6 +51,12 @@ public:
 
 	typedef ObjCollection<Timer *> TimerCollection;
 	TimerCollection TimersList;
+
+		/* Topics' */
+	void SubscribeTopics( void );	// Subscribe to defined MQTT topics
+
+		/* Timers' */
+	void LaunchTimers( void );
 
 		/* Execution */
 	void RunStartups( void );	// Executes RunAtStartup marked tasks
