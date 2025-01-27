@@ -208,6 +208,22 @@ bool LuaExec::feedbyNeeded( lua_State *L, bool require ){
 		}
 	}
 
+	for(auto &i : this->needed_timer){
+		try {
+			class Timer *tmr = config.TimersList.at( i );
+			class Timer **timer = (class Timer **)lua_newuserdata(L, sizeof(class Timer *));
+			assert(timer);
+
+			*timer = tmr;
+			luaL_getmetatable(L, "MajordomeTimer");
+			lua_setmetatable(L, -2);
+
+			lua_setglobal(L, i.c_str());
+		} catch( std::out_of_range &e ){	// Not found 
+			return false;
+		}
+	}
+
 	return true;
 }
 

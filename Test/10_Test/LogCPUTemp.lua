@@ -6,8 +6,6 @@
 -- listen directive.
 --->> name=Toto
 --
--->> need_timer=30s
---
 -- Indicate the Timer(s) to wait for
 -- (more than one "when" can be present)
 --->> when=30s
@@ -21,6 +19,11 @@
 --
 -- Disable this script
 --->> disabled
+--
+-->> need_timer=30s
+-->> RunAtStartup
+
+print(_G['30s'])
 
 local f = assert(io.open("/sys/class/thermal/thermal_zone1/temp", "r"))
 local t = f:read("*number")
