@@ -132,7 +132,7 @@ void *Timer::threadedslave(void *arg){
 			SelLog->Log('D', "[Timer %s] it's %s", me->getNameC(), SeleneCore->ctime(&current_time, NULL, 0) );
 		}
 #endif
-//		me->execTasks();
+		me->execHandlers();
 	}
 	return NULL;
 }
@@ -157,4 +157,27 @@ void Timer::launchThread( void ){
 	pthread_attr_destroy(&thread_attr);
 }
 
+bool Timer::isOver( void ){
+	if( this->every || !this->runifover )
+		return false;
 
+	time_t t;
+	struct tm now;
+	time(&t);
+	localtime_r( &t, &now );
+
+	if( now.tm_hour < this->at )
+		return false;
+	else if( now.tm_hour > this->at )
+		return true;
+	else if( now.tm_min < this->min )
+		return false;
+	else	// If it's exactly the same hh:mm, it's already over
+		return true;
+}
+
+void Timer::execHandlers(void){
+	this->Event::execHandlers();	// Execute slaves' handlers
+
+	/* TODO start/stop */
+}

@@ -48,6 +48,28 @@ public:
 	 * A pointer to this object is passed to it.
 	 */
 	void launchThread( void );
+
+	/*
+	 * Executes slaves' handlers
+	 */
+
+	void execHandlers(void);
+
+	/*
+	 * Accessors
+	 */
+	unsigned long getEvery( void ){ return this->every; }
+	void setEvery( unsigned long v ){ this->every = v; }
+
+	unsigned short getAt( void ){ return this->at; }
+	unsigned short getMin( void ){ return this->min; }
+	void setAt( unsigned short v ){ this->at = v; }
+	void setMin( unsigned short v ){ this->min = v; }
+
+	bool getImmediate( void ){ return this->immediate; }
+	bool getRunIfOver( void ){ return this->runifover; }
+
+	bool isOver( void );	// Tell if this absolute timer is passed and has runifover
 };
 
 #endif

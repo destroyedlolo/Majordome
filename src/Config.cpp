@@ -131,3 +131,11 @@ void Config::LaunchTimers( void ){
 	for(auto &i : this->TimersList)
 		i.second->launchThread();
 }
+
+void Config::RunImmediates( void ){
+	for(auto &i : this->TimersList){
+		if( i.second->getImmediate() || i.second->isOver() )
+			i.second->execHandlers();
+	}
+}
+

@@ -56,7 +56,8 @@ public:
 	void SubscribeTopics( void );	// Subscribe to defined MQTT topics
 
 		/* Timers' */
-	void LaunchTimers( void );
+	void LaunchTimers( void );	// Launch slaves' threads
+	void RunImmediates( void );	// Triggers immediate & over timers
 
 		/* Execution */
 	void RunStartups( void );	// Executes RunAtStartup marked tasks
