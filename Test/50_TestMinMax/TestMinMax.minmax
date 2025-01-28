@@ -24,3 +24,5 @@
 -- Bellow, optional Lua code to validate the data :
 -- - if the return code is 'false', the data is ignored
 -- - other value, or no return, the data is considered
+
+print("bip")
