@@ -6,9 +6,9 @@
 
 #include "LuaExec.h"
 
-class Handler : virtual public LuaExec {
+class Handler : public LuaExec {
 protected :
-	Handler(const std::string &fch, std::string &where, std::string &name) : Object(fch, where, name), LuaExec(fch, where, name) {};
+	Handler(const std::string &fch, std::string &where, std::string &name) : LuaExec(fch, where, name) {};
 
 public :
 

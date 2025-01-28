@@ -15,7 +15,7 @@
 #include <sstream>	// stringstream
 #include <lua.hpp>	/* Lua's state needed */
 
-class LuaExec : virtual public Object {
+class LuaExec : public Object {
 	struct elastic_storage func;	// Storage for the function to execute
 
 public:

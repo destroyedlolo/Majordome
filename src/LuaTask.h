@@ -11,7 +11,7 @@
 
 class Config;
 
-class LuaTask : virtual public Handler {
+class LuaTask : public Handler {
 	bool once;	// can run only once
 
 	pthread_mutex_t running_access;	// we want an access to "running"
