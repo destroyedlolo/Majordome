@@ -26,9 +26,9 @@ static const SubConfigDir::extweight fileext[] = {
 	{ ".topic", 0xc0 },
 	{ ".timer", 0xc0 },
 	{ ".rendezvous", 0xc0 },
+	{ ".minmax", 0x80 },
 #if 0
 	{ ".tracker", 0x80 },
-	{ ".minmax", 0x80 },
 	{ ".namedminmax", 0x80 },
 	{ ".shutdown", 0x50 },
 #endif
@@ -137,6 +137,16 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 				exit(EXIT_FAILURE);
 			} else
 				cfg.EventsList.insert( std::make_pair(name, evt) );
+		} else if(ext == ".minmax"){
+			std::string name;
+			auto trk = new MinMax(completpath, where, name, L );
+	
+			Config::MinMaxCollection::iterator prev;
+			if((prev = cfg.MinMaxList.find(name)) != cfg.MinMaxList.end()){
+				SelLog->Log('F', "MinMax '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhere().c_str());
+				exit(EXIT_FAILURE);
+			} else
+				cfg.MinMaxList.insert( std::make_pair(name, trk) );
 #	ifdef DEBUG
 		} else 
 			if(debug)

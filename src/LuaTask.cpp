@@ -8,7 +8,7 @@
 #include <cstring>
 #include <cassert>
 
-LuaTask::LuaTask( const std::string &fch, std::string &where, std::string &name, lua_State *L ) : Handler(fch, where, name), once(false), running_access(PTHREAD_MUTEX_INITIALIZER), running(false), runatstartup(false){
+LuaTask::LuaTask( const std::string &fch, std::string &where, std::string &name, lua_State *L ) : Object(fch, where, name), Handler(fch, where, name), once(false), running_access(PTHREAD_MUTEX_INITIALIZER), running(false), runatstartup(false){
 	/*
 	 * Reading file's content
 	 */

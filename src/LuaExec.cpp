@@ -116,6 +116,17 @@ void LuaExec::readConfigDirective( std::string &l, std::string &name, bool &name
 			SelLog->Log('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
+	} else if(!!(arg = striKWcmp( l, "-->> need_minmax=" ))){
+		Config::MinMaxCollection::iterator minmax;
+		if( (minmax = config.MinMaxList.find(arg)) != config.MinMaxList.end()){
+			if(verbose)
+				SelLog->Log('C', "\t\tAdded needed minmax '%s'", arg.c_str());
+			this->addNeededMinMax( arg );
+			return;
+		} else {
+			SelLog->Log('F', "\t\tminmax '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
 	}
 
 /* TODO */
@@ -216,6 +227,22 @@ bool LuaExec::feedbyNeeded( lua_State *L, bool require ){
 
 			*timer = tmr;
 			luaL_getmetatable(L, "MajordomeTimer");
+			lua_setmetatable(L, -2);
+
+			lua_setglobal(L, i.c_str());
+		} catch( std::out_of_range &e ){	// Not found 
+			return false;
+		}
+	}
+
+	for(auto &i : this->needed_minmax){
+		try {
+			class MinMax *mm = config.MinMaxList.at( i );
+			class MinMax **minmax = (class MinMax **)lua_newuserdata(L, sizeof(class MinMax *));
+			assert(minmax);
+
+			*minmax = mm;
+			luaL_getmetatable(L, "MajordomeMinMax");
 			lua_setmetatable(L, -2);
 
 			lua_setglobal(L, i.c_str());
