@@ -130,7 +130,7 @@ void LuaExec::readConfigDirective( std::string &l, std::string &name, bool &name
 	}
 
 /* TODO */
-	return Object::readConfigDirective(l, name, nameused);
+	return this->Object::readConfigDirective(l, name, nameused);
 }
 
 bool LuaExec::canRun( void ){

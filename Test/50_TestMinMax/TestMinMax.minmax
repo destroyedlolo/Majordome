@@ -14,7 +14,7 @@
 -->> quiet
 --
 -- Disable this trigger
---->> disabled
+-->> disabled
 --
 -- Indicate MQTT topic(s) to listen to
 -- More than one "listen" can be present : in such case, all
@@ -26,3 +26,10 @@
 -- - other value, or no return, the data is considered
 
 print("bip")
+
+--[[
+for k,v in pairs(_G)
+do
+	print(k,v)
+end
+]]

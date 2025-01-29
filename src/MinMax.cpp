@@ -73,7 +73,7 @@ void MinMax::readConfigDirective( std::string &l, std::string &name, bool &nameu
 			exit(EXIT_FAILURE);
 		}
 	} else 
-		LuaExec::readConfigDirective(l, name, nameused);
+		this->LuaExec::readConfigDirective(l, name, nameused);
 }
 
 void MinMax::feedState( lua_State *L ){
@@ -95,4 +95,15 @@ void MinMax::feedState( lua_State *L ){
 	}
 }
 
+bool MinMax::execAsync(lua_State *L){
+#if 0
+	if( !this->isEnabled() ){
+		if(verbose)
+			SelLog->Log('T', "MinMax'%s' from '%s' is disabled", this->getNameC(), this->getWhereC() );
+		return false;
+	}
+#endif
 
+	puts("execAsync");
+	return false;
+}

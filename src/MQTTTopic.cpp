@@ -122,7 +122,7 @@ void MQTTTopic::readConfigDirective( std::string &l, std::string &name, bool &na
 			}
 		}
 	} else 
-		Object::readConfigDirective(l, name, nameused);
+		this->Object::readConfigDirective(l, name, nameused);
 }
 
 bool MQTTTopic::match( const char *intopic ){
@@ -148,7 +148,7 @@ void MQTTTopic::execHandlers(MQTTTopic &, const char *topic, const char *payload
 		lua_pushstring( L, payload );	// and its payload
 		lua_setglobal( L, "MAJORDOME_PAYLOAD" );
 
-		i->LuaExec::execAsync(L);
+		i->execAsync(L);
 	}
 }
 

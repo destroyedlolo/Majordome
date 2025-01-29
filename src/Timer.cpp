@@ -72,7 +72,7 @@ void Timer::readConfigDirective( std::string &l, std::string &name, bool &nameus
 		if(verbose)
 			SelLog->Log('C', "\t\tRun if over");
  	} else 
-		Object::readConfigDirective(l, name, nameused);
+		this->Object::readConfigDirective(l, name, nameused);
 }
 
 void *Timer::threadedslave(void *arg){

@@ -11,7 +11,7 @@
 
 #include <math.h>
 
-class MinMax : public Handler {
+class MinMax : virtual public Handler {
 	bool empty;		// No value yet
 	lua_Number min,max;
 	size_t nbre;	// Number of handled values
@@ -38,6 +38,9 @@ public:
 
 	bool isEmpty(){ return this->empty; }
 	void Clear(){ this->empty = true; }
+
+		/* Executable */
+	virtual bool execAsync(lua_State *L);	// Overloading to handle MinMax data feeding
 };
 
 #endif

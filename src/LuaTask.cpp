@@ -99,7 +99,7 @@ void LuaTask::readConfigDirective( std::string &l, std::string &name, bool &name
 			exit(EXIT_FAILURE);
 		}
 	} else 
-		LuaExec::readConfigDirective(l, name, nameused);
+		this->LuaExec::readConfigDirective(l, name, nameused);
 }
 
 	/* ***

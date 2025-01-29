@@ -91,7 +91,7 @@ public:
 	 * Run in a new thread with a dedicated State.
 	 * Consequently, global objects are not accessible.
 	 */
-	bool execAsync(lua_State *L);
+	virtual bool execAsync(lua_State *L);
 
 	/* Synchronously execute Lua code.
 	 * Run with the same State as its caller.
