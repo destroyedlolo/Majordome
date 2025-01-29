@@ -11,13 +11,14 @@
 
 #include <math.h>
 
-class MinMax : public Event, public LuaExec {
+class MinMax : public Handler {
 	bool empty;		// No value yet
 	lua_Number min,max;
 	size_t nbre;	// Number of handled values
 	lua_Number sum;
 
 	virtual void readConfigDirective( std::string &l, std::string &name, bool &nameused );
+	virtual void feedState(lua_State *L);
 
 public:
 	/* Constructor from a file
@@ -28,7 +29,7 @@ public:
 	 */
 	MinMax( const std::string &file, std::string &where, std::string &name, lua_State *L );
 
-		/* Accessor */
+		/* Accessors */
 	lua_Number getMin(){ return(this->empty ? 0 : this->min); }
 	lua_Number getMax(){ return(this->empty ? 0 : this->max); }
 	lua_Number getAverage(){ return(this->empty ? INFINITY : this->sum/this->nbre); }

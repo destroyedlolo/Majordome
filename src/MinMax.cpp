@@ -8,7 +8,7 @@
 #include <cassert>
 
 
-MinMax::MinMax(const std::string &fch, std::string &where, std::string &name, lua_State *L) : Object(fch, where, name), LuaExec(fch, where, name), empty(true){
+MinMax::MinMax(const std::string &fch, std::string &where, std::string &name, lua_State *L) : Object(fch, where, name), Handler(fch, where, name), empty(true){
 	/*
 	 * Reading file's content
 	 */
@@ -75,3 +75,24 @@ void MinMax::readConfigDirective( std::string &l, std::string &name, bool &nameu
 	} else 
 		LuaExec::readConfigDirective(l, name, nameused);
 }
+
+void MinMax::feedState( lua_State *L ){
+	try {
+		class MinMax *mm = config.MinMaxList.at( this->getNameC() );
+		class MinMax **minmax = (class MinMax **)lua_newuserdata(L, sizeof(class MinMax *));
+		assert(minmax);
+
+		lua_pushstring( L, this->getNameC() );	// Push the name of the tracker
+		lua_setglobal( L, "MAJORDOME_MINMAX" );
+
+		*minmax = mm;
+		luaL_getmetatable(L, "MajordomeMinMax");
+		lua_setmetatable(L, -2);
+		lua_setglobal( L, "MAJORDOME_Myself" );
+	} catch( std::out_of_range &e ){	// Not found 
+		SelLog->Log('F', "Can't find minmax '%s'", this->getNameC() );
+		exit(EXIT_FAILURE);
+	}
+}
+
+
