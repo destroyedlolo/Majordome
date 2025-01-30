@@ -141,14 +141,16 @@ void MQTTTopic::execHandlers(MQTTTopic &, const char *topic, const char *payload
 	for(auto &i : *this){
 		lua_State *L = i->prepareExec();
 
-		lua_pushstring( L, this->getNameC() );	// Push the name
-		lua_setglobal( L, "MAJORDOME_TOPIC_NAME" );
-		lua_pushstring( L, topic );	// Push the topic
-		lua_setglobal( L, "MAJORDOME_TOPIC" );
-		lua_pushstring( L, payload );	// and its payload
-		lua_setglobal( L, "MAJORDOME_PAYLOAD" );
+		if(L){
+			lua_pushstring( L, this->getNameC() );	// Push the name
+			lua_setglobal( L, "MAJORDOME_TOPIC_NAME" );
+			lua_pushstring( L, topic );	// Push the topic
+			lua_setglobal( L, "MAJORDOME_TOPIC" );
+			lua_pushstring( L, payload );	// and its payload
+			lua_setglobal( L, "MAJORDOME_PAYLOAD" );
 
-		i->execAsync(L);
+			i->execAsync(L);
+		}
 	}
 }
 
