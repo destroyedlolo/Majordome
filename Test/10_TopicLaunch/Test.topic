@@ -1,0 +1,12 @@
+-- test topic
+--
+-- name of the topic
+-- if not set, takes the filename
+--->> name=toto
+--
+-- set the topic (mandatory)
+-- if present, %ClientID% will be replaced by Majordome's MQTT client ID
+-->> topic=Test
+--
+-- Need to be stored for required topics
+-->> store

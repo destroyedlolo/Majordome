@@ -1,4 +1,4 @@
--- This task with collect minmax data every 1 minute.
+-- Tasks that will launch bip one
 --
 -- In the header of the script (comment block at the very beginning of
 -- the script), each line starting with -->> are Majordome's commands.
@@ -10,12 +10,7 @@
 -- listen directive.
 --->> name=Toto
 --
--- Indicate the Timer(s) to wait for
--- (more than one "when" can be present)
--->> when=10s
---
--- Create this rendez-vous object
--->> need_minmax=TestMinMax
+-->> need_topic=Test
 --
 -- remove some trace
 -- This option is useful to avoid logging of very noisy topics
@@ -24,13 +19,8 @@
 -- Disable this script
 --->> disabled
 --
+-- Start at Majordome startup
+-->> RunAtStartup
 
--- Get MinMax values
-print ""
-print( "Number of samples :", TestMinMax:getSamplesNumber() )
-print( "Min value :", TestMinMax:getMin() )
-print( "Max value :", TestMinMax:getMax() )
-print( "Max Average :", TestMinMax:getAverage() )
+Test:Launch()
 
--- Clear storage : restart a new series
-TestMinMax:Clear()

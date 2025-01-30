@@ -144,10 +144,13 @@ void MQTTTopic::execHandlers(MQTTTopic &, const char *topic, const char *payload
 		if(L){
 			lua_pushstring( L, this->getNameC() );	// Push the name
 			lua_setglobal( L, "MAJORDOME_TOPIC_NAME" );
-			lua_pushstring( L, topic );	// Push the topic
-			lua_setglobal( L, "MAJORDOME_TOPIC" );
-			lua_pushstring( L, payload );	// and its payload
-			lua_setglobal( L, "MAJORDOME_PAYLOAD" );
+
+			if(topic){	// Otherwise, launched by the Lua API
+				lua_pushstring( L, topic );	// Push the topic
+				lua_setglobal( L, "MAJORDOME_TOPIC" );
+				lua_pushstring( L, payload );	// and its payload
+				lua_setglobal( L, "MAJORDOME_PAYLOAD" );
+			}
 
 				/* Notez-bien : this function may be overloaded and, 
 				 * the handler can be called SYNCHRONOUSLY if needed.
@@ -274,19 +277,17 @@ static int mtpc_isEnabled( lua_State *L ){
 	return 1;
 }
 
-#if 0
 static int mtpc_Launch( lua_State *L ){
 	class MQTTTopic *topic = checkMajordomeMQTTTopic(L);
 
 	if( topic->isEnabled() )
-		topic->execTasks(config, topic->getNameC(), NULL, "fake");
+		topic->execHandlers(*topic, NULL, NULL);
 #ifdef DEBUG
 	else if( debug )
 		SelLog->Log('D', "Topic %s is disabled : no tasks launched", topic->getNameC() );
 #endif	
 	return 0;
 }
-#endif
 
 static const struct luaL_Reg MajTopicM [] = {
 	{"Publish", mtpc_Publish},
@@ -297,7 +298,7 @@ static const struct luaL_Reg MajTopicM [] = {
 	{"isEnabled", mtpc_isEnabled},
 	{"Enable", mtpc_enabled},
 	{"Disable", mtpc_disable},
-//	{"Launch", mtpc_Launch},
+	{"Launch", mtpc_Launch},
 	{NULL, NULL}
 };
 
