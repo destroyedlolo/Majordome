@@ -149,6 +149,10 @@ void MQTTTopic::execHandlers(MQTTTopic &, const char *topic, const char *payload
 			lua_pushstring( L, payload );	// and its payload
 			lua_setglobal( L, "MAJORDOME_PAYLOAD" );
 
+				/* Notez-bien : this function may be overloaded and, 
+				 * the handler can be called SYNCHRONOUSLY if needed.
+				 * (it's the case of MinMax).
+				 */
 			i->execAsync(L);
 		}
 	}

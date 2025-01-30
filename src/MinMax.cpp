@@ -96,7 +96,7 @@ void MinMax::feedState( lua_State *L ){
 }
 
 bool MinMax::execAsync(lua_State *L){
-#if 0
+#if 0	// Not needed as already checked within LuaExec::canRun() called by MQTTTopic::execHandlers()
 	if( !this->isEnabled() ){
 		if(verbose)
 			SelLog->Log('T', "MinMax'%s' from '%s' is disabled", this->getNameC(), this->getWhereC() );
@@ -104,6 +104,41 @@ bool MinMax::execAsync(lua_State *L){
 	}
 #endif
 
-	puts("execAsync");
-	return false;
+	LuaExec::boolRetCode rc;
+	std::string rs;
+	lua_Number retn;
+
+	bool r = this->LuaExec::execSync(L, &rc, &rs, &retn);
+
+	if( rc != LuaExec::boolRetCode::RCfalse ){
+
+		lua_Number val;
+		lua_getglobal(L, "MAJORDOME_PAYLOAD");
+		if(lua_isnumber(L, -1)){
+			val = lua_tonumber(L, -1);
+		
+			if(this->empty){
+				this->empty = false;
+				this->nbre = 1;
+				this->min = this->max = this->sum = val; 
+			} else {
+				if(val < this->min)
+					this->min = val;
+				if(val > this->max)
+					this->max = val;
+
+				this->sum += val;
+				this->nbre++;
+			}
+
+			if(debug)
+				SelLog->Log('T', "[MinMax '%s'] accepting %.0f -> min:%.0f max:%.0f", this->getNameC(), val, this->min, this->max);
+		} else
+			SelLog->Log('E', "[MinMax '%s'] can't find MAJORDOME_PAYLOAD variable", this->getNameC());
+	} else
+		SelLog->Log('D', "[MinMax '%s'] Data rejected", this->getNameC());
+
+	lua_close(L);
+
+	return r;
 }

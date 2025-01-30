@@ -22,8 +22,11 @@
 
 Rendez-vous Lua interface
 
----
+--- Futures
 
+(Named)MinMax handler to run asynchronously.
+
+---
 Add a new Object :
 - Config.h
 - SubConfigDir : extension
