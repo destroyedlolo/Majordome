@@ -29,6 +29,17 @@ None
 - **MAJORDOME_MINMAX** - minmax's name
 
 ## at Lua side
+### Validating incoming data
+MinMax definition file can end with a Lua code : if this code returns "**false**", this data submission is ignored. Any other value (or no value), the data is accepted.
+
+> [!TIP]  
+> If comming from a [topic](topic.md), the data are stored in **MAJORDOME_PAYLOAD** variable
+
+> [!CAUTION]
+> Validation code is running synchronously : consequently, it has to be 
+> * not blocking
+> * as fast as possible
+
 ### Exposed objects
 Statistics sequencing and retrieving are done through the **MajordomeMinMax**'s API :
 - `getContainer()` returns the container (directory) in which this MinMax has been defined
