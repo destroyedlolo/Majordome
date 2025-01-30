@@ -402,6 +402,8 @@ int main(int ac, char **av){
 	SelLua->AddStartupFunc(Event::initLuaInterface);
 	SelLua->AddStartupFunc(MQTTTopic::initLuaInterface);
 	SelLua->AddStartupFunc(Timer::initLuaInterface);
+	SelLua->AddStartupFunc(Timer::initLuaInterface);
+	SelLua->AddStartupFunc(MinMax::initLuaInterface);
 
 		/* **
 		 * After this point, we're running application's code
