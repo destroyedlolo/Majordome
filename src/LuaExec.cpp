@@ -127,9 +127,19 @@ void LuaExec::readConfigDirective( std::string &l, std::string &name, bool &name
 			SelLog->Log('F', "\t\tminmax '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
+	} else if(!!(arg = striKWcmp( l, "-->> need_namedminmax=" ))){
+		Config::NamedMinMaxCollection::iterator nminmax;
+		if( (nminmax = config.NamedMinMaxList.find(arg)) != config.NamedMinMaxList.end()){
+			if(verbose)
+				SelLog->Log('C', "\t\tAdded needed namedminmax '%s'", arg.c_str());
+			this->addNeededNamedMinMax( arg );
+			return;
+		} else {
+			SelLog->Log('F', "\t\tnamedminmax '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
 	}
 
-/* TODO */
 	return this->Object::readConfigDirective(l, name, nameused);
 }
 
@@ -243,6 +253,22 @@ bool LuaExec::feedbyNeeded( lua_State *L, bool require ){
 
 			*minmax = mm;
 			luaL_getmetatable(L, "MajordomeMinMax");
+			lua_setmetatable(L, -2);
+
+			lua_setglobal(L, i.c_str());
+		} catch( std::out_of_range &e ){	// Not found 
+			return false;
+		}
+	}
+
+	for(auto &i : this->needed_namedminmax){
+		try {
+			class NamedMinMax *nmm = config.NamedMinMaxList.at( i );
+			class NamedMinMax **nminmax = (class NamedMinMax **)lua_newuserdata(L, sizeof(class NamedMinMax *));
+			assert(nminmax);
+
+			*nminmax = nmm;
+			luaL_getmetatable(L, "MajordomeNamedMinMax");
 			lua_setmetatable(L, -2);
 
 			lua_setglobal(L, i.c_str());

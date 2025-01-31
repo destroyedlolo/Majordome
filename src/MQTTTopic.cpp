@@ -135,7 +135,7 @@ bool MQTTTopic::match( const char *intopic ){
 void MQTTTopic::execHandlers(MQTTTopic &, const char *topic, const char *payload){
 #ifdef DEBUG
 	if(debug && !this->isQuiet())
-		SelLog->Log('D', "[%s] MQTTTopic::execHandlers() : %d tasks to run", this->getNameC(), this->size());
+		SelLog->Log('D', "[%s] MQTTTopic::execHandlers() : %d handler(s) to run", this->getNameC(), this->size());
 #endif
 
 	for(auto &i : *this){
