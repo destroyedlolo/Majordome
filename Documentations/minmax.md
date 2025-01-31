@@ -21,6 +21,9 @@ Remove some trace. This option is useful to avoid logging of very noisy topics.
 #### -->> disabled
 This MinMax starts as disabled : stats change and incoming messages are ignored.
 
+#### -->> need_*
+All **need_** directives known by [Lua tasks](Task(lua).md).
+
 ### MinMax owns
 None
 
