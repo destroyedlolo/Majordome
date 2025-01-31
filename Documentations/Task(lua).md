@@ -99,7 +99,7 @@ Creates an object if a value has been received and its value hasn't expired. Oth
 #### -->> require_topic=
 Prevents the script to be launched if corresponding value is not valid.<br>
 
-#### -->> need_rendezvous=, -->> need_tracker=, -->> need_timer=, -->> need_task=, -->> need_minmax
+#### -->> need_rendezvous=, -->> need_tracker=, -->> need_timer=, -->> need_task=, -->> need_minmax, -->> need_namedminmax, -->> need_shutdown
 Create corresponding object.
 
 ## at Lua side
