@@ -151,7 +151,6 @@ void Config::RunImmediates( void ){
 }
 
 void Config::RunShutdowns( void ){
-	for(auto &i : this->ShutdownsList){
+	for(auto &i : this->ShutdownsList)
 		i.second->exec();
-	}
 }

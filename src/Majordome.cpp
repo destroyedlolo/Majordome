@@ -403,6 +403,7 @@ int main(int ac, char **av){
 	SelLua->AddStartupFunc(Timer::initLuaInterface);
 	SelLua->AddStartupFunc(MinMax::initLuaInterface);
 	SelLua->AddStartupFunc(NamedMinMax::initLuaInterface);
+	SelLua->AddStartupFunc(Shutdown::initLuaInterface);
 
 		/* **
 		 * After this point, we're running application's code

@@ -1,6 +1,7 @@
 -- Shutdown script called at shutdown
 --
 -->> need_topic=ConsPower
+--
 
 for k,v in pairs(_G)
 do

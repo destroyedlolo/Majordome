@@ -19,6 +19,9 @@ public:
 	Shutdown( const std::string &file, std::string &where, std::string &name, lua_State *L );
 
 	void exec( void );
+
+	/* Create Lua's object */
+	static void initLuaInterface( lua_State *L );
 };
 
 #endif
