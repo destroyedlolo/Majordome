@@ -15,6 +15,7 @@
 #include "MQTTTopic.h"
 #include "Timer.h"
 #include "MinMax.h"
+#include "NamedMinMax.h"
 
 #include <lua.hpp>	/* Lua's state needed */
 #include <string>
@@ -55,6 +56,9 @@ public:
 
 	typedef ObjCollection<MinMax *> MinMaxCollection;
 	MinMaxCollection MinMaxList;
+
+	typedef ObjCollection<NamedMinMax *> NamedMinMaxCollection;
+	NamedMinMaxCollection NamedMinMaxList;
 
 		/* Topics' */
 	void SubscribeTopics( void );	// Subscribe to defined MQTT topics

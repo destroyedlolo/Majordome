@@ -34,10 +34,6 @@ Add a new Object :
 - LuaExec.cpp : feedbyNeeded()
 - Majordome.cpp : SelLua->AddStartupFunc()
 
--- Missing
-
-MQTTTopic.cpp : Lua Launch
-
 ---
 
 static_cast - Base -> Derived
