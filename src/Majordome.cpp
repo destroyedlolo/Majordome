@@ -197,7 +197,6 @@ static int msgarrived(void *actx, char *topic, int tlen, MQTTClient_message *msg
 	memcpy(cpayload, msg->payload, msg->payloadlen);
 	cpayload[msg->payloadlen] = 0;
 
-/* TODO message handling */
 	for(auto &i : config.TopicsList){
 		if(i.second->isEnabled()){
 			if(i.second->match( topic )){
@@ -252,8 +251,7 @@ void quit(int){
 }
 
 void bye(void){
-	/* ToDo */
-//	config.RunShutdowns();
+	config.RunShutdowns();
 }
 
 int main(int ac, char **av){

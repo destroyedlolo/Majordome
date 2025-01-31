@@ -34,5 +34,5 @@
  *	20/01/2025 - v6.00 - LF - Code redesign
  */
 
-#define VERSION 6.0004
+#define VERSION 6.0005
 #define COPYRIGHT "Majordome (c) L.Faillie 2018-2025"

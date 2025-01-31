@@ -32,6 +32,7 @@ public:
 	StringVector needed_timer;
 	StringVector needed_minmax;
 	StringVector needed_namedminmax;
+	StringVector needed_shutdown;
 #if 0	/* TODO */
 	StringVector needed_tracker;
 #ifdef TOILE
@@ -47,6 +48,7 @@ protected:
 	void addNeededTimer( std::string t ){ this->needed_timer.Add(t); }
 	void addNeededMinMax( std::string t ){ this->needed_minmax.Add(t); }
 	void addNeededNamedMinMax( std::string t ){ this->needed_namedminmax.Add(t); }
+	void addNeededShutdown( std::string t ){ this->needed_namedminmax.Add(t); }
 #if 0	/* TODO */
 	void addNeededTracker( std::string t ){ this->needed_tracker.Add(t); }
 

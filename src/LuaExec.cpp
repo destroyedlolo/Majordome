@@ -6,13 +6,6 @@
 #include <cassert>
 #include <cmath>
 
-/*
-extern "C" {
-    #include "lualib.h"
-    #include "lauxlib.h"
-};
-*/
-
 LuaExec::LuaExec(const std::string &fch, std::string &where, std::string &name) : Object(fch, where, name) {
 	assert( SelElasticStorage->init(&this->func) );	
 }
@@ -136,6 +129,17 @@ void LuaExec::readConfigDirective( std::string &l, std::string &name, bool &name
 			return;
 		} else {
 			SelLog->Log('F', "\t\tnamedminmax '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
+	} else if(!!(arg = striKWcmp( l, "-->> need_shutdown=" ))){
+		Config::ShutdownCollection::iterator shut;
+		if( (shut = config.ShutdownsList.find(arg)) != config.ShutdownsList.end()){
+			if(verbose)
+				SelLog->Log('C', "\t\tAdded needed Shutdown '%s'", arg.c_str());
+			this->addNeededShutdown( arg );
+			return;
+		} else {
+			SelLog->Log('F', "\t\tShutdown '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
 	}
@@ -269,6 +273,22 @@ bool LuaExec::feedbyNeeded( lua_State *L, bool require ){
 
 			*nminmax = nmm;
 			luaL_getmetatable(L, "MajordomeNamedMinMax");
+			lua_setmetatable(L, -2);
+
+			lua_setglobal(L, i.c_str());
+		} catch( std::out_of_range &e ){	// Not found 
+			return false;
+		}
+	}
+
+	for(auto &i : this->needed_shutdown){
+		try {
+			class Shutdown *s = config.ShutdownsList.at( i );
+			class Shutdown **shut = (class Shutdown **)lua_newuserdata(L, sizeof(class Shutdown *));
+			assert(shut);
+
+			*shut = s;
+			luaL_getmetatable(L, "MajordomeShutdown");
 			lua_setmetatable(L, -2);
 
 			lua_setglobal(L, i.c_str());

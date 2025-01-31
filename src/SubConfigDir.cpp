@@ -30,8 +30,8 @@ static const SubConfigDir::extweight fileext[] = {
 	{ ".namedminmax", 0x80 },
 #if 0
 	{ ".tracker", 0x80 },
-	{ ".shutdown", 0x50 },
 #endif
+	{ ".shutdown", 0x50 },
 	{ ".lua", 0x40 },
 	{ ".md", 0x01 }	// ignored, documentation only
 };
@@ -107,6 +107,17 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 				exit(EXIT_FAILURE);
 			} else
 				cfg.TasksList.insert( std::make_pair(name, tsk) );
+		} else if(ext == ".shutdown"){
+			std::string name;
+			auto tsk = new Shutdown( completpath, where, name, L );
+			assert(tsk);
+	
+			Config::ShutdownCollection::iterator prev;
+			if((prev = cfg.ShutdownsList.find(name)) != cfg.ShutdownsList.end()){
+				SelLog->Log('F', "Shutdown '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhere().c_str());
+				exit(EXIT_FAILURE);
+			} else
+				cfg.ShutdownsList.insert( std::make_pair(name, tsk) );
 		} else if(ext == ".topic"){
 			std::string name;
 			auto tpc = new MQTTTopic( completpath, where, name );
