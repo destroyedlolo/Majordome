@@ -7,7 +7,6 @@ As an example, temperature followup to close shutters in order to prevent over h
 
 Trackers make easy this kind of simple automation.
 
-Typical example : Follow a room temperature to close its shutter if too hot.
 Status are :
 
 	Status 'WAITING' : incoming value are ignored.
