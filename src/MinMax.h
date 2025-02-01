@@ -6,12 +6,11 @@
 #ifndef MINMAX_H
 #define MINMAX_H
 
-#include "Event.h"
-#include "LuaExec.h"
+#include "Handler.h"
 
 #include <math.h>
 
-class MinMax : virtual public Handler {
+class MinMax : public Handler {
 	bool empty;		// No value yet
 	lua_Number min,max;
 	size_t nbre;	// Number of handled values

@@ -6,13 +6,12 @@
 #ifndef NMINMAX_H
 #define NMINMAX_H
 
-#include "Event.h"
-#include "LuaExec.h"
+#include "Handler.h"
 
 #include <unordered_map>
 #include <math.h>
 
-class NamedMinMax : virtual public Handler {
+class NamedMinMax : public Handler {
 public:	// Made public only to let Lua enumerates
 	std::unordered_map<std::string, bool> empty;		// No value yet
 	std::unordered_map<std::string, lua_Number> min,max;
