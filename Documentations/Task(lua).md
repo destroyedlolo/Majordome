@@ -102,6 +102,9 @@ Prevents the script to be launched if corresponding value is not valid.<br>
 #### -->> need_rendezvous=, -->> need_tracker=, -->> need_timer=, -->> need_task=, -->> need_minmax, -->> need_namedminmax, -->> need_shutdown
 Create corresponding object.
 
+#### -->> need_renderer
+Create corresponding object (Only Toile plug-in has been compiled).
+
 ## at Lua side
 
 ### Exposed variables
