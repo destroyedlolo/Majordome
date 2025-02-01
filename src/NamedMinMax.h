@@ -7,6 +7,7 @@
 #define NMINMAX_H
 
 #include "Handler.h"
+#include "ObjCollection.h"
 
 #include <unordered_map>
 #include <math.h>
@@ -48,4 +49,5 @@ public:
 	static void initLuaInterface( lua_State *L );
 };
 
+typedef ObjCollection<NamedMinMax *> NamedMinMaxCollection;
 #endif

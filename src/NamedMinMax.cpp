@@ -62,7 +62,7 @@ void NamedMinMax::readConfigDirective( std::string &l, std::string &name, bool &
 	MayBeEmptyString arg;
 
 	if( !!(arg = striKWcmp( l, "-->> listen=" ))){
-		Config::TopicCollection::iterator topic;
+		TopicCollection::iterator topic;
 		if( (topic = config.TopicsList.find(arg)) != config.TopicsList.end()){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded to topic '%s'", arg.c_str());

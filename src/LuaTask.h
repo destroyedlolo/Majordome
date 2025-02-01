@@ -8,8 +8,7 @@
 
 #include "LuaExec.h"
 #include "Handler.h"
-
-class Config;
+#include "ObjCollection.h"
 
 class LuaTask : public Handler {
 	bool once;	// can run only once
@@ -47,4 +46,7 @@ public:
 
 	/* TODO */
 };
+
+typedef ObjCollection<LuaTask *> TaskCollection;
+
 #endif

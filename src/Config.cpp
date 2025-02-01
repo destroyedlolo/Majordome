@@ -90,7 +90,7 @@ void Config::SanityChecks( void ){
 		/* Verify that needed tasks exists */
 	for(auto &i : this->TasksList){
 		for(auto &j : i.second->needed_task){
-			Config::TaskCollection::iterator task;
+			TaskCollection::iterator task;
 			if( (task = config.TasksList.find(j.c_str())) == config.TasksList.end()){
 				SelLog->Log('F', "Task \"%s\" needed by \"%s\" doesn't exist", j.c_str(), i.second->getNameC());
 				exit(EXIT_FAILURE);

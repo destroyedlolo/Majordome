@@ -10,6 +10,7 @@
 #define TIMER_H
 
 #include "Event.h"
+#include "ObjCollection.h"
 
 class Timer : public Event {	// Event contains tasks to launch
 
@@ -90,5 +91,7 @@ public:
 	/* Create Lua's object */
 	static void initLuaInterface(lua_State *L);
 };
+
+typedef ObjCollection<Timer *> TimerCollection;
 
 #endif

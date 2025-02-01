@@ -8,6 +8,7 @@
 
 #include "MayBeEmptyString.h"
 #include "Event.h"
+#include "ObjCollection.h"
 
 class MQTTTopic : virtual public Object, public Event {
 	bool alreadydefault;	// true if default has been already used
@@ -52,4 +53,5 @@ public:
 	static void initLuaInterface( lua_State *L );
 };
 
+typedef ObjCollection<MQTTTopic *> TopicCollection;
 #endif

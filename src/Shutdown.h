@@ -7,6 +7,7 @@
 #define SHUTDOWN_H
 
 #include "LuaExec.h"
+#include "ObjCollection.h"
 
 class Shutdown : public LuaExec {
 public:
@@ -24,4 +25,5 @@ public:
 	static void initLuaInterface( lua_State *L );
 };
 
+typedef ObjCollection<Shutdown *> ShutdownCollection;
 #endif

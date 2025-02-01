@@ -9,6 +9,7 @@
 
 #include "Handler.h"
 #include "Object.h"
+#include "ObjCollection.h"
 
 class Event : virtual public Object, public std::vector<Handler *> {
 	// The vector contains the collection of handler to launch
@@ -45,4 +46,5 @@ public:
 	static void initLuaInterface(lua_State *L);
 };
 
+typedef ObjCollection<Event *> EventCollection;
 #endif

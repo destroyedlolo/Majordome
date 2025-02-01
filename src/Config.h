@@ -10,6 +10,7 @@
 
 #include "SortDir.h"
 
+#include "ObjCollection.h"
 #include "LuaTask.h"
 #include "Event.h"
 #include "MQTTTopic.h"
@@ -20,7 +21,6 @@
 
 #include <lua.hpp>	/* Lua's state needed */
 #include <string>
-#include <unordered_map>
 
 class Config : public SortDir { 
 	std::string configDir;
@@ -29,8 +29,7 @@ protected :
 	virtual bool accept( const char *, std::string & );
 
 public:
-	template <class T> class ObjCollection : public std::unordered_map<std::string, T> {};
-
+	
 	/* Initialise this configuration against 'where' directory's content */
 	void init(std::string &where, lua_State *L);
 
@@ -43,25 +42,12 @@ public:
 	std::string getConfigDir(){ return this->configDir; };
 
 		/* Objects collections */
-	typedef ObjCollection<LuaTask *> TaskCollection;
 	TaskCollection TasksList;
-
-	typedef ObjCollection<Event *> EventCollection;
 	EventCollection EventsList;
-
-	typedef ObjCollection<MQTTTopic *> TopicCollection;
 	TopicCollection TopicsList;
-
-	typedef ObjCollection<Timer *> TimerCollection;
 	TimerCollection TimersList;
-
-	typedef ObjCollection<MinMax *> MinMaxCollection;
 	MinMaxCollection MinMaxList;
-
-	typedef ObjCollection<NamedMinMax *> NamedMinMaxCollection;
 	NamedMinMaxCollection NamedMinMaxList;
-
-	typedef ObjCollection<Shutdown *> ShutdownCollection;
 	ShutdownCollection ShutdownsList;
 
 		/* Topics' */

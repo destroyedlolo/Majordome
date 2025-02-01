@@ -7,6 +7,7 @@
 #define MINMAX_H
 
 #include "Handler.h"
+#include "ObjCollection.h"
 
 #include <math.h>
 
@@ -44,5 +45,7 @@ public:
 	/* Create Lua's object */
 	static void initLuaInterface( lua_State *L );
 };
+
+typedef ObjCollection<MinMax *> MinMaxCollection;
 
 #endif

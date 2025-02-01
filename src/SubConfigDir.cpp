@@ -101,7 +101,7 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 			auto tsk = new LuaTask( completpath, where, name, L );
 			assert(tsk);
 	
-			Config::TaskCollection::iterator prev;
+			TaskCollection::iterator prev;
 			if((prev = cfg.TasksList.find(name)) != cfg.TasksList.end()){
 				SelLog->Log('F', "Task '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhere().c_str());
 				exit(EXIT_FAILURE);
@@ -112,7 +112,7 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 			auto tsk = new Shutdown( completpath, where, name, L );
 			assert(tsk);
 	
-			Config::ShutdownCollection::iterator prev;
+			ShutdownCollection::iterator prev;
 			if((prev = cfg.ShutdownsList.find(name)) != cfg.ShutdownsList.end()){
 				SelLog->Log('F', "Shutdown '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhere().c_str());
 				exit(EXIT_FAILURE);
@@ -122,7 +122,7 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 			std::string name;
 			auto tpc = new MQTTTopic( completpath, where, name );
 
-			Config::TopicCollection::iterator prev;
+			TopicCollection::iterator prev;
 			if((prev = cfg.TopicsList.find(name)) != cfg.TopicsList.end()){
 				SelLog->Log('F', "Topic '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhereC());
 				exit(EXIT_FAILURE);
@@ -132,7 +132,7 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 			std::string name;
 			auto tmr = new Timer( completpath, where, name );
 
-			Config::TimerCollection::iterator p;
+			TimerCollection::iterator p;
 			if((p = cfg.TimersList.find(name)) != cfg.TimersList.end()){
 				SelLog->Log('F', "Timer '%s' is defined multiple times (previous one '%s')", name.c_str(), p->second->getWhereC());
 				exit(EXIT_FAILURE);
@@ -142,7 +142,7 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 			std::string name;
 			auto evt = new Event( completpath, where, name );
 
-			Config::EventCollection::iterator prev;
+			EventCollection::iterator prev;
 			if((prev = cfg.EventsList.find(name)) != cfg.EventsList.end()){
 				SelLog->Log('F', "Event '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhereC());
 				exit(EXIT_FAILURE);
@@ -152,7 +152,7 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 			std::string name;
 			auto trk = new MinMax(completpath, where, name, L );
 	
-			Config::MinMaxCollection::iterator prev;
+			MinMaxCollection::iterator prev;
 			if((prev = cfg.MinMaxList.find(name)) != cfg.MinMaxList.end()){
 				SelLog->Log('F', "MinMax '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhere().c_str());
 				exit(EXIT_FAILURE);
@@ -162,7 +162,7 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 			std::string name;
 			auto trk = new NamedMinMax(completpath, where, name, L );
 	
-			Config::NamedMinMaxCollection::iterator prev;
+			NamedMinMaxCollection::iterator prev;
 			if((prev = cfg.NamedMinMaxList.find(name)) != cfg.NamedMinMaxList.end()){
 				SelLog->Log('F', "NamedMinMax '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhere().c_str());
 				exit(EXIT_FAILURE);

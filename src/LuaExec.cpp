@@ -62,7 +62,7 @@ void LuaExec::readConfigDirective( std::string &l, std::string &name, bool &name
 		this->addNeededTask( arg );
 		return;
 	} else if(!!(arg = striKWcmp( l, "-->> need_rendezvous=" ))){
-		Config::EventCollection::iterator event;
+		EventCollection::iterator event;
 		if( (event = config.EventsList.find(arg)) != config.EventsList.end()){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded needed rendezvous '%s'", arg.c_str());
@@ -73,7 +73,7 @@ void LuaExec::readConfigDirective( std::string &l, std::string &name, bool &name
 			exit(EXIT_FAILURE);
 		}
 	} else if(!!(arg = striKWcmp( l, "-->> need_topic=" ))){
-		Config::TopicCollection::iterator topic;
+		TopicCollection::iterator topic;
 		if( (topic = config.TopicsList.find(arg)) != config.TopicsList.end()){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded needed topic '%s'", arg.c_str());
@@ -84,7 +84,7 @@ void LuaExec::readConfigDirective( std::string &l, std::string &name, bool &name
 			exit(EXIT_FAILURE);
 		}
 	} else if(!!(arg = striKWcmp( l, "-->> require_topic=" ))){
-		Config::TopicCollection::iterator topic;
+		TopicCollection::iterator topic;
 		if( (topic = config.TopicsList.find(arg)) != config.TopicsList.end()){
 			if(!topic->second->toBeStored()){
 				SelLog->Log('F', "Can't required \"%s\" topic : not stored", arg.c_str());
@@ -99,7 +99,7 @@ void LuaExec::readConfigDirective( std::string &l, std::string &name, bool &name
 			exit(EXIT_FAILURE);
 		}
 	} else if(!!(arg = striKWcmp( l, "-->> need_timer=" ))){
-		Config::TimerCollection::iterator timer;
+		TimerCollection::iterator timer;
 		if( (timer = config.TimersList.find(arg)) != config.TimersList.end()){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded needed timer '%s'", arg.c_str());
@@ -110,7 +110,7 @@ void LuaExec::readConfigDirective( std::string &l, std::string &name, bool &name
 			exit(EXIT_FAILURE);
 		}
 	} else if(!!(arg = striKWcmp( l, "-->> need_minmax=" ))){
-		Config::MinMaxCollection::iterator minmax;
+		MinMaxCollection::iterator minmax;
 		if( (minmax = config.MinMaxList.find(arg)) != config.MinMaxList.end()){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded needed minmax '%s'", arg.c_str());
@@ -121,7 +121,7 @@ void LuaExec::readConfigDirective( std::string &l, std::string &name, bool &name
 			exit(EXIT_FAILURE);
 		}
 	} else if(!!(arg = striKWcmp( l, "-->> need_namedminmax=" ))){
-		Config::NamedMinMaxCollection::iterator nminmax;
+		NamedMinMaxCollection::iterator nminmax;
 		if( (nminmax = config.NamedMinMaxList.find(arg)) != config.NamedMinMaxList.end()){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded needed namedminmax '%s'", arg.c_str());
@@ -132,7 +132,7 @@ void LuaExec::readConfigDirective( std::string &l, std::string &name, bool &name
 			exit(EXIT_FAILURE);
 		}
 	} else if(!!(arg = striKWcmp( l, "-->> need_shutdown=" ))){
-		Config::ShutdownCollection::iterator shut;
+		ShutdownCollection::iterator shut;
 		if( (shut = config.ShutdownsList.find(arg)) != config.ShutdownsList.end()){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded needed Shutdown '%s'", arg.c_str());

@@ -66,7 +66,7 @@ void LuaTask::readConfigDirective( std::string &l, std::string &name, bool &name
 			SelLog->Log('C', "\t\tRun at startup");
 		this->setRunAtStartup( true );
 	} else if( !!(arg = striKWcmp( l, "-->> listen=" ))){
-		Config::TopicCollection::iterator topic;
+		TopicCollection::iterator topic;
 		if( (topic = config.TopicsList.find(arg)) != config.TopicsList.end()){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded to topic '%s'", arg.c_str());
@@ -77,7 +77,7 @@ void LuaTask::readConfigDirective( std::string &l, std::string &name, bool &name
 			exit(EXIT_FAILURE);
 		}
 	} else if( !!(arg = striKWcmp( l, "-->> waitfor=" ))){
-		Config::EventCollection::iterator event;
+		EventCollection::iterator event;
 		if( (event = config.EventsList.find(arg)) != config.EventsList.end()){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded to rendezvous '%s'", arg.c_str());
@@ -88,7 +88,7 @@ void LuaTask::readConfigDirective( std::string &l, std::string &name, bool &name
 			exit(EXIT_FAILURE);
 		}
 	} else if( !!(arg = striKWcmp( l, "-->> when=" ))){
-		Config::TimerCollection::iterator timer;
+		TimerCollection::iterator timer;
 		if( (timer = config.TimersList.find(arg)) != config.TimersList.end()){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded to timer '%s'", arg.c_str());
