@@ -11,6 +11,7 @@
 
 #include "Event.h"
 #include "ObjCollection.h"
+#include "Tracker.h"
 
 class Timer : public Event {	// Event contains tasks to launch
 
@@ -23,6 +24,9 @@ class Timer : public Event {	// Event contains tasks to launch
 
 	pthread_t thread;
 	static void *threadedslave(void *);
+
+	TrackerVector startTrackers;
+	TrackerVector stopTrackers;
 
 public:
 	/* Constructor from a file
@@ -87,6 +91,10 @@ public:
 	void unlock( void );
 
 	void sendCommand( enum Commands );
+
+	/* Trackers */
+	void addStartTracker( Tracker *t ){ this->startTrackers.Add(t); }
+	void addStopTracker( Tracker *t ){ this->stopTrackers.Add(t); }
 
 	/* Create Lua's object */
 	static void initLuaInterface(lua_State *L);

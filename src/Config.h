@@ -17,6 +17,7 @@
 #include "Timer.h"
 #include "MinMax.h"
 #include "NamedMinMax.h"
+#include "Tracker.h"
 #include "Shutdown.h"
 
 #include <lua.hpp>	/* Lua's state needed */
@@ -48,6 +49,7 @@ public:
 	TimerCollection TimersList;
 	MinMaxCollection MinMaxList;
 	NamedMinMaxCollection NamedMinMaxList;
+	TrackerCollection TrackersList;
 	ShutdownCollection ShutdownsList;
 
 		/* Topics' */

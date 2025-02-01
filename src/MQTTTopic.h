@@ -13,6 +13,8 @@
 class MQTTTopic : virtual public Object, public Event {
 	bool alreadydefault;	// true if default has been already used
 
+	void readConfigDirective( std::string &l, std::string &name, bool &nameused );
+
 protected:
 	MayBeEmptyString topic;	// Topic to look for
 	unsigned int qos;		// Associated QoS
@@ -29,8 +31,6 @@ public:
 	 */
 	MQTTTopic( const std::string &file, std::string &where, std::string &name  );
 	
-	void readConfigDirective( std::string &l, std::string &name, bool &nameused );
-
 		/* Accessors */
 	std::string &getTopic( void ){ return this->topic; };
 	const char *getTopicC( void ){ return this->topic.c_str(); };

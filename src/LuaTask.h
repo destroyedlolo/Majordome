@@ -48,5 +48,6 @@ public:
 };
 
 typedef ObjCollection<LuaTask *> TaskCollection;
+typedef ObjVector<LuaTask *> TaskVector;
 
 #endif
