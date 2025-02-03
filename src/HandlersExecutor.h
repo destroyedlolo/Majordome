@@ -15,7 +15,7 @@ public :
 	 */
 	void execHandlers(void);		// fresh State but in the same thread
 
-	virtual void feedHandlersStat(lua_State *L) {};	// Add custom object in Lua state
+	virtual void feedHandlersState(lua_State *L) {};	// Add custom object in Lua state
 };
 
 #endif

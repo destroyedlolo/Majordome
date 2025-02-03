@@ -188,6 +188,11 @@ void Timer::execHandlers(void){
 	/* TODO start/stop */
 }
 
+void Timer::feedHandlersState(lua_State *L){
+	lua_pushstring( L, this->getNameC() );	// Push the name
+	lua_setglobal( L, "MAJORDOME_TIMER" );
+}
+
 	/* ***
 	 * Locking
 	 * ***/

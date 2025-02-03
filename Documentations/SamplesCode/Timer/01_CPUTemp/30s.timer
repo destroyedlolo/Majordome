@@ -6,7 +6,7 @@
 --
 -- repeating delay (in seconds)
 -- ignored if null
--->> every=30
+-->> every=10
 --
 -- This timer is set to an absolute time, 
 -- format HHMM

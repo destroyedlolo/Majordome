@@ -134,7 +134,7 @@ void Config::SubscribeTopics( void ){
 void Config::RunStartups( void ){
 	for(auto &i : this->TasksList){
 		if( i.second->getRunAtStartup() )
-			i.second->exec();
+			i.second->exec((HandlersExecutor *)NULL);
 	}
 }
 

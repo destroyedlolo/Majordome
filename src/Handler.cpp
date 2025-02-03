@@ -1,5 +1,6 @@
 #include "Helpers.h"
 #include "Handler.h"
+#include "HandlersExecutor.h"
 
 lua_State *Handler::prepareExec(void){
 	if(!this->canRun())
@@ -27,11 +28,14 @@ lua_State *Handler::prepareExec(void){
 	return L;
 }
 
-bool Handler::exec(void){
+bool Handler::exec(HandlersExecutor *h){
 	lua_State *L;
 
 	if(!(L = this->prepareExec()))
 		return false;
+
+	if(h)
+		h->feedHandlersState(L);
 
 	return this->LuaExec::execAsync(L);
 }
