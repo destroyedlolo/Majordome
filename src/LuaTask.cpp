@@ -98,6 +98,50 @@ void LuaTask::readConfigDirective( std::string &l, std::string &name, bool &name
 			SelLog->Log('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
+	} else if( !!(arg = striKWcmp( l, "-->> whenDone=" ))){
+		TrackerCollection::iterator tracker;
+		if( (tracker = config.TrackersList.find(arg)) != config.TrackersList.end()){
+			if(verbose)
+				SelLog->Log('C', "\t\tAdded to tracker '%s' as Done task", arg.c_str());
+			tracker->second->addDone( this );
+//			nameused = true;
+		} else {
+			SelLog->Log('F', "\t\tTracker '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
+	} else if( !!(arg = striKWcmp( l, "-->> whenStarted=" ))){
+		TrackerCollection::iterator tracker;
+		if( (tracker = config.TrackersList.find(arg)) != config.TrackersList.end()){
+			if(verbose)
+				SelLog->Log('C', "\t\tAdded to tracker '%s' as Started task", arg.c_str());
+	 		tracker->second->addStarted( this );
+//			nameused = true;
+		} else {
+			SelLog->Log('F', "\t\tTracker '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
+	} else if( !!(arg = striKWcmp( l, "-->> whenStopped=" ))){
+		TrackerCollection::iterator tracker;
+		if( (tracker = config.TrackersList.find(arg)) != config.TrackersList.end()){
+			if(verbose)
+				SelLog->Log('C', "\t\tAdded to tracker '%s' as Stopped task", arg.c_str());
+		 	tracker->second->addStopped( this );
+//			nameused = true;
+		} else {
+			SelLog->Log('F', "\t\tTracker '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
+	} else if( !!(arg = striKWcmp( l, "-->> whenChanged=" ))){
+		TrackerCollection::iterator tracker;
+		if( (tracker = config.TrackersList.find(arg)) != config.TrackersList.end()){
+			if(verbose)
+				SelLog->Log('C', "\t\tAdded to tracker '%s' as Changed task", arg.c_str());
+			tracker->second->addChanged( this );
+//			nameused = true;
+		} else {
+			SelLog->Log('F', "\t\ttracker '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
 	} else 
 		this->LuaExec::readConfigDirective(l, name, nameused);
 }
@@ -137,7 +181,7 @@ void LuaTask::finished( void ){
 void LuaTask::feedState(lua_State *L){
 	try {
 		class LuaTask *tsk = config.TasksList.at( this->getNameC() );
-		class LuaTask **task = (class LuaTask **)lua_newuserdata(L, sizeof(class Tracker *));
+		class LuaTask **task = (class LuaTask **)lua_newuserdata(L, sizeof(class LuaTask *));
 		assert(task);
 
 		*task = tsk;

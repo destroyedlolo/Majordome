@@ -46,6 +46,8 @@ public:
 	 */
 	Tracker( const std::string &file, std::string &where, std::string &name, lua_State *L );
 
+	virtual void feedState(lua_State *L);
+
 	enum _status getStatus( void ){ return this->status; }
 	const char *getStatusC( void );
 	unsigned int getCounter(void){ return this->hm_counter; }

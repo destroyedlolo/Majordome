@@ -10,9 +10,13 @@
 #include "Handler.h"
 #include "Object.h"
 #include "ObjCollection.h"
+#include "Tracker.h"
 
 class Event : virtual public Object, public std::vector<Handler *> {
 	// The vector contains the collection of handler to launch
+
+	TrackerVector trackersToEnable;
+	TrackerVector trackersToDisable;
 
 public:
 	/* Constructor from a file
@@ -31,20 +35,15 @@ public:
 	void execHandlers(void);		// fresh State but in the same thread
 	void execHandlers(lua_State *);	// same thread, same State
 
-		/* Execute on particular events.
-		 * By default, they are doing nothing ... 
-		 * They have to be overloaded by objects handling this event.
-		 *
-		 * The 1st argument is only here to identify the event's kind.
-		 *
-		 * Note : in the case of MQTTTopic, the handler is not defined here :
-		 * the processing is part of msgarrived() and we know which handler to
-		 * call.
-		 */
+	/* Trackers */
+	void addTrackerEN( Tracker *t ){ this->trackersToEnable.Add(t); }
+	void addTrackerDIS( Tracker *t ){ this->trackersToDisable.Add(t); }
 
 	/* Create Lua's object */
 	static void initLuaInterface(lua_State *L);
 };
 
 typedef ObjCollection<Event *> EventCollection;
+typedef ObjVector<Event *> EventVector;
+
 #endif

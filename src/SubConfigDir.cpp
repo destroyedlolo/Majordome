@@ -28,9 +28,7 @@ static const SubConfigDir::extweight fileext[] = {
 	{ ".rendezvous", 0xc0 },
 	{ ".minmax", 0x80 },
 	{ ".namedminmax", 0x80 },
-#if 0
 	{ ".tracker", 0x80 },
-#endif
 	{ ".shutdown", 0x50 },
 	{ ".lua", 0x40 },
 	{ ".md", 0x01 }	// ignored, documentation only
@@ -148,6 +146,16 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 				exit(EXIT_FAILURE);
 			} else
 				cfg.EventsList.insert( std::make_pair(name, evt) );
+		} else if(ext == ".tracker"){
+			std::string name;
+			auto trk = new Tracker( completpath, where, name, L );
+	
+			TrackerCollection::iterator prev;
+			if((prev = cfg.TrackersList.find(name)) != cfg.TrackersList.end()){
+				SelLog->Log('F', "Tracker '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhereC());
+				exit(EXIT_FAILURE);
+			} else
+				cfg.TrackersList.insert( std::make_pair(name, trk) );
 		} else if(ext == ".minmax"){
 			std::string name;
 			auto trk = new MinMax(completpath, where, name, L );

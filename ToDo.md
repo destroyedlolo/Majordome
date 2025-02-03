@@ -20,7 +20,7 @@
 
 --- doc missing
 
-Rendez-vous Lua interface
+LuaTask Once
 
 --- Futures
 

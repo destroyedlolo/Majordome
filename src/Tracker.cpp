@@ -103,6 +103,31 @@ void Tracker::readConfigDirective( std::string &l, std::string &name, bool &name
 			SelLog->Log('F', "\t\tTimer '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
+	} else if( !!(arg = striKWcmp( l, "-->> enableRDV=" ))){
+		EventCollection::iterator event;
+		if( (event = config.EventsList.find(arg)) != config.EventsList.end()){
+			if(verbose)
+				SelLog->Log('C', "\t\tEnabling rendez-vous '%s'", arg.c_str());
+	 		event->second->addTrackerEN( this );
+		} else {
+			SelLog->Log('F', "\t\tRendez-vous '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
+	} else if( !!(arg = striKWcmp( l, "-->> disableRDV=" ))){
+		EventCollection::iterator event;
+		if( (event = config.EventsList.find(arg)) != config.EventsList.end()){
+			if(verbose)
+				SelLog->Log('C', "\t\tDisabling rendez-vous '%s'", arg.c_str());
+	 		event->second->addTrackerDIS( this );
+		} else {
+			SelLog->Log('F', "\t\tRendez-vous '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
+	} else if( l == "-->> activated" ){
+		if(verbose)
+			SelLog->Log('C', "\t\tActivated at startup");
+		this->status = _status::CHECKING;
+		this->hm_counter = this->howmany;
 	} else 
 		this->LuaExec::readConfigDirective(l, name, nameused);
 }
@@ -132,9 +157,8 @@ void Tracker::notifyChanged( void ){
 
 void Tracker::start( void ){
 	if( this->isEnabled() && this->getStatus() != _status::CHECKING ){
-		for(auto &t : this->startingTasks){
+		for(auto &t : this->startingTasks)	// Execute attached starting tasks
 			t->exec();
-		}
 		if(verbose)
 			SelLog->Log('T', "Tracker '%s' is checking", this->getNameC() );
 		this->status = _status::CHECKING;
@@ -146,9 +170,8 @@ void Tracker::start( void ){
 
 void Tracker::stop( void ){
 	if( this->isEnabled() && this->getStatus() != _status::WAITING ){
-		for(auto &t : this->startingTasks){
+		for(auto &t : this->stoppingTasks)	// Execute attached stopping tasks
 			t->exec();
-		}
 		if(verbose)
 			SelLog->Log('T', "Tracker '%s' is waiting", this->getNameC() );
 		this->status = _status::WAITING;
@@ -159,9 +182,8 @@ void Tracker::stop( void ){
 
 void Tracker::done( void ){
 	if( this->isEnabled() && this->getStatus() != _status::CHECKING ){
-		for(auto &t : this->startingTasks){
+		for(auto &t : this->doneTasks)	// Execute attached done tasks
 			t->exec();
-		}
 		if(verbose)
 			SelLog->Log('T', "Tracker '%s' is done", this->getNameC() );
 		this->status = _status::DONE;
@@ -169,3 +191,22 @@ void Tracker::done( void ){
 		this->notifyChanged();
 	}
 }
+
+
+void Tracker::feedState(lua_State *L){
+	try {
+		class Tracker *tsk = config.TrackersList.at( this->getNameC() );
+		class Tracker **task = (class Tracker **)lua_newuserdata(L, sizeof(class Tracker *));
+		assert(task);
+
+		*task = tsk;
+		luaL_getmetatable(L, "MajordomeTracker");
+		lua_setmetatable(L, -2);
+		lua_setglobal( L, "MAJORDOME_Myself" );
+	} catch( std::out_of_range &e ){	// Not found 
+		SelLog->Log('F', "Can't find tracker '%s'", this->getNameC() );
+		exit(EXIT_FAILURE);
+	}
+}
+
+
