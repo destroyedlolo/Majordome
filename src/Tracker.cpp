@@ -182,7 +182,7 @@ void Tracker::stop( void ){
 
 void Tracker::done( void ){
 	if( this->isEnabled() && this->getStatus() != _status::CHECKING ){
-		for(auto &t : this->doneTasks)	// Execute attached done tasks
+		for(auto &t : *this)	// Execute attached done tasks
 			t->exec();
 		if(verbose)
 			SelLog->Log('T', "Tracker '%s' is done", this->getNameC() );
