@@ -13,7 +13,7 @@
 #include "ObjCollection.h"
 #include "Tracker.h"
 
-class Timer : public Event {	// Event contains tasks to launch
+class Timer : public Event, virtual public HandlersExecutor {	// Event contains tasks to launch
 
 	uint32_t every;		// Delay b/w launches
 	uint16_t at;			// launch time
@@ -35,6 +35,7 @@ public:
 	 * <- name : this object's name
 	 */
 	Timer( const std::string &file, std::string &where, std::string &name  );
+	virtual ~Timer() = default;	// Just to make this class polymorphic
 
 	void readConfigDirective( std::string &l, std::string &name, bool &nameused );
 

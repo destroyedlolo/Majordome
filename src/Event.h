@@ -8,11 +8,12 @@
 #include <vector>
 
 #include "Handler.h"
+#include "HandlersExecutor.h"
 #include "Object.h"
 #include "ObjCollection.h"
 #include "Tracker.h"
 
-class Event : virtual public Object, public std::vector<Handler *> {
+class Event : virtual public Object, virtual public HandlersExecutor {
 	// The vector contains the collection of handler to launch
 
 	TrackerVector trackersToEnable;
@@ -28,11 +29,6 @@ public:
 	Event(){};
 
 	void addHandler( Handler *h ){ this->push_back(h); }
-
-	/* Handlers execution
-	 * (runs sequentially)
-	 */
-	void execHandlers(void);		// fresh State but in the same thread
 	void execHandlers(lua_State *);	// same thread, same State
 
 	/* Trackers */

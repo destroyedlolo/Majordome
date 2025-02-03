@@ -180,7 +180,7 @@ bool Timer::isOver( void ){
 }
 
 void Timer::execHandlers(void){
-	this->Event::execHandlers();	// Execute slaves' handlers
+	this->HandlersExecutor::execHandlers();	// Execute slaves' handlers
 
 	for(auto &i : this->startTrackers)
 		i->start();
