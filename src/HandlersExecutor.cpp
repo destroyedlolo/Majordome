@@ -10,7 +10,7 @@ void HandlersExecutor::execHandlers(void){
 #endif
 
 		for(auto &i : *this)
-			i->exec();
+			i->exec(this);
 
 #ifdef DEBUG
 	} else if( debug ){

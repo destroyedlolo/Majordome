@@ -158,7 +158,7 @@ void Tracker::notifyChanged( void ){
 void Tracker::start( void ){
 	if( this->isEnabled() && this->getStatus() != _status::CHECKING ){
 		for(auto &t : this->startingTasks)	// Execute attached starting tasks
-			t->exec();
+			t->exec(this);
 		if(verbose)
 			SelLog->Log('T', "Tracker '%s' is checking", this->getNameC() );
 		this->status = _status::CHECKING;
@@ -171,7 +171,7 @@ void Tracker::start( void ){
 void Tracker::stop( void ){
 	if( this->isEnabled() && this->getStatus() != _status::WAITING ){
 		for(auto &t : this->stoppingTasks)	// Execute attached stopping tasks
-			t->exec();
+			t->exec(this);
 		if(verbose)
 			SelLog->Log('T', "Tracker '%s' is waiting", this->getNameC() );
 		this->status = _status::WAITING;
@@ -183,7 +183,7 @@ void Tracker::stop( void ){
 void Tracker::done( void ){
 	if( this->isEnabled() && this->getStatus() != _status::CHECKING ){
 		for(auto &t : *this)	// Execute attached done tasks
-			t->exec();
+			t->exec(this);
 		if(verbose)
 			SelLog->Log('T', "Tracker '%s' is done", this->getNameC() );
 		this->status = _status::DONE;

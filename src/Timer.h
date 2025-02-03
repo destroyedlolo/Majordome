@@ -49,6 +49,7 @@ public:
 	 */
 
 	void execHandlers(void);
+	void feedHandlersState(lua_State *L);
 
 	/*
 	 * Accessors
