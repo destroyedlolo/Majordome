@@ -16,10 +16,20 @@ protected:
 	std::string name;
 	std::string where;
 
-	bool readConfigDirective(std::string &l);
+		/* Read configuration directive
+		 * l -> string to read
+		 * nameused -> boolean holding 'true' if the object's name has been
+		 *		already stored in a list. So the name can't be change anymore.
+		 *
+		 * NOTEZ-BIEN : this function will FAIL if the directive is not 
+		 * 		recognized ; it has to be called lastly.
+		 */
+	void readConfigDirective(std::string &l, std::string &name, bool &nameused);
 
 public:
 	Object() : disabled(false), quiet(false){};
+	Object(const std::string &fch, std::string &where, std::string &name);
+
 	Object& operator=(const Object&) = default;	/* avoid "defaulted move" warning */
 
 	void enable( void ){ this->disabled = false; };

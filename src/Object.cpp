@@ -2,6 +2,15 @@
 #include "Selene.h"
 #include "Helpers.h"
 
+Object::Object(const std::string &fch, std::string &where, std::string &name) : disabled(false), quiet(false){
+	if(verbose)
+		SelLog->Log('L', "\t'%s'", fch.c_str());
+
+	this->extrName( fch, name );
+	this->name = name;
+	this->where = where;
+}
+
 void Object::extrName( const std::string &fch, std::string &name){
 	name = fch;
 	const size_t last_slash_idx = name.find_last_of("/");	// Filename only
@@ -13,9 +22,19 @@ void Object::extrName( const std::string &fch, std::string &name){
 		name.erase(period_idx);
 }
 
-	/* Read directives applicables to Object */
-bool Object::readConfigDirective(std::string &l){
-	if( l == "-->> quiet" ){
+void Object::readConfigDirective(std::string &l, std::string &name, bool &nameused){
+	MayBeEmptyString arg;
+
+	if( !!(arg = striKWcmp( l, "-->> name=" ))){
+		if( nameused ){
+			SelLog->Log('F', "\t\tName can be changed only before any other directives");
+			exit(EXIT_FAILURE);
+		}
+
+		this->name = name = arg;
+		if(verbose)
+			SelLog->Log('C', "\t\tChanging name to '%s'", name.c_str());
+	} else if( l == "-->> quiet" ){
 		if(verbose)
 			SelLog->Log('C', "\t\tBe quiet");
 		this->beQuiet();
@@ -23,7 +42,8 @@ bool Object::readConfigDirective(std::string &l){
 		if(verbose)
 			SelLog->Log('C', "\t\tDisabled");
 		this->disable();
+	} else if(!! striKWcmp( l, "-->> ")){
+		SelLog->Log('F', "Unknown directive '%s'", l.c_str());
+		exit(EXIT_FAILURE);
 	}
-
-	return false;
 }

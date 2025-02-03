@@ -1,7 +1,7 @@
 /* Timer definition
  *
  * Note :
- * Enable / Disable - only control if tasks have to be launched or not
+ * Enable / Disable - only control if handlers have to be launched or not
  *
  * 15/08/2018 - LF - First version
  */
@@ -9,40 +9,24 @@
 #ifndef TIMER_H
 #define TIMER_H
 
-#include <ctime>
-#include <sys/time.h>
-#include <cerrno>
-
-#include "StringVector.h"
 #include "Event.h"
+#include "ObjCollection.h"
+#include "Tracker.h"
 
- 
 class Timer : public Event {	// Event contains tasks to launch
 
-	unsigned long every;		// Delay b/w launches
-	unsigned short at;			// launch time
-	unsigned short min;			// At's minute 
+	uint32_t every;		// Delay b/w launches
+	uint16_t at;			// launch time
+	uint16_t min;			// At's minute 
 
 	bool immediate;	// Launch at startup
 	bool runifover;	// run immediately if the 'At' hour is already passed
 
 	pthread_t thread;
-	pthread_cond_t cond;
-	pthread_mutex_t mutex;
-
-	StringVector startTrackers;
-	StringVector stopTrackers;
-
-public:
-	enum Commands {
-	LAUNCH,	// Launch tasks now
-	RESET,	// Reset the timer without launching tasks
-	};
-
-private :
-	enum Commands cmd;
-
 	static void *threadedslave(void *);
+
+	TrackerVector startTrackers;
+	TrackerVector stopTrackers;
 
 public:
 	/* Constructor from a file
@@ -52,39 +36,18 @@ public:
 	 */
 	Timer( const std::string &file, std::string &where, std::string &name  );
 
-	void addStartTracker( std::string t ){ this->startTrackers.Add(t); }
-	void addStopTracker( std::string t ){ this->stopTrackers.Add(t); }
+	void readConfigDirective( std::string &l, std::string &name, bool &nameused );
 
-	/* The timer is handled through a dedicated thread ... a pointer
-	 * to this object has to be passed to the newly created thread
-	 * BUT as object are copied into maps, the pointer is only valid after
-	 * the said insertion.
+	/* Timers are handled through a dedicated thread ...
+	 * A pointer to this object is passed to it.
 	 */
 	void launchThread( void );
 
-	/* Launch tasks associated to this trigger 
-	 * Disable/Enable trackers as well
-	 */
-	void execTasks( void );
-
-	/* Tell if this timer is passed and has runifover
-	 *	Return false if it's an 'every' timer
-	 */
-	bool isOver( void );
-
-	/* Tell if this timer is in 'every' mode */
-	bool inEveryMode( void );
-
 	/*
-	 * (un)Lock timer data to avoid race condition
+	 * Executes slaves' handlers
 	 */
-	void lock( void );
-	void unlock( void );
 
-	/*
-	 *	Send a command to the timer
-	 */
-	void sendCommand( enum Commands );
+	void execHandlers(void);
 
 	/*
 	 * Accessors
@@ -100,8 +63,43 @@ public:
 	bool getImmediate( void ){ return this->immediate; }
 	bool getRunIfOver( void ){ return this->runifover; }
 
+	bool isOver( void );	// Tell if this absolute timer is passed and has runifover
+	bool inEveryMode( void ){ return( !!this->every ); }
+
+		/* Lua's communication
+		 * As timers are running in separate threads an IPC kind of
+		 * channel has to be used.
+		 */
+
+public:
+	enum Commands {
+	LAUNCH,	// Launch tasks now
+	RESET,	// Reset the timer without launching tasks
+	};
+
+private:
+
+	/* IPC signaling */
+	pthread_cond_t cond;
+	pthread_mutex_t mutex;
+
+	enum Commands cmd;
+
+public:
+		// Avoid race condition (for multi-fields value, like "at")
+	void lock( void );
+	void unlock( void );
+
+	void sendCommand( enum Commands );
+
+	/* Trackers */
+	void addStartTracker( Tracker *t ){ this->startTrackers.Add(t); }
+	void addStopTracker( Tracker *t ){ this->stopTrackers.Add(t); }
+
 	/* Create Lua's object */
-	static void initLuaObject( lua_State *L );
+	static void initLuaInterface(lua_State *L);
 };
+
+typedef ObjCollection<Timer *> TimerCollection;
 
 #endif

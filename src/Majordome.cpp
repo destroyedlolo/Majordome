@@ -2,7 +2,7 @@
  * Majordome
  * 	An event based Automation System
  *
- * Copyright 2018-24 Laurent Faillie
+ * Copyright 2018-25 Laurent Faillie
  *
  * 		Majordome is covered by
  *		Creative Commons Attribution-NonCommercial 3.0 License
@@ -16,46 +16,41 @@
  *
  */
 
+#include "Version.h"
 #include "Selene.h"
 #include "Helpers.h"
-#include "Version.h"
+#include "MayBeEmptyString.h"
 #include "Config.h"
 
-#include <iostream>
 #include <fstream>
 
-#include <cstdio>
-#include <cstdlib>
 #include <cstring>		// strerror()
-#include <cassert>
-
+#include <cassert>		// Dirty exits for situations not expected to arrive
+#include <csignal>
 #include <unistd.h> 	// getopt()
-#include <errno.h>
 #include <libgen.h>		// basename()
-
-using namespace std;
 
 #define DEFAULT_CONFIGURATION_FILE "/usr/local/etc/Majordome.conf"
 
-	/*****
-	 * global configuration
-	 *****/
-bool verbose = false;
+	/* ****
+	 * global runtime configuration
+	 * ****/
+bool quiet = false;		// Avoid unnecessary messages
+bool verbose = false;	// Add verbosity
+bool trace = false;		// Trace internals like messages arrival
+bool debug = false;		// Add debugging code (mostly messages)
 bool hideTopicArrival = false;	// Silence topics arrival
-bool debug = false;
-bool quiet = false;
-bool trace = false;
-bool configtest = false;
 
-Config config;
+bool configtest = false;	// Only validate the configuration, then exit
+Config config;			// Application's configuration
 
-	/******
+	/* *****
 	 * local configuration
 	 * (feed with default values)
-	 *******/
-string MQTT_ClientID;
-static string UserConfigRoot("/usr/local/etc/Majordome");	// Where to find user configuration
-static string Broker_URL("tcp://localhost:1883");	// Broker to contact
+	 * ******/
+std::string MQTT_ClientID;
+static std::string UserConfigRoot("/usr/local/etc/Majordome");	// Where to find user configuration
+static std::string Broker_URL("tcp://localhost:1883");	// Broker to contact
 
 static void read_configuration(const char *fch){
 	std::ifstream file;
@@ -107,12 +102,14 @@ static void read_configuration(const char *fch){
 	}
 }
 
-	/******
+
+	/* *****
 	 * Threading
-	 *******/
+	 * ******/
+
 pthread_attr_t thread_attr;
 
-/* Set the environment of each newly created threads
+/* Set the Lua environment of each newly created threads
  * (including the main one)
  */
 
@@ -123,8 +120,16 @@ void threadEnvironment(lua_State *L){
 	lua_pushstring( L, COPYRIGHT );	/* Expose copyright to lua side */
 	lua_setglobal( L, "MAJORDOME_COPYRIGHT" );
 
+#ifdef TOILE
+	lua_pushnumber( L, TOILEVERSION );	/* Expose version to lua side */
+	lua_setglobal( L, "TOILE_VERSION" );
+#endif
+
 	lua_pushstring( L, MQTT_ClientID.c_str() );	/* Expose ClientID to lua side */
 	lua_setglobal( L, "MAJORDOME_ClientID" );
+
+	lua_pushstring( L, config.getConfigDir().c_str() );
+	lua_setglobal( L, "MAJORDOME_CONFIGURATION_DIRECTORY" );
 
 	if(verbose){
 		lua_pushinteger( L, 1 );
@@ -141,6 +146,31 @@ void threadEnvironment(lua_State *L){
 	SelLua->ApplyStartupFunc(L);	// Creates metas
 	SelMQTT->createExternallyManaged(L, MQTT_client);	// Push object on the task
 	lua_setglobal( L, "MQTTBroker" );	// expose it as the broker
+}
+
+
+	/* ***
+	 * Majordome's Lua own API
+	 */
+
+static int mjd_letsgo(lua_State *L){
+	SelLog->Log('D', "Late dependencies building");
+	
+	SelLua->lateBuildingDependancies(L);
+	SelLua->ApplyStartupFunc(L);
+
+	SelLog->Log('D', "Let's go ...");
+
+	return 0;
+}
+
+static const struct luaL_Reg MajordomeLib [] = {
+	{"LetsGo", mjd_letsgo},
+	{NULL, NULL}
+};
+
+static void initMajordomeObject( lua_State *L ){
+	SelLua->libCreateOrAddFuncs( L, "Majordome", MajordomeLib );
 }
 
 
@@ -167,34 +197,33 @@ static int msgarrived(void *actx, char *topic, int tlen, MQTTClient_message *msg
 	memcpy(cpayload, msg->payload, msg->payloadlen);
 	cpayload[msg->payloadlen] = 0;
 
-	for(Config::TopicElements::iterator i = config.TopicsList.begin(); i != config.TopicsList.end(); i++){
-		if( i->second.match( topic ) ){
+	for(auto &i : config.TopicsList){
+		if(i.second->isEnabled()){
+			if(i.second->match( topic )){
 #ifdef DEBUG
-			if( debug && !i->second.isQuiet() ){
-				if(hideTopicArrival)
-					SelLog->Log('D', "'%s' accepted by topic '%s'", topic, i->second.getNameC() );
-				else
-					SelLog->Log('D', "Accepted by topic '%s'", i->second.getNameC() );
-			}
+				if( debug && !i.second->isQuiet() ){
+					if(hideTopicArrival)
+						SelLog->Log('D', "'%s' accepted by topic '%s'", topic, i.second->getNameC() );
+					else
+						SelLog->Log('D', "Accepted by topic '%s'", i.second->getNameC() );
+				}
 #endif
-			if( i->second.toBeStored() ){	// Store it in a SharedVar
-				if( i->second.isNumeric() ){
-					try {
-						double val = std::stod( cpayload );
-						SelSharedVar->setNumber( i->second.getNameC(), val, i->second.getTTL() );
-					} catch( ... ){
-						SelLog->Log('E', "Topic '%s' is expecting a number : no convertion done ", i->second.getNameC() );
-						SelSharedVar->clear( i->second.getNameC() );
-					}
-				} else
-					SelSharedVar->setString( i->second.getNameC(), cpayload, i->second.getTTL() );
+
+				if( i.second->toBeStored() ){	// Store it in a SharedVar
+					if( i.second->isNumeric() ){
+						try {
+							double val = std::stod( cpayload );
+							SelSharedVar->setNumber( i.second->getNameC(), val, i.second->getTTL() );
+						} catch( ... ){
+							SelLog->Log('E', "Topic '%s' is expecting a number : no convertion done ", i.second->getNameC() );
+							SelSharedVar->clear( i.second->getNameC() );
+						}
+					} else
+						SelSharedVar->setString( i.second->getNameC(), cpayload, i.second->getTTL() );
+				}
 			}
 
-			i->second.execTasks( config, i->second.getNameC(), topic, cpayload );
-			i->second.execTrackers( config, i->second.getNameC(), topic, cpayload );
-			i->second.execMinMax( config, i->second.getNameC(), topic, cpayload );
-			i->second.execNamedMinMax( config, i->second.getNameC(), topic, cpayload );
-			break;
+			i.second->execHandlers(*i.second, topic, cpayload);
 		}
 	}
 
@@ -213,9 +242,18 @@ static void brkcleaning(void){	/* Clean broker stuffs */
 	MQTTClient_destroy(&MQTT_client);
 }
 
-	/******
+	/* *****
 	 * Main loop
-	 *******/
+	 * ******/
+
+void quit(int){
+	exit(EXIT_SUCCESS);
+}
+
+void bye(void){
+	config.RunShutdowns();
+}
+
 int main(int ac, char **av){
 	initSelene();							// Load Séléné modules
 	SelLog->configure(NULL, LOG_STDOUT);	// Early logging to STDOUT before broker initialisation
@@ -226,7 +264,7 @@ int main(int ac, char **av){
 
 	while((c = getopt(ac, av, "qvVdhrf:t")) != (char)EOF) switch(c){
 	case 'h':
-		fprintf(stderr, "%s (%.04f)\n"
+		fprintf(stderr, "%s (%.04f%s)\n"
 			"A lightweight event based Automation System\n"
 			"%s\n"
 			"Known options are :\n"
@@ -241,14 +279,26 @@ int main(int ac, char **av){
 			"\t-f<file> : read <file> for configuration\n"
 			"\t\t(default is '%s')\n"
 			"\t-t : test configuration file and exit\n",
-			basename(av[0]), VERSION, COPYRIGHT, DEFAULT_CONFIGURATION_FILE
+			basename(av[0]), VERSION,
+#ifdef TOILE
+#define STRIFY_HELPER(s) #s
+#define STRIFY(x) STRIFY_HELPER(x)
+			" - Toile " STRIFY(TOILEVERSION),
+#else
+			"",
+#endif
+			COPYRIGHT, DEFAULT_CONFIGURATION_FILE
 		);
 		exit(EXIT_FAILURE);
 		break;
 	case 't':
 		configtest = true;
 	case 'v':
+#ifdef TOILE
+		SelLog->Log('I', "%s v%.04f %s", basename(av[0]), VERSION, " - Toile v" STRIFY(TOILEVERSION));
+#else
 		SelLog->Log('I', "%s v%.04f", basename(av[0]), VERSION);
+#endif
 		verbose = true;
 		quiet = false;
 		break;
@@ -281,18 +331,18 @@ int main(int ac, char **av){
 
 	read_configuration(conf_file);
 
-		/***
+		/* **
 		 * Initial technical objects
-		 ***/
+		 * **/
 
 		// Creates threads as detached in order to save
 		// some resources when quiting
 	assert(!pthread_attr_init (&thread_attr));
 	assert(!pthread_attr_setdetachstate (&thread_attr, PTHREAD_CREATE_DETACHED));
 
-		/***
+		/* **
 		 * Connecting to the broker
-		 ***/
+		 * **/
 	MQTTClient_connectOptions conn_opts = MQTTClient_connectOptions_initializer;
 	conn_opts.reliable = 0;	/* Asynchronous sending */
 	int err;
@@ -327,14 +377,13 @@ int main(int ac, char **av){
 	atexit(brkcleaning);
 	SelLog->initMQTT(MQTT_client, MQTT_ClientID.c_str());	// Initialize MQTT logging
 
-	threadEnvironment(SelLua->getLuaState());
-
+		/* **
+		 * Reading user configuration 
+		 * ***/
 	if(!quiet)
 		SelLog->Log('I', "Application code for %s %f ...", basename(av[0]), VERSION);
 
-		/***
-		 * Reading user configuration 
-		 ****/
+	threadEnvironment(SelLua->getLuaState());
 	config.init(UserConfigRoot, SelLua->getLuaState());	// Read user's configuration files
 	config.SanityChecks();
 
@@ -343,25 +392,39 @@ int main(int ac, char **av){
 		exit(EXIT_FAILURE);
 	}
 
+		/* **
+		 * Add Majordom's own objects to slave thread
+		 * ***/
+	SelLua->AddStartupFunc(initMajordomeObject);
+	SelLua->AddStartupFunc(LuaTask::initLuaInterface);
+	SelLua->AddStartupFunc(Event::initLuaInterface);
+	SelLua->AddStartupFunc(MQTTTopic::initLuaInterface);
+	SelLua->AddStartupFunc(Timer::initLuaInterface);
+	SelLua->AddStartupFunc(Timer::initLuaInterface);
+	SelLua->AddStartupFunc(MinMax::initLuaInterface);
+	SelLua->AddStartupFunc(NamedMinMax::initLuaInterface);
+	SelLua->AddStartupFunc(Shutdown::initLuaInterface);
+
+		/* **
+		 * After this point, we're running application's code
+		 * **/
+
 	if(!quiet)
 		SelLog->Log('I', "Application starting ...");
-
-
-		/***
-		 * Add Majordom's own objects to slave thread
-		 ****/
-	SelLua->AddStartupFunc(LuaTask::initLuaObject);
-	SelLua->AddStartupFunc(Timer::initLuaObject);
-	SelLua->AddStartupFunc(MQTTTopic::initLuaObject);
-	SelLua->AddStartupFunc(Event::initLuaObject);
-	SelLua->AddStartupFunc(Tracker::initLuaObject);
-	SelLua->AddStartupFunc(MinMax::initLuaObject);
-	SelLua->AddStartupFunc(NamedMinMax::initLuaObject);
 
 	config.RunStartups();	// Run startup functions
 	config.SubscribeTopics();	// MQTT : activate topics receiving
 	config.LaunchTimers();	// Launch slave timers
 	config.RunImmediates();	// Run immediate & overdue timers tasks
+
+		/* Shutdown's */
+	signal(SIGINT,quit);
+	signal(SIGUSR1,quit);
+	atexit(bye);
+
+#ifdef TOILE
+	Toile::RefreshRenderers();
+#endif
 
 	pause();	// Waiting for events, nothing else to do
 }

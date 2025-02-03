@@ -7,16 +7,19 @@
 #define TRACKER_H
 
 #include "MayBeEmptyString.h"
-#include "Event.h"
-#include "LuaExec.h"
+#include "Handler.h"
+#include "ObjCollection.h"
+#include "LuaTask.h"
 
-class Tracker : public Event, public LuaExec {	// Event contains tasks to launch when tracker changes to DONE
+class Tracker : public Handler {
 
-	StringVector startingTasks;	// Tasks to launch when starting the tracker
-	StringVector stoppingTasks;	// Tasks to launch when stopping the tracker
-	StringVector changingTasks;	// Tasks to launch when the tracker's status is changing
+		/* notifications */
+	TaskVector startingTasks;	// Tasks to launch when starting the tracker
+	TaskVector stoppingTasks;	// Tasks to launch when stopping the tracker
+	TaskVector doneTasks;		// Tasks to launch when the tracker's DONE
+	TaskVector changingTasks;	// Tasks to launch when the tracker's status is changing
 
-	void notifyChanged(void);
+	void readConfigDirective( std::string &l, std::string &name, bool &nameused );
 
 public:
 	enum _status {
@@ -31,6 +34,9 @@ private:
 	unsigned int howmany;		// howmany consign
 	unsigned int hm_counter;	// actual counter value
 
+	void publishstatus( void );
+	void notifyChanged(void);
+
 public:
 	/* Constructor from a file
 	 * -> file : file to load
@@ -40,41 +46,29 @@ public:
 	 */
 	Tracker( const std::string &file, std::string &where, std::string &name, lua_State *L );
 
+	virtual void feedState(lua_State *L);
+
 	enum _status getStatus( void ){ return this->status; }
 	const char *getStatusC( void );
 	unsigned int getCounter(void){ return this->hm_counter; }
 	void resetCounter(void){ this->hm_counter = this->howmany; }
 
-	/* Overloading of LuaExec's in order to initialise Myself object */
-	virtual void feedState( lua_State *L, const char *name, const char *topic=NULL, const char *payload=NULL, bool tracker=false, const char *trkstatus=NULL );
-
-	/* Launch lua script if applicable
-	 * -> name : name of the topic/timer that triggers this task
-	 * -> topic : the topic itself
-	 * <- true if it has been launched, false otherwise
-	 */
-	bool exec( const char *name, const char *topic=NULL, const char *payload=NULL );
+	void setStatusTopic( std::string t ){ this->statusTopic = t; }
+	bool asStatusTopic( void ){ return !!this->statusTopic; }
+	MayBeEmptyString &getStatusTopic( void ){ return this->statusTopic; }
 
 	/* Change tracker status */
 	void start( void );
 	void stop( void );
 	void done( void );
 
-	void addDone( std::string t ){ this->Add(t); }
-	void addStarted( std::string t ){ this->startingTasks.Add(t); }
-	void addStopped( std::string t ){ this->stoppingTasks.Add(t); }
-	void addChanged( std::string t ){ this->changingTasks.Add(t); }
+	void addDone( LuaTask *t ){ this->doneTasks.Add(t); }
+	void addStarted( LuaTask *t ){ this->startingTasks.Add(t); }
+	void addStopped( LuaTask *t ){ this->stoppingTasks.Add(t); }
+	void addChanged( LuaTask *t ){ this->changingTasks.Add(t); }
 
-	void setStatusTopic( std::string t ){ this->statusTopic = t; }
-	bool asStatusTopic( void ){ return !!this->statusTopic; }
-	MayBeEmptyString &getStatusTopic( void ){ return this->statusTopic; }
-
-protected :
-	void publishstatus( void );
-
-public :
-		/* Create Lua's object */
-	static void initLuaObject( lua_State *L );
 };
 
+typedef ObjCollection<Tracker *> TrackerCollection;
+typedef ObjVector<Tracker *> TrackerVector;
 #endif

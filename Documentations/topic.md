@@ -3,87 +3,100 @@ Define **MQTT topic**
 
 ## Directives
 
-### name=
+> [!IMPORTANT]  
+> As of v6.0 onward, The syntax has changed for **Topic** and is not any more compatible with previous versions.
+
+### General directives
+#### -->> name=
 Unique name to identify the topic. If not set, uses the filename.
 ```
-name=toto
+-->> name=Toto
 ```
+#### --> quiet
+Removes some trace. This option is useful to avoid logging of very noisy topics.
 
-### topic=
+#### -->> disabled
+Message arrival is ignored
+
+### Topics' owns
+#### -->> topic=
 Topic to listen / publish too. **This field is mandatory.**
 ```
-topic=Temperature/Pool
+-->> topic=Temperature/Pool
 ```
+> [!TIP]  
+> **%ClientID%** will be replaced by its value.
 
-### qos=
+#### -->> qos=
 Quality of service for this topic between **0** and **2**. If outside this range, forced to **0** (which is the default value)
 ```
-qos=2
+-->> qos=2
 ```
 
-### store
+#### -->> store
 Store received payload in a SelShared variable with the name of this topic. As example :
 ```
-name=titi
-topic=example
-store
+-->> name=titi
+-->> topic=example
+-->> store
 ```
 If we receive a value "*toto*" in topic `example`, a SelShared variable "**titi**" is created with value "*toto*".
 
-### numeric
+#### -->> numeric
 Store the payload as a numeric value (float).
 
-### ttl=
-Time to live of this SelShared (in seconds). When the topic doesn't receive fresh data during this ttl period, SelShared is unset.
+#### -->> ttl=
+Time to live of this SelSharedVar (in seconds). When the topic doesn't receive fresh data during this ttl period, SelSharedVar is unset.
 ```
-ttl=2.5
+-->> ttl=2.5
 ```
 
-### default=
+#### -->> default=
 Set the default value for this topic. This field must be defined after **name**, **numeric** and **ttl** and is useful only with **store**d topics.
 ```
-default=3.14
+-->> default=3.14
 ```
 
-### quiet
-Remove some trace. This option is useful to avoid logging of very noisy topics.
-
-### disabled
-This topic starts as disabled : incoming messages are ignored.
 
 ## Example
 File **test.topic**
 ```
-# name of the topic
-# Here, commented out, so we take the filename, "test"
-# name=
-
-# set the topic (mandatory)
-# if present, %ClientID% will be replaced by Majordome's MQTT client ID
-topic=%ClientID%/myValue
-
-# QOS for this topic between 0 and 2
-# if outside this range, forced to 0 (which is the default value)
-qos=0
-
-# Store this topic's content in a SelShared variable with the name of this topic
-store
-
-# Store it as a numeric value
-numeric
-
-# time to live of this variable (in Seconds)
-ttl=2
-
-# set the default value for this topic.
-#default=3.14
-
-# Don't log incomming messages on this topic
-#quiet
-
-# disable this topic
-#disabled
+-- test topic
+--
+-- name of the topic
+-- if not set, takes the filename
+--->> name=toto
+--
+-- set the topic (mandatory)
+-- if present, %ClientID% will be replaced by Majordome's MQTT client ID
+-->> topic=%ClientID%/About
+--
+-- QOS for this topic between 0 and 2
+-- if outside this range, forced to 0 (which is the default value)
+-->> qos=0
+--
+-- Store this topic's content in a SelShared variable with the name of this topic
+-->> store
+--
+-- Store it as a numeric value
+-->> numeric
+--
+-- time to live of this variable (in Seconds)
+-->> ttl=2
+--
+-- set the default value for this topic.
+-- must be defined after 'name', 'numeric' and 'ttl'
+-- useful only with 'store'd topics
+-->> default=3.14
+--
+-- remove some trace
+-- This option is useful to avoid logging of very noisy topics
+-->> quiet
+--
+-- disable this topic
+-->> disabled
 ```
+
 ## at Lua side
 
 MQTTTopic are exposed as **MajordomeMQTTTopic** object that supports the following methods :
@@ -92,7 +105,7 @@ MQTTTopic are exposed as **MajordomeMQTTTopic** object that supports the followi
     - `Boolean retain` does the value to be retained ?
   - `getTopic()` returns the associated MQTT topic
   - `getVal()` returns the last received payload (only if the topic is `stored`). Takes in account also the associated time to live.
-  - `Launch()` launches tasks associated to this topic
+  - `Launch()` launches tasks associated to this topic (they will run in the same thread and with the same State)
   - `getContainer()` returns the container (directory) in which this topic as been defined
   - `getName()` returns topic's name
   - `isEnabled()` returns a boolean reflecting if the topic is enabled or not

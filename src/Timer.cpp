@@ -1,108 +1,82 @@
-#include <iostream>
-#include <fstream>
-#include <cstring>
-#include <cstdlib>
-#include <cassert>
-
-extern "C" {
-    #include "lualib.h"
-    #include "lauxlib.h"
-};
-
-#include "Helpers.h"
 #include "Timer.h"
+#include "Helpers.h"
 #include "Config.h"
 
-Timer::Timer( const std::string &fch, std::string &where, std::string &name ) : every(0), at((unsigned short)-1), immediate(false), runifover(false), cond(PTHREAD_COND_INITIALIZER), mutex(PTHREAD_MUTEX_INITIALIZER) {
-	this->extrName( fch, name );
-	this->name = name;
-	this->where = where;
+#include <fstream>
+
+#include <sys/time.h>
+#include <cstring>
+#include <cassert>
+
+Timer::Timer( const std::string &fch, std::string &where, std::string &name ) : Object(fch, where, name), every(0), at((unsigned short)-1), immediate(false), runifover(false), cond(PTHREAD_COND_INITIALIZER), mutex(PTHREAD_MUTEX_INITIALIZER) {
 
 	/*
 	 * Reading file's content
 	 */
-	if(verbose)
-		SelLog->Log('L', "\t'%s'", fch.c_str());
 
+	std::stringstream buffer;
 	std::ifstream file;
-	file.exceptions ( std::ios::eofbit | std::ios::failbit ); // No need to check failbit
+	file.exceptions ( std::ios::eofbit | std::ios::failbit );
 	try {
-		std::string l;
+		std::ifstream file(fch);
+		std::streampos pos;
 
-		file.open(fch);
-		while( std::getline( file, l) ){
-			MayBeEmptyString arg;
+		bool nameused = false;	// if so, the name can't be changed anymore
 
-			if( !!(arg = striKWcmp( l, "name=" )) ){
-				this->name = name = arg;
-				if(verbose)
-					SelLog->Log('C', "\t\tChanging name to '%s'", name.c_str());
-			} else if( !!(arg = striKWcmp( l, "at=" )) ){
-				unsigned long v = strtoul( arg.c_str(), NULL, 10 );
-				this->at = v / 100;
-				this->min = v % 100;
-				if(verbose)
-					SelLog->Log('C', "\t\tRunning at %u:%u", this->at, this->min);
-			} else if( !!(arg = striKWcmp( l, "every=" )) ){
-				this->every = strtoul( arg.c_str(), NULL, 0 );
-				if(verbose)
-					SelLog->Log('C', "\t\tRunning every %lu second%c", this->every, this->every > 1 ? 's':' ');
-			} else if( l == "immediate" ){
-				this->immediate = true;
-				if(verbose)
-					SelLog->Log('C', "\t\tImmediate");
-			} else if( l == "runifover" ){
-				this->runifover = true;
-				if(verbose)
-					SelLog->Log('C', "\t\tRun if over");
-			} else if( l == "quiet" ){
-				if(verbose)
-					SelLog->Log('C', "\t\tBe quiet");
-				this->beQuiet();
-			} else if( l == "disabled" ){
-				if(verbose)
-					SelLog->Log('C', "\t\tDisabled");
-				this->disable();
+		/*
+		 * Reading header (Majordome's commands)
+		 */
+
+		do {
+			std::string l;
+			pos = file.tellg();
+
+			std::getline( file, l);
+			if( l.compare(0, 2, "--") ){	// End of comments
+				file.seekg( pos );
+				break;
 			}
-#if 0
-else SelLog->Log('D', "Ignore '%s'", l.c_str());
-#endif
-		}
+
+			this->readConfigDirective(l, name, nameused);
+		} while(true);
+
+		file.close();
 	} catch(const std::ifstream::failure &e){
 		if(!file.eof()){
 			SelLog->Log('F', "%s : %s", fch.c_str(), strerror(errno) );
 			exit(EXIT_FAILURE);
 		}
-	} catch(const std::invalid_argument &e){
-		SelLog->Log('F', "%s : invalid argument", fch.c_str() );
-		exit(EXIT_FAILURE);
 	}
 
-	file.close();
 }
 
-void Timer::launchThread( void ){
-	/*
-	 * Create a detached thread
-	 */
-	pthread_attr_t thread_attr;
-	if( pthread_attr_init(&thread_attr) ){
-		SelLog->Log('F', "Can't initialise a new thread for '%s' : %s", this->getWhereC(), strerror(errno) );
-		exit(EXIT_FAILURE);
-	}
-	if( pthread_attr_setdetachstate(&thread_attr, PTHREAD_CREATE_DETACHED) ){
-		SelLog->Log('F', "Can't setdetechstate for a new thread for '%s' : %s", this->getWhereC(), strerror(errno) );
-		exit(EXIT_FAILURE);
-	}
-	if(pthread_create( &(this->thread), &thread_attr, this->threadedslave, this )){
-		SelLog->Log('F', "Can't create a new thread for '%s' : %s", this->getWhereC(), strerror(errno) );
-		exit(EXIT_FAILURE);
-	}
-	pthread_attr_destroy(&thread_attr);
+void Timer::readConfigDirective( std::string &l, std::string &name, bool &nameused ){
+	MayBeEmptyString arg;
+
+	if( !!(arg = striKWcmp( l, "-->> at=" )) ){
+		uint32_t v = strtoul( arg.c_str(), NULL, 10 );
+		this->at = v / 100;
+		this->min = v % 100;
+		if(verbose)
+			SelLog->Log('C', "\t\tRunning at %u:%u", this->at, this->min);
+	} else if( !!(arg = striKWcmp( l, "-->> every=" )) ){
+		this->every = strtoul( arg.c_str(), NULL, 0 );
+		if(verbose)
+			SelLog->Log('C', "\t\tRunning every %lu second%c", this->every, this->every > 1 ? 's':' ');
+	} else if( l == "-->> immediate" ){
+		this->immediate = true;
+		if(verbose)
+			SelLog->Log('C', "\t\tImmediate");
+	} else if( l == "-->> runifover" ){
+		this->runifover = true;
+		if(verbose)
+			SelLog->Log('C', "\t\tRun if over");
+ 	} else 
+		this->Object::readConfigDirective(l, name, nameused);
 }
 
 void *Timer::threadedslave(void *arg){
-	class Timer *me = (class Timer *)arg;	// 'this' in this thread
+	class Timer *me = static_cast<Timer *>(arg);	// 'this' in this thread
 
 	pthread_mutex_lock( &(me->mutex) );
 	for(;;){
@@ -136,19 +110,21 @@ void *Timer::threadedslave(void *arg){
 			}
 #ifdef DEBUG
 			if( debug )
-				SelLog->Log('D', "Timer %s : %lu second(s) to wait", me->getNameC(), sec );
+				SelLog->Log('D', "[Timer %s] %lu second(s) to wait", me->getNameC(), sec );
 #endif
 			ts.tv_sec += sec;
 		} else {
-			SelLog->Log('F', "Timer '%s' : No time defined", me->getNameC());
+			SelLog->Log('F', "[Timer '%s'] No time defined", me->getNameC());
 			exit(EXIT_FAILURE);
 		}
 
 		int rc;
 		if( (rc = pthread_cond_timedwait(&(me->cond), &(me->mutex), &ts)) != ETIMEDOUT ){
-// SelLog->Log('d', "Interrupted : %s", strerror(rc));
+			/* If interrupted, it's meaning we got a command
+			 * Notez-bien : only RESET is coded here, LAUNCH only break the
+			 * timedwait and let remaining code (handlers launching) executes.
+			 */
 			if( me->cmd == Commands::RESET ){
-// SelLog->Log('d', "reset");
 				continue;	// Rethink the timer without launching tasks
 			}
 		}
@@ -156,12 +132,32 @@ void *Timer::threadedslave(void *arg){
 #ifdef DEBUG
 		if( debug ){
 			time_t current_time = time(NULL);
-			SelLog->Log('D', "Timer %s : it's %s", me->getNameC(), SeleneCore->ctime(&current_time, NULL, 0) );
+			SelLog->Log('D', "[Timer %s] it's %s", me->getNameC(), SeleneCore->ctime(&current_time, NULL, 0) );
 		}
 #endif
-		me->execTasks();
+		me->execHandlers();
 	}
 	return NULL;
+}
+
+void Timer::launchThread( void ){
+	/*
+	 * Create a detached thread
+	 */
+	pthread_attr_t thread_attr;
+	if( pthread_attr_init(&thread_attr) ){
+		SelLog->Log('F', "Can't initialise a new thread for '%s' : %s", this->getWhereC(), strerror(errno) );
+		exit(EXIT_FAILURE);
+	}
+	if( pthread_attr_setdetachstate(&thread_attr, PTHREAD_CREATE_DETACHED) ){
+		SelLog->Log('F', "Can't setdetechstate for a new thread for '%s' : %s", this->getWhereC(), strerror(errno) );
+		exit(EXIT_FAILURE);
+	}
+	if(pthread_create( &(this->thread), &thread_attr, this->threadedslave, this )){
+		SelLog->Log('F', "Can't create a new thread for '%s' : %s", this->getWhereC(), strerror(errno) );
+		exit(EXIT_FAILURE);
+	}
+	pthread_attr_destroy(&thread_attr);
 }
 
 bool Timer::isOver( void ){
@@ -183,39 +179,18 @@ bool Timer::isOver( void ){
 		return true;
 }
 
-bool Timer::inEveryMode( void ){
-	return( !!this->every );
+void Timer::execHandlers(void){
+	this->Event::execHandlers();	// Execute slaves' handlers
+
+	for(auto &i : this->startTrackers)
+		i->start();
+
+	/* TODO start/stop */
 }
 
-void Timer::execTasks( void ){
-	if( this->isEnabled() ){
-		for( Entries::iterator trk = this->startTrackers.begin(); trk != this->startTrackers.end(); trk++){	// starting tracker
-			try {
-				Tracker &tracker = config.findTracker( *trk );
-				tracker.start();
-			} catch (...) {
-				SelLog->Log('F', "Internal error : can't find tracker \"%s\"", (*trk).c_str() );
-				exit(EXIT_FAILURE);
-			}
-		}
-
-		for( Entries::iterator trk = this->stopTrackers.begin(); trk != this->stopTrackers.end(); trk++){	// starting tracker
-			try {
-				Tracker &tracker = config.findTracker( *trk );
-				tracker.stop();
-			} catch (...) {
-				SelLog->Log('F', "Internal error : can't find tracker \"%s\"", (*trk).c_str() );
-				exit(EXIT_FAILURE);
-			}
-		}
-
-		Event::execTasks( config, this->getNameC() );
-#ifdef DEBUG
-	} else if( debug ) {
-		SelLog->Log('D', "Timer %s is disabled : no tasks launched nor trackers touched", this->getNameC() );
-#endif
-	}
-}
+	/* ***
+	 * Locking
+	 * ***/
 
 void Timer::lock( void ){
 	pthread_mutex_lock( &(this->mutex) );
@@ -232,9 +207,10 @@ void Timer::sendCommand( enum Commands c ){
 	this->unlock();
 }
 
-	/*****
+	/* ****
 	 * Lua exposed functions
-	 *****/
+	 * ****/
+
 static class Timer *checkMajordomeTimer(lua_State *L){
 	class Timer **r = (class Timer **)SelLua->testudata(L, 1, "MajordomeTimer");
 	luaL_argcheck(L, r != NULL, 1, "'MajordomeTimer' expected");
@@ -245,11 +221,11 @@ static int mtmr_find(lua_State *L){
 	const char *name = luaL_checkstring(L, 1);
 
 	try {
-		class Timer &tmr = config.TimersList.at( name );
+		class Timer *tmr = config.TimersList.at( name );
 		class Timer **timer = (class Timer **)lua_newuserdata(L, sizeof(class Timer *));
 		assert(timer);
 
-		*timer = &tmr;
+		*timer = tmr;
 		luaL_getmetatable(L, "MajordomeTimer");
 		lua_setmetatable(L, -2);
 
@@ -395,7 +371,7 @@ static const struct luaL_Reg MajTimerM [] = {
 	{NULL, NULL}
 };
 
-void Timer::initLuaObject( lua_State *L ){
+void Timer::initLuaInterface( lua_State *L ){
 	SelLua->objFuncs( L, "MajordomeTimer", MajTimerM );
 	SelLua->libCreateOrAddFuncs( L, "MajordomeTimer", MajTimerLib );
 }

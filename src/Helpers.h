@@ -1,5 +1,6 @@
 /* Helpers.h
- * 	helpers functions spanned across sources files.
+ * 	helpers functions spanned across sources files and global
+ *	configuration.
  *
  * 	06/07/2018 - LF - First version
  * 	25/07/2018 - LF - switch to C++
@@ -8,23 +9,32 @@
 #ifndef HELPERS_H
 #define HELPERS_H
 
-#include <string>
-
 #include <MQTTClient.h> /* PAHO library needed */
-#include <lua.h>	/* Lua's state needed */
+#include <lua.hpp>	/* Lua's state needed */
 
 #include "MayBeEmptyString.h"
 
-	/****
+	/* ***
 	 * Configuration's
-	 ****/
+	 * ***/
 extern bool quiet;
 extern bool verbose;
 extern bool debug;
 extern bool trace;
 extern bool configtest;
+
+
+	/* ***
+	 * MQTT
+	 * ***/
+
 extern MQTTClient MQTT_client;
 extern std::string MQTT_ClientID;
+
+
+	/* ***
+	 * Lua
+	 * ***/
 
 extern void *luainitfunc;
 extern void threadEnvironment(lua_State *);

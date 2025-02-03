@@ -4,34 +4,49 @@
  * 10/08/2018 - LF - Force loading order
  * 16/03/2019 - LF - Add .tracker
  * 20/05/2024 - LF - Migrate to v4
+ * 20/01/2025 - LF - Migrate to v6
  */
-#include <cstring>
-#include <algorithm>
 
 #include "Selene.h"
 #include "Helpers.h"
 #include "SubConfigDir.h"
+#ifdef TOILE
+#	include "Toile/Toile.h"
+#endif
+#include "Config.h"
+
+#include <algorithm>
+#include <cstring>
+#include <cassert>
 
 /* Determine object weight based on its file extension 
- * (reverse ordered by weight)
+ * Some space are left for modules extensions (like Toile's)
  */
-static const char * fileext[] = {
-	".topic",
-	".timer",
-	".rendezvous",
-	".tracker",
-	".minmax",
-	".namedminmax",
-	".lua",
-	".md"
+static const SubConfigDir::extweight fileext[] = {
+	{ ".topic", 0xc0 },
+	{ ".timer", 0xc0 },
+	{ ".rendezvous", 0xc0 },
+	{ ".minmax", 0x80 },
+	{ ".namedminmax", 0x80 },
+	{ ".tracker", 0x80 },
+	{ ".shutdown", 0x50 },
+	{ ".lua", 0x40 },
+	{ ".md", 0x01 }	// ignored, documentation only
 };
 
-static int objectweight( const char *ext ){
-	for(unsigned int i = 0; i<sizeof(fileext)/sizeof(const char *); i++){
-		if(!strcmp(ext, fileext[i]))
-			return (int)i;
+static uint8_t objectweight( const char *ext ){
+	uint8_t ret = 0x00;
+	for(SubConfigDir::extweight i : fileext){
+		if(!strcmp(ext, i.ext))
+			return i.weight;
 	}
-	return -1;
+
+#if TOILE
+	if((ret = Toile::objectweight(ext)))
+		return ret;
+#endif
+
+	return ret;
 }
 
 bool SubConfigDir::accept( const char *fch, std::string &full ){
@@ -40,7 +55,7 @@ bool SubConfigDir::accept( const char *fch, std::string &full ){
 		bool res = false;
 
 		if(ext)
-			res = (objectweight(ext) != -1 );
+			res = objectweight(ext);
 
 		if(!res)
 			SelLog->Log('E', "'%s' is rejected", fch);
@@ -53,11 +68,11 @@ bool SubConfigDir::accept( const char *fch, std::string &full ){
 SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 	this->readdircontent(where);
 
-	for( iterator i=this->begin(); i<this->end(); i++){
+	for(auto i=this->begin(); i<this->end(); i++){
 		std::string completpath = where + '/' + *i;
-		const char *ext = fileextention((*i).c_str());
+		std::string ext = fileextention((*i).c_str());
 
-		if(!strcmp(ext,".md"))	// Ignore documentation
+		if(ext == ".md")	// Ignore documentation
 			;
 		else if( *i == "Init.lua" ){
 			if(configtest){
@@ -79,92 +94,103 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 				lua_pop(L, 1);  /* pop error message from the stack */
 				exit(EXIT_FAILURE);
 			}
-		} else if( !strcmp(ext,".timer") ){
+		} else if(ext == ".lua"){
 			std::string name;
-			Timer tmr( completpath, where, name );
-
-			Config::TimerElements::iterator p;
-			if((p = cfg.TimersList.find(name)) != cfg.TimersList.end()){
-				SelLog->Log('F', "Timer '%s' is defined multiple times (previous one '%s')", name.c_str(), p->second.getWhere().c_str());
-				exit(EXIT_FAILURE);
-			} else
-				cfg.TimersList.insert( std::make_pair(name, tmr) ).first;
-		} else if( !strcmp(ext,".lua") ){
-			std::string name;
-			LuaTask tsk( completpath, where, name, L );
+			auto tsk = new LuaTask( completpath, where, name, L );
+			assert(tsk);
 	
-			Config::TaskElements::iterator prev;
+			TaskCollection::iterator prev;
 			if((prev = cfg.TasksList.find(name)) != cfg.TasksList.end()){
-				SelLog->Log('F', "Task '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second.getWhere().c_str());
+				SelLog->Log('F', "Task '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhere().c_str());
 				exit(EXIT_FAILURE);
 			} else
 				cfg.TasksList.insert( std::make_pair(name, tsk) );
-		} else if( !strcmp(ext,".topic") ){
+		} else if(ext == ".shutdown"){
 			std::string name;
-			MQTTTopic tpc( completpath, where, name );
+			auto tsk = new Shutdown( completpath, where, name, L );
+			assert(tsk);
+	
+			ShutdownCollection::iterator prev;
+			if((prev = cfg.ShutdownsList.find(name)) != cfg.ShutdownsList.end()){
+				SelLog->Log('F', "Shutdown '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhere().c_str());
+				exit(EXIT_FAILURE);
+			} else
+				cfg.ShutdownsList.insert( std::make_pair(name, tsk) );
+		} else if(ext == ".topic"){
+			std::string name;
+			auto tpc = new MQTTTopic( completpath, where, name );
 
-			Config::TopicElements::iterator prev;
+			TopicCollection::iterator prev;
 			if((prev = cfg.TopicsList.find(name)) != cfg.TopicsList.end()){
-				SelLog->Log('F', "Topic '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second.getWhere().c_str());
+				SelLog->Log('F', "Topic '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhereC());
 				exit(EXIT_FAILURE);
 			} else
 				cfg.TopicsList.insert( std::make_pair(name, tpc) );
-		} else if( !strcmp(ext,".rendezvous") ){
+		} else if(ext == ".timer" ){
 			std::string name;
-			Event evt( completpath, where, name );
+			auto tmr = new Timer( completpath, where, name );
 
-			Config::EventElements::iterator prev;
+			TimerCollection::iterator p;
+			if((p = cfg.TimersList.find(name)) != cfg.TimersList.end()){
+				SelLog->Log('F', "Timer '%s' is defined multiple times (previous one '%s')", name.c_str(), p->second->getWhereC());
+				exit(EXIT_FAILURE);
+			} else
+				cfg.TimersList.insert( std::make_pair(name, tmr) ).first;
+		} else if(ext == ".rendezvous"){
+			std::string name;
+			auto evt = new Event( completpath, where, name );
+
+			EventCollection::iterator prev;
 			if((prev = cfg.EventsList.find(name)) != cfg.EventsList.end()){
-				SelLog->Log('F', "Event '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second.getWhere().c_str());
+				SelLog->Log('F', "Event '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhereC());
 				exit(EXIT_FAILURE);
 			} else
 				cfg.EventsList.insert( std::make_pair(name, evt) );
-		} else if( !strcmp(ext,".tracker") ){
+		} else if(ext == ".tracker"){
 			std::string name;
-			Tracker trk( completpath, where, name, L );
+			auto trk = new Tracker( completpath, where, name, L );
 	
-			Config::TrackerElements::iterator prev;
+			TrackerCollection::iterator prev;
 			if((prev = cfg.TrackersList.find(name)) != cfg.TrackersList.end()){
-				SelLog->Log('F', "Tracker '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second.getWhere().c_str());
+				SelLog->Log('F', "Tracker '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhereC());
 				exit(EXIT_FAILURE);
 			} else
 				cfg.TrackersList.insert( std::make_pair(name, trk) );
-		} else if( !strcmp(ext,".minmax") ){
+		} else if(ext == ".minmax"){
 			std::string name;
-			MinMax trk( completpath, where, name, L );
+			auto trk = new MinMax(completpath, where, name, L );
 	
-			Config::MinMaxElements::iterator prev;
+			MinMaxCollection::iterator prev;
 			if((prev = cfg.MinMaxList.find(name)) != cfg.MinMaxList.end()){
-				SelLog->Log('F', "MinMax '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second.getWhere().c_str());
+				SelLog->Log('F', "MinMax '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhere().c_str());
 				exit(EXIT_FAILURE);
 			} else
 				cfg.MinMaxList.insert( std::make_pair(name, trk) );
-		} else if( !strcmp(ext,".namedminmax") ){
+		} else if(ext == ".namedminmax"){
 			std::string name;
-			NamedMinMax trk( completpath, where, name, L );
-
-			Config::NamedMinMaxElements::iterator prev;
+			auto trk = new NamedMinMax(completpath, where, name, L );
+	
+			NamedMinMaxCollection::iterator prev;
 			if((prev = cfg.NamedMinMaxList.find(name)) != cfg.NamedMinMaxList.end()){
-				SelLog->Log('F', "NamedMinMax '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second.getWhere().c_str());
+				SelLog->Log('F', "NamedMinMax '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhere().c_str());
 				exit(EXIT_FAILURE);
 			} else
 				cfg.NamedMinMaxList.insert( std::make_pair(name, trk) );
-		}
 #	ifdef DEBUG
-		else 
+		} else 
 			if(debug)
-				SelLog->Log('D', "Ignoring %s (ext '%s')", (*i).c_str(), ext );
+				SelLog->Log('D', "Ignoring %s (ext '%s')", (*i).c_str(), ext.c_str() );
 #	endif
 	}
 }
 
 void SubConfigDir::sort( void ){
-	std::sort(entries.begin(), entries.end(), 
+	std::sort(this->begin(), this->end(), 
 		[](std::string const &a, std::string const &b) -> bool {
 			int va = objectweight( fileextention( a.c_str() ));
 			int vb = objectweight( fileextention( b.c_str() ));
 
-			return(va < vb);
+			return(va > vb);
 		}
 	);
 }

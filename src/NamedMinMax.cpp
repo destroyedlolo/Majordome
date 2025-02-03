@@ -1,27 +1,14 @@
-#include <iostream>
+#include "MinMax.h"
+#include "Config.h"
+#include "Helpers.h"
+
 #include <fstream>
-#include <sstream>	// stringstream
 
 #include <cstring>
 #include <cassert>
 
-extern "C" {
-    #include "lualib.h"
-    #include "lauxlib.h"
-};
 
-#include "Config.h"
-#include "Helpers.h"
-#include "NamedMinMax.h"
-
-NamedMinMax::NamedMinMax( const std::string &fch, std::string &where, std::string &name, lua_State *L ){
-	if(verbose)
-		SelLog->Log('L', "\t'%s'", fch.c_str());
-
-	this->extrName( fch, name );
-	this->name = name;
-	this->where = where;
-
+NamedMinMax::NamedMinMax(const std::string &fch, std::string &where, std::string &name, lua_State *L) : Object(fch, where, name), Handler(fch, where, name){
 	/*
 	 * Reading file's content
 	 */
@@ -35,6 +22,10 @@ NamedMinMax::NamedMinMax( const std::string &fch, std::string &where, std::strin
 
 		bool nameused = false;	// if so, the name can't be changed anymore
 
+		/*
+		 * Reading header (Majordome's commands)
+		 */
+
 		do {
 			std::string l;
 			pos = file.tellg();
@@ -45,30 +36,9 @@ NamedMinMax::NamedMinMax( const std::string &fch, std::string &where, std::strin
 				break;
 			}
 
-			MayBeEmptyString arg;
-			if( !!(arg = striKWcmp( l, "-->> name=" ))){
-				if( nameused ){
-					SelLog->Log('F', "\t\tName can be changed only before listen, until or waitfor directives");
-					exit(EXIT_FAILURE);
-				}
-
-				this->name = name = arg;
-				if(verbose)
-					SelLog->Log('C', "\t\tChanging name to '%s'", name.c_str());
-			} else if( !!(arg = striKWcmp( l, "-->> listen=" ))){
-				Config::TopicElements::iterator topic;
-				if( (topic = config.TopicsList.find(arg)) != config.TopicsList.end()){
-					if(verbose)
-						SelLog->Log('C', "\t\tAdded to topic '%s'", arg.c_str());
-	 				topic->second.addNamedMinMax( this->getName() );
-					nameused = true;
-				} else {
-					SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
-					exit(EXIT_FAILURE);
-				}
-			} else if( LuaExec::readConfigDirective(l) )
-				nameused = true;
+			this->readConfigDirective(l, name, nameused);
 		} while(true);
+
 
 		/*
 		 * Reading the remaining of the script and keep it as 
@@ -88,16 +58,34 @@ NamedMinMax::NamedMinMax( const std::string &fch, std::string &where, std::strin
 		exit(EXIT_FAILURE);
 }
 
-void NamedMinMax::feedState( lua_State *L, const char *name, const char *topic, const char *payload, bool tracker, const char *trkstatus ){
-	try {
-		class NamedMinMax &mm = config.NamedMinMaxList.at( this->getNameC() );
-		class NamedMinMax **minmax = (class NamedMinMax **)lua_newuserdata(L, sizeof(class NamedMinMax *));
-		assert(minmax);
+void NamedMinMax::readConfigDirective( std::string &l, std::string &name, bool &nameused ){
+	MayBeEmptyString arg;
 
-		lua_pushstring( L, name );	// Push the name of the tracker
+	if( !!(arg = striKWcmp( l, "-->> listen=" ))){
+		TopicCollection::iterator topic;
+		if( (topic = config.TopicsList.find(arg)) != config.TopicsList.end()){
+			if(verbose)
+				SelLog->Log('C', "\t\tAdded to topic '%s'", arg.c_str());
+			topic->second->addHandler( dynamic_cast<Handler *>(this) );
+//			nameused = true;
+		} else {
+			SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
+	} else 
+		this->LuaExec::readConfigDirective(l, name, nameused);
+}
+
+void NamedMinMax::feedState( lua_State *L ){
+	try {
+		class NamedMinMax *nmm = config.NamedMinMaxList.at( this->getNameC() );
+		class NamedMinMax **nminmax = (class NamedMinMax **)lua_newuserdata(L, sizeof(class NamedMinMax *));
+		assert(nminmax);
+
+		lua_pushstring( L, this->getNameC() );	// Push the name of the tracker
 		lua_setglobal( L, "MAJORDOME_NAMEDMINMAX" );
 
-		*minmax = &mm;
+		*nminmax = nmm;
 		luaL_getmetatable(L, "MajordomeNamedMinMax");
 		lua_setmetatable(L, -2);
 		lua_setglobal( L, "MAJORDOME_Myself" );
@@ -105,48 +93,57 @@ void NamedMinMax::feedState( lua_State *L, const char *name, const char *topic, 
 		SelLog->Log('F', "Can't find namedminmax '%s'", this->getNameC() );
 		exit(EXIT_FAILURE);
 	}
-
-	LuaExec::feedState(L, name, topic, payload, tracker, trkstatus);
 }
 
-bool NamedMinMax::exec( const char *name, const char *topic, const char *payload ){
+bool NamedMinMax::execAsync(lua_State *L){
+#if 0	// Not needed as already checked within LuaExec::canRun() called by MQTTTopic::execHandlers()
 	if( !this->isEnabled() ){
 		if(verbose)
-			SelLog->Log('T', "NamedMinMax'%s' from '%s' is disabled", this->getNameC(), this->getWhereC() );
+			SelLog->Log('T', "MinMax'%s' from '%s' is disabled", this->getNameC(), this->getWhereC() );
 		return false;
 	}
+#endif
 
+	LuaExec::boolRetCode rc;
 	std::string rs;
-	lua_Number ret;
-	bool r = this->LuaExec::execSync(name, topic, payload, true, NULL, &rs, &ret);
+	lua_Number retn;
 
-	if(!rs.empty()){
-		if(debug)
-			SelLog->Log('T', "NamedMinMaxi '%s'[%s] from '%s' is accepting \"%s\"", this->getNameC(), rs.c_str(), this->getWhereC(), payload );
+	bool r = this->LuaExec::execSync(L, &rc, &rs, &retn);
 
-		double val = atof(payload);
-		if(ret == ret)	// Lua forced the value
-			val = ret;
+	if( rc != LuaExec::boolRetCode::RCfalse ){
 
-		auto it = this->empty.find(rs);
+		lua_Number val;
+		lua_getglobal(L, "MAJORDOME_PAYLOAD");
+		if(lua_isnumber(L, -1)){
+			val = lua_tonumber(L, -1);
 
-		if(this->empty[rs] || it == this->empty.end()){
-			this->empty[rs] = false;
-			this->nbre[rs] = 1;
-			this->min[rs] = this->max[rs] = this->sum[rs] = val; 
-		} else {
-			if(val < this->min[rs])
-				this->min[rs] = val;
-			if(val > this->max[rs])
-				this->max[rs] = val;
+			if(retn == retn)	// Lua forced the value
+				val = retn;
 
-			this->sum[rs] += val;
-			this->nbre[rs]++;
-		}
+			auto it = this->empty.find(rs);
 
-		if(debug)
-			SelLog->Log('T', "NamedMinMax '%s'[%s] min:%.0f max:%.0f", this->getNameC(), rs.c_str(), this->min[rs], this->max[rs]);
-	}
+			if(this->empty[rs] || it == this->empty.end()){
+				this->empty[rs] = false;
+				this->nbre[rs] = 1;
+				this->min[rs] = this->max[rs] = this->sum[rs] = val; 
+			} else {
+				if(val < this->min[rs])
+					this->min[rs] = val;
+				if(val > this->max[rs])
+					this->max[rs] = val;
+
+				this->sum[rs] += val;
+				this->nbre[rs]++;
+			}
+
+			if(debug)
+				SelLog->Log('T', "NamedMinMax '%s'[%s] min:%.0f max:%.0f", this->getNameC(), rs.c_str(), this->min[rs], this->max[rs]);
+		} else
+			SelLog->Log('E', "[NamedMinMax '%s'] can't find MAJORDOME_PAYLOAD variable", this->getNameC());
+	} else
+		SelLog->Log('D', "[NamedMinMax '%s'] Data rejected", this->getNameC());
+
+	lua_close(L);
 
 	return r;
 }
@@ -165,11 +162,11 @@ static int mmm_find(lua_State *L){
 	const char *name = luaL_checkstring(L, 1);
 
 	try {
-		class NamedMinMax &mm = config.NamedMinMaxList.at( name );
+		class NamedMinMax *mm = config.NamedMinMaxList.at( name );
 		class NamedMinMax **minmax = (class NamedMinMax **)lua_newuserdata(L, sizeof(class NamedMinMax *));
 		assert(minmax);
 
-		*minmax = &mm;
+		*minmax = mm;
 		luaL_getmetatable(L, "MajordomeNamedMinMax");
 		lua_setmetatable(L, -2);
 
@@ -292,7 +289,7 @@ static const struct luaL_Reg MajNamedMinMaxM [] = {
 	{NULL, NULL}
 };
 
-void NamedMinMax::initLuaObject( lua_State *L ){
+void NamedMinMax::initLuaInterface( lua_State *L ){
 	SelLua->objFuncs( L, "MajordomeNamedMinMax", MajNamedMinMaxM );
 	SelLua->libCreateOrAddFuncs( L, "MajordomeNamedMinMax", MajNamedMinMaxLib );
 }

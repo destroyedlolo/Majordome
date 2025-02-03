@@ -7,19 +7,16 @@
 
 #include <vector>
 
+#include "Handler.h"
 #include "Object.h"
-#include "StringVector.h"
-#include "LuaTask.h"
+#include "ObjCollection.h"
+#include "Tracker.h"
 
-class Config;
+class Event : virtual public Object, public std::vector<Handler *> {
+	// The vector contains the collection of handler to launch
 
-class Event : virtual public Object, public StringVector {
-	// The StringVector contains the lists of LuaTasks to launch
-
-protected:
-	/* Default empty constructor to be only used by derived classes 
-	 */
-Event() = default;
+	TrackerVector trackersToEnable;
+	TrackerVector trackersToDisable;
 
 public:
 	/* Constructor from a file
@@ -28,39 +25,25 @@ public:
 	 * <- name : this object's name
 	 */
 	Event( const std::string &file, std::string &where, std::string &name  );
+	Event(){};
 
+	void addHandler( Handler *h ){ this->push_back(h); }
 
-	void addTask( std::string t ){ this->Add(t); }
-
-	/* launch tasks associated to this event (topic or tracker)
-	 * -> name of the object that triggers the task
-	 * -> topic : the one that triggers the task
-	 * -> payload
-	 * -> tracker : true if it's a tracker
-	 * -> trkstatus : status of the tracker
+	/* Handlers execution
+	 * (runs sequentially)
 	 */
-	void execTasks( Config &, const char *name, const char *topic, const char *payload, bool tracker=false, const char *trkstatus=NULL );
+	void execHandlers(void);		// fresh State but in the same thread
+	void execHandlers(lua_State *);	// same thread, same State
 
-	/* launch tasks associated to this event (timer)
-	 * -> name of the object that triggers the task
-	 */
-	void execTasks( Config &, const char *name );
-
-private:
-	StringVector trackersToEnable;	// Trackers to be enable by this event
-	StringVector trackersToDisable;	// Trackers to be disabled by this event
-
-public:
-	/* Add a tracker to Enable or Disable list */
-	void addTrackerEN( std::string t ){ this->trackersToEnable.Add(t); }
-	void addTrackerDIS( std::string t ){ this->trackersToDisable.Add(t); }
-
-	/* Enable/Disable trackers from lists */
-	void enableTrackers( void );
-	void disableTrackers( void );
+	/* Trackers */
+	void addTrackerEN( Tracker *t ){ this->trackersToEnable.Add(t); }
+	void addTrackerDIS( Tracker *t ){ this->trackersToDisable.Add(t); }
 
 	/* Create Lua's object */
-	static void initLuaObject( lua_State *L );
+	static void initLuaInterface(lua_State *L);
 };
+
+typedef ObjCollection<Event *> EventCollection;
+typedef ObjVector<Event *> EventVector;
 
 #endif

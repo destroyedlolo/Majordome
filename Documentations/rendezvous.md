@@ -4,30 +4,39 @@ Typical usage is to synchronize automation within Majordome without having to us
 
 ## Directives
 
-### name=
+> [!IMPORTANT]  
+> As of v6.0 onward, The syntax has changed for **Rendezvous** and is not any more compatible with previous versions.
+
+### General directives
+#### -->> name=
 Unique name to identify the rendez-vous. If not set, uses the filename.
 ```
-name=toto
+-->> name=Toto
 ```
+#### --> quiet
+Removes some trace.
 
-### quiet
-Remove some trace. This option is useful to avoid logging of very noisy topics.
-
-### disabled
-This topic starts as disabled : incoming messages are ignored.
+#### -->> disabled
+This rendez-vous will not trigger any handler.
 
 ## Example
 File **test.rendezvous**
 ```
-# name of the topic
-# Here, commented out, so we take the filename, "test"
-# name=
-
-# Don't log incomming messages on this topic
-#quiet
-
-# disable this topic
-#disabled
+-- Example of a "Rendez-vous"
+-- 
+-- Directives starting with a '-->>' are took in account.
+-- Ones with a '--->>' are commented out
+--
+-- name of the event
+-- if not set, takes the filename
+--->> name=toto
+--
+-- remove some trace
+-- This option is useful to avoid logging of very noisy topics
+--->> quiet
+--
+-- disable this event
+--->> disabled
 ```
 
 File **trigger.lua**

@@ -1,4 +1,4 @@
-/* MinMax object
+/* NamedMinMax object
  *
  * 27/10/2024 Creation
  */
@@ -6,19 +6,22 @@
 #ifndef NMINMAX_H
 #define NMINMAX_H
 
-#include "Event.h"
-#include "LuaExec.h"
-#include "MinMax.h"
+#include "Handler.h"
+#include "ObjCollection.h"
 
 #include <unordered_map>
 #include <math.h>
 
-class NamedMinMax : public Event, public LuaExec {
+class NamedMinMax : public Handler {
 public:	// Made public only to let Lua enumerates
 	std::unordered_map<std::string, bool> empty;		// No value yet
 	std::unordered_map<std::string, lua_Number> min,max;
 	std::unordered_map<std::string, size_t> nbre;	// Number of handled values
 	std::unordered_map<std::string, lua_Number> sum;
+
+private:
+	virtual void readConfigDirective( std::string &l, std::string &name, bool &nameused );
+	virtual void feedState(lua_State *L);
 
 public:
 	/* Constructor from a file
@@ -29,15 +32,8 @@ public:
 	 */
 	NamedMinMax( const std::string &file, std::string &where, std::string &name, lua_State *L );
 
-	/* Launch lua script if applicable
-	 * -> name : name of the topic/timer that triggers this task
-	 * -> topic : the topic itself
-	 * <- true if it has been launched, false otherwise
-	 */
-	bool exec( const char *name, const char *topic=NULL, const char *payload=NULL );
-
-		/* Create Lua's object */
-	static void initLuaObject( lua_State *L );
+		/* Executable */
+	virtual bool execAsync(lua_State *L);	// Overloading to handle MinMax data feeding
 
 		/* Accessor */
 	lua_Number getMin(const char *n){ return(this->empty[n] ? 0 : this->min[n]); }
@@ -49,9 +45,9 @@ public:
 	bool isEmpty(const char *n){ return this->empty[n]; }
 	void Clear(const char *n){ this->empty[n] = true; }
 
-	/* Overloading of LuaExec's in order to initialise Myself object */
-	virtual void feedState( lua_State *L, const char *name, const char *topic=NULL, const char *payload=NULL, bool tracker=false, const char *trkstatus=NULL );
-
+	/* Create Lua's object */
+	static void initLuaInterface( lua_State *L );
 };
 
+typedef ObjCollection<NamedMinMax *> NamedMinMaxCollection;
 #endif

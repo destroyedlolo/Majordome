@@ -1,0 +1,8 @@
+-- Test shutdown API
+--
+-- Just to test
+-->> need_shutdown=bye
+
+print("")
+print("Bye status", bye:isEnabled())
+print("")

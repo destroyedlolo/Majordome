@@ -1,56 +1,36 @@
-/* Configuration handling
+/* Application configuration handling
  *
  * 26/07/2018 - LF - First version
  * 27/07/2018 - LF - handle all Configuration aspects
  * 20/05/2024 - LF - Migrate to v4
+ * 20/01/2025 - LF - Migrate to v6
  */
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#include <unordered_map>
-#include <string>
-
-#include <lua.hpp>	/* Lua's state needed */
-
 #include "SortDir.h"
 
+#include "ObjCollection.h"
 #include "LuaTask.h"
 #include "Event.h"
-#include "Timer.h"
 #include "MQTTTopic.h"
-#include "Tracker.h"
+#include "Timer.h"
 #include "MinMax.h"
 #include "NamedMinMax.h"
+#include "Tracker.h"
+#include "Shutdown.h"
 
-class Config : virtual public SortDir {
+#include <lua.hpp>	/* Lua's state needed */
+#include <string>
+
+class Config : public SortDir { 
 	std::string configDir;
 
 protected :
 	virtual bool accept( const char *, std::string & );
 
 public:
-		/* Objects collections */
-	typedef std::unordered_map<std::string, Event> EventElements;
-	EventElements EventsList;
-
-	typedef std::unordered_map<std::string, LuaTask> TaskElements;
-	TaskElements TasksList;
 	
-	typedef std::unordered_map<std::string, Timer> TimerElements;
-	TimerElements TimersList;
-
-	typedef std::unordered_map<std::string, MQTTTopic> TopicElements;
-	TopicElements TopicsList;
-
-	typedef std::unordered_map<std::string, Tracker> TrackerElements;
-	TrackerElements TrackersList;
-
-	typedef std::unordered_map<std::string, MinMax> MinMaxElements;
-	MinMaxElements MinMaxList;
-
-	typedef std::unordered_map<std::string, NamedMinMax> NamedMinMaxElements;
-	NamedMinMaxElements NamedMinMaxList;
-
 	/* Initialise this configuration against 'where' directory's content */
 	void init(std::string &where, lua_State *L);
 
@@ -59,27 +39,29 @@ public:
 	 */
 	void SanityChecks( void );
 
-	/* Subscribe to defined MQTT topics */
-	void SubscribeTopics( void );
+		/* Accessors */
+	std::string getConfigDir(){ return this->configDir; };
 
-	/* Launch timer slave threads */
-	void LaunchTimers( void );
+		/* Objects collections */
+	TaskCollection TasksList;
+	EventCollection EventsList;
+	TopicCollection TopicsList;
+	TimerCollection TimersList;
+	MinMaxCollection MinMaxList;
+	NamedMinMaxCollection NamedMinMaxList;
+	TrackerCollection TrackersList;
+	ShutdownCollection ShutdownsList;
 
-	/* Triggers immediate & over timers */
-	void RunImmediates( void );
+		/* Topics' */
+	void SubscribeTopics( void );	// Subscribe to defined MQTT topics
 
-		/* Run startup functions */
-	void RunStartups( void );
+		/* Timers' */
+	void LaunchTimers( void );	// Launch slaves' threads
+	void RunImmediates( void );	// Triggers immediate & over timers
 
-	/* Find a task/tracker by its name 
-	 *	throw an exception if not found
-	 */
-	LuaTask &findTask( std::string & );
-	Tracker &findTracker( std::string & );
-	MinMax &findMinMax( std::string & );
-	NamedMinMax &findNamedMinMax( std::string & );
-
-	std::string getConfigDir(){ return this->configDir; }
+		/* Execution */
+	void RunStartups( void );	// Executes RunAtStartup marked tasks
+	void RunShutdowns( void );
 };
 
 extern Config config;
