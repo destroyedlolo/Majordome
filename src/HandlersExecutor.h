@@ -6,6 +6,7 @@
 
 #include "Object.h"
 #include "Handler.h"
+#include "Helpers.h"
 
 class HandlersExecutor : virtual public Object, public std::vector<Handler *> {
 public :
@@ -13,6 +14,8 @@ public :
 	 * (runs sequentially)
 	 */
 	void execHandlers(void);		// fresh State but in the same thread
+
+	virtual void feedHandlersStat(lua_State *L) {};	// Add custom object in Lua state
 };
 
 #endif

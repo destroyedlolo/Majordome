@@ -8,15 +8,16 @@
 
 #include "MayBeEmptyString.h"
 #include "Handler.h"
+#include "HandlersExecutor.h"
 #include "ObjCollection.h"
 #include "LuaTask.h"
 
-class Tracker : public Handler {
+class Tracker : public Handler, virtual public HandlersExecutor {	// HandlersExecutor contains tasks to launch when tracker changes to DONE
+
 
 		/* notifications */
 	TaskVector startingTasks;	// Tasks to launch when starting the tracker
 	TaskVector stoppingTasks;	// Tasks to launch when stopping the tracker
-	TaskVector doneTasks;		// Tasks to launch when the tracker's DONE
 	TaskVector changingTasks;	// Tasks to launch when the tracker's status is changing
 
 	void readConfigDirective( std::string &l, std::string &name, bool &nameused );
@@ -62,7 +63,7 @@ public:
 	void stop( void );
 	void done( void );
 
-	void addDone( LuaTask *t ){ this->doneTasks.Add(t); }
+	void addDone( LuaTask *t ){ this->push_back(t); }
 	void addStarted( LuaTask *t ){ this->startingTasks.Add(t); }
 	void addStopped( LuaTask *t ){ this->stoppingTasks.Add(t); }
 	void addChanged( LuaTask *t ){ this->changingTasks.Add(t); }
