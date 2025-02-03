@@ -192,7 +192,6 @@ void Tracker::done( void ){
 	}
 }
 
-
 void Tracker::feedState(lua_State *L){
 	try {
 		class Tracker *tsk = config.TrackersList.at( this->getNameC() );
@@ -209,4 +208,11 @@ void Tracker::feedState(lua_State *L){
 	}
 }
 
+void Tracker::feedHandlersState(lua_State *L){
+	lua_pushstring( L, this->getNameC() );	// Push the name
+	lua_setglobal( L, "MAJORDOME_TRACKER" );
+
+	lua_pushstring( L, this->getStatusC() );	// Push the name
+	lua_setglobal( L, "MAJORDOME_TRACKER_STATUS" );
+}
 
