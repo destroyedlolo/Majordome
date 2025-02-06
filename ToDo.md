@@ -18,6 +18,12 @@
 
 ### DRM
 
+--- Improvement
+
+needs : checking will not work if at same level (or lower).
+	- remove existance checking in LuaExec
+	- add checking in Config::SanityChecks
+
 --- doc missing
 
 LuaTask Once

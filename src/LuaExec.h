@@ -33,11 +33,9 @@ public:
 	StringVector needed_minmax;
 	StringVector needed_namedminmax;
 	StringVector needed_shutdown;
-#if 0	/* TODO */
 	StringVector needed_tracker;
 #ifdef TOILE
 	StringVector needed_renderer;
-#endif
 #endif
 
 protected:
@@ -49,12 +47,9 @@ protected:
 	void addNeededMinMax( std::string t ){ this->needed_minmax.Add(t); }
 	void addNeededNamedMinMax( std::string t ){ this->needed_namedminmax.Add(t); }
 	void addNeededShutdown( std::string t ){ this->needed_shutdown.Add(t); }
-#if 0	/* TODO */
 	void addNeededTracker( std::string t ){ this->needed_tracker.Add(t); }
-
 #ifdef TOILE
 	void addNeededRenderer( std::string t ){ this->needed_renderer.Add(t); }
-#endif
 #endif
 
 	virtual void readConfigDirective( std::string &l, std::string &name, bool &nameused );
