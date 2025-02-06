@@ -1,7 +1,7 @@
 # Milestones
 
 ## General
-- [ ] Ensure inherance
+- [X] Ensure inherance
 
 ## Devices
 ### LCD
