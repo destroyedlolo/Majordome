@@ -97,8 +97,6 @@ void Config::SanityChecks( void ){
 			}
 		}
 	}
-
-/* TODO trackerlist */
 }
 
 void Config::SubscribeTopics( void ){
