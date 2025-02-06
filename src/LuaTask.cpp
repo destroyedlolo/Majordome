@@ -65,6 +65,10 @@ void LuaTask::readConfigDirective( std::string &l, std::string &name, bool &name
 		if(verbose)
 			SelLog->Log('C', "\t\tRun at startup");
 		this->setRunAtStartup( true );
+	} else if( l == "-->> once" ){
+		if(verbose)
+			SelLog->Log('C', "\t\tOnly one instance is allowed to run (once)");
+		this->setOnce( true );
 	} else if( !!(arg = striKWcmp( l, "-->> listen=" ))){
 		TopicCollection::iterator topic;
 		if( (topic = config.TopicsList.find(arg)) != config.TopicsList.end()){
