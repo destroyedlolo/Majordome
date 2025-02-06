@@ -109,6 +109,17 @@ void LuaExec::readConfigDirective( std::string &l, std::string &name, bool &name
 			SelLog->Log('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
+	} else if(!!(arg = striKWcmp( l, "-->> need_tracker=" ))){
+		TrackerCollection::iterator trk;
+		if( (trk = config.TrackersList.find(arg)) != config.TrackersList.end()){
+			if(verbose)
+				SelLog->Log('C', "\t\tAdded needed TrackersList '%s'", arg.c_str());
+			this->addNeededTracker(arg);
+			return;
+		} else {
+			SelLog->Log('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
 	} else if(!!(arg = striKWcmp( l, "-->> need_minmax=" ))){
 		MinMaxCollection::iterator minmax;
 		if( (minmax = config.MinMaxList.find(arg)) != config.MinMaxList.end()){
@@ -241,6 +252,22 @@ bool LuaExec::feedbyNeeded( lua_State *L, bool require ){
 
 			*timer = tmr;
 			luaL_getmetatable(L, "MajordomeTimer");
+			lua_setmetatable(L, -2);
+
+			lua_setglobal(L, i.c_str());
+		} catch( std::out_of_range &e ){	// Not found 
+			return false;
+		}
+	}
+
+	for(auto &i : this->needed_tracker){
+		try {
+			class Tracker *trk = config.TrackersList.at( i );
+			class Tracker **tracker = (class Tracker **)lua_newuserdata(L, sizeof(class Tracker *));
+			assert(tracker);
+
+			*tracker = trk;
+			luaL_getmetatable(L, "MajordomeTracker");
 			lua_setmetatable(L, -2);
 
 			lua_setglobal(L, i.c_str());
