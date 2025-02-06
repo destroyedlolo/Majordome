@@ -185,7 +185,8 @@ void Timer::execHandlers(void){
 	for(auto &i : this->startTrackers)
 		i->start();
 
-	/* TODO start/stop */
+	for(auto &i : this->stopTrackers)
+		i->stop();
 }
 
 void Timer::feedHandlersState(lua_State *L){
