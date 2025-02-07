@@ -221,9 +221,8 @@ static int msgarrived(void *actx, char *topic, int tlen, MQTTClient_message *msg
 					} else
 						SelSharedVar->setString( i.second->getNameC(), cpayload, i.second->getTTL() );
 				}
+				i.second->execHandlers(*i.second, topic, cpayload);
 			}
-
-			i.second->execHandlers(*i.second, topic, cpayload);
 		}
 	}
 
