@@ -21,4 +21,4 @@ for file in lfs.dir("/tmp") do
 	end
 end
 
-SelLog.log('I', nbre_del .. " log file" .. ((nbre_del > 1) and 's' or '') .. " deleted / ".. nbre_kept .." kept")
+SelLog.Log('I', nbre_del .. " log file" .. ((nbre_del > 1) and 's' or '') .. " deleted / ".. nbre_kept .." kept")
