@@ -102,7 +102,7 @@ end
 local t15s = MajordomeTimer.find("15s")
 local t25s = MajordomeTimer.find("25s")
 if not t15s or not t25s then
-	SelLog.log('E',"Can't find '15s' or '25s' timer")
+	SelLog.Log('E',"Can't find '15s' or '25s' timer")
 	return
 end
 ```

@@ -69,6 +69,8 @@ public:
 	void addStopped( LuaTask *t ){ this->stoppingTasks.Add(t); }
 	void addChanged( LuaTask *t ){ this->changingTasks.Add(t); }
 
+	/* Create Lua's object */
+	static void initLuaInterface( lua_State *L );
 };
 
 typedef ObjCollection<Tracker *> TrackerCollection;

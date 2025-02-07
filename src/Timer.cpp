@@ -180,13 +180,15 @@ bool Timer::isOver( void ){
 }
 
 void Timer::execHandlers(void){
-	this->HandlersExecutor::execHandlers();	// Execute slaves' handlers
+	if(this->isEnabled()){
+		this->HandlersExecutor::execHandlers();	// Execute slaves' handlers
 
-	for(auto &i : this->startTrackers)
-		i->start();
+		for(auto &i : this->startTrackers)
+			i->start();
 
-	for(auto &i : this->stopTrackers)
-		i->stop();
+		for(auto &i : this->stopTrackers)
+			i->stop();
+	}
 }
 
 void Timer::feedHandlersState(lua_State *L){

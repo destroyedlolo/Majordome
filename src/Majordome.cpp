@@ -401,6 +401,7 @@ int main(int ac, char **av){
 	SelLua->AddStartupFunc(MQTTTopic::initLuaInterface);
 	SelLua->AddStartupFunc(Timer::initLuaInterface);
 	SelLua->AddStartupFunc(Timer::initLuaInterface);
+	SelLua->AddStartupFunc(Tracker::initLuaInterface);
 	SelLua->AddStartupFunc(MinMax::initLuaInterface);
 	SelLua->AddStartupFunc(NamedMinMax::initLuaInterface);
 	SelLua->AddStartupFunc(Shutdown::initLuaInterface);
