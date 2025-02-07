@@ -152,7 +152,10 @@ void Tracker::publishstatus( void ){
 }
 
 void Tracker::notifyChanged( void ){
-	/* TODO */
+	if( this->isEnabled() ){
+		for(auto &t : this->changingTasks)	// Execute attached starting tasks
+			t->exec(this);
+	}
 }
 
 void Tracker::start( void ){
