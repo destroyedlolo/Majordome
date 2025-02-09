@@ -59,6 +59,9 @@ The tracker will start in **CHECKING** mode
 
 ### Timer to start/stop the tracker
 
+> [!TIP]
+> Trackers can be enabled/disable by [rendezvous](rendezvous.md).
+
 #### -->> start=
 Timer indicating when the tracker will switch to **CHECKING** mode
 
