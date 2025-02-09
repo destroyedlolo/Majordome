@@ -131,6 +131,7 @@ Create corresponding object (Only Toile plug-in has been compiled).
 ### Exposed variables
 #### Majordom's variables
 Following variables are created :
+
 - **MAJORDOME_VERSION** and **MAJORDOME_COPYRIGHT** as the name said
 - **MAJORDOME_CONFIGURATION_DIRECTORY**, the root of the configuration directory
 - **MAJORDOME_ClientID**, MQTT client identifier that must be unique for a single broker.
