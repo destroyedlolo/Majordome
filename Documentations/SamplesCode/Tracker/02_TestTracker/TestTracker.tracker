@@ -52,6 +52,8 @@
 print("I'm the TestTracker code", MAJORDOME_TRACKER, MAJORDOME_TOPIC, MAJORDOME_PAYLOAD)
 print("My status is :", MAJORDOME_Myself:getStatus() )
 
+--[[
 if tonumber(MAJORDOME_PAYLOAD) > 10 then
 	MAJORDOME_Myself:setStatus("DONE")
 end
+]]

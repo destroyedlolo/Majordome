@@ -1,147 +1,96 @@
+#include "Event.h"
+#include "Config.h"
+#include "Helpers.h"
+
 #include <iostream>
 #include <fstream>
+
 #include <cstring>
 #include <cassert>
 
-extern "C" {
-    #include "lualib.h"
-    #include "lauxlib.h"
-};
-
-#include "Selene.h"
-#include "Helpers.h"
-#include "Event.h"
-#include "Config.h"
-
-Event::Event( const std::string &fch, std::string &where, std::string &name ){
-	this->extrName( fch, name );
-	this->name = name;
-	this->where = where;
+Event::Event(const std::string &fch, std::string &where, std::string &name) :
+	Object(fch, where, name){
 
 	/*
 	 * Reading file's content
 	 */
-	if(verbose)
-		SelLog->Log('L', "\t'%s'", fch.c_str());
 
+	std::stringstream buffer;
 	std::ifstream file;
-	file.exceptions ( std::ios::eofbit | std::ios::failbit ); // No need to check failbit
+	file.exceptions ( std::ios::eofbit | std::ios::failbit );
 	try {
-		std::string l;
+		std::ifstream file(fch);
+		std::streampos pos;
 
-		file.open(fch);
-		while( std::getline( file, l) ){
-			MayBeEmptyString arg;
+		bool nameused = false;	// if so, the name can't be changed anymore
 
-			if( !!(arg = striKWcmp( l, "name=" )) ){
-				this->name = name = arg;
-				if(verbose)
-					SelLog->Log('C', "\t\tChanging name to '%s'", name.c_str());
-			} else if( l == "quiet" ){
-				if(verbose)
-					SelLog->Log('C', "\t\tBe quiet");
-			} else if( l == "disabled" ){
-				if(verbose)
-					SelLog->Log('C', "\t\tDisabled");
-				this->disable();
+		/*
+		 * Reading header (Majordome's commands)
+		 */
+
+		do {
+			std::string l;
+			pos = file.tellg();
+
+			std::getline( file, l);
+			if( l.compare(0, 2, "--") ){	// End of comments
+				file.seekg( pos );
+				break;
 			}
-#if 0
-else SelLog->Log('D', "Ignore '%s'", l.c_str());
-#endif
-		}
+
+			this->readConfigDirective(l, name, nameused);
+		} while(true);
+
+		file.close();
 	} catch(const std::ifstream::failure &e){
 		if(!file.eof()){
 			SelLog->Log('F', "%s : %s", fch.c_str(), strerror(errno) );
 			exit(EXIT_FAILURE);
 		}
-	} catch(const std::invalid_argument &e){
-		SelLog->Log('F', "%s : invalid argument", fch.c_str() );
-		exit(EXIT_FAILURE);
 	}
-
-	file.close();
 }
 
-void Event::execTasks( Config &cfg, const char *trig_name, const char *topic, const char *payload, bool tracker, const char *trkstatus ){
+
+void Event::execHandlers(lua_State *L){
+	if(this->isEnabled()){
 #ifdef DEBUG
-	if(debug && !this->isQuiet())
-		SelLog->Log('D', "execTasks(topic) : %d to run", this->list.size());
+		if(debug && !this->isQuiet())
+			SelLog->Log('D', "[%s] Handlers called", this->getNameC());
 #endif
 
-	for(Entries::iterator tsk = this->begin(); tsk != this->end(); tsk++){
-		try {
-			LuaTask &task = cfg.findTask( *tsk );
-			if( this->isQuiet() )
-				task.beQuiet();
-			task.exec( trig_name, topic, payload, tracker, trkstatus );
-		} catch (...) {
-			SelLog->Log('F', "Internal error : can't find task \"%s\"", (*tsk).c_str() );
-			exit(EXIT_FAILURE);
-		}
-	}
-}
+		for(auto &i : *this)
+			i->exec(L);
 
-void Event::execTasks( Config &cfg, const char *timer_name ){
 #ifdef DEBUG
-	if(debug && !this->isQuiet())
-		SelLog->Log('D', "execTasks(timer) : %d to run", this->list.size());
-#endif
-
-	for( Entries::iterator tsk = this->begin(); tsk != this->end(); tsk++){
-		try {
-			LuaTask &task = cfg.findTask( *tsk );
-			if( this->isQuiet() )
-				task.beQuiet();
-			task.exec( timer_name );
-		} catch (...) {
-			SelLog->Log('F', "Internal error : can't find task \"%s\"", (*tsk).c_str());
-			exit(EXIT_FAILURE);
-		}
+	} else if( debug ){
+		SelLog->Log('D', "Event %s is disabled : no tasks launched", this->getNameC());
 	}
+#endif
 }
-
 
 void Event::enableTrackers( void ){
 #ifdef DEBUG
 	if(debug && !this->isQuiet())
-		SelLog->Log('D', "enableTrackers() : %d to enable", this->trackersToEnable.size());
+		SelLog->Log('D', "[%s] %d traker(s) to enable", this->getNameC(), this->trackersToEnable.size());
 #endif
 
-	for(Tracker::iterator trk = this->trackersToEnable.begin(); trk != this->trackersToEnable.end(); trk++){
-		try {
-			Tracker &tracker = config.findTracker( *trk );
-			if( this->isQuiet() )
-				tracker.beQuiet();
-			tracker.enable();
-		} catch (...) {
-			SelLog->Log('F', "Internal error : can't find tracker \"%s\"", (*trk).c_str());
-			exit(EXIT_FAILURE);
-		}		
-	}
+	for(auto &i : this->trackersToEnable)
+		i->enable();
 }
 
 void Event::disableTrackers( void ){
 #ifdef DEBUG
 	if(debug && !this->isQuiet())
-		SelLog->Log('D', "disableTrackers() : %d to disable", this->trackersToDisable.size());
+		SelLog->Log('D', "[%s] %d traker(s) to disable", this->getNameC(), this->trackersToDisable.size());
 #endif
 
-	for(Tracker::iterator trk = this->trackersToDisable.begin(); trk != this->trackersToDisable.end(); trk++){
-		try {
-			Tracker &tracker = config.findTracker( *trk );
-			if( this->isQuiet() )
-				tracker.beQuiet();
-			tracker.disable();
-		} catch (...) {
-			SelLog->Log('F', "Internal error : can't find tracker \"%s\"", (*trk).c_str());
-			exit(EXIT_FAILURE);
-		}		
-	}
+	for(auto &i : this->trackersToDisable)
+		i->disable();
 }
 
-	/*****
+	/* ****
 	 * Lua exposed functions
-	 *****/
+	 * ****/
 static class Event *checkMajordomeEvent(lua_State *L){
 	class Event **r = (class Event **)SelLua->testudata(L, 1, "MajordomeRendezVous");
 	luaL_argcheck(L, r != NULL, 1, "'MajordomeRendezVous' expected");
@@ -157,11 +106,11 @@ static int mevt_find(lua_State *L){
 	bool tofail =  lua_toboolean(L, 2);
 
 	try {
-		class Event &evt = config.EventsList.at( name );
+		class Event *evt = config.EventsList.at( name );
 		class Event **event = (class Event **)lua_newuserdata(L, sizeof(class Event *));
 		assert(event);
 
-		*event = &evt;
+		*event = evt;
 		luaL_getmetatable(L, "MajordomeRendezVous");
 		lua_setmetatable(L, -2);
 
@@ -181,15 +130,12 @@ static const struct luaL_Reg MajEventLib [] = {
 static int mevt_Launch( lua_State *L ){
 	class Event *event = checkMajordomeEvent(L);
 
-	if( event->isEnabled() ){
-		event->execTasks(config, event->getNameC(), NULL, "fake");
+	if(event->isEnabled()){
+		event->execHandlers(L);
 		event->enableTrackers();
 		event->disableTrackers();
-#ifdef DEBUG
-	} else if( debug ){
-		SelLog->Log('D', "Event %s is disabled : no tasks launched", event->getNameC());
-#endif
 	}
+		
 	return 0;
 }
 
@@ -233,7 +179,7 @@ static const struct luaL_Reg MajEventM [] = {
 	{NULL, NULL}
 };
 
-void Event::initLuaObject( lua_State *L ){
+void Event::initLuaInterface( lua_State *L ){
 	SelLua->objFuncs( L, "MajordomeRendezVous", MajEventM );
 	SelLua->libCreateOrAddFuncs( L, "MajordomeRendezVous", MajEventLib );
 }

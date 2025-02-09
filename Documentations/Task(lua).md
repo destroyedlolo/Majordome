@@ -17,14 +17,15 @@ Unique name to identify the topic. If not set, uses the filename.
 ```
 -->> name=Toto
 ```
-#### -->> once
-Only one instance is allowed to run at the same time : no concurrency.
-
 #### --> quiet
 Removes some trace.
 
 #### -->> disabled
 This script won't run.
+
+### Task's
+#### -->> once
+Only one instance is allowed to run at the same time : no concurrency.
 
 ### Triggering
 Following directives determine what will trigger this script.<br>
@@ -32,6 +33,9 @@ Multiple directives may be present, including those of the same kind.
 
 #### -->> RunAtStartup
 Run when Majordome starts.
+> [!IMPORTANT]  
+> Startup tasks run **before** any other actions, i.e., before topics are subscribed, timers started, ...
+> On the other hand, [**Timer**](timer.md)'s immediate functions are launched after everything is configured.
 
 #### -->> listen=
 Indicates [**MQTT topic**](topic.md) to listen to : this script will be launched when a data
@@ -85,33 +89,60 @@ The script is launched when a [**tracker**](tracker.md) status is changed.
 ```
 ### Dependancies
 Tasks usually depends on Majordome's objects ; those directives expose them at Lua level without having to manually `find()` them.
+> [!TIP]
+> With V6 and below, needed may fail while looking for same priority objects (i.e : if a **tracker** needs a **minmax** ...). In such case, use the *old way* by using find() function.
+> Here an example :
+```lua
+local tracker = MajordomeTracker.find("TestTracker")
+if not tracker then
+	print("Can't find ".. '"TestTracker"')
+	return
+end
+
+local t15s = MajordomeTimer.find("15s")
+local t25s = MajordomeTimer.find("25s")
+if not t15s or not t25s then
+	SelLog.Log('E',"Can't find '15s' or '25s' timer")
+	return
+end
+```
+
+#### Topics
 
 > [!WARNING]
 > Only `store`d topic can be  needed or required.
 
-#### -->> need_topic=
+##### -->> need_topic=
 Creates an object if a value has been received and its value hasn't expired. Otherwise, the object remains unset.
 
-#### -->> require_topic=
+##### -->> require_topic=
 Prevents the script to be launched if corresponding value is not valid.<br>
 
-#### -->> need_rendezvous=, -->> need_tracker=, -->> need_timer=, -->> need_task=
+#### Others
+##### -->> need_rendezvous=, -->> need_tracker=, -->> need_timer=, -->> need_task=, -->> need_minmax, -->> need_namedminmax, -->> need_shutdown
 Create corresponding object.
+
+#### With Toile extension
+##### -->> need_renderer
+Create corresponding object (Only Toile plug-in has been compiled).
 
 ## at Lua side
 
 ### Exposed variables
-As described above, following variables are subject to be created :
-- **MAJORDOME_TOPIC_NAME**, **MAJORDOME_TOPIC** and **MAJORDOME_PAYLOAD** if the task is launched by an MQTT topic.
-- **MAJORDOME_TIMER** if the task is launched by a timer
-- **MAJORDOME_TRACKER** and  **MAJORDOME_TRACKER_STATUS** if the task is launched by a  tracker.
-
-Following variables are also created :
-- **MAJORDOME_Myself** is automatically created and correspond to the current tracker
+#### Majordom's variables
+Following variables are created :
 - **MAJORDOME_VERSION** and **MAJORDOME_COPYRIGHT** as the name said
 - **MAJORDOME_CONFIGURATION_DIRECTORY**, the root of the configuration directory
 - **MAJORDOME_ClientID**, MQTT client identifier that must be unique for a single broker.
 - **MAJORDOME_DEBUG**, set only if Majordome has been started with `-d` and, consequently, is in debugging mode.
+
+- **MAJORDOME_Myself** is automatically created and correspond to the current task
+
+#### Who launched this task ?
+Following variables are created depending who triggering this task
+- **MAJORDOME_TOPIC_NAME**, **MAJORDOME_TOPIC** and **MAJORDOME_PAYLOAD** if the task is launched by an [MQTT topic](topic.md).
+- **MAJORDOME_TIMER** : name of the triggering [timer](timer.md)
+- **MAJORDOME_TRACKER** and  **MAJORDOME_TRACKER_STATUS** if the task is launched by a  tracker.
 
 ### Exposed objects
 - **MQTTBroker**, the master broker as defined in the configuration file.

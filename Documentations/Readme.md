@@ -79,6 +79,7 @@ Supported are :
 - [Topic](tipic.md) (`.topic`) :  specifies MQTT topics. For incoming topic, the payload can be forced to be a numerical value and it can be stored as a SelShared variables with an optional expiration time (*time to live*, TTL). A *quality of service* (QoS) can be specified as well
 - [Rendez-vous](rendezvous.md) (`.rendezvous`) : allows triggering an action without having to use an MQTT topic.
 - [Tracker](tracker.md) (`.tracker`) : a simple but powerful state box to track some activities. Start an action at after an even, track its advancement, finishing it.
+- [MinMax](minmax.md) (`.minmax`) : A simple way to generate statistics on data collection : minimum, maximum, average, ... of data coming from a data source (like topic).
 - last but not least, [Tasks](Task(lua).md)  (`.lua`) are Lua script that are triggered by events described above. Processing data, storing them, decision-making, triggering other objects ... they are the brain of the automation.
 
 ## Lua scripting
@@ -89,6 +90,7 @@ Following variables are defined in launched scripts :
 - **MAJORDOME_VERSION**
 - **MAJORDOME_COPYRIGHT**
 - **MAJORDOME_ClientID** - MQTT Client identifier, must be unique per broker.
+- **MAJORDOME_VERBOSE** - declared if started with `-v` option, unset otherwise.
 - if compiled with DEBUG defined and if started with `-d` option, **MAJORDOME_DEBUG** is declared, otherwise, it is unset.
 
 As well as following objects :

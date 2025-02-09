@@ -8,12 +8,12 @@
 
 #include "MayBeEmptyString.h"
 #include "Event.h"
+#include "ObjCollection.h"
 
-class MQTTTopic : public Event {
-	// LuaTasks to launch are stored in the Event
+class MQTTTopic : virtual public Object, public Event {
+	bool alreadydefault;	// true if default has been already used
 
-public :
-	StringVector trackers;	// Trackers to launch at message arrival
+	void readConfigDirective( std::string &l, std::string &name, bool &nameused );
 
 protected:
 	MayBeEmptyString topic;	// Topic to look for
@@ -30,16 +30,15 @@ public:
 	 * <- name : this object's name
 	 */
 	MQTTTopic( const std::string &file, std::string &where, std::string &name  );
-
-	const char *getTopic( void ){ return this->topic.c_str(); };
+	
+		/* Accessors */
+	std::string &getTopic( void ){ return this->topic; };
+	const char *getTopicC( void ){ return this->topic.c_str(); };
 	unsigned int getQOS( void ){ return this->qos; };
 	bool hasWildcard( void ){ return this->wildcard; };
 	bool toBeStored( void ){ return this->store; };
 	bool isNumeric( void ){ return this->numeric; };
 	unsigned long int getTTL( void ){ return this->ttl; };
-
-	bool enable( void );
-	bool disable( void );
 
 	/* check if an incoming topic matches this one
 	 * -> intopic : incoming topic
@@ -47,13 +46,12 @@ public:
 	 */
 	bool match( const char *intopic );
 
-		/* Have a look on *Task() in Event.h for some documentation */
-	void addTracker( std::string t ){ this->trackers.Add(t); }
-	void execTrackers( Config &, const char *name, const char *topic, const char *payload );
-	void execTrackers( Config &, const char *name );
+	/* A message arrived */
+	void execHandlers(MQTTTopic &, const char *topic, const char *msg);
 
 	/* Create Lua's object */
-	static void initLuaObject( lua_State *L );
+	static void initLuaInterface( lua_State *L );
 };
 
+typedef ObjCollection<MQTTTopic *> TopicCollection;
 #endif

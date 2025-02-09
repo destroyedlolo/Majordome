@@ -1,11 +1,11 @@
 /* Helpers.c
  * 	Helper functions
  */
+#include "Helpers.h"
+
 #include <cstring>
 #include <cstdarg>
 #include <cstdio>
-
-#include "Helpers.h"
 
 char *removeLF(char *s){
 	size_t l=strlen(s);

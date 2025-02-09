@@ -8,27 +8,16 @@
 #ifndef SORTDIR_H
 #define SORTDIR_H
 
-#include <vector>
-#include <string>
+#include "StringVector.h"
 
-class SortDir {
-protected:
-	typedef std::vector<std::string> DirEntries;
-	DirEntries entries;
-
-public :
-	typedef DirEntries::iterator iterator;
-	typedef DirEntries::const_iterator const_iterator;
-	iterator begin() { return entries.begin(); }
-	iterator end() { return entries.end(); }
-	
+class SortDir : public StringVector {
 protected:
 		/* File acceptance :
 		 * -> fch : filename
 		 * -> full : full path of this file
 		 * <- boolean : accepted (true) or rejected (false)
 		 *
-		 * in this version, ignore everything starting by
+		 * Here, ignore everything starting by
 		 * a dot '.' and may be overload by derived classes
 		 */
 	virtual bool accept( const char *fch, std::string &full ){

@@ -1,6 +1,6 @@
 /* Majordome's version
  *
- * Copyright 2018-2022 Laurent Faillie
+ * Copyright 2018-2024 Laurent Faillie
  *
  * 		Majordome is covered by
  *		Creative Commons Attribution-NonCommercial 3.0 License
@@ -25,7 +25,14 @@
  *	09/12/2020 - v3.13 - LF - add getName()
  *		---
  *	12/05/2024 - v4.00 - LF - Migrate to SeleneV7
+ *	26/10/2024 - V4.01 - LF - Add MinMax
+ *	27/10/2024 - V4.02 - LF - Add NamedMinMax
+ *	29/10/2024 - V4.03 - LF - NamedMinMax's Lua can return a value
+ *		---
+ *	24/11/2024 - v5.00 - LF - Introduce Toile
+ *		It was only a PoC with bad programming habits.
+ *	20/01/2025 - v6.00 - LF - Code redesign
  */
 
-#define VERSION 4.0010
-#define COPYRIGHT "Majordome (c) L.Faillie 2018-2024"
+#define VERSION 6.0005
+#define COPYRIGHT "Majordome (c) L.Faillie 2018-2025"

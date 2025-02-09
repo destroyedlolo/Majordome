@@ -6,10 +6,20 @@
 #ifndef SUBCONFIGDIR_H
 #define SUBCONFIGDIR_H
 
-#include "Config.h"
 #include "SortDir.h"
 
-class SubConfigDir : virtual public SortDir {
+#include <lua.hpp>	/* Lua's state needed */
+#include <cstdint>
+
+class Config;
+
+class SubConfigDir : public SortDir {
+public :
+	struct extweight {
+		const char *const ext;
+		uint8_t weight;
+	};
+
 protected :
 	virtual bool accept( const char *, std::string & );
 

@@ -25,7 +25,7 @@ void SortDir::readdircontent( const char *where ){
 		full += p->d_name;
 
 		if( this->accept( p->d_name, full ) )
-			entries.push_back(  p->d_name );
+			this->Add( p->d_name );
 	}
 
 	closedir(dir);
@@ -34,7 +34,7 @@ void SortDir::readdircontent( const char *where ){
 }
 
 void SortDir::sort( void ){
-	std::sort(entries.begin(), entries.end(), 
+	std::sort(this->begin(), this->end(), 
 		[](std::string const &a, std::string const &b) -> bool {
 		    return a < b;
 		}

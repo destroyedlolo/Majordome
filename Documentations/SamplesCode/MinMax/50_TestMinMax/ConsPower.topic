@@ -1,0 +1,4 @@
+-- Retrieve electricity consumed for my home
+--
+-->> topic=TeleInfo/Consommation/values/PAPP
+--->> store

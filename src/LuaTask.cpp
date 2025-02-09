@@ -1,27 +1,14 @@
+#include "Config.h"
+#include "Helpers.h"
+#include "LuaTask.h"
+
 #include <iostream>
 #include <fstream>
 
 #include <cstring>
 #include <cassert>
 
-extern "C" {
-    #include "lualib.h"
-    #include "lauxlib.h"
-};
-
-#include "Config.h"
-#include "Helpers.h"
-#include "LuaTask.h"
-#include "Tracker.h"
-
-LuaTask::LuaTask( const std::string &fch, std::string &where, std::string &name, lua_State *L ) : once(false), running_access(PTHREAD_MUTEX_INITIALIZER), running(false), runatstartup(false){
-	if(verbose)
-		SelLog->Log('L', "\t'%s'", fch.c_str());
-
-	this->extrName( fch, name );
-	this->name = name;
-	this->where = where;
-
+LuaTask::LuaTask( const std::string &fch, std::string &where, std::string &name, lua_State *L ) : Object(fch, where, name), Handler(fch, where, name), once(false), running_access(PTHREAD_MUTEX_INITIALIZER), running(false), runatstartup(false){
 	/*
 	 * Reading file's content
 	 */
@@ -49,114 +36,7 @@ LuaTask::LuaTask( const std::string &fch, std::string &where, std::string &name,
 				break;
 			}
 
-			MayBeEmptyString arg;
-			if( !!(arg = striKWcmp( l, "-->> name=" ))){
-				if( nameused ){
-					SelLog->Log('F', "\t\tName can be changed only before listen, until or waitfor directives");
-					exit(EXIT_FAILURE);
-				}
-
-				this->name = name = arg;
-				if(verbose)
-					SelLog->Log('C', "\t\tChanging name to '%s'", name.c_str());
-			} else if( !!(arg = striKWcmp( l, "-->> listen=" ))){
-				Config::TopicElements::iterator topic;
-				if( (topic = config.TopicsList.find(arg)) != config.TopicsList.end()){
-					if(verbose)
-						SelLog->Log('C', "\t\tAdded to topic '%s'", arg.c_str());
-	 				topic->second.addTask( this->getName() );
-					nameused = true;
-				} else {
-					SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
-					exit(EXIT_FAILURE);
-				}
-			} else if( !!(arg = striKWcmp( l, "-->> when=" ))){
-				Config::TimerElements::iterator timer;
-				if( (timer = config.TimersList.find(arg)) != config.TimersList.end()){
-					if(verbose)
-						SelLog->Log('C', "\t\tAdded to timer '%s'", arg.c_str());
-	 				timer->second.addTask( this->getName() );
-					nameused = true;
-				} else {
-					SelLog->Log('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
-					exit(EXIT_FAILURE);
-				}
-			} else if( !!(arg = striKWcmp( l, "-->> waitfor=" ))){
-				Config::EventElements::iterator event;
-				if( (event = config.EventsList.find(arg)) != config.EventsList.end()){
-					if(verbose)
-						SelLog->Log('C', "\t\tAdded to rendezvous '%s'", arg.c_str());
-	 				event->second.addTask( this->getName() );
-					nameused = true;
-				} else {
-					SelLog->Log('F', "\t\tRendezvous '%s' is not (yet ?) defined", arg.c_str());
-					exit(EXIT_FAILURE);
-				}
-			} else if( !!(arg = striKWcmp( l, "-->> whenDone=" ))){
-				Config::TrackerElements::iterator tracker;
-				if( (tracker = config.TrackersList.find(arg)) != config.TrackersList.end()){
-					if(verbose)
-						SelLog->Log('C', "\t\tAdded to tracker '%s' as Done task", arg.c_str());
-	 				tracker->second.addDone( this->getName() );
-					nameused = true;
-				} else {
-					SelLog->Log('F', "\t\ttracker '%s' is not (yet ?) defined", arg.c_str());
-					exit(EXIT_FAILURE);
-				}
-			} else if( !!(arg = striKWcmp( l, "-->> whenStarted=" ))){
-				Config::TrackerElements::iterator tracker;
-				if( (tracker = config.TrackersList.find(arg)) != config.TrackersList.end()){
-					if(verbose)
-						SelLog->Log('C', "\t\tAdded to tracker '%s' as Started task", arg.c_str());
-	 				tracker->second.addStarted( this->getName() );
-					nameused = true;
-				} else {
-					SelLog->Log('F', "\t\ttracker '%s' is not (yet ?) defined", arg.c_str());
-					exit(EXIT_FAILURE);
-				}
-			} else if( !!(arg = striKWcmp( l, "-->> whenStopped=" ))){
-				Config::TrackerElements::iterator tracker;
-				if( (tracker = config.TrackersList.find(arg)) != config.TrackersList.end()){
-					if(verbose)
-						SelLog->Log('C', "\t\tAdded to tracker '%s' as Stopped task", arg.c_str());
-	 				tracker->second.addStopped( this->getName() );
-					nameused = true;
-				} else {
-					SelLog->Log('F', "\t\tracker '%s' is not (yet ?) defined", arg.c_str());
-					exit(EXIT_FAILURE);
-				}
-			} else if( !!(arg = striKWcmp( l, "-->> whenChanged=" ))){
-				Config::TrackerElements::iterator tracker;
-				if( (tracker = config.TrackersList.find(arg)) != config.TrackersList.end()){
-					if(verbose)
-						SelLog->Log('C', "\t\tAdded to tracker '%s' as Changed task", arg.c_str());
-	 				tracker->second.addChanged( this->getName() );
-					nameused = true;
-				} else {
-					SelLog->Log('F', "\t\ttracker '%s' is not (yet ?) defined", arg.c_str());
-					exit(EXIT_FAILURE);
-				}
-			} else if( l == "-->> once" ){
-				if(verbose)
-					SelLog->Log('C', "\t\tOnly one instance is allowed to run (once)");
-				this->setOnce( true );
-			} else if( l == "-->> RunAtStartup" ){
-				if(verbose)
-					SelLog->Log('C', "\t\tRun at startup");
-				this->setRunAtStartup( true );
-			} else if( l == "-->> quiet" ){
-				if(verbose)
-					SelLog->Log('C', "\t\tBe quiet");
-				this->beQuiet();
-			} else if( l == "-->> disabled" ){
-				if(verbose)
-					SelLog->Log('C', "\t\tDisabled");
-				this->disable();
-			} else if( LuaExec::readConfigDirective(l) )
-				nameused = true;
-#if 0
-else printf("Ignore '%s'\n", l.c_str());
-#endif
+			this->readConfigDirective(l, name, nameused);
 		} while(true);
 
 
@@ -178,57 +58,114 @@ else printf("Ignore '%s'\n", l.c_str());
 		exit(EXIT_FAILURE);
 }
 
-void LuaTask::feedState( lua_State *L, const char *name, const char *topic, const char *payload, bool tracker, const char *trkstatus ){
+void LuaTask::readConfigDirective( std::string &l, std::string &name, bool &nameused ){
+	MayBeEmptyString arg;
 
-	try {
-		class LuaTask &tsk = config.TasksList.at( this->getNameC() );
-		class LuaTask **task = (class LuaTask **)lua_newuserdata(L, sizeof(class Tracker *));
-		assert(task);
-
-		*task = &tsk;
-		luaL_getmetatable(L, "MajordomeTask");
-		lua_setmetatable(L, -2);
-		lua_setglobal( L, "MAJORDOME_Myself" );
-	} catch( std::out_of_range &e ){	// Not found 
-		SelLog->Log('F', "Can't find task '%s'", this->getNameC() );
-		exit(EXIT_FAILURE);
-	}
-
-	LuaExec::feedState(L, name, topic, payload, tracker, trkstatus);
+	if( l == "-->> RunAtStartup" ){
+		if(verbose)
+			SelLog->Log('C', "\t\tRun at startup");
+		this->setRunAtStartup( true );
+	} else if( l == "-->> once" ){
+		if(verbose)
+			SelLog->Log('C', "\t\tOnly one instance is allowed to run (once)");
+		this->setOnce( true );
+	} else if( !!(arg = striKWcmp( l, "-->> listen=" ))){
+		TopicCollection::iterator topic;
+		if( (topic = config.TopicsList.find(arg)) != config.TopicsList.end()){
+			if(verbose)
+				SelLog->Log('C', "\t\tAdded to topic '%s'", arg.c_str());
+			topic->second->addHandler( dynamic_cast<Handler *>(this) );
+//			nameused = true;
+		} else {
+			SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
+	} else if( !!(arg = striKWcmp( l, "-->> waitfor=" ))){
+		EventCollection::iterator event;
+		if( (event = config.EventsList.find(arg)) != config.EventsList.end()){
+			if(verbose)
+				SelLog->Log('C', "\t\tAdded to rendezvous '%s'", arg.c_str());
+			event->second->addHandler( dynamic_cast<Handler *>(this) );
+//			nameused = true;
+		} else {
+			SelLog->Log('F', "\t\tRendezvous '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
+	} else if( !!(arg = striKWcmp( l, "-->> when=" ))){
+		TimerCollection::iterator timer;
+		if( (timer = config.TimersList.find(arg)) != config.TimersList.end()){
+			if(verbose)
+				SelLog->Log('C', "\t\tAdded to timer '%s'", arg.c_str());
+			timer->second->addHandler( dynamic_cast<Handler *>(this) );
+//			nameused = true;
+		} else {
+			SelLog->Log('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
+	} else if( !!(arg = striKWcmp( l, "-->> whenDone=" ))){
+		TrackerCollection::iterator tracker;
+		if( (tracker = config.TrackersList.find(arg)) != config.TrackersList.end()){
+			if(verbose)
+				SelLog->Log('C', "\t\tAdded to tracker '%s' as Done task", arg.c_str());
+			tracker->second->addDone( this );
+//			nameused = true;
+		} else {
+			SelLog->Log('F', "\t\tTracker '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
+	} else if( !!(arg = striKWcmp( l, "-->> whenStarted=" ))){
+		TrackerCollection::iterator tracker;
+		if( (tracker = config.TrackersList.find(arg)) != config.TrackersList.end()){
+			if(verbose)
+				SelLog->Log('C', "\t\tAdded to tracker '%s' as Started task", arg.c_str());
+	 		tracker->second->addStarted( this );
+//			nameused = true;
+		} else {
+			SelLog->Log('F', "\t\tTracker '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
+	} else if( !!(arg = striKWcmp( l, "-->> whenStopped=" ))){
+		TrackerCollection::iterator tracker;
+		if( (tracker = config.TrackersList.find(arg)) != config.TrackersList.end()){
+			if(verbose)
+				SelLog->Log('C', "\t\tAdded to tracker '%s' as Stopped task", arg.c_str());
+		 	tracker->second->addStopped( this );
+//			nameused = true;
+		} else {
+			SelLog->Log('F', "\t\tTracker '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
+	} else if( !!(arg = striKWcmp( l, "-->> whenChanged=" ))){
+		TrackerCollection::iterator tracker;
+		if( (tracker = config.TrackersList.find(arg)) != config.TrackersList.end()){
+			if(verbose)
+				SelLog->Log('C', "\t\tAdded to tracker '%s' as Changed task", arg.c_str());
+			tracker->second->addChanged( this );
+//			nameused = true;
+		} else {
+			SelLog->Log('F', "\t\ttracker '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
+	} else 
+		this->LuaExec::readConfigDirective(l, name, nameused);
 }
 
-	/*****
-	 * Execute the code
-	 *****/
-
-bool LuaTask::exec( const char *name, const char *topic, const char *payload, bool tracker, const char *trkstatus ){
-		/* Check if the task can be launched */
-	if( !this->isEnabled() ){
-		if(verbose)
-			SelLog->Log('T', "Task '%s' from '%s' is disabled", this->getNameC(), this->getWhereC() );
-		return false;
-	}
-
-	if( !this->canRun() ){
-		if(verbose)
-			SelLog->Log('T', "Task '%s' from '%s' is already running", this->getNameC(), this->getWhereC() );
-		return false;
-	}
-
-	bool ret = this->LuaExec::execAsync(name, topic, payload, tracker, trkstatus);
-	if(!ret)
-		this->finished();
-
-	return ret;
-}
+	/* ***
+	 * Execution
+	 * ***/
 
 bool LuaTask::canRun( void ){
-	if( !this->once )
+	if(!this->LuaExec::canRun())
+		return false;
+
+	if( !this->once )	// Nothing else can prevent it to run
 		return true;
 
 	pthread_mutex_lock( &this->running_access );
 	if( this->running ){
 		pthread_mutex_unlock( &this->running_access );
+		if(verbose)
+			SelLog->Log('T', "Task '%s' from '%s' is already running", this->getNameC(), this->getWhereC() );		
 		return false;
 	}
 	this->running = true;
@@ -245,9 +182,26 @@ void LuaTask::finished( void ){
 	}
 }
 
-	/*****
+void LuaTask::feedState(lua_State *L){
+	try {
+		class LuaTask *tsk = config.TasksList.at( this->getNameC() );
+		class LuaTask **task = (class LuaTask **)lua_newuserdata(L, sizeof(class LuaTask *));
+		assert(task);
+
+		*task = tsk;
+		luaL_getmetatable(L, "MajordomeTask");
+		lua_setmetatable(L, -2);
+		lua_setglobal( L, "MAJORDOME_Myself" );
+	} catch( std::out_of_range &e ){	// Not found 
+		SelLog->Log('F', "Can't find task '%s'", this->getNameC() );
+		exit(EXIT_FAILURE);
+	}
+}
+
+
+	/* ****
 	 * Lua exposed functions
-	 *****/
+	 * ****/
 
 static class LuaTask *checkMajordomeTask(lua_State *L){
 	class LuaTask **r = (class LuaTask **)SelLua->testudata(L, 1, "MajordomeTask");
@@ -264,11 +218,11 @@ static int mtsk_find(lua_State *L){
 	bool tofail =  lua_toboolean(L, 2);
 
 	try {
-		class LuaTask &tsk = config.TasksList.at( name );
+		class LuaTask *tsk = config.TasksList.at( name );
 		class LuaTask **task = (class LuaTask **)lua_newuserdata(L, sizeof(class LuaTask *));
 		assert(task);
 
-		*task = &tsk;
+		*task = tsk;
 		luaL_getmetatable(L, "MajordomeTask");
 		lua_setmetatable(L, -2);
 
@@ -288,35 +242,15 @@ static const struct luaL_Reg MajTaskLib [] = {
 static int mtsk_launch(lua_State *L){
 	class LuaTask *task = checkMajordomeTask(L);
 
-	if( !task->isEnabled() ){
-		if(verbose)
-			SelLog->Log('T', "Task '%s' from '%s' is disabled", task->getNameC(), task->getWhereC() );
-		return 0;
-	}
-
-	if( !task->canRun() ){
-		if(verbose)
-			SelLog->Log('T', "Task '%s' from '%s' is already running", task->getNameC(), task->getWhereC() );
-		return 0;
-	}
-
-	if(!task->feedbyNeeded(L))
+	if( !task->canRun() )
 		return 0;
 
-	int err;
-	if( (err = SelElasticStorage->loadsharedfunction( L, task->getFunc() )) ){
-		SelLog->Log('E', "Unable to create task '%s' from '%s' : %s", task->getNameC(), task->getWhereC(), (err == LUA_ERRSYNTAX) ? "Syntax error" : "Memory error" );
-		task->finished();
+	if(!task->feedbyNeeded(L))	// Feed with local needs
 		return 0;
-	}
 
-	if(verbose)
-		SelLog->Log('T', "running Task '%s' from '%s'", task->getNameC(), task->getWhereC() );
-
-	if(lua_pcall( L, 0, 0, 0))
-		SelLog->Log('E', "Unable to create task '%s' from '%s' : %s", task->getNameC(), task->getWhereC(), lua_tostring(L, -1));
-
+	task->execSync(L);
 	task->finished();
+
 	return 0;
 }
 
@@ -335,13 +269,13 @@ static int mtsk_getName(lua_State *L){
 static int mtsk_enabled( lua_State *L ){
 	class LuaTask *task = checkMajordomeTask(L);
 	task->enable();
-	return 1;
+	return 0;
 }
 
 static int mtsk_disable( lua_State *L ){
 	class LuaTask *task = checkMajordomeTask(L);
 	task->disable();
-	return 1;
+	return 0;
 }
 
 static int mtsk_isEnabled( lua_State *L ){
@@ -360,7 +294,7 @@ static const struct luaL_Reg MajTaskM [] = {
 	{NULL, NULL}
 };
 
-void LuaTask::initLuaObject( lua_State *L ){
+void LuaTask::initLuaInterface( lua_State *L ){
 	SelLua->objFuncs( L, "MajordomeTask", MajTaskM );
 	SelLua->libCreateOrAddFuncs( L, "MajordomeTask", MajTaskLib );
 }

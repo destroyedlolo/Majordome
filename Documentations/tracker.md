@@ -7,7 +7,6 @@ As an example, temperature followup to close shutters in order to prevent over h
 
 Trackers make easy this kind of simple automation.
 
-Typical example : Follow a room temperature to close its shutter if too hot.
 Status are :
 
 	Status 'WAITING' : incoming value are ignored.
@@ -23,7 +22,7 @@ Status are :
 	 ||
 	Status 'WAITING' : the racker is reseted.
 
-The status can **MajordomeTracker** API or be changed by the tracker's script return code.
+The status can be set using **MajordomeTracker** API or be changed by the tracker's script return code.
 * Return code = **true** - decreases *howmany* counter and propotes status to *DONE* if the counter is over (by default, this counter is set to **1** meaning the 1st positive result is promoted to *DONE*).
 * Return code = **false** - keep in *CHECKING* status but the howmany counter is reset
 * no return code - keep the tracker as it is and *howmany* remains untouched
@@ -57,6 +56,11 @@ Numbers of consecutive positive responses before the tracker status become DONE.
 
 #### -->> activated
 The tracker will start in **CHECKING** mode
+
+#### -->> enableRDV= and -->> disableRDV=
+Trackers can be enabled/disabled by [rendezvous](rendezvous.md) making it easy to change the state of a set of tackers with one action.
+
+Typical usage :  in my smarthome automation, winter season disables all temperature-saving trackers.
 
 ### Timer to start/stop the tracker
 
@@ -99,11 +103,11 @@ Create corresponding object.
 
 ### Exposed objects
 Trakers are exposed as **MajordomeTracker** with following methods :
-- `getContainer()` returns the container (directory) in which this task as been defined
-- `getName()` returns task's name
-- `isEnabled()` returns a boolean reflecting if the task is enabled or not
-- `Enable()` to enable this task
-- `Disable()` to disable this task 
+- `getContainer()` returns the container (directory) in which this tracker as been defined
+- `getName()` returns tracker's name
+- `isEnabled()` returns a boolean reflecting if the tracker is enabled or not
+- `Enable()` to enable this tracker
+- `Disable()` to disable this tracker 
 - `getCounter()` get the *HowMany* counter (counting downward)
 - `resetCounter()` resert the *HowMany* counter
 - `getStatus()` get current tracker status
