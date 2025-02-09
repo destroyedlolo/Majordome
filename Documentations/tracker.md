@@ -57,10 +57,12 @@ Numbers of consecutive positive responses before the tracker status become DONE.
 #### -->> activated
 The tracker will start in **CHECKING** mode
 
-### Timer to start/stop the tracker
+#### -->> enableRDV= and -->> disableRDV=
+Trackers can be enabled/disabled by [rendezvous](rendezvous.md) making it easy to change the state of a set of tackers with one action.
 
-> [!TIP]
-> Trackers can be enabled/disable by [rendezvous](rendezvous.md).
+Typical usage :  in my smarthome automation, winter season disables all temperature-saving trackers.
+
+### Timer to start/stop the tracker
 
 #### -->> start=
 Timer indicating when the tracker will switch to **CHECKING** mode
