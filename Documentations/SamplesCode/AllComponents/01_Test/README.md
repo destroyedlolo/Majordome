@@ -1,15 +1,15 @@
 This is an *example* of a typical package. 
-Have a look inside provided files : they contain options applicable.
+Have a look inside the provided files : they contain options applicable.
 In a package's directory, you will find (in loading order) :
 
 * **\*.topic** - MQTT topic definition
-* **\*.lua** - Lua's task to associate with events (have a look on **DoNothing.lua** for the list of all parameters)
-* **Init.lua** - a Lua script that is executed when the package is loaded. Notez-bien : it runs in Majordome's global context that is not shared with actions scripts. Use **SelSharedVar** if something has to be shared.
+* **\*.lua** - Lua's task to associate with events (take a look at **DoNothing.lua** for the list of all parameters).
+* **Init.lua** - a Lua script that is executed when the package is loaded. Notez-bien : It runs in Majordome's global context that is not shared with action scripts. Use **SelSharedVar** if something has to be shared.
 
 ---
 
-- **MajordomeAbout.topic** define `<ClientID>/About` topic
-- **MajordomeAbout.lua** listen this topic and display Majordome's version and copyright when a messgage is received
+- **MajordomeAbout.topic** defines `<ClientID>/About` topic
+- **MajordomeAbout.lua** listen this topic and display Majordome's version and copyright when a message is received
 
 ---
 
@@ -17,9 +17,9 @@ In a package's directory, you will find (in loading order) :
 
 ---
 
-- **ClientTask.lua** is the main test tasks consuming **15s** timer and will be disabled/re-enable when a message arrives on **NoStations** topic, through **LuaTaskInterface.lua**
+- **ClientTask.lua** is the main test task consuming **15s** timer and will be disabled/re-enable when a message arrives on **NoStations** topic, through **LuaTaskInterface.lua**
 
 ---
 
-- **BipTask.lua** consumes **5s** and display "*bip*" when launched.
+- **BipTask.lua** consumes **5s** and displays "*bip*" when launched.
 - **TestTimerInterface.lua** will disable/re-enable **5s** timer when a message arrives on **NoStations** topic.
