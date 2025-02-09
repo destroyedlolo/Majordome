@@ -109,7 +109,7 @@ void *Timer::threadedslave(void *arg){
 				}
 			}
 #ifdef DEBUG
-			if( debug )
+			if(debug && !me->isQuiet())
 				SelLog->Log('D', "[Timer %s] %lu second(s) to wait", me->getNameC(), sec );
 #endif
 			ts.tv_sec += sec;
@@ -130,7 +130,7 @@ void *Timer::threadedslave(void *arg){
 		}
 
 #ifdef DEBUG
-		if( debug ){
+		if(debug && !me->isQuiet()){
 			time_t current_time = time(NULL);
 			SelLog->Log('D', "[Timer %s] it's %s", me->getNameC(), SeleneCore->ctime(&current_time, NULL, 0) );
 		}
