@@ -68,6 +68,26 @@ void Event::execHandlers(lua_State *L){
 #endif
 }
 
+void Event::enableTrackers( void ){
+#ifdef DEBUG
+	if(debug && !this->isQuiet())
+		SelLog->Log('D', "[%s] %d traker(s) to enable", this->getNameC(), this->trackersToEnable.size());
+#endif
+
+	for(auto &i : this->trackersToEnable)
+		i->enable();
+}
+
+void Event::disableTrackers( void ){
+#ifdef DEBUG
+	if(debug && !this->isQuiet())
+		SelLog->Log('D', "[%s] %d traker(s) to disable", this->getNameC(), this->trackersToDisable.size());
+#endif
+
+	for(auto &i : this->trackersToDisable)
+		i->disable();
+}
+
 	/* ****
 	 * Lua exposed functions
 	 * ****/
@@ -110,7 +130,11 @@ static const struct luaL_Reg MajEventLib [] = {
 static int mevt_Launch( lua_State *L ){
 	class Event *event = checkMajordomeEvent(L);
 
-	event->execHandlers(L);
+	if(event->isEnabled()){
+		event->execHandlers(L);
+		event->enableTrackers();
+		event->disableTrackers();
+	}
 		
 	return 0;
 }

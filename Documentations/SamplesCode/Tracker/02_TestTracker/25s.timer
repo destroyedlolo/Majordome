@@ -23,3 +23,6 @@
 --
 -- disable this timer
 --->> disabled
+--
+-- Do not log
+-->> quiet

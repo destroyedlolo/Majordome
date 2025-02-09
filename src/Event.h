@@ -35,6 +35,10 @@ public:
 	void addTrackerEN( Tracker *t ){ this->trackersToEnable.Add(t); }
 	void addTrackerDIS( Tracker *t ){ this->trackersToDisable.Add(t); }
 
+	/* Enable/Disable trackers from lists */
+	void enableTrackers( void );
+	void disableTrackers( void );
+
 	/* Create Lua's object */
 	static void initLuaInterface(lua_State *L);
 };
