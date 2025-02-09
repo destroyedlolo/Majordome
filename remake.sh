@@ -24,9 +24,9 @@ DEBUG='-DDEBUG'
 # detection bellow.
 
 VERLUA=$( lua -v 2>&1 | grep -o -E '[0-9]\.[0-9]' )
-echo -n "Lua's version :" $VERLUA
+echo -n "Lua's version : $VERLUA"
 
-if pkg-config --cflags lua$VERLUA > /dev/null 2>&1; then
+if pkg-config --cflags "lua$VERLUA" > /dev/null 2>&1; then
 	echo "  (Packaged)"
 	LUA="\$(shell pkg-config --cflags lua$VERLUA )"
 	LUALIB="\$(shell pkg-config --libs lua$VERLUA )"
@@ -58,7 +58,7 @@ DEV
 	SELDIR=~/Projets/Selene
 	SELLIB='-l:libSelene.so.2'
 	echo "Don't forget"
-	echo export LD_LIBRARY_PATH=$SELDIR/lib:$LD_LIBRARY_PATH
+	echo "export LD_LIBRARY_PATH=$SELDIR/lib:$LD_LIBRARY_PATH"
 # fi
 
 cd src

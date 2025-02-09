@@ -56,9 +56,9 @@ extern char *removeLF(char *);
  * 	- remaining string if the keyword matches
  * 	- NULL if the keyword is not found
  */
-extern char *striKWcmp( char *s, const char *kw );
-extern MayBeEmptyString striKWcmp( std::string s, const char *kw );
-extern MayBeEmptyString striKWcmp( std::string s, std::string &kw );
+extern const char *striKWcmp( const char *s, const char *kw );
+extern MayBeEmptyString striKWcmp( const std::string s, const char *kw );
+extern MayBeEmptyString striKWcmp( const std::string s, const std::string &kw );
 
 /* Return the extention of a given file
  * -> filename

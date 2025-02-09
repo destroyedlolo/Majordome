@@ -33,7 +33,7 @@ void Config::init(std::string &where, lua_State *L){
 	this->readdircontent(where);
 
 		/* Load packages */
-	for(auto i=this->begin(); i<this->end(); i++){
+	for(auto i=this->begin(); i<this->end(); ++i){
 		if(!quiet)
 			SelLog->Log('L', "Loading '%s'", (*i).c_str());
 
@@ -50,9 +50,9 @@ void Config::SanityChecks( void ){
 	  * Verify topics overlapping
 	  */
 
-	for(auto i = TopicsList.begin(); i != TopicsList.end(); i++){
+	for(auto i = TopicsList.begin(); i != TopicsList.end(); ++i){
 		TopicCollection::iterator j = i;
-		for(j++; j != TopicsList.end(); j++){
+		for(++j; j != TopicsList.end(); ++j){
 			if( !(i->second->hasWildcard()) && !(j->second->hasWildcard()) ){ // No wildcard
 				if( i->second->getTopic() == j->second->getTopic() ){
 					SelLog->Log('F', "Same MQTT topic used for topics '%s' from '%s' and '%s' from '%s'",
