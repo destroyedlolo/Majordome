@@ -9,7 +9,7 @@
 -- Disable this script
 --->> disabled
 
-io.write('NonExistantTimer :')
+io.write('NonExistantTimer : ')
 local timer = MajordomeTimer.find("NonExistantTimer")
 if not timer then
 	print('Ok')

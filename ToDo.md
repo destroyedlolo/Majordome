@@ -18,15 +18,15 @@
 
 ### DRM
 
+--- Migration to v6
+
+MAJORDOME_TRIGGER replaced by MAJORDOME_TOPIC_NAME
+
 --- Improvement
 
 needs : checking will not work if at same level (or lower).
 	- remove existance checking in LuaExec
 	- add checking in Config::SanityChecks
-
---- doc missing
-
-LuaTask Once
 
 --- Futures
 
