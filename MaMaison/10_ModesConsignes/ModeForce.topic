@@ -1,0 +1,7 @@
+# Consigne de mode générale
+
+topic=%ClientID%/Mode/Force
+store
+
+# Par défaut, pas d'automatisation
+default=Auto
