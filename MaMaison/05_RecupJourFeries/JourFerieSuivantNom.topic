@@ -1,7 +1,6 @@
-# Date du jour férié suivant
-
-topic=%ClientID%/JourFerieSuivant/Nom
-
-# stocké dans une variable SelShared
-store
-
+-- Date du jour férié suivant
+--
+-->> topic=%ClientID%/JourFerieSuivant/Nom
+--
+-- stocké dans une variable SelShared
+-->> store
