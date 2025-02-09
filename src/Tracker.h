@@ -69,6 +69,9 @@ public:
 	void addStopped( LuaTask *t ){ this->stoppingTasks.Add(t); }
 	void addChanged( LuaTask *t ){ this->changingTasks.Add(t); }
 
+		/* Executable */
+	virtual bool execAsync(lua_State *L);	// Overloading to handle data feeding
+
 	/* Create Lua's object */
 	static void initLuaInterface( lua_State *L );
 };

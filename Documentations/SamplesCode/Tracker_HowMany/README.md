@@ -4,10 +4,12 @@ Following objects are created :
 - `TestHM.topic` - subscribes to a topic **TestHM** to receive data
 - `TestTrackerHM.tracker` - A tracker waiting for 3 incoming data > 10
 
+<!---
 - `ControlHM.topic` - subscribes to a topic **ControlHM** to send command to the tracker. Recognized commands are :
 
   * **STATUS** : displays the tracker status
   * **CHECKING** or **START** : Force the status of the tracker for testing purposes
+--->
 
 ---
 

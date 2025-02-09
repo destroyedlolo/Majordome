@@ -36,7 +36,7 @@
 -- MAJORDOME_TRACKER - tracker's name
 -- MAJORDOME_TRACKER_STATUS - tracker's status
 
-print("I'm the TestTrackerHM code", MAJORDOME_TRACKER, MAJORDOME_TOPIC, MAJORDOME_PAYLOAD)
+print("I'm the TestTrackerHM code", MAJORDOME_TRACKER, MAJORDOME_TRACKER_STATUS, MAJORDOME_TOPIC, MAJORDOME_PAYLOAD)
 print("My current status is :", MAJORDOME_Myself:getStatus(), MAJORDOME_Myself:getCounter() )
 
 if tonumber(MAJORDOME_PAYLOAD) > 10 then

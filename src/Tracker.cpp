@@ -132,6 +132,33 @@ void Tracker::readConfigDirective( std::string &l, std::string &name, bool &name
 		this->LuaExec::readConfigDirective(l, name, nameused);
 }
 
+bool Tracker::execAsync(lua_State *L){
+	if( !this->isEnabled() || this->status != _status::CHECKING ){
+		if(verbose)
+			SelLog->Log('T', "Tracker '%s' from '%s' is disabled or inactive", this->getNameC(), this->getWhereC() );
+		return false;
+	}
+	
+	LuaExec::boolRetCode rc;
+	std::string rs;
+	lua_Number retn;
+
+	bool r = this->LuaExec::execSync(L, &rc, &rs, &retn);
+
+	if( rc == LuaExec::boolRetCode::RCfalse ){
+		this->hm_counter = this->howmany;
+#ifdef DEBUG
+		if(debug)
+			SelLog->Log('D', "[%s] Reset to %u", this->getNameC(), this->getCounter());
+#endif
+	} else if( rc == LuaExec::boolRetCode::RCtrue ){
+		if(!--this->hm_counter)
+			this->done();
+	}
+
+	return r;
+}
+
 const char *Tracker::getStatusC( void ){
 	switch( this->status ){
 	case _status::WAITING :
@@ -184,7 +211,7 @@ void Tracker::stop( void ){
 }
 
 void Tracker::done( void ){
-	if( this->isEnabled() && this->getStatus() != _status::CHECKING ){
+	if( this->isEnabled() && this->getStatus() == _status::CHECKING ){
 		for(auto &t : *this)	// Execute attached done tasks
 			t->exec(this);
 		if(verbose)
@@ -205,6 +232,8 @@ void Tracker::feedState(lua_State *L){
 		luaL_getmetatable(L, "MajordomeTracker");
 		lua_setmetatable(L, -2);
 		lua_setglobal( L, "MAJORDOME_Myself" );
+
+		this->feedHandlersState(L);
 	} catch( std::out_of_range &e ){	// Not found 
 		SelLog->Log('F', "Can't find tracker '%s'", this->getNameC() );
 		exit(EXIT_FAILURE);
