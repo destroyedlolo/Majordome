@@ -48,6 +48,11 @@ bool Handler::exec(lua_State *L, enum boolRetCode *rc, std::string *rs, lua_Numb
 	 * Right now, the tasks is marked as running 
 	 * ***/
 
+	if(!this->feedbyNeeded(L)){
+		this->finished();
+		return false;
+	}
+
 	this->feedState(L);
 
 	return this->LuaExec::execSync(L, rc,rs,retn);
