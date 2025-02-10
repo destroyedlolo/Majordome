@@ -1,5 +1,5 @@
-# Heure de coucher du soleil en provenance de la météo
-# (générée par Marcel)
-
-topic=Meteo/Nonglard/sunset
-store
+-- Heure de coucher du soleil en provenance de la météo
+-- (générée par Marcel)
+--
+-->> topic=Meteo/Nonglard/sunset
+-->> store

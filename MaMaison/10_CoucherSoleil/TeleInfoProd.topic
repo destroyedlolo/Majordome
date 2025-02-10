@@ -1,13 +1,13 @@
-# réception de la production photovoltaïque
-
-topic=TeleInfo/Production/values/PAPP
-store
-numeric
-ttl=60
-
-# désactivé par défaut sinon ... il crée beaucoup trop d'activité (et de log)
-# pour rien.
-# Sera activé au coucher du soleil
-disabled
-
-quiet
+-- réception de la production photovoltaïque
+--
+-->> topic=TeleInfo/Production/values/PAPP
+-->> store
+-->> numeric
+-->> ttl=60
+--
+-- désactivé par défaut sinon ... il crée beaucoup trop d'activité (et de log)
+-- pour rien.
+-- Sera activé au coucher du soleil
+-->> disabled
+--
+-->> quiet
