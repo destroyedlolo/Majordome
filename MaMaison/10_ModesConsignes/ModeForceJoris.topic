@@ -1,7 +1,0 @@
-# Consigne de mode pour la chambre de Joris
-
-topic=%ClientID%/Mode/Force/Enfants/Joris
-store
-
-# Par défaut, mode calculé
-default=Auto
