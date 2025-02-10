@@ -1,0 +1,12 @@
+-- Rendez-vous lorsque le soleil est couché
+--
+-- name of the event
+-- if not set, takes the filename
+--->> name=toto
+--
+-- remove some trace
+-- This option is useful to avoid logging of very noisy topics
+--->> quiet
+--
+-- disable this event
+--->> disabled

@@ -1,0 +1,8 @@
+-- Nom du jour férié du jour
+-->> topic=%ClientID%/JourFerie/Nom
+--
+-- stocké dans une variable SelShared
+-->> store
+--
+-- Par défaut, nous ne sommes pas un jour férié
+-->> default=

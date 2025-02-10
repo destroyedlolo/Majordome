@@ -1,0 +1,6 @@
+-- Mis à jour automatiquement à la réception des info météo
+--
+-->> at=700
+--->> immediate
+--->> runifover
+--->> disabled

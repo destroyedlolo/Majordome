@@ -1,0 +1,7 @@
+-- Consigne de mode générale pour les chambres des enfants
+--
+-->> topic=%ClientID%/Mode/Force/Enfants
+-->> store
+--
+-- Par défaut, mode calculé
+-->> default=Auto
