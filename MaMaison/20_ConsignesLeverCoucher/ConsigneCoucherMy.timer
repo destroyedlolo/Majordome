@@ -1,5 +1,5 @@
-# timer de la consigne de coucher
-# Fermeture "My" des volets (5 minutes avant la consigne)
-
-# bidon, sera mis à jour par "MajConsigneCoucher"
-at=2155
+-- timer de la consigne de coucher
+-- Fermeture "My" des volets (5 minutes avant la consigne)
+--
+-- bidon, sera mis à jour par "MajConsigneCoucher"
+-->> at=2155

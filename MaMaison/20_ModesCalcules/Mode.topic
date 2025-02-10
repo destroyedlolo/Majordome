@@ -1,7 +1,7 @@
-# Mode actif
-
-topic=%ClientID%/Mode
-store
-
-# Par défaut, pas d'automatisation
-default=Manuel
+-- Mode actif
+--
+-->> topic=%ClientID%/Mode
+-->> store
+--
+-- Par défaut, pas d'automatisation
+-->> default=Manuel

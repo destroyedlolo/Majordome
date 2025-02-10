@@ -1,4 +1,1 @@
-# Active la surveillance (si la saison est autre qu'hiver)
-#name=toto
-#quiet
-#disabled
+-- Active la surveillance (si la saison est autre qu'hiver)

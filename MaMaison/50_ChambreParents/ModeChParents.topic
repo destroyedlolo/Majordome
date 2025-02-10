@@ -1,2 +1,2 @@
-topic=%ClientID%/Mode/Parents
-store
+-->> topic=%ClientID%/Mode/Parents
+-->> store

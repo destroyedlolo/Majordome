@@ -1,4 +1,3 @@
-# Heure de lever pour Joris
-topic=%ClientID%/HLever/Joris
-store
-#numeric
+-- Heure de lever pour Joris
+-->> topic=%ClientID%/HLever/Joris
+-->> store

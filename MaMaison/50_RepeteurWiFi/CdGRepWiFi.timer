@@ -1,4 +1,4 @@
-# Chien de garde sur la réception des informations du répéteur WiFi
-
-# on a un problème si le récepteur n'a rien envoyé depuis 4 minutes
-every=240
+-- Chien de garde sur la réception des informations du répéteur WiFi
+--
+-- on a un problème si le récepteur n'a rien envoyé depuis 4 minutes
+-->> every=240

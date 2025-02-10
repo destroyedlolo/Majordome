@@ -1,6 +1,4 @@
-at=1100
-#immediate
-#runifover
-
-# Désactivé depuis le passage à la Dela
-disabled
+-->> at=1100
+--
+-- Désactivé depuis le passage à la Dela
+-->> disabled
