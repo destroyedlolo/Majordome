@@ -30,7 +30,9 @@
  *	29/10/2024 - V4.03 - LF - NamedMinMax's Lua can return a value
  *		---
  *	24/11/2024 - v5.00 - LF - Introduce Toile
+ *		It was only a PoC with bad programming habits.
+ *	20/01/2025 - v6.00 - LF - Code redesign
  */
 
-#define VERSION 5.0000
-#define COPYRIGHT "Majordome (c) L.Faillie 2018-2024"
+#define VERSION 6.0008
+#define COPYRIGHT "Majordome (c) L.Faillie 2018-2025"

@@ -8,9 +8,12 @@
 
 #include "SortDir.h"
 
+#include <lua.hpp>	/* Lua's state needed */
+#include <cstdint>
+
 class Config;
 
-class SubConfigDir : virtual public SortDir {
+class SubConfigDir : public SortDir {
 public :
 	struct extweight {
 		const char *const ext;

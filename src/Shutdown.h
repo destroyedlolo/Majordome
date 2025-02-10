@@ -6,8 +6,8 @@
 #ifndef SHUTDOWN_H 
 #define SHUTDOWN_H
 
-#include "Selene.h"
 #include "LuaExec.h"
+#include "ObjCollection.h"
 
 class Shutdown : public LuaExec {
 public:
@@ -20,6 +20,10 @@ public:
 	Shutdown( const std::string &file, std::string &where, std::string &name, lua_State *L );
 
 	void exec( void );
+
+	/* Create Lua's object */
+	static void initLuaInterface( lua_State *L );
 };
 
+typedef ObjCollection<Shutdown *> ShutdownCollection;
 #endif

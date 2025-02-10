@@ -15,7 +15,6 @@ struct SelMQTT *SelMQTT;
 struct SelElasticStorage *SelElasticStorage;
 struct SelSharedVar *SelSharedVar;
 
-	/* Here start 'standard' C code */
 #include <cstdlib>		/* exit(), ... */
 #include <cstring>
 

@@ -15,7 +15,7 @@ end
 local t15s = MajordomeTimer.find("15s")
 local t25s = MajordomeTimer.find("25s")
 if not t15s or not t25s then
-	SelLog.log('E',"Can't find '15s' or '25s' timer")
+	SelLog.Log('E',"Can't find '15s' or '25s' timer")
 	return
 end
 
@@ -33,11 +33,11 @@ if MAJORDOME_PAYLOAD == 'STATUS' then
 elseif MAJORDOME_PAYLOAD == 'MANUAL' then	-- Disable control timers
 	t15s:Disable()
 	t25s:Disable()
-	SelLog.log('I',"Manual mode")
+	SelLog.Log('I',"Manual mode")
 elseif MAJORDOME_PAYLOAD == 'AUTO' then	-- Disable control timers
 	t15s:Enable()
 	t25s:Enable()
-	SelLog.log('I',"Automatic mode")
+	SelLog.Log('I',"Automatic mode")
 elseif MAJORDOME_PAYLOAD == "WAITING" or MAJORDOME_PAYLOAD == "STOP" or
 		MAJORDOME_PAYLOAD == "CHECKING" or MAJORDOME_PAYLOAD == "START" or
 		MAJORDOME_PAYLOAD == "DONE" then
@@ -45,14 +45,14 @@ elseif MAJORDOME_PAYLOAD == "WAITING" or MAJORDOME_PAYLOAD == "STOP" or
 elseif MAJORDOME_PAYLOAD == "ENABLE" then
 	local rdv = MajordomeRendezVous.find("enabletracker")
 	if not rdv then
-		SelLog.log('E',"Can't find 'enabletracker' rendez-vous")
+		SelLog.Log('E',"Can't find 'enabletracker' rendez-vous")
 		return
 	end
 	rdv:Launch()
 elseif MAJORDOME_PAYLOAD == "DISABLE" then
 	local rdv = MajordomeRendezVous.find("disabletracker")
 	if not rdv then
-		SelLog.log('E',"Can't find 'disabletracker' rendez-vous")
+		SelLog.Log('E',"Can't find 'disabletracker' rendez-vous")
 		return
 	end
 	rdv:Launch()

@@ -7,7 +7,6 @@ As an example, temperature followup to close shutters in order to prevent over h
 
 Trackers make easy this kind of simple automation.
 
-Typical example : Follow a room temperature to close its shutter if too hot.
 Status are :
 
 	Status 'WAITING' : incoming value are ignored.
@@ -57,6 +56,11 @@ Numbers of consecutive positive responses before the tracker status become DONE.
 
 #### -->> activated
 The tracker will start in **CHECKING** mode
+
+#### -->> enableRDV= and -->> disableRDV=
+Trackers can be enabled/disabled by [rendezvous](rendezvous.md) making it easy to change the state of a set of tackers with one action.
+
+Typical usage :  in my smarthome automation, winter season disables all temperature-saving trackers.
 
 ### Timer to start/stop the tracker
 

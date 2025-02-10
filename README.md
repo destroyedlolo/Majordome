@@ -1,5 +1,5 @@
 > [!IMPORTANT]  
-> **Toile** branch is currently on heavy development. It's not yet fully tested and stable (i.e. subject to changes).
+> **Toile** and **V6** branches are currently on heavy development. It's not yet fully tested and stable (i.e. subject to changes).
 
 ----
 
@@ -11,6 +11,7 @@ A lightweight, event driven **Automation System**.
 (no commit for long time doesn't mean this project is stalling but reached a stable state and I switched to others activities :relaxed:)
 
 ----
+
 
 Within **Majordome**, your application is built around a galaxy of small tasks orchestrated by efficient but resource conservative mechanisms.<br>
 You organize your code into independent and **stateless Lua functions** that are called when an event happened and/or conditions are met (*like what AWS Lambda does*). Tasks are executed only if necessary in the massively threaded Majordome engine, resulting to a as reduced as possible system footprint.

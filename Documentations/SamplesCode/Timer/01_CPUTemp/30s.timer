@@ -1,25 +1,25 @@
-# Timer to launch tasks every 30 secondes
+-- Timer to launch tasks every 30 secondes
+--
+-- name of the timer
+-- if not set, takes the filename
+--->> name=toto
+--
+-- repeating delay (in seconds)
+-- ignored if null
+-->> every=10
+--
+-- This timer is set to an absolute time, 
+-- format HHMM
+-->> at=2256
+--
+-- NOTEZ-BIEN : every has precedence on at.
+-- If both are present, only every is took in account
 
-# name of the timer
-# if not set, takes the filename
-#name=toto
+-- Launch tasks at startup
+-->> immediate
 
-# repeating delay (in seconds)
-# ignored if null
-every=30
+-- Launch tasks if Majordome is starting after at= time (for the same day)
+--->> runifover
 
-# This timer is set to an absolute time, 
-# format HHMM
-#at=2256
-
-# NOTEZ-BIEN : every has precedence on at.
-# If both are present, only every is took in account
-
-# Launch tasks at startup
-immediate
-
-# Launch tasks if Majordome is starting after at= time (for the same day)
-#runifover
-
-# disable this timer
-#disabled
+-- disable this timer
+--->> disabled

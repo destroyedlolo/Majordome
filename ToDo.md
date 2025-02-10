@@ -1,7 +1,7 @@
 # Milestones
 
 ## General
-- [ ] Ensure inherance
+- [X] Ensure inherance
 
 ## Devices
 ### LCD
@@ -18,6 +18,31 @@
 
 ### DRM
 
+--- Migration to v6
+
+MAJORDOME_TRIGGER replaced by MAJORDOME_TOPIC_NAME
+
+--- Improvement
+
+needs : checking will not work if at same level (or lower).
+	- remove existance checking in LuaExec
+	- add checking in Config::SanityChecks
+
+--- Futures
+
+(Named)MinMax handler to run asynchronously.
+
+---
+Add a new Object :
+- Config.h
+- SubConfigDir : extension
+- LuaExec.h : needed / required / feed
+- LuaExec.cpp : feedbyNeeded()
+- Majordome.cpp : SelLua->AddStartupFunc()
+
 ---
 
-- Add -->> needed_xxx support for Renderer (not needed for Decoration ??)
+static_cast - Base -> Derived
+dynamic_cast - Derived -> Base
+
+

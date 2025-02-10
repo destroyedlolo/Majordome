@@ -22,7 +22,7 @@ void Object::extrName( const std::string &fch, std::string &name){
 		name.erase(period_idx);
 }
 
-bool Object::readConfigDirective(std::string &l, bool &nameused){
+void Object::readConfigDirective(std::string &l, std::string &name, bool &nameused){
 	MayBeEmptyString arg;
 
 	if( !!(arg = striKWcmp( l, "-->> name=" ))){
@@ -46,6 +46,4 @@ bool Object::readConfigDirective(std::string &l, bool &nameused){
 		SelLog->Log('F', "Unknown directive '%s'", l.c_str());
 		exit(EXIT_FAILURE);
 	}
-
-	return false;
 }

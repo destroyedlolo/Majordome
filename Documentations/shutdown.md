@@ -6,9 +6,14 @@ If most of Majordome own resources are cleaned up/released at exit, typical
 Toile's renderer :  when Majordome is finished, the screen has to be turned off.
 It can be achieved by a **shutdown** task.
 
+## Syntax
+
+**Shutdowns** are basically **[Lua tasks](Task(lua).md)** and are following the same syntax and share most of it's Lua API.
+
+In the header of the script (comment block at the very beginning of the script), each line starting with `-->>` are Majordome's commands.<br>
+Consequently, `--->>` are commented out commands (notice the 3 dashes).
+
 ## Directives
-In the header of the script (comment block at the very beginning of the script), each line starting with `-->>` (2 dashes) are Majordome's directives.
-If you want to comment out a directive, use `--->>` (3 dashes)
 ### General directives
 #### -->> name=
 Unique name to identify the topic. If not set, uses the filename.
@@ -36,3 +41,13 @@ Create corresponding object.
 
 #### -->> need_renderer
 Only **Toile** plug-in has been compiled
+
+## at Lua side
+
+### Exposed objects
+Statistics sequencing and retrieving are done through the **MajordomeNamedMinMax**'s API :
+- `getContainer()` returns the container (directory) in which this Shutdown has been defined
+- `getName()` returns Shutdown's name
+- `isEnabled()` returns a boolean reflecting if this Shutdown is enabled or not
+- `Enable()` to enable this Shutdown
+- `Disable()` to disable this Shutdown 

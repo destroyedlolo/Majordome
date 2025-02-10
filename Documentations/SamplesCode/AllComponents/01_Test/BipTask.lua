@@ -45,7 +45,7 @@
 -- Here starts the lua's code.
 -- In case this task is launched by a MQTT trigger, following variables
 -- are defined :
--- MAJORDOME_TRIGGER variable contains the "name" of the topic that
+-- MAJORDOME_TOPIC_NAME variable contains the "name" of the topic that
 -- triggered this task
 -- MAJORDOME_TOPIC & MAJORDOME_PAYLOAD : the message
 

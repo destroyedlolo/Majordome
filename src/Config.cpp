@@ -2,15 +2,18 @@
  *
  * 26/07/2018 - LF - First version
  * 20/05/2024 - LF - Migrate to v4
+ * 20/01/2025 - LF - Migrate to v6
  */
+
 #include "Config.h"
 #include "Selene.h"
 #include "Helpers.h"
 #include "SubConfigDir.h"
 
 #include <sys/stat.h>
-#include <cstring>
+#include <cstring>	// strerror()
 
+	// Reject non-directory
 bool Config::accept( const char *fch, std::string &full ){
 	if( SortDir::accept( fch, full) ){
 
@@ -30,7 +33,7 @@ void Config::init(std::string &where, lua_State *L){
 	this->readdircontent(where);
 
 		/* Load packages */
-	for(auto i=this->begin(); i<this->end(); i++){
+	for(auto i=this->begin(); i<this->end(); ++i){
 		if(!quiet)
 			SelLog->Log('L', "Loading '%s'", (*i).c_str());
 
@@ -46,37 +49,38 @@ void Config::SanityChecks( void ){
 	 /* 
 	  * Verify topics overlapping
 	  */
-	for(auto i = TopicsList.begin(); i != TopicsList.end(); i++){
-		TopicElements::iterator j = i;
-		for(j++; j != TopicsList.end(); j++){
-			if( !(i->second.hasWildcard()) && !(j->second.hasWildcard()) ){ // No wildcard
-				if( !strcmp( i->second.getTopic(), j->second.getTopic() )){
+
+	for(auto i = TopicsList.begin(); i != TopicsList.end(); ++i){
+		TopicCollection::iterator j = i;
+		for(++j; j != TopicsList.end(); ++j){
+			if( !(i->second->hasWildcard()) && !(j->second->hasWildcard()) ){ // No wildcard
+				if( i->second->getTopic() == j->second->getTopic() ){
 					SelLog->Log('F', "Same MQTT topic used for topics '%s' from '%s' and '%s' from '%s'",
-						i->second.getName().c_str(), 
-						i->second.getWhere().c_str(), 
-						j->second.getName().c_str(),
-						j->second.getWhere().c_str()
+						i->second->getName().c_str(), 
+						i->second->getWhere().c_str(), 
+						j->second->getName().c_str(),
+						j->second->getWhere().c_str()
 					);
 					exit(EXIT_FAILURE);
 				}
-			} else if( i->second.hasWildcard() && j->second.hasWildcard() ){	// Both contain wildcard
-			} else if( i->second.hasWildcard() ){
-				if( !SelMQTT->mqtttokcmp( i->second.getTopic(), j->second.getTopic() )){
+			} else if( i->second->hasWildcard() && j->second->hasWildcard() ){	// Both contain wildcard
+			} else if( i->second->hasWildcard() ){
+				if( !SelMQTT->mqtttokcmp( i->second->getTopicC(), j->second->getTopicC() )){
 					SelLog->Log('F', "'%s' from '%s' hides '%s' from '%s'",
-						i->second.getName().c_str(), 
-						i->second.getWhere().c_str(), 
-						j->second.getName().c_str(),
-						j->second.getWhere().c_str()
+						i->second->getName().c_str(), 
+						i->second->getWhere().c_str(), 
+						j->second->getName().c_str(),
+						j->second->getWhere().c_str()
 					);
 					exit(EXIT_FAILURE);
 				}
-			} else if( j->second.hasWildcard() ){
-				if( !SelMQTT->mqtttokcmp( j->second.getTopic(), i->second.getTopic() )){
+			} else if( j->second->hasWildcard() ){
+				if( !SelMQTT->mqtttokcmp( j->second->getTopicC(), i->second->getTopicC() )){
 					SelLog->Log('W', "'%s' from '%s' overlaps '%s' from '%s'",
-						i->second.getName().c_str(), 
-						i->second.getWhere().c_str(), 
-						j->second.getName().c_str(),
-						j->second.getWhere().c_str()
+						i->second->getName().c_str(), 
+						i->second->getWhere().c_str(), 
+						j->second->getName().c_str(),
+						j->second->getWhere().c_str()
 					);
 				}
 			}
@@ -85,20 +89,10 @@ void Config::SanityChecks( void ){
 
 		/* Verify that needed tasks exists */
 	for(auto &i : this->TasksList){
-		for(auto &j : i.second.needed_task){
-			Config::TaskElements::iterator task;
+		for(auto &j : i.second->needed_task){
+			TaskCollection::iterator task;
 			if( (task = config.TasksList.find(j.c_str())) == config.TasksList.end()){
-				SelLog->Log('F', "Task \"%s\" needed by \"%s\" doesn't exist", j.c_str(), i.second.getNameC());
-				exit(EXIT_FAILURE);
-			}
-		}
-	}
-
-	for(auto &i : this->TrackersList){
-		for(auto &j : i.second.needed_task){
-			Config::TaskElements::iterator task;
-			if( (task = config.TasksList.find(j.c_str())) == config.TasksList.end()){
-				SelLog->Log('F', "Task \"%s\" needed by \"%s\" doesn't exist", j.c_str(), i.second.getNameC());
+				SelLog->Log('F', "Task \"%s\" needed by \"%s\" doesn't exist", j.c_str(), i.second->getNameC());
 				exit(EXIT_FAILURE);
 			}
 		}
@@ -110,16 +104,17 @@ void Config::SubscribeTopics( void ){
 	const char **topics = new const char * [nbre];
 	int *qoss = new int [nbre];
 
+		/* Note : we're subscribing to all topics, including disabled ones.
+		 * It will be up to code to ignore disabled.
+		 */
 	nbre = 0;
-	for(auto &i : TopicsList){
-		if( i.second.isEnabled() ){
-			topics[nbre] = i.second.getTopic();
-			qoss[nbre++] = i.second.getQOS();
-		}
+	for(auto &i : this->TopicsList){
+		topics[nbre] = i.second->getTopicC();
+		qoss[nbre++] = i.second->getQOS();
 	}
 #ifdef DEBUG
 	if(verbose)
-		SelLog->Log('C', "Subscribing to %ld actives topics", nbre);
+		SelLog->Log('C', "Subscribing to %ld topics", nbre);
 #endif
 
 	if( nbre ){
@@ -134,92 +129,26 @@ void Config::SubscribeTopics( void ){
 	}
 }
 
+void Config::RunStartups( void ){
+	for(auto &i : this->TasksList){
+		if( i.second->getRunAtStartup() )
+			i.second->exec((HandlersExecutor *)NULL);
+	}
+}
+
 void Config::LaunchTimers( void ){
 	for(auto &i : this->TimersList)
-		i.second.launchThread();
+		i.second->launchThread();
 }
 
 void Config::RunImmediates( void ){
 	for(auto &i : this->TimersList){
-		if( i.second.getImmediate() || i.second.isOver() )
-			i.second.execTasks();
-	}
-}
-
-void Config::RunStartups( void ){
-	for(auto &i : this->TasksList){
-		if( i.second.getRunAtStartup() )
-			i.second.exec(NULL);
+		if( i.second->getImmediate() || i.second->isOver() )
+			i.second->execHandlers();
 	}
 }
 
 void Config::RunShutdowns( void ){
-	for(auto &i : this->ShutdownsList){
-		i.second.exec();
-	}
+	for(auto &i : this->ShutdownsList)
+		i.second->exec();
 }
-
-LuaTask &Config::findTask( std::string &n ) {
-	Config::TaskElements::iterator tsk;
-
-	if( (tsk = this->TasksList.find( n )) == this->TasksList.end() )
-		throw 1;
-	else
-		return (*tsk).second;
-}
-
-Tracker &Config::findTracker( std::string &n ) {
-	Config::TrackerElements::iterator trk;
-
-	if( (trk = this->TrackersList.find( n )) == this->TrackersList.end() )
-		throw 1;
-	else
-		return (*trk).second;
-}
-
-MinMax &Config::findMinMax( std::string &n ) {
-	Config::MinMaxElements::iterator obj;
-
-	if( (obj = this->MinMaxList.find( n )) == this->MinMaxList.end() )
-		throw 1;
-	else
-		return (*obj).second;
-}
-
-NamedMinMax &Config::findNamedMinMax( std::string &n ) {
-	Config::NamedMinMaxElements::iterator obj;
-
-	if( (obj = this->NamedMinMaxList.find( n )) == this->NamedMinMaxList.end() )
-		throw 1;
-	else
-		return (*obj).second;
-}
-
-#ifdef TOILE
-Renderer *Config::findRenderer( std::string &n ) {
-	Config::RendererElements::iterator obj;
-
-	if( (obj = this->RendererList.find( n )) == this->RendererList.end() )
-		throw 1;
-	else
-		return (*obj).second;
-}
-
-Decoration *Config::findDecoration( std::string &n ) {
-	Config::DecorationElements::iterator obj;
-
-	if( (obj = this->DecorationList.find( n )) == this->DecorationList.end() )
-		throw 1;
-	else
-		return (*obj).second;
-}
-
-Painting *Config::findPainting( std::string &n ) {
-	Config::PaintingElements::iterator obj;
-
-	if( (obj = this->PaintingList.find( n )) == this->PaintingList.end() )
-		throw 1;
-	else
-		return (*obj).second;
-}
-#endif

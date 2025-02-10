@@ -1,11 +1,11 @@
 /* Helpers.c
  * 	Helper functions
  */
+#include "Helpers.h"
+
 #include <cstring>
 #include <cstdarg>
 #include <cstdio>
-
-#include "Helpers.h"
 
 char *removeLF(char *s){
 	size_t l=strlen(s);
@@ -14,7 +14,7 @@ char *removeLF(char *s){
 	return s;
 }
 
-char *striKWcmp( char *s, const char *kw ){
+const char *striKWcmp(const char *s, const char *kw){
 	size_t klen = strlen(kw);
 	if( strncasecmp(s,kw,klen) )
 		return NULL;
@@ -22,7 +22,7 @@ char *striKWcmp( char *s, const char *kw ){
 		return s+klen;
 }
 
-MayBeEmptyString striKWcmp( std::string s, const char *kw ){
+MayBeEmptyString striKWcmp(const std::string s, const char *kw){
 	size_t l = strlen( kw );
 
 	if(!s.compare(0, l, kw))
@@ -30,7 +30,7 @@ MayBeEmptyString striKWcmp( std::string s, const char *kw ){
 	return MayBeEmptyString();
 }
 
-MayBeEmptyString striKWcmp( std::string &s, std::string &kw ){
+MayBeEmptyString striKWcmp(const std::string &s, const std::string &kw ){
 	if(!s.compare(0, kw.size(), kw))
 		return MayBeEmptyString( s.substr(kw.size()) );
 	return MayBeEmptyString();

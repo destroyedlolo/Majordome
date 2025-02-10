@@ -1,0 +1,7 @@
+# Liste des jours fériés (JSON)
+
+topic=%ClientID%/JourFeries
+
+# stocké dans une variable SelShared
+store
+
