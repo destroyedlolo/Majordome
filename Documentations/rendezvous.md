@@ -65,3 +65,16 @@ File **Result.lua**
 
 SelLog.Log("Result is running")
 ```
+
+## at Lua side
+### Exposed variables
+- **MAJORDOME_Myself** is automatically created and correspond to the current tracker
+
+### Exposed objects
+RendezVous are exposed as **MajordomeRendezVous** with following methods :
+- `getContainer()` returns the container (directory) in which this tracker as been defined
+- `getName()` returns tracker's name
+- `isEnabled()` returns a boolean reflecting if the tracker is enabled or not
+- `Enable()` to enable this tracker
+- `Disable()` to disable this tracker
+- `Launch()` to launch all attached handlers
