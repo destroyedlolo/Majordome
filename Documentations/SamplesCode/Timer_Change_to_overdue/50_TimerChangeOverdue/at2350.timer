@@ -1,0 +1,7 @@
+-- Timer to trigger an action at 23:50
+-->> at=2350
+--
+-->> runifover
+--
+--->> immediate
+--->> disabled
