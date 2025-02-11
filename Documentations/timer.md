@@ -52,3 +52,20 @@ File **MidnightOrAtLaunch.timer**
 # or at launch time
 -->> runifover
 ```
+
+## at Lua side
+### Exposed variables
+- **MAJORDOME_Myself** is automatically created and correspond to the current timer
+
+### Exposed objects
+Timers are exposed as **MajordomeTimer** with following methods :
+- `getContainer()` returns the container (directory) in which this timer as been defined
+- `getName()` returns timer's name
+- `isEnabled()` returns a boolean reflecting if the timer is enabled or not
+- `Enable()` to enable this timer
+- `Disable()` to disable this timer
+- `Launch()` to launch all attached handlers
+- `getEvery()` and `setEvery()` to get or change *every* timer
+- `getAt()` and `setAt()` to get or change *at* timer in the form **hh.mm**
+- `getAtHM(h, m)` and `h,m = getAtHM()` to get or change *at* timer in with its 2 components, hour and minute
+- `Reset()` to reset an *every* timer
