@@ -32,6 +32,18 @@ if args[1]:upper() == "TRACKER" then
 		tracker:setStatus( args[3]:upper() )
 	end
 
+elseif args[1]:upper() == "TIMER" then
+	local timer = MajordomeTimer.find(args[2])
+	if not timer then
+		SelLog.Log('E', "Can't find '".. args[2].."'")
+		return
+	end
+
+	local h,m = timer:getAtHM()
+	SelLog.Log('D', "Timer is coming from : ".. timer:getContainer())
+	SelLog.Log('D', "Timer is ".. (timer:isEnabled() and 'Enabled' or 'Disabled') )
+	SelLog.Log('D', "Time at ".. ("%02d:%02d"):format(h,m))
+
 elseif args[1]:upper() == "TOPIC" then
 	local topic = MajordomeMQTTTopic.find(args[2])
 	if not topic then

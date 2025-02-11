@@ -1,6 +1,6 @@
 -- réception de la production photovoltaïque
 --
--->> topic=TeleInfo/Production/values/PAPP
+-->> topic=TeleInfo/LinkyProduction/SINSTI
 -->> store
 -->> numeric
 -->> ttl=60
