@@ -72,9 +72,9 @@ SelLog.Log("Result is running")
 
 ### Exposed objects
 RendezVous are exposed as **MajordomeRendezVous** with following methods :
-- `getContainer()` returns the container (directory) in which this tracker as been defined
-- `getName()` returns tracker's name
-- `isEnabled()` returns a boolean reflecting if the tracker is enabled or not
-- `Enable()` to enable this tracker
-- `Disable()` to disable this tracker
+- `getContainer()` returns the container (directory) in which this RendezVous as been defined
+- `getName()` returns RendezVous's name
+- `isEnabled()` returns a boolean reflecting if the RendezVous is enabled or not
+- `Enable()` to enable this RendezVous
+- `Disable()` to disable this RendezVous
 - `Launch()` to launch all attached handlers
