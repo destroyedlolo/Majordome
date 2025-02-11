@@ -287,8 +287,8 @@ static void internal_setAt( class Timer *timer, unsigned short h, unsigned short
 	timer->setMin( m );
 	timer->unlock();
 
-	if( !timer->inEveryMode() )	// The timer need to be recalculed only if in 'at' mode
-		timer->sendCommand( Timer::Commands::RESET );
+	if(!timer->inEveryMode())	// The timer need to be recalculed only if in 'at' mode
+		timer->sendCommand( timer->isOver() ? Timer::Commands::LAUNCH : Timer::Commands::RESET );
 }
 
 static int mtmr_setAt( lua_State *L ){

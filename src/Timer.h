@@ -57,10 +57,17 @@ public:
 	unsigned long getEvery( void ){ return this->every; }
 	void setEvery( unsigned long v ){ this->every = v; }
 
-	unsigned short getAt( void ){ return this->at; }
-	unsigned short getMin( void ){ return this->min; }
+		/* Notez-bien :
+		 * 	- To avoid race condition, protect these function within
+		 * lock()/unlock() pair.
+		 *	- Probably, if runifover set, handlers have to be called.
+		 *
+		 *	Everything is handled by internal_setAt()
+		 */
 	void setAt( unsigned short v ){ this->at = v; }
 	void setMin( unsigned short v ){ this->min = v; }
+	unsigned short getAt( void ){ return this->at; }
+	unsigned short getMin( void ){ return this->min; }
 
 	bool getImmediate( void ){ return this->immediate; }
 	bool getRunIfOver( void ){ return this->runifover; }
