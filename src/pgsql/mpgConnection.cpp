@@ -1,8 +1,12 @@
 #include "mpgConnection.h"
+#include "pgSQL.h"
+#include "../Selene.h"
 
-bool mpgConnection::connect(pgSQL &s){
+mpgConnection::mpgConnection(pgSQL &s){
 	if(s.asConnectionString()){
-		return true;
-	} else
-		return false;
+		this->valide = true;
+	} else {
+		this->valide = false;
+		SelLog->Log('E', "[%s] no connection string", s.getNameC());
+	}
 }

@@ -5,11 +5,14 @@
 #include "pgSQL.h"
 #include <libpq-fe.h>
 
+class pgSQL;
+
 class mpgConnection {
 	PGconn *conn;
+	bool valide;
 
 public:
-	bool connect(pgSQL &);
+	mpgConnection(pgSQL &);
 };
 
 #endif

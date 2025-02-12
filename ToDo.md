@@ -22,6 +22,15 @@
 
 MAJORDOME_TRIGGER replaced by MAJORDOME_TOPIC_NAME
 
+--- Doc
+
+Postgresql :
+    Arch : 
+    Gentoo : 
+        package.use : dev-db/postgresql -server
+        emerge -va postgresql
+    Arch :
+        postgresql-libs
 --- Improvement
 
 needs : checking will not work if at same level (or lower).
