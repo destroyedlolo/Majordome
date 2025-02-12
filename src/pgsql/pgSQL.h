@@ -1,8 +1,8 @@
 /* Postgeql database access
  * Reference : https://www.postgresql.org/docs/current/libpq-example.html
  */
-#ifndef MAJPGSQL_H
-#define MAJPGSQL_H
+#ifndef MPGSQL_H
+#define MPGSQL_H
 
 #include "../Object.h"
 #include "../MayBeEmptyString.h"
@@ -16,6 +16,10 @@ class pgSQL : public Object {
 
 public:
 	pgSQL(const std::string &fch, std::string &where, std::string &name);
+
+	bool asConnectionString(void){ return(!this->conninfo.isEmpty()); }
+	MayBeEmptyString &getConnectionString(void){ return this->conninfo; }
+
 };
 
 #endif
