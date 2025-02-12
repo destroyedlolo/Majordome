@@ -25,7 +25,7 @@ local hl,ml = string.match(string.gsub( ConsigneLever:getVal(), '%.', ':'), "(%d
 if ModeChParents:getVal() == 'Absent' then
 	if not SelSharedVar.Get("ChParentsAbsent") then	-- N'envoie l'ordre de fermeture que si ca n'a pas été déjà fait
 		VoletChParents:Publish("Down")
-		SelLog.log('I', "Le volet de la chambre des parents se ferme")
+		SelLog.Log('I', "Le volet de la chambre des parents se ferme")
 		SelSharedVar.Set("ChParentsAbsent", 1)
 		VoletChParents:Disable()	-- Plus aucun ordre car les volets doivent restés baissés
 	end

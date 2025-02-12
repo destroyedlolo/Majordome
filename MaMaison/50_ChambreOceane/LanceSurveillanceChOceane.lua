@@ -29,7 +29,7 @@ if MAJORDOME_TIMER == consigne:getName() then	-- Lancé par la consigne
 
 elseif MAJORDOME_TIMER == "OuvertureVoletChOceane" then -- lancé par l'heure de levé
 	if consigne:getAt() > OuvertureVoletChOceane:getAt() then	-- ignoré car ce n'est pas encore l'heure de la consigne
-		SelLog.log('D', "Le début de la surveillance de la chambre d'Océane est reporté à consigne")
+		SelLog.Log('D', "Le début de la surveillance de la chambre d'Océane est reporté à consigne")
 		return
 	end
 

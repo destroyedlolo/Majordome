@@ -3,7 +3,7 @@
 -->> when=0215OrOver
 -->> need_topic=JourFeries
 --
--->> disabled
+--->> disabled
 
 require("socket")
 local https = require("ssl.https")
