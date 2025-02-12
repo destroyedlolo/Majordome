@@ -2,7 +2,7 @@ Majordome's configuration
 =========================
 
 This little page explaines how to configure **Majordome**.<br>
-Some examples are provided also in `Config` directory at the root of this project.
+Some examples are provided also in [SamplesCode](SamplesCode/) and [UseCases](UseCases/) directory at the root of this project.
 
 # Majordome command line options
 
@@ -48,7 +48,7 @@ Example (which is the default value) :<br>
 
 # Automation Configuration
 
-Automation configurations are grouped (for a specific Majordome instance) in a directory tree likes specified with the `ApplicationDirectory=` parameter. A typical directory tree looks like :
+Automation configurations are grouped (for a specific Majordome instance) in a directory tree, specified with the `ApplicationDirectory=` parameter. A typical directory tree looks like :
 ```
 00_Majordome
 01_Pool
@@ -59,7 +59,7 @@ Directories, also known as *containers*, are loaded in order (00_* first, 01_* a
 An error is raised if an object is duplicated.
 
 > [!TIP]
-> Have a look on `00_Majordome` provided in [Documentations/SamplesCode/AllComponents/](Documentations/SamplesCode/AllComponents/) directory. It contains some code that can be usefull in all project. 
+> Have a look on `00_Majordome` provided in [Documentations/SamplesCode/AllComponents/](SamplesCode/AllComponents/) directory. It contains some code that can be usefull in all project. 
 > ```
 > LogToFile.lua
 > MidnightOrAtLaunch.timer

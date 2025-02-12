@@ -65,3 +65,16 @@ File **Result.lua**
 
 SelLog.Log("Result is running")
 ```
+
+## at Lua side
+### Exposed variables
+- **MAJORDOME_Myself** is automatically created and correspond to the current tracker
+
+### Exposed objects
+RendezVous are exposed as **MajordomeRendezVous** with following methods :
+- `getContainer()` returns the container (directory) in which this RendezVous as been defined
+- `getName()` returns RendezVous's name
+- `isEnabled()` returns a boolean reflecting if the RendezVous is enabled or not
+- `Enable()` to enable this RendezVous
+- `Disable()` to disable this RendezVous
+- `Launch()` to launch all attached handlers
