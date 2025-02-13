@@ -5,6 +5,7 @@
 #define MPGSQL_H
 
 #include "../Object.h"
+#include "../ObjCollection.h"
 #include "../MayBeEmptyString.h"
 
 #include <string>
@@ -22,4 +23,5 @@ public:
 
 };
 
+typedef ObjCollection<pgSQL *> pgSQLCollection;
 #endif

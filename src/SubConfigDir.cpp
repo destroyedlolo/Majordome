@@ -23,6 +23,11 @@
  * Some space are left for modules extensions (like Toile's)
  */
 static const SubConfigDir::extweight fileext[] = {
+#ifdef DBASE
+#	ifdef PGSQL
+	{ ".pgsql", 0xc0 },
+#	endif
+#endif
 	{ ".topic", 0xc0 },
 	{ ".timer", 0xc0 },
 	{ ".rendezvous", 0xc0 },
@@ -176,6 +181,18 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 				exit(EXIT_FAILURE);
 			} else
 				cfg.NamedMinMaxList.insert( std::make_pair(name, trk) );
+#ifdef PGSQL
+		} else if(ext == ".pgsql"){
+			std::string name;
+			auto pg = new pgSQL( completpath, where, name );
+
+			pgSQLCollection::iterator prev;
+			if((prev = cfg.pgSQLList.find(name)) != cfg.pgSQLList.end()){
+				SelLog->Log('F', "pgsql '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhereC());
+				exit(EXIT_FAILURE);
+			} else
+				cfg.pgSQLList.insert( std::make_pair(name, pg) );
+#endif
 #	ifdef DEBUG
 		} else 
 			if(debug)

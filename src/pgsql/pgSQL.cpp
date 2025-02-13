@@ -8,6 +8,8 @@
 #include <cassert>
 
 pgSQL::pgSQL(const std::string &fch, std::string &where, std::string &name) : Object(fch, where, name){
+puts("pgSQL::constructeur");
+
 	/*
 	 * Reading file's content
 	 */
@@ -50,7 +52,7 @@ pgSQL::pgSQL(const std::string &fch, std::string &where, std::string &name) : Ob
 void pgSQL::readConfigDirective( std::string &l, std::string &name, bool &nameused ){
 	MayBeEmptyString arg;
 
-	if( !!(arg = striKWcmp( l, "-->> BDstring=" ))){
+	if( !!(arg = striKWcmp( l, "-->> pgConnectionstring=" ))){
 		this->conninfo = arg;
 
 		if(verbose)

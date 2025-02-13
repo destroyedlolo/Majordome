@@ -9,7 +9,7 @@
 
 # PostgreSQL database access
 # needs postgresql-libs installed
-PGSQL='-DPGSQL'
+PGSQL='-DPGSQL -DDBASE'
 
 # Graphical extension : Toile
 # Not yet !
@@ -95,7 +95,7 @@ echo
 echo "----------------"
 echo
 
-	LFMakeMaker -v +f=Makefile -cc="g++" --opts="-Wall -O2 ${DEBUG} ${TOILE} -lpthread -lpaho-mqtt3c -ldl \
-	${LUA} ${LUALIB} \
-	-I$SELDIR/include -L$SELDIR/lib $SELLIB" ${SOURCES} -t=../Majordome > Makefile
+LFMakeMaker -v +f=Makefile -cc="g++" --opts="-Wall -O2 ${DEBUG} ${TOILE} ${PGSQL} -lpthread -lpaho-mqtt3c -ldl \
+${LUA} ${LUALIB} \
+-I$SELDIR/include -L$SELDIR/lib $SELLIB" ${SOURCES} -t=../Majordome > Makefile
 
