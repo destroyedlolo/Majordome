@@ -22,6 +22,7 @@
 
 #ifdef PGSQL
 #	include "pgsql/pgSQL.h"
+#	include "pgsql/Feed.h"
 #endif
 
 #include <lua.hpp>	/* Lua's state needed */
@@ -60,6 +61,8 @@ public:
 #	ifdef PGSQL
 	pgSQLCollection pgSQLList;
 #	endif
+
+	FeedCollection FeedsList;
 #endif
 		/* Topics' */
 	void SubscribeTopics( void );	// Subscribe to defined MQTT topics

@@ -23,14 +23,15 @@
  * Some space are left for modules extensions (like Toile's)
  */
 static const SubConfigDir::extweight fileext[] = {
+	{ ".topic", 0xc0 },
+	{ ".timer", 0xc0 },
+	{ ".rendezvous", 0xc0 },
 #ifdef DBASE
 #	ifdef PGSQL
 	{ ".pgsql", 0xc0 },
 #	endif
+	{ ".feed", 0xa0 },
 #endif
-	{ ".topic", 0xc0 },
-	{ ".timer", 0xc0 },
-	{ ".rendezvous", 0xc0 },
 	{ ".minmax", 0x80 },
 	{ ".namedminmax", 0x80 },
 	{ ".tracker", 0x80 },
@@ -181,7 +182,8 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 				exit(EXIT_FAILURE);
 			} else
 				cfg.NamedMinMaxList.insert( std::make_pair(name, trk) );
-#ifdef PGSQL
+#ifdef DBASE
+#	ifdef PGSQL
 		} else if(ext == ".pgsql"){
 			std::string name;
 			auto pg = new pgSQL( completpath, where, name );
@@ -192,6 +194,17 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 				exit(EXIT_FAILURE);
 			} else
 				cfg.pgSQLList.insert( std::make_pair(name, pg) );
+#	endif
+		} else if(ext == ".feed"){
+			std::string name;
+			auto f = new Feed( completpath, where, name );
+
+			FeedCollection::iterator prev;
+			if((prev = cfg.FeedsList.find(name)) != cfg.FeedsList.end()){
+				SelLog->Log('F', "Feed '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhereC());
+				exit(EXIT_FAILURE);
+			} else
+				cfg.FeedsList.insert( std::make_pair(name, f) );
 #endif
 #	ifdef DEBUG
 		} else 

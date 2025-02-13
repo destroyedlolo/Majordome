@@ -2,13 +2,16 @@
 #include "pgSQL.h"
 #include "../Selene.h"
 
-mpgConnection::mpgConnection(pgSQL &s) : conn(NULL) {
-puts("constructeur");
+bool mpgConnection::connect(pgSQL &s) {
 	if(s.asConnectionString()){
 		this->valide = true;
+
+			/* ToDo */
+		return true;
 	} else {
 		this->valide = false;
 		SelLog->Log('E', "[%s] no connection string", s.getNameC());
+		return false;
 	}
 }
 

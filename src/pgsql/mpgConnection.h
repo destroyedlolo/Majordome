@@ -20,8 +20,11 @@ class mpgConnection {
 	bool valide;
 
 public:
-	mpgConnection(pgSQL &);
+	mpgConnection() : conn(NULL), valide(false){};
 	~mpgConnection();
+
+	bool connect(pgSQL &);
+	bool isConnected(void){ return this->valide; }
 };
 
 #endif
