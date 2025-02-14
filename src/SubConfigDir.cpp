@@ -197,7 +197,7 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 #	endif
 		} else if(ext == ".feed"){
 			std::string name;
-			auto f = new Feed( completpath, where, name );
+			auto f = new Feed( completpath, where, name, L );
 
 			FeedCollection::iterator prev;
 			if((prev = cfg.FeedsList.find(name)) != cfg.FeedsList.end()){

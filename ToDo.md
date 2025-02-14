@@ -18,6 +18,11 @@
 
 ### DRM
 
+---
+
+Dans tous les \*::feedState(), supprimer les find().
+Voir Feed.
+
 --- Migration to v6
 
 MAJORDOME_TRIGGER replaced by MAJORDOME_TOPIC_NAME

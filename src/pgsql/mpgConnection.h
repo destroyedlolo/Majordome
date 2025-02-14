@@ -13,18 +13,21 @@
 #include "pgSQL.h"
 #include <libpq-fe.h>
 
-class pgSQL;
-
 class mpgConnection {
-	PGconn *conn;
-	bool valide;
+	pgSQL *db;		// Database to connect to
+	PGconn *conn;	// libpg database connection
+
+protected:
+			// will be overwritten (see Feed)
+	virtual const char *getNameC(){ return "????"; }
 
 public:
-	mpgConnection() : conn(NULL), valide(false){};
+	mpgConnection() : db(NULL), conn(NULL){};
 	~mpgConnection();
 
-	bool connect(pgSQL &);
-	bool isConnected(void){ return this->valide; }
+	bool connect(void);
+	void disconnect(void);
+	bool isConnected(void){ return !!this->conn; }
 };
 
 #endif
