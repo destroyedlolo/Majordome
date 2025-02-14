@@ -14,10 +14,10 @@
 #include <libpq-fe.h>
 
 class mpgConnection {
+protected:
 	pgSQL *db;		// Database to connect to
 	PGconn *conn;	// libpg database connection
 
-protected:
 			// will be overwritten (see Feed)
 	virtual const char *getNameC(){ return "????"; }
 

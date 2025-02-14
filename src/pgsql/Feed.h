@@ -10,9 +10,7 @@
 
 class pgSQL;
 
-class Feed : public Handler {
-	mpgConnection *db;
-
+class Feed : public mpgConnection, public Handler {
 	virtual void readConfigDirective( std::string &l, std::string &name, bool &nameused );
 	virtual void feedState(lua_State *L);
 

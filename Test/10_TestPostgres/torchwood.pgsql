@@ -1,6 +1,6 @@
 -- PostgreSQL database access definition
 --
--- name of the timer
+-- name of the database declaration
 -- if not set, takes the filename
 --->> name=toto
 --

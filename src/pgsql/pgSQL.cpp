@@ -8,7 +8,6 @@
 #include <cassert>
 
 pgSQL::pgSQL(const std::string &fch, std::string &where, std::string &name) : Object(fch, where, name){
-puts("pgSQL::constructeur");
 
 	/*
 	 * Reading file's content

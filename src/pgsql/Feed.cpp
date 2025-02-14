@@ -8,7 +8,7 @@
 #include <cstring>
 #include <cassert>
 
-Feed::Feed(const std::string &fch, std::string &where, std::string &name, lua_State *L): Object(fch, where, name), Handler(fch, where, name), db(NULL) {
+Feed::Feed(const std::string &fch, std::string &where, std::string &name, lua_State *L): Object(fch, where, name), Handler(fch, where, name) {
 	/*
 	 * Reading file's content
 	 */
@@ -61,7 +61,7 @@ Feed::Feed(const std::string &fch, std::string &where, std::string &name, lua_St
 void Feed::readConfigDirective( std::string &l, std::string &name, bool &nameused ){
 	MayBeEmptyString arg;
 
-	if( !!(arg = striKWcmp( l, "-->> listen=" ))){
+	if(!!(arg = striKWcmp( l, "-->> listen=" ))){
 		TopicCollection::iterator topic;
 		if( (topic = config.TopicsList.find(arg)) != config.TopicsList.end()){
 			if(verbose)
@@ -70,6 +70,17 @@ void Feed::readConfigDirective( std::string &l, std::string &name, bool &nameuse
 //			nameused = true;
 		} else {
 			SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
+	} else if(!!(arg = striKWcmp( l, "-->> Database=" ))){
+		pgSQLCollection::iterator db;
+		if( (db = config.pgSQLList.find(arg)) != config.pgSQLList.end()){
+			if(verbose)
+				SelLog->Log('C', "\t\tDatabase : %s", arg.c_str());
+			this->db = db->second;
+//			nameused = true;
+		} else {
+			SelLog->Log('F', "\t\tDatabase '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
 	} else 
