@@ -19,8 +19,14 @@ bool mpgConnection::connect(void){
 		exit(EXIT_FAILURE);
 	}
 
-	/* ToDo */
-this->conn = (PGconn*)1;
+		// Connection to the database
+	this->conn = PQconnectdb(this->db->getConnectionString().c_str());
+	if(PQstatus(conn) != CONNECTION_OK){
+		SelLog->Log('E', "[%s] Error : %s", this->db->getNameC(), PQerrorMessage(conn));
+		PQfinish(this->conn);
+		this->conn = NULL;
+		return false;
+	}
 
 	if(debug && !this->isQuiet())
 		SelLog->Log('T', "[%s] Connected", this->db->getNameC());
@@ -33,8 +39,7 @@ void mpgConnection::disconnect(void){
 		if(debug && !this->isQuiet())
 			SelLog->Log('T', "[%s] Disconnect", this->db->getNameC());
 
-		/* ToDo */
-
+		PQfinish(this->conn);
 		this->conn = NULL;
 	}
 }

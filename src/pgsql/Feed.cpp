@@ -72,6 +72,10 @@ void Feed::readConfigDirective( std::string &l, std::string &name, bool &nameuse
 			SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
+	} else if(!!(arg = striKWcmp( l, "-->> table=" ))){
+		this->TableName = arg;
+			if(verbose)
+				SelLog->Log('C', "\t\tTable : %s", arg.c_str());
 	} else if(!!(arg = striKWcmp( l, "-->> Database=" ))){
 		pgSQLCollection::iterator db;
 		if( (db = config.pgSQLList.find(arg)) != config.pgSQLList.end()){
@@ -100,12 +104,22 @@ void Feed::feedState( lua_State *L ){
 	lua_setglobal( L, "MAJORDOME_Myself" );
 }
 
+const char *Feed::getTableName(void){
+	if(!!this->TableName)
+		return(this->TableName.c_str());
+	else
+		return(this->getNameC());
+}
+
 bool Feed::execAsync(lua_State *L){
-puts("Feed::execAsync");
+	printf("--> '%s'\n", this->getTableName());
+
+	/* Voir PQexecParams pour éviter une injection SQL */
+#if 0
 	if(!this->connect())
 		return false;
 
 	this->disconnect();
-
+#endif
 	return true;
 }

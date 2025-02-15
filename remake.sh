@@ -79,7 +79,7 @@ else
 	echo "PostgreSQL : included"
 
 	SOURCES+=' pgsql/*.cpp'
-	LIBS=' -lpq'
+	LIBS+=' -lpq'
 fi
 
 
@@ -97,5 +97,6 @@ echo
 
 LFMakeMaker -v +f=Makefile -cc="g++" --opts="-Wall -O2 ${DEBUG} ${TOILE} ${PGSQL} -lpthread -lpaho-mqtt3c -ldl \
 ${LUA} ${LUALIB} \
+${LIBS} \
 -I$SELDIR/include -L$SELDIR/lib $SELLIB" ${SOURCES} -t=../Majordome > Makefile
 

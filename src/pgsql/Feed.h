@@ -8,6 +8,7 @@
 #include "../Handler.h"
 #include "../HandlersExecutor.h"
 #include "../ObjCollection.h"
+#include "../MayBeEmptyString.h"
 
 class pgSQL;
 
@@ -19,6 +20,9 @@ class Feed : public mpgConnection, public Handler, virtual public HandlersExecut
 	virtual bool execAsync(lua_State *L);	// Overloading to handle data acceptation 
 
 	bool isQuiet(){ return this->Object::isQuiet(); };
+
+	MayBeEmptyString TableName;
+	const char *getTableName(void);
 
 protected:
 	virtual const char *getNameC(){ return(this->Object::getNameC()); };

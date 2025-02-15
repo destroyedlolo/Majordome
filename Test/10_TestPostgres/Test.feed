@@ -5,7 +5,7 @@
 --->> name=toto
 --
 -- The database to connect to
--->> Database=torchwood
+-->> Database=database
 --
 -- The table where data will be inserted
 -- if not set, the same as "name"
