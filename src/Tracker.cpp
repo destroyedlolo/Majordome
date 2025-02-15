@@ -136,6 +136,7 @@ bool Tracker::execAsync(lua_State *L){
 	if( !this->isEnabled() || this->status != _status::CHECKING ){
 		if(verbose)
 			SelLog->Log('T', "Tracker '%s' from '%s' is disabled or inactive", this->getNameC(), this->getWhereC() );
+		lua_close( L );
 		return false;
 	}
 	
@@ -156,6 +157,7 @@ bool Tracker::execAsync(lua_State *L){
 			this->done();
 	}
 
+	lua_close( L );
 	return r;
 }
 
