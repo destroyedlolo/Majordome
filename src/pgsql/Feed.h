@@ -6,18 +6,26 @@
 #include "mpgConnection.h"
 #include "../Object.h"
 #include "../Handler.h"
+#include "../HandlersExecutor.h"
 #include "../ObjCollection.h"
 
 class pgSQL;
 
-class Feed : public mpgConnection, public Handler {
+class Feed : public mpgConnection, public Handler, virtual public HandlersExecutor {
 	virtual void readConfigDirective( std::string &l, std::string &name, bool &nameused );
 	virtual void feedState(lua_State *L);
+
+		/* Executable */
+	virtual bool execAsync(lua_State *L);	// Overloading to handle data acceptation 
+
+	bool isQuiet(){ return this->Object::isQuiet(); };
 
 protected:
 	virtual const char *getNameC(){ return(this->Object::getNameC()); };
 
 public:
+	virtual ~Feed(){};
+
 	Feed(const std::string &fch, std::string &where, std::string &name, lua_State *L);
 };
 

@@ -99,3 +99,13 @@ void Feed::feedState( lua_State *L ){
 	lua_setmetatable(L, -2);
 	lua_setglobal( L, "MAJORDOME_Myself" );
 }
+
+bool Feed::execAsync(lua_State *L){
+puts("Feed::execAsync");
+	if(!this->connect())
+		return false;
+
+	this->disconnect();
+
+	return true;
+}

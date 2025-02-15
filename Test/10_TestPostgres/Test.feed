@@ -4,4 +4,15 @@
 -- if not set, takes the filename
 --->> name=toto
 --
+-- The database to connect to
 -->> Database=torchwood
+--
+-- The table where data will be inserted
+-- if not set, the same as "name"
+--->> table=mytable
+--
+-- Topic to listen too
+-->> listen=Test
+--
+-- Remove some tracing messages
+--->> quiet

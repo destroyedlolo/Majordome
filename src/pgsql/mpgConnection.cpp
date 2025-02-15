@@ -4,7 +4,6 @@
 #include "pgSQL.h"
 
 mpgConnection::~mpgConnection(){
-puts("destructeur");
 	this->disconnect();
 }
 
@@ -21,13 +20,17 @@ bool mpgConnection::connect(void){
 	}
 
 	/* ToDo */
+this->conn = (PGconn*)1;
 
-	return false;
+	if(debug && !this->isQuiet())
+		SelLog->Log('T', "[%s] Connected", this->db->getNameC());
+
+	return true;
 }
 
 void mpgConnection::disconnect(void){
 	if(this->conn){
-		if(debug)
+		if(debug && !this->isQuiet())
 			SelLog->Log('T', "[%s] Disconnect", this->db->getNameC());
 
 		/* ToDo */

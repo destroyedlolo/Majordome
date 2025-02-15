@@ -7,4 +7,6 @@
 -- Connection string : see PostgreSQL documentation
 -- Something like :
 --	postgresql://[user[:password]@][[host][:port][,...]][/dbname][?name=value[&...]]
+-- to test it, you can try something like:
+--	psql -t postgresql://test@torchwood.chez.moi -c 'select current_date'
 -->> pgConnectionstring=postgresql://test@torchwood.chez.moi

@@ -18,12 +18,17 @@ protected:
 	pgSQL *db;		// Database to connect to
 	PGconn *conn;	// libpg database connection
 
-			// will be overwritten (see Feed)
+			/* Wrapper to Object's methods.
+			 * Only as it's needed for logging and I don't want to
+			 * inherit from Object.
+			 * will be overwritten (see Feed)
+			 */
 	virtual const char *getNameC(){ return "????"; }
+	virtual bool isQuiet() = 0;
 
 public:
 	mpgConnection() : db(NULL), conn(NULL){};
-	~mpgConnection();
+	virtual ~mpgConnection();
 
 	bool connect(void);
 	void disconnect(void);

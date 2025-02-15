@@ -251,6 +251,14 @@ void quit(int){
 
 void bye(void){
 	config.RunShutdowns();
+
+#if DBASE
+		/* Properly close database connection 
+		 * to avoid leaks at server side
+		 */
+	for(auto &i : config.FeedsList)
+		delete(i.second);
+#endif
 }
 
 int main(int ac, char **av){
