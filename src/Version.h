@@ -1,6 +1,6 @@
 /* Majordome's version
  *
- * Copyright 2018-2024 Laurent Faillie
+ * Copyright 2018-2025 Laurent Faillie
  *
  * 		Majordome is covered by
  *		Creative Commons Attribution-NonCommercial 3.0 License
@@ -34,5 +34,5 @@
  *	20/01/2025 - v6.00 - LF - Code redesign
  */
 
-#define VERSION 6.0010
+#define VERSION 6.0011
 #define COPYRIGHT "Majordome (c) L.Faillie 2018-2025"
