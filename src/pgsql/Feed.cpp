@@ -125,17 +125,21 @@ bool Feed::execAsync(lua_State *L){
 
 	LuaExec::boolRetCode rc;
 	std::string rs;
-	lua_Number retn;
+	lua_Number val = NAN;
 
-	bool r = this->LuaExec::execSync(L, &rc, &rs, &retn);
+	bool r = this->LuaExec::execSync(L, &rc, &rs, &val);
 	if( rc != LuaExec::boolRetCode::RCfalse ){
-		lua_Number val;
-		lua_getglobal(L, "MAJORDOME_PAYLOAD");
-		if(lua_isnumber(L, -1)){
-			val = lua_tonumber(L, -1);
+		if(isnan(val)){
+			lua_getglobal(L, "MAJORDOME_PAYLOAD");
+			if(lua_isnumber(L, -1))
+				val = lua_tonumber(L, -1);
+			else
+				SelLog->Log('E', "['%s'] can't find MAJORDOME_PAYLOAD variable", this->getNameC());
+		}
 		
+		if(val != NAN){
 			if(debug && !this->isQuiet())
-				SelLog->Log('T', "[Feed '%s'] accepting %.0f", this->getNameC(), val);
+				SelLog->Log('T', "['%s'] accepting %.0f", this->getNameC(), val);
 
 			/* Build SQL request */
 			if(!this->connect()){
@@ -153,14 +157,13 @@ bool Feed::execAsync(lua_State *L){
 			cmd += " )";
 
 			if(!this->doSQL(cmd.c_str()))
-				SelLog->Log('E', "[Feed '%s'] %s", this->getNameC(), this->lastError());
-		} else
-			SelLog->Log('E', "[Feed '%s'] can't find MAJORDOME_PAYLOAD variable", this->getNameC());
-
+				SelLog->Log('E', "['%s'] %s", this->getNameC(), this->lastError());
+		}
+	
 		this->disconnect();
 		lua_close(L);
-	}else
-		SelLog->Log('D', "[Feed '%s'] Data rejected", this->getNameC());
+	} else
+		SelLog->Log('D', "['%s'] Data rejected", this->getNameC());
 
 	return r;
 }

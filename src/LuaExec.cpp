@@ -405,8 +405,10 @@ bool LuaExec::execSync(lua_State *L, enum boolRetCode *rc, std::string *rs, lua_
 
 	if(retn){
 		*retn = NAN;
-		if(lua_isnumber(L, -1))
-			*retn = lua_tonumber(L, -1);
+		if(lua_isnumber(L, -2)){
+			*retn = lua_tonumber(L, -2);
+printf("ret : %f\n", *retn);
+		}
 	}
 
 	return true;

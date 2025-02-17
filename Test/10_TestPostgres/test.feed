@@ -25,6 +25,8 @@ print("Data ", MAJORDOME_PAYLOAD)
 
 -- With 1-wire probe, 85 means underpowered
 -- So we can't accept this data
-if(tonumber(MAJORDOME_PAYLOAD) == 85) then
+if tonumber(MAJORDOME_PAYLOAD) == 85 then
 	return false;
+elseif tonumber(MAJORDOME_PAYLOAD) == 50 then
+	return 49;
 end
