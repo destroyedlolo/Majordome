@@ -17,6 +17,7 @@ class mpgConnection {
 protected:
 	pgSQL *db;		// Database to connect to
 	PGconn *conn;	// libpg database connection
+	PGresult   *res;
 
 			/* Wrapper to Object's methods.
 			 * Only as it's needed for logging and I don't want to
@@ -27,12 +28,17 @@ protected:
 	virtual bool isQuiet() = 0;
 
 public:
-	mpgConnection() : db(NULL), conn(NULL){};
+	mpgConnection() : db(NULL), conn(NULL), res(NULL){};
 	virtual ~mpgConnection();
 
 	bool connect(void);
 	void disconnect(void);
-	bool isConnected(void){ return !!this->conn; }
+	bool isConnected(void){ return !!this->conn; };
+
+	PGconn *getConnection(void){ return this->conn; };
+
+	bool doSQL(const char *);		// Execute a simple query
+	const char *lastError(void);	// get last error message
 };
 
 #endif

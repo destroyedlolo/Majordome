@@ -118,9 +118,7 @@ const char *Feed::getTableName(void){
 }
 
 bool Feed::execAsync(lua_State *L){
-	printf("--> '%s'\n", this->getTableName());
-
-	/* Voir PQexecParams pour éviter une injection SQL 
+	/* To prevent SQL injection
 	 * https://www.postgresql.org/docs/current/libpq-exec.html#LIBPQ-EXEC-ESCAPE-STRING
 	insert into test values (now(), 10);
 	*/
@@ -130,7 +128,7 @@ bool Feed::execAsync(lua_State *L){
 	if(lua_isnumber(L, -1)){
 		val = lua_tonumber(L, -1);
 		
-		if(debug)
+		if(debug && !this->isQuiet())
 			SelLog->Log('T', "[Feed '%s'] accepting %.0f", this->getNameC(), val);
 
 		/* Build SQL request */
@@ -148,8 +146,8 @@ bool Feed::execAsync(lua_State *L){
 		cmd += std::to_string(val);
 		cmd += " )";
 
-		printf(">> '%s'\n", cmd.c_str());
-
+		if(!this->doSQL(cmd.c_str()))
+			SelLog->Log('E', "[Feed '%s'] %s", this->getNameC(), this->lastError());
 	} else
 		SelLog->Log('E', "[Feed '%s'] can't find MAJORDOME_PAYLOAD variable", this->getNameC());
 

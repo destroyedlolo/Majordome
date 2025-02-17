@@ -43,3 +43,18 @@ void mpgConnection::disconnect(void){
 		this->conn = NULL;
 	}
 }
+
+bool mpgConnection::doSQL(const char *q){
+	if(debug && !this->isQuiet())
+		SelLog->Log('T', "['%s'] Running query : %s", this->getNameC(), q);
+
+	PGresult *res = PQexec(this->conn, q);
+	bool ret = (PQresultStatus(res) == PGRES_COMMAND_OK);
+	PQclear(res);
+
+	return ret;
+}
+
+const char *mpgConnection::lastError(void){
+	return PQerrorMessage(conn);
+}

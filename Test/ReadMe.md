@@ -9,7 +9,7 @@ createuser test ...
 ```
 Then login as test then create the target table :
 ```
-CREATE TABLE Test (
+CREATE TABLE test (
    sample_time TIMESTAMP WITH TIME ZONE,
    value INTEGER
 );
