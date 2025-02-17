@@ -123,36 +123,44 @@ bool Feed::execAsync(lua_State *L){
 	insert into test values (now(), 10);
 	*/
 
-	lua_Number val;
-	lua_getglobal(L, "MAJORDOME_PAYLOAD");
-	if(lua_isnumber(L, -1)){
-		val = lua_tonumber(L, -1);
+	LuaExec::boolRetCode rc;
+	std::string rs;
+	lua_Number retn;
+
+	bool r = this->LuaExec::execSync(L, &rc, &rs, &retn);
+	if( rc != LuaExec::boolRetCode::RCfalse ){
+		lua_Number val;
+		lua_getglobal(L, "MAJORDOME_PAYLOAD");
+		if(lua_isnumber(L, -1)){
+			val = lua_tonumber(L, -1);
 		
-		if(debug && !this->isQuiet())
-			SelLog->Log('T', "[Feed '%s'] accepting %.0f", this->getNameC(), val);
+			if(debug && !this->isQuiet())
+				SelLog->Log('T', "[Feed '%s'] accepting %.0f", this->getNameC(), val);
 
-		/* Build SQL request */
-		if(!this->connect()){
-			lua_close(L);
-			return false;
-		}
+			/* Build SQL request */
+			if(!this->connect()){
+				lua_close(L);
+				return false;
+			}
 
-		char *t;
-		std::string cmd("INSERT INTO ");
-		cmd += (t = PQescapeIdentifier(this->conn, this->getTableName(), strlen(this->getTableName())));
-		PQfreemem(t);
+			char *t;
+			std::string cmd("INSERT INTO ");
+			cmd += (t = PQescapeIdentifier(this->conn, this->getTableName(), strlen(this->getTableName())));
+			PQfreemem(t);
 
-		cmd += " VALUES ( now(), ",
-		cmd += std::to_string(val);
-		cmd += " )";
+			cmd += " VALUES ( now(), ",
+			cmd += std::to_string(val);
+			cmd += " )";
 
-		if(!this->doSQL(cmd.c_str()))
-			SelLog->Log('E', "[Feed '%s'] %s", this->getNameC(), this->lastError());
-	} else
-		SelLog->Log('E', "[Feed '%s'] can't find MAJORDOME_PAYLOAD variable", this->getNameC());
+			if(!this->doSQL(cmd.c_str()))
+				SelLog->Log('E', "[Feed '%s'] %s", this->getNameC(), this->lastError());
+		} else
+			SelLog->Log('E', "[Feed '%s'] can't find MAJORDOME_PAYLOAD variable", this->getNameC());
 
-	this->disconnect();
-	lua_close(L);
+		this->disconnect();
+		lua_close(L);
+	}else
+		SelLog->Log('D', "[Feed '%s'] Data rejected", this->getNameC());
 
-	return true;
+	return r;
 }
