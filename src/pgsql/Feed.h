@@ -24,6 +24,9 @@ class Feed : public mpgConnection, public Handler, virtual public HandlersExecut
 	MayBeEmptyString TableName;
 	const char *getTableName(void);
 
+	bool numerical;	// Numerical value
+	bool getNumerical(void){ return this->numerical; };
+
 protected:
 	virtual const char *getNameC(){ return(this->Object::getNameC()); };
 

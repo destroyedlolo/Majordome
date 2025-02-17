@@ -76,6 +76,12 @@ void Feed::readConfigDirective( std::string &l, std::string &name, bool &nameuse
 		this->TableName = arg;
 			if(verbose)
 				SelLog->Log('C', "\t\tTable : %s", arg.c_str());
+#if 0/* For the moment, the value can be only numeric */
+	} else if(l == "-->> Numerical"){
+		this->numerical = true;
+			if(verbose)
+				SelLog->Log('C', "\t\tNumerical");
+#endif
 	} else if(!!(arg = striKWcmp( l, "-->> Database=" ))){
 		pgSQLCollection::iterator db;
 		if( (db = config.pgSQLList.find(arg)) != config.pgSQLList.end()){
@@ -114,12 +120,41 @@ const char *Feed::getTableName(void){
 bool Feed::execAsync(lua_State *L){
 	printf("--> '%s'\n", this->getTableName());
 
-	/* Voir PQexecParams pour éviter une injection SQL */
-#if 0
-	if(!this->connect())
-		return false;
+	/* Voir PQexecParams pour éviter une injection SQL 
+	 * https://www.postgresql.org/docs/current/libpq-exec.html#LIBPQ-EXEC-ESCAPE-STRING
+	insert into test values (now(), 10);
+	*/
+
+	lua_Number val;
+	lua_getglobal(L, "MAJORDOME_PAYLOAD");
+	if(lua_isnumber(L, -1)){
+		val = lua_tonumber(L, -1);
+		
+		if(debug)
+			SelLog->Log('T', "[Feed '%s'] accepting %.0f", this->getNameC(), val);
+
+		/* Build SQL request */
+		if(!this->connect()){
+			lua_close(L);
+			return false;
+		}
+
+		char *t;
+		std::string cmd("INSERT INTO ");
+		cmd += (t = PQescapeIdentifier(this->conn, this->getTableName(), strlen(this->getTableName())));
+		PQfreemem(t);
+
+		cmd += " VALUES ( now(), ",
+		cmd += std::to_string(val);
+		cmd += " )";
+
+		printf(">> '%s'\n", cmd.c_str());
+
+	} else
+		SelLog->Log('E', "[Feed '%s'] can't find MAJORDOME_PAYLOAD variable", this->getNameC());
 
 	this->disconnect();
-#endif
+	lua_close(L);
+
 	return true;
 }
