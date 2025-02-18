@@ -1,5 +1,6 @@
 > [!IMPORTANT]  
 > **Toile** and **V6** branches are currently on heavy development. It's not yet fully tested and stable (i.e. subject to changes).
+> **Master** branch is the stable one.
 
 ----
 
