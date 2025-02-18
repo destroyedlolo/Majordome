@@ -31,6 +31,7 @@ static const SubConfigDir::extweight fileext[] = {
 	{ ".pgsql", 0xc0 },
 #	endif
 	{ ".feed", 0xa0 },
+	{ ".namedfeed", 0xa0 },
 #endif
 	{ ".minmax", 0x80 },
 	{ ".namedminmax", 0x80 },
@@ -205,6 +206,16 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 				exit(EXIT_FAILURE);
 			} else
 				cfg.FeedsList.insert( std::make_pair(name, f) );
+		} else if(ext == ".namedfeed"){
+			std::string name;
+			auto f = new NamedFeed( completpath, where, name, L );
+
+			NamedFeedCollection::iterator prev;
+			if((prev = cfg.NamedFeedsList.find(name)) != cfg.NamedFeedsList.end()){
+				SelLog->Log('F', "NamedFeed '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhereC());
+				exit(EXIT_FAILURE);
+			} else
+				cfg.NamedFeedsList.insert( std::make_pair(name, f) );
 #endif
 #	ifdef DEBUG
 		} else 
