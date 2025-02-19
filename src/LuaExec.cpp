@@ -427,10 +427,8 @@ bool LuaExec::execSync(lua_State *L, enum boolRetCode *rc, lua_Number *retn){
 }
 
 bool LuaExec::execSync(lua_State *L, std::string *rs, enum boolRetCode *rc, lua_Number *retn){
-	if(rc)
-		*rc = boolRetCode::RCnil;
-	if(retn)
-		*retn = NAN;
+	*rc = boolRetCode::RCnil;
+	*retn = NAN;
 
 	if(!this->prepareExecSync(L))
 		return false;
@@ -442,31 +440,15 @@ bool LuaExec::execSync(lua_State *L, std::string *rs, enum boolRetCode *rc, lua_
 		 * -2 : string value or RC
 		 */
 
-printf("-1 : %s\n", lua_typename(L, lua_type(L, -1)));
-printf("-2 : %s\n", lua_typename(L, lua_type(L, -2)));
+	if(lua_isboolean(L, -2))
+		*rc = lua_toboolean(L, -2) ? boolRetCode::RCtrue : boolRetCode::RCfalse;
 
-	if(rc){
-		*rc = boolRetCode::RCnil;
-		if(lua_isboolean(L, -2))
-			*rc = lua_toboolean(L, -2) ? boolRetCode::RCtrue : boolRetCode::RCfalse;
-	}
+	if(lua_isstring(L, -2))
+		*rs = lua_tostring(L, -2);
 
-	if(rs){
-		*rs = "";
-		if(lua_isstring(L, -2))
-			*rs = lua_tostring(L, -2);
-	}
-
-	if(retn){
-		*retn = NAN;
-		int idx = -2;
-
-		if(!lua_isnil(L,-1))
-			idx = -1;
-
-		if(lua_isnumber(L, idx)){
-			*retn = lua_tonumber(L, idx);
-		}
+	if(lua_isnumber(L, -1)){
+		*rc = boolRetCode::RCforced;
+		*retn = lua_tonumber(L, -1);
 	}
 
 	return true;
