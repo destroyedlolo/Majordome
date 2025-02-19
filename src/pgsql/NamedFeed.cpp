@@ -63,18 +63,15 @@ bool NamedFeed::execAsync(lua_State *L){
 	PQfreemem(t);
 
 	cmd += " VALUES ( now(), ",
-	cmd += (t = PQescapeIdentifier(this->conn, rs.c_str(), rs.length()));
+	cmd += (t = PQescapeLiteral(this->conn, rs.c_str(), rs.length()));
 	PQfreemem(t);
 	
 	cmd += ", ";
 	cmd += std::to_string(val);
 	cmd += " )";
 
-puts(cmd.c_str());
-#if 0
 	if(!this->doSQL(cmd.c_str()))
 		SelLog->Log('E', "['%s'] %s", this->getNameC(), this->lastError());
-#endif
 
 	this->disconnect();
 	lua_close(L);
