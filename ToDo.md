@@ -24,8 +24,6 @@
 Dans tous les \*::feedState(), supprimer les find().
 Voir Feed.
 
-LuaExec::execSync() - rs doit être non null que pour les fonctions "named"
-
 Ajouter les fonctions Lua dans Feed et NamedFeed
 
 --- Migration to v6

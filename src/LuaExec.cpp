@@ -415,7 +415,7 @@ bool LuaExec::execSync(lua_State *L, enum boolRetCode *rc, lua_Number *retn){
 		SelLog->Log('E', "Can't execute task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), lua_tostring(L, -1));
 
 	if(lua_isboolean(L, -1))
-		*rc = lua_toboolean(L, -2) ? boolRetCode::RCtrue : boolRetCode::RCfalse;
+		*rc = lua_toboolean(L, -1) ? boolRetCode::RCtrue : boolRetCode::RCfalse;
 
 	if(lua_isnumber(L, -1)){
 		*rc = boolRetCode::RCforced;

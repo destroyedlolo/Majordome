@@ -109,6 +109,8 @@ bool MinMax::execAsync(lua_State *L){
 
 	bool r = this->LuaExec::execSync(L, &rc, &val);
 
+printf("rc: %d, val %f\n", rc, val);
+
 	if( rc != LuaExec::boolRetCode::RCfalse ){	// data not rejected
 		if(isnan(val)){	// data unchanged
 			lua_getglobal(L, "MAJORDOME_PAYLOAD");
@@ -138,7 +140,7 @@ bool MinMax::execAsync(lua_State *L){
 		if(debug)
 			SelLog->Log('T', "[MinMax '%s'] accepting %.0f -> min:%.0f max:%.0f", this->getNameC(), val, this->min, this->max);
 	} else
-		SelLog->Log('E', "[MinMax '%s'] can't find MAJORDOME_PAYLOAD variable", this->getNameC());
+		SelLog->Log('E', "[MinMax '%s'] Data rejected", this->getNameC());
 
 	lua_close(L);
 	return r;
