@@ -77,33 +77,19 @@ void NamedMinMax::readConfigDirective( std::string &l, std::string &name, bool &
 }
 
 void NamedMinMax::feedState( lua_State *L ){
-	try {
-		class NamedMinMax *nmm = config.NamedMinMaxList.at( this->getNameC() );
-		class NamedMinMax **nminmax = (class NamedMinMax **)lua_newuserdata(L, sizeof(class NamedMinMax *));
-		assert(nminmax);
+	class NamedMinMax **nminmax = (class NamedMinMax **)lua_newuserdata(L, sizeof(class NamedMinMax *));
+	assert(nminmax);
 
-		lua_pushstring( L, this->getNameC() );	// Push the name of the tracker
-		lua_setglobal( L, "MAJORDOME_NAMEDMINMAX" );
+	lua_pushstring( L, this->getNameC() );	// Push the name of the tracker
+	lua_setglobal( L, "MAJORDOME_NAMEDMINMAX" );
 
-		*nminmax = nmm;
-		luaL_getmetatable(L, "MajordomeNamedMinMax");
-		lua_setmetatable(L, -2);
-		lua_setglobal( L, "MAJORDOME_Myself" );
-	} catch( std::out_of_range &e ){	// Not found 
-		SelLog->Log('F', "Can't find namedminmax '%s'", this->getNameC() );
-		exit(EXIT_FAILURE);
-	}
+	*nminmax = this;
+	luaL_getmetatable(L, "MajordomeNamedMinMax");
+	lua_setmetatable(L, -2);
+	lua_setglobal( L, "MAJORDOME_Myself" );
 }
 
 bool NamedMinMax::execAsync(lua_State *L){
-#if 0	// Not needed as already checked within LuaExec::canRun() called by MQTTTopic::execHandlers()
-	if( !this->isEnabled() ){
-		if(verbose)
-			SelLog->Log('T', "MinMax'%s' from '%s' is disabled", this->getNameC(), this->getWhereC() );
-		return false;
-	}
-#endif
-
 	LuaExec::boolRetCode rc;
 	std::string rs("orphaned data collection");
 	lua_Number val;

@@ -183,19 +183,16 @@ void LuaTask::finished( void ){
 }
 
 void LuaTask::feedState(lua_State *L){
-	try {
-		class LuaTask *tsk = config.TasksList.at( this->getNameC() );
-		class LuaTask **task = (class LuaTask **)lua_newuserdata(L, sizeof(class LuaTask *));
-		assert(task);
+	class LuaTask **task = (class LuaTask **)lua_newuserdata(L, sizeof(class LuaTask *));
+	assert(task);
 
-		*task = tsk;
-		luaL_getmetatable(L, "MajordomeTask");
-		lua_setmetatable(L, -2);
-		lua_setglobal( L, "MAJORDOME_Myself" );
-	} catch( std::out_of_range &e ){	// Not found 
-		SelLog->Log('F', "Can't find task '%s'", this->getNameC() );
-		exit(EXIT_FAILURE);
-	}
+	lua_pushstring( L, this->getNameC() );	// Push the name of the tracker
+	lua_setglobal( L, "MAJORDOME_TASK" );
+
+	*task = this;
+	luaL_getmetatable(L, "MajordomeTask");
+	lua_setmetatable(L, -2);
+	lua_setglobal( L, "MAJORDOME_Myself" );
 }
 
 

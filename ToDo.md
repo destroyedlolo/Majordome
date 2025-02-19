@@ -20,10 +20,6 @@
 
 ---
 
-
-Dans tous les \*::feedState(), supprimer les find().
-Voir Feed.
-
 Ajouter les fonctions Lua dans Feed et NamedFeed
 
 --- Migration to v6
