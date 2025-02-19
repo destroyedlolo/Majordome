@@ -22,6 +22,6 @@ To test it, create a config file like this :
 	Broker_URL=tcp://torchwood.local:1883
 
 	# Application directory
-	ApplicationDirectory=Documentations/SamplesCode/Tracker_HowMany
+	ApplicationDirectory=Documentations/SamplesCode/NamedMinMax
 
 And obviously you have to find out your own data source.

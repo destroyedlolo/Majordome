@@ -17,5 +17,5 @@ CREATE TABLE test (
 
 # Files
 - **Test.topic** creates a listening topic `Test` on which data will be received
-- **database.pgsql** declares the postgresql database. ** *MUST BE CONFIGURED* **
+- **database.pgsql** declares the postgresql database. ***MUST BE CONFIGURED***
 - **Test.feed** feeds incoming data into a table name `Test`
