@@ -1,13 +1,13 @@
 This example demonstrates how **MinMax**'s validation script can reject or modify incoming data.
 
----
+# Files
 
 * `Test.topic` : data source
 * `TestMinMax.namedminmax` : validation script inside namedminmax object definition
 * `30s.timer` : Timeframe to generate statistics on
 * `Collector.lua` : display MinMax's statistics
 
----
+# How to test
 To test it, create a config file like this :
 
     # URL to reach the broker
@@ -18,7 +18,6 @@ To test it, create a config file like this :
 
 And publish data to `Test` topic.
 
----
 
 The validation script handles the following data :
 - **< 10** : stored as orphaned

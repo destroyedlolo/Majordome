@@ -23,7 +23,7 @@ void NamedFeed::feedState( lua_State *L ){
 
 bool NamedFeed::execAsync(lua_State *L){
 	LuaExec::boolRetCode rc;
-	std::string rs;
+	std::string rs("orphaned data");
 	lua_Number val;
 
 	bool r = this->LuaExec::execSync(L, &rs, &rc, &val);
@@ -51,8 +51,32 @@ bool NamedFeed::execAsync(lua_State *L){
 	if(debug && !this->isQuiet())
 		SelLog->Log('T', "['%s'/'%s'] accepting %.0f", this->getNameC(),rs.c_str(), val);
 
-			/* Todo */
+		/* Build SQL request */
+	if(!this->connect()){
+		lua_close(L);
+		return false;
+	}
 
+	char *t;
+	std::string cmd("INSERT INTO ");
+	cmd += (t = PQescapeIdentifier(this->conn, this->getTableName(), strlen(this->getTableName())));
+	PQfreemem(t);
+
+	cmd += " VALUES ( now(), ",
+	cmd += (t = PQescapeIdentifier(this->conn, rs.c_str(), rs.length()));
+	PQfreemem(t);
+	
+	cmd += ", ";
+	cmd += std::to_string(val);
+	cmd += " )";
+
+puts(cmd.c_str());
+#if 0
+	if(!this->doSQL(cmd.c_str()))
+		SelLog->Log('E', "['%s'] %s", this->getNameC(), this->lastError());
+#endif
+
+	this->disconnect();
 	lua_close(L);
 	return r;
 }

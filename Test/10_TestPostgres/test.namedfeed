@@ -13,7 +13,7 @@
 --
 -- The table where data will be inserted
 -- if not set, the same as "name"
---->> table=mytable
+-->> table=ntest
 --
 -- Topic to listen too
 -->> listen=Test
@@ -21,16 +21,18 @@
 -- Remove some tracing messages
 --->> quiet
 
-print("Data ", MAJORDOME_PAYLOAD)
+print("Incomming value", MAJORDOME_PAYLOAD)
 
 -- With 1-wire probe, 85 means underpowered
 -- So we can't accept this data
-if tonumber(MAJORDOME_PAYLOAD) == 85 then
+if tonumber(MAJORDOME_PAYLOAD) == 85 then -- Rejected
 	return false
+elseif tonumber(MAJORDOME_PAYLOAD) < 10 then -- only accepted, stored in "orphaned data collection" collection
+	return true
 elseif tonumber(MAJORDOME_PAYLOAD) == 20 then
-	return 21
-elseif tonumber(MAJORDOME_PAYLOAD) == 50 then
-	return 'test',49
-else
-	return 'test'
+	return "my data", 21
+elseif tonumber(MAJORDOME_PAYLOAD) > 90 then -- We are not forcing the value, "2" is the name of a collection
+	return 2
+else	-- accepted as such and stored in 
+	return "my data"
 end
