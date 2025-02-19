@@ -27,7 +27,6 @@
 -- - other value, or no return, the data is considered
 
 if tonumber(MAJORDOME_PAYLOAD) == 85 then
-print("rej")
 	return false
 elseif tonumber(MAJORDOME_PAYLOAD) == 20 then
 	return 21

@@ -109,8 +109,6 @@ bool MinMax::execAsync(lua_State *L){
 
 	bool r = this->LuaExec::execSync(L, &rc, &val);
 
-printf("rc: %d, val %f\n", rc, val);
-
 	if( rc != LuaExec::boolRetCode::RCfalse ){	// data not rejected
 		if(isnan(val)){	// data unchanged
 			lua_getglobal(L, "MAJORDOME_PAYLOAD");
