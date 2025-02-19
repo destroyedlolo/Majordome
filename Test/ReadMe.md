@@ -40,3 +40,24 @@ The validation script handles the following data :
 - all other values are accepted as such in "*my data*".
 
 All the other data are stored in *my data*
+
+# Results
+
+```
+psql (15.3, serveur 11.7)
+Saisissez « help » pour l'aide.
+
+test=> select * from ntest;
+          sample_time          |    figure     | value 
+-------------------------------+---------------+-------
+ 2025-02-19 22:38:40.452419+01 | my data       |    21
+ 2025-02-19 22:39:03.654682+01 | my data       |    10
+ 2025-02-19 22:39:16.666189+01 | orphaned data |     5
+ 2025-02-19 22:39:25.376924+01 | orphaned data |     9
+ 2025-02-19 22:39:34.659751+01 | my data       |    21
+ 2025-02-19 22:39:48.078592+01 | 2             |    91
+ 2025-02-19 22:39:52.504817+01 | 2             |    95
+ 2025-02-19 22:39:56.21702+01  | my data       |    45
+(8 lignes)
+```
+```
