@@ -105,7 +105,7 @@ bool NamedMinMax::execAsync(lua_State *L){
 #endif
 
 	LuaExec::boolRetCode rc;
-	std::string rs;
+	std::string rs("orphaned data collection");
 	lua_Number val;
 
 	bool r = this->LuaExec::execSync(L, &rs, &rc, &val);
