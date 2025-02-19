@@ -18,8 +18,15 @@
 class LuaExec : virtual public Object {
 	struct elastic_storage func;	// Storage for the function to execute
 
+	bool prepareExecSync(lua_State *L);
+
 public:
-	enum boolRetCode { RCnil=-1, RCfalse=false, RCtrue=true };
+	enum boolRetCode { 
+		RCnil=-1,		// no return
+		RCfalse=false,	// bool false (rejected)
+		RCtrue=true,	// bool true (accepted)
+		RCforced=-2		// value provided
+	};
 
 		/* ***
 		 * Lists of needed
@@ -94,8 +101,21 @@ public:
 	 * Run with the same State as its caller.
 	 * Globals objects are accessible and call code will create objects in
 	 * the State.
+	 *
+	 * Notez-bien :
+	 *	- it's up to the caller to clean Lua state
+	 *	- in case of failure, return false, and the Lua state is already cleared
 	 */
-	bool execSync(lua_State *L, enum boolRetCode *rc = NULL, std::string *rs = NULL, lua_Number *retn = NULL);	
+
+		// We are expecting only a YES/NO to accept a value
+		// (default as well if we don't care about the result)
+	bool execSync(lua_State *L, enum boolRetCode *rc=NULL);
+
+		// boolean or value forced
+	bool execSync(lua_State *L, enum boolRetCode *rc, lua_Number *retn);
+
+		// name + boolean or value forced
+	bool execSync(lua_State *L, std::string *rs, enum boolRetCode *rc, lua_Number *retn);	
 };
 
 #endif

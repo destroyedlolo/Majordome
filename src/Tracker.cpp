@@ -141,10 +141,8 @@ bool Tracker::execAsync(lua_State *L){
 	}
 	
 	LuaExec::boolRetCode rc;
-	std::string rs;
-	lua_Number retn;
 
-	bool r = this->LuaExec::execSync(L, &rc, &rs, &retn);
+	bool r = this->LuaExec::execSync(L, &rc);
 
 	if( rc == LuaExec::boolRetCode::RCfalse ){
 		this->hm_counter = this->howmany;

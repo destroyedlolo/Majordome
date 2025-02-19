@@ -55,5 +55,5 @@ bool Handler::exec(lua_State *L, enum boolRetCode *rc, std::string *rs, lua_Numb
 
 	this->feedState(L);
 
-	return this->LuaExec::execSync(L, rc,rs,retn);
+	return this->LuaExec::execSync(L, rs,rc,retn);
 }

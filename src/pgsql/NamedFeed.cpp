@@ -9,7 +9,7 @@
 #include <cassert>
 
 void NamedFeed::feedState( lua_State *L ){
-	class Feed **feed= (class Feed **)lua_newuserdata(L, sizeof(class Feed *));
+	class NamedFeed **feed= (class NamedFeed **)lua_newuserdata(L, sizeof(class NamedFeed *));
 	assert(feed);
 
 	lua_pushstring( L, this->getNameC() );	// Push the name of the tracker
@@ -24,27 +24,35 @@ void NamedFeed::feedState( lua_State *L ){
 bool NamedFeed::execAsync(lua_State *L){
 	LuaExec::boolRetCode rc;
 	std::string rs;
-	lua_Number val = NAN;
+	lua_Number val;
 
-	bool r = this->LuaExec::execSync(L, &rc, &rs, &val);
-	if( rc != LuaExec::boolRetCode::RCfalse ){
-		if(isnan(val)){
-			lua_getglobal(L, "MAJORDOME_PAYLOAD");
-			if(lua_isnumber(L, -1))
-				val = lua_tonumber(L, -1);
-			else
-				SelLog->Log('E', "['%s'] can't find MAJORDOME_PAYLOAD variable", this->getNameC());
-		}
-		
-		if(val != NAN){
-			if(debug && !this->isQuiet())
-				SelLog->Log('T', "['%s'/'%s'] accepting %.0f", this->getNameC(),rs.c_str(), val);
-		} else
-			SelLog->Log('E', "['%s'] can't find MAJORDOME_PAYLOAD variable", this->getNameC());
-	} else
+	bool r = this->LuaExec::execSync(L, &rs, &rc, &val);
+	switch(rc){
+	case LuaExec::boolRetCode::RCfalse :	// data rejected
 		SelLog->Log('D', "['%s'] Data rejected", this->getNameC());
+		lua_close(L);
+		return r;
+	
+	case LuaExec::boolRetCode::RCforced :	// value provided
+		break;
+
+	default:	// Take the payload as data
+		lua_getglobal(L, "MAJORDOME_PAYLOAD");
+		if(lua_isnumber(L, -1))
+			val = lua_tonumber(L, -1);
+		else {
+			SelLog->Log('E', "['%s'] can't find MAJORDOME_PAYLOAD as number", this->getNameC());
+			lua_close(L);
+			return r;
+		}
+		break;
+	}
+
+	if(debug && !this->isQuiet())
+		SelLog->Log('T', "['%s'/'%s'] accepting %.0f", this->getNameC(),rs.c_str(), val);
+
+			/* Todo */
 
 	lua_close(L);
-
 	return r;
 }

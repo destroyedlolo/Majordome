@@ -374,7 +374,7 @@ bool LuaExec::execAsync( lua_State *L ){
 	return true;
 }
 
-bool LuaExec::execSync(lua_State *L, enum boolRetCode *rc, std::string *rs, lua_Number *retn){
+bool LuaExec::prepareExecSync(lua_State *L){
 	int err;
 	if( (err = SelElasticStorage->loadsharedfunction( L, this->getFunc() )) ){
 		SelLog->Log('E', "Unable to create task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), (err == LUA_ERRSYNTAX) ? "Syntax error" : "Memory error" );
@@ -384,6 +384,56 @@ bool LuaExec::execSync(lua_State *L, enum boolRetCode *rc, std::string *rs, lua_
 
 	if(verbose && !this->isQuiet())
 		SelLog->Log('T', "Sync running Task '%s' from '%s'", this->getNameC(), this->getWhereC() );
+
+	return true;
+}
+
+bool LuaExec::execSync(lua_State *L, enum boolRetCode *rc){
+	if(!this->prepareExecSync(L))
+		return false;
+
+	if(lua_pcall( L, 0, 1, 0))
+		SelLog->Log('E', "Can't execute task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), lua_tostring(L, -1));
+
+	if(rc){
+		*rc = boolRetCode::RCnil;
+		if(lua_isboolean(L, -1))
+			*rc = lua_toboolean(L, -1) ? boolRetCode::RCtrue : boolRetCode::RCfalse;
+	}
+
+	return true;
+}
+
+bool LuaExec::execSync(lua_State *L, enum boolRetCode *rc, lua_Number *retn){
+	*retn = NAN;
+	*rc = boolRetCode::RCnil;
+
+	if(!this->prepareExecSync(L))
+		return false;
+
+	if(lua_pcall( L, 0, 1, 0))
+		SelLog->Log('E', "Can't execute task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), lua_tostring(L, -1));
+
+	if(lua_isboolean(L, -1))
+		*rc = lua_toboolean(L, -2) ? boolRetCode::RCtrue : boolRetCode::RCfalse;
+
+	if(lua_isnumber(L, -1)){
+		*rc = boolRetCode::RCforced;
+		*retn = lua_tonumber(L, -1);
+	}
+
+	return true;
+	
+}
+
+bool LuaExec::execSync(lua_State *L, std::string *rs, enum boolRetCode *rc, lua_Number *retn){
+	if(rc)
+		*rc = boolRetCode::RCnil;
+	if(retn)
+		*retn = NAN;
+
+	if(!this->prepareExecSync(L))
+		return false;
 
 	if(lua_pcall( L, 0, 2, 0))
 		SelLog->Log('E', "Can't execute task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), lua_tostring(L, -1));
