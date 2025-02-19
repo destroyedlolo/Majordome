@@ -102,7 +102,7 @@ void Feed::feedState( lua_State *L ){
 	assert(feed);
 
 	lua_pushstring( L, this->getNameC() );	// Push the name of the tracker
-	lua_setglobal( L, "MAJORDOME_MINMAX" );
+	lua_setglobal( L, "MAJORDOME_FEED" );
 
 	*feed = this;
 	luaL_getmetatable(L, "MajordomeFeed");

@@ -19,17 +19,16 @@ class Feed : public mpgConnection, public Handler, virtual public HandlersExecut
 		/* Executable */
 	virtual bool execAsync(lua_State *L);	// Overloading to handle data acceptation 
 
+#if 0
+	bool numerical;	// Numerical value
+	bool getNumerical(void){ return this->numerical; };
+#endif
+protected:
+	virtual const char *getNameC(){ return(this->Object::getNameC()); };
 	bool isQuiet(){ return this->Object::isQuiet(); };
 
 	MayBeEmptyString TableName;
 	const char *getTableName(void);
-
-	bool numerical;	// Numerical value
-	bool getNumerical(void){ return this->numerical; };
-
-protected:
-	virtual const char *getNameC(){ return(this->Object::getNameC()); };
-
 public:
 	virtual ~Feed(){};
 

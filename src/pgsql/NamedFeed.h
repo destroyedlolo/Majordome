@@ -6,6 +6,8 @@
 #include "Feed.h"
 
 class NamedFeed : public Feed {
+	virtual void feedState(lua_State *L);
+
 		/* Executable */
 	virtual bool execAsync(lua_State *L);	// Overloading to handle data acceptation 
 

@@ -391,6 +391,10 @@ bool LuaExec::execSync(lua_State *L, enum boolRetCode *rc, std::string *rs, lua_
 		/* -1 : numeric value if provided
 		 * -2 : string value or RC
 		 */
+
+printf("-1 : %s\n", lua_typename(L, lua_type(L, -1)));
+printf("-2 : %s\n", lua_typename(L, lua_type(L, -2)));
+
 	if(rc){
 		*rc = boolRetCode::RCnil;
 		if(lua_isboolean(L, -2))
@@ -405,9 +409,13 @@ bool LuaExec::execSync(lua_State *L, enum boolRetCode *rc, std::string *rs, lua_
 
 	if(retn){
 		*retn = NAN;
-		if(lua_isnumber(L, -2)){
-			*retn = lua_tonumber(L, -2);
-printf("ret : %f\n", *retn);
+		int idx = -2;
+
+		if(!lua_isnil(L,-1))
+			idx = -1;
+
+		if(lua_isnumber(L, idx)){
+			*retn = lua_tonumber(L, idx);
 		}
 	}
 
