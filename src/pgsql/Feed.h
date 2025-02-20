@@ -33,6 +33,9 @@ public:
 	virtual ~Feed(){};
 
 	Feed(const std::string &fch, std::string &where, std::string &name, lua_State *L);
+
+	/* Create Lua's object */
+	static void initLuaInterface( lua_State *L );
 };
 
 typedef ObjCollection<Feed *> FeedCollection;

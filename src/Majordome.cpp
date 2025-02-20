@@ -413,6 +413,11 @@ int main(int ac, char **av){
 	SelLua->AddStartupFunc(NamedMinMax::initLuaInterface);
 	SelLua->AddStartupFunc(Shutdown::initLuaInterface);
 
+#ifdef DBASE
+	SelLua->AddStartupFunc(Feed::initLuaInterface);
+	SelLua->AddStartupFunc(NamedFeed::initLuaInterface);
+#endif
+
 		/* **
 		 * After this point, we're running application's code
 		 * **/

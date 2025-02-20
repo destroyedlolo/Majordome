@@ -34,7 +34,7 @@ needs : checking will not work if at same level (or lower).
 
 --- Futures
 
-(Named)MinMax handler to run asynchronously.
+(Named)MinMax, [Named]Feed handlers to run asynchronously.
 
 ---
 Add a new Object :

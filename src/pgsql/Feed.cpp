@@ -167,3 +167,80 @@ bool Feed::execAsync(lua_State *L){
 
 	return r;
 }
+
+	/*****
+	 * Lua exposed functions
+	 *****/
+
+static class Feed *checkMajordomeFeed(lua_State *L){
+	class Feed **r = (class Feed **)SelLua->testudata(L, 1, "MajordomeFeed");
+	luaL_argcheck(L, r != NULL, 1, "'MajordomeFeed' expected");
+	return *r;
+}
+
+static int mmm_find(lua_State *L){
+	const char *name = luaL_checkstring(L, 1);
+
+	try {
+		class Feed *f = config.FeedsList.at( name );
+		class Feed **feed = (class Feed **)lua_newuserdata(L, sizeof(class Feed *));
+		assert(feed);
+
+		*feed = f;
+		luaL_getmetatable(L, "MajordomeFeed");
+		lua_setmetatable(L, -2);
+
+		return 1;
+	} catch( std::out_of_range &e ){	// Not found 
+		return 0;
+	}
+}
+
+static const struct luaL_Reg MajFeedLib [] = {
+	{"find", mmm_find},
+	{NULL, NULL}
+};
+
+static int mmm_getContainer(lua_State *L){
+	class Feed *feed= checkMajordomeFeed(L);
+	lua_pushstring( L, feed->getWhereC() );
+	return 1;
+}
+
+static int mmm_getName(lua_State *L){
+	class Feed *feed= checkMajordomeFeed(L);
+	lua_pushstring( L, feed->getName().c_str() );
+	return 1;
+}
+
+static int mmm_isEnabled( lua_State *L ){
+	class Feed *feed= checkMajordomeFeed(L);
+	lua_pushboolean( L, feed->isEnabled() );
+	return 1;
+}
+
+static int mmm_enabled( lua_State *L ){
+	class Feed *feed= checkMajordomeFeed(L);
+	feed->enable();
+	return 0;
+}
+
+static int mmm_disable( lua_State *L ){
+	class Feed *feed= checkMajordomeFeed(L);
+	feed->disable();
+	return 0;
+}
+
+static const struct luaL_Reg MajFeedM [] = {
+	{"getContainer", mmm_getContainer},
+ 	{"getName", mmm_getName},
+	{"isEnabled", mmm_isEnabled},
+	{"Enable", mmm_enabled},
+	{"Disable", mmm_disable},
+	{NULL, NULL}
+};
+
+void Feed::initLuaInterface( lua_State *L ){
+	SelLua->objFuncs( L, "MajordomeFeed", MajFeedM );
+	SelLua->libCreateOrAddFuncs( L, "MajordomeFeed", MajFeedLib );
+}
