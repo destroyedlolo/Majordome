@@ -154,6 +154,19 @@ void LuaExec::readConfigDirective( std::string &l, std::string &name, bool &name
 			exit(EXIT_FAILURE);
 		}
 #ifdef DBASE
+#	ifdef PGSQL
+	} else if(!!(arg = striKWcmp( l, "-->> need_pgSQL=" ))){
+		pgSQLCollection::iterator shut;
+		if( (shut = config.pgSQLsList.find(arg)) != config.pgSQLsList.end()){
+			if(verbose)
+				SelLog->Log('C', "\t\tAdded needed pgSQL '%s'", arg.c_str());
+			this->addNeededpgSQL( arg );
+			return;
+		} else {
+			SelLog->Log('F', "\t\tpgSQL '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
+#	endif
 	} else if(!!(arg = striKWcmp( l, "-->> need_feed=" ))){
 		FeedCollection::iterator shut;
 		if( (shut = config.FeedsList.find(arg)) != config.FeedsList.end()){
@@ -349,6 +362,25 @@ bool LuaExec::feedbyNeeded( lua_State *L, bool require ){
 	}
 
 #ifdef DBASE
+#	ifdef PGSQL
+	for(auto &i : this->needed_pgSQL){
+		try {
+			class pgSQL *s = config.pgSQLsList.at( i );
+			class pgSQL **db = (class pgSQL **)lua_newuserdata(L, sizeof(class pgSQL *));
+			assert(db);
+
+			*db = s;
+			luaL_getmetatable(L, "MajordomepgSQL");
+			lua_setmetatable(L, -2);
+
+			lua_setglobal(L, i.c_str());
+		} catch( std::out_of_range &e ){	// Not found 
+			return false;
+		}
+	}
+#	endif
+
+
 	for(auto &i : this->needed_feed){
 		try {
 			class Feed *s = config.FeedsList.at( i );

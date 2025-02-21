@@ -414,6 +414,10 @@ int main(int ac, char **av){
 	SelLua->AddStartupFunc(Shutdown::initLuaInterface);
 
 #ifdef DBASE
+#	ifdef PGSQL
+	SelLua->AddStartupFunc(pgSQL::initLuaInterface);
+#	endif
+
 	SelLua->AddStartupFunc(Feed::initLuaInterface);
 	SelLua->AddStartupFunc(NamedFeed::initLuaInterface);
 #endif

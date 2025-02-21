@@ -83,7 +83,7 @@ void Feed::readConfigDirective( std::string &l, std::string &name, bool &nameuse
 #endif
 	} else if(!!(arg = striKWcmp( l, "-->> Database=" ))){
 		pgSQLCollection::iterator db;
-		if( (db = config.pgSQLList.find(arg)) != config.pgSQLList.end()){
+		if( (db = config.pgSQLsList.find(arg)) != config.pgSQLsList.end()){
 			if(verbose)
 				SelLog->Log('C', "\t\tDatabase : %s", arg.c_str());
 			this->db = db->second;

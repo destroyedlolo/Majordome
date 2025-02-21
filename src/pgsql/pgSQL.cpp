@@ -59,3 +59,80 @@ void pgSQL::readConfigDirective( std::string &l, std::string &name, bool &nameus
 	} else 
 		this->Object::readConfigDirective(l, name, nameused);
 }
+
+	/*****
+	 * Lua exposed functions
+	 *****/
+
+static class pgSQL *checkMajordomepgSQL(lua_State *L){
+	class pgSQL **r = (class pgSQL **)SelLua->testudata(L, 1, "MajordomepgSQL");
+	luaL_argcheck(L, r != NULL, 1, "'MajordomepgSQL' expected");
+	return *r;
+}
+
+static int mmm_find(lua_State *L){
+	const char *name = luaL_checkstring(L, 1);
+
+	try {
+		class pgSQL *f = config.pgSQLsList.at( name );
+		class pgSQL **pgsql = (class pgSQL **)lua_newuserdata(L, sizeof(class pgSQL *));
+		assert(pgsql);
+
+		*pgsql = f;
+		luaL_getmetatable(L, "MajordomepgSQL");
+		lua_setmetatable(L, -2);
+
+		return 1;
+	} catch( std::out_of_range &e ){	// Not found 
+		return 0;
+	}
+}
+
+static const struct luaL_Reg MajpgSQLLib [] = {
+	{"find", mmm_find},
+	{NULL, NULL}
+};
+
+static int mmm_getContainer(lua_State *L){
+	class pgSQL *pgsql= checkMajordomepgSQL(L);
+	lua_pushstring( L, pgsql->getWhereC() );
+	return 1;
+}
+
+static int mmm_getName(lua_State *L){
+	class pgSQL *pgsql= checkMajordomepgSQL(L);
+	lua_pushstring( L, pgsql->getName().c_str() );
+	return 1;
+}
+
+static int mmm_isEnabled( lua_State *L ){
+	class pgSQL *pgsql= checkMajordomepgSQL(L);
+	lua_pushboolean( L, pgsql->isEnabled() );
+	return 1;
+}
+
+static int mmm_enabled( lua_State *L ){
+	class pgSQL *pgsql= checkMajordomepgSQL(L);
+	pgsql->enable();
+	return 0;
+}
+
+static int mmm_disable( lua_State *L ){
+	class pgSQL *pgsql= checkMajordomepgSQL(L);
+	pgsql->disable();
+	return 0;
+}
+
+static const struct luaL_Reg MajpgSQLM [] = {
+	{"getContainer", mmm_getContainer},
+ 	{"getName", mmm_getName},
+	{"isEnabled", mmm_isEnabled},
+	{"Enable", mmm_enabled},
+	{"Disable", mmm_disable},
+	{NULL, NULL}
+};
+
+void pgSQL::initLuaInterface( lua_State *L ){
+	SelLua->objFuncs( L, "MajordomepgSQL", MajpgSQLM );
+	SelLua->libCreateOrAddFuncs( L, "MajordomepgSQL", MajpgSQLLib );
+}

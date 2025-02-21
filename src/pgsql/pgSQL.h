@@ -10,6 +10,8 @@
 
 #include <string>
 
+class lua_State;
+
 class pgSQL : public Object {
 	MayBeEmptyString conninfo;
 
@@ -21,6 +23,8 @@ public:
 	bool asConnectionString(void){ return(!this->conninfo.isEmpty()); }
 	MayBeEmptyString &getConnectionString(void){ return this->conninfo; }
 
+	/* Create Lua's object */
+	static void initLuaInterface( lua_State *L );
 };
 
 typedef ObjCollection<pgSQL *> pgSQLCollection;

@@ -45,6 +45,9 @@ public:
 	StringVector needed_renderer;
 #endif
 #ifdef DBASE
+#	ifdef PGSQL
+	StringVector needed_pgSQL;
+#	endif
 	StringVector needed_feed;
 	StringVector needed_namedfeed;
 #endif
@@ -63,6 +66,9 @@ protected:
 	void addNeededRenderer( std::string t ){ this->needed_renderer.Add(t); }
 #endif
 #ifdef DBASE
+#	ifdef PGSQL
+	void addNeededpgSQL( std::string t ){ this->needed_pgSQL.Add(t); }
+#	endif
 	void addNeededFeed( std::string t ){ this->needed_feed.Add(t); }
 	void addNeededNamedFeed( std::string t ){ this->needed_namedfeed.Add(t); }
 #endif

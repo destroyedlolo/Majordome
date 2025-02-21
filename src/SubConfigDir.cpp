@@ -190,11 +190,11 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 			auto pg = new pgSQL( completpath, where, name );
 
 			pgSQLCollection::iterator prev;
-			if((prev = cfg.pgSQLList.find(name)) != cfg.pgSQLList.end()){
+			if((prev = cfg.pgSQLsList.find(name)) != cfg.pgSQLsList.end()){
 				SelLog->Log('F', "pgsql '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhereC());
 				exit(EXIT_FAILURE);
 			} else
-				cfg.pgSQLList.insert( std::make_pair(name, pg) );
+				cfg.pgSQLsList.insert( std::make_pair(name, pg) );
 #	endif
 		} else if(ext == ".feed"){
 			std::string name;

@@ -60,7 +60,7 @@ public:
 
 #ifdef DBASE
 #	ifdef PGSQL
-	pgSQLCollection pgSQLList;
+	pgSQLCollection pgSQLsList;
 #	endif
 
 	FeedCollection FeedsList;
