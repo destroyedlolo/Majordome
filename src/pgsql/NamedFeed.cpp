@@ -8,6 +8,9 @@
 #include <cstring>
 #include <cassert>
 
+NamedFeed::NamedFeed(const std::string &fch, std::string &where, std::string &name, lua_State *L) : Object(fch, where, name), Handler(fch, where, name), Feed(fch, where, name, L){
+}
+
 void NamedFeed::feedState( lua_State *L ){
 	class NamedFeed **feed= (class NamedFeed **)lua_newuserdata(L, sizeof(class NamedFeed *));
 	assert(feed);

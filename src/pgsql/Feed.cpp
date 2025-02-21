@@ -44,7 +44,6 @@ Feed::Feed(const std::string &fch, std::string &where, std::string &name, lua_St
 		 * Reading the remaining of the script and keep it as 
 		 * an Lua's script
 		 */
-
 		buffer << file.rdbuf();
 		file.close();
 	} catch(const std::ifstream::failure &e){
