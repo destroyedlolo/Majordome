@@ -80,6 +80,7 @@ Supported are :
 - [Rendez-vous](rendezvous.md) (`.rendezvous`) : allows triggering an action without having to use an MQTT topic.
 - [Tracker](tracker.md) (`.tracker`) : a simple but powerful state box to track some activities. Start an action at after an even, track its advancement, finishing it.
 - [MinMax](minmax.md) (`.minmax`) : A simple way to generate statistics on data collection : minimum, maximum, average, ... of data coming from a data source (like topic).
+- [NamedMinMax](NamedMinMax.md) (`.namedminmax`) :  simple way to generate statistics on set of data collections : minimum, maximum, average, ... of data coming from a data source (like topic).
 - last but not least, [Tasks](Task(lua).md)  (`.lua`) are Lua script that are triggered by events described above. Processing data, storing them, decision-making, triggering other objects ... they are the brain of the automation.
 
 ## Lua scripting
