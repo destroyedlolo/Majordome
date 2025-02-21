@@ -10,8 +10,9 @@
 #ifndef MPGCONN_H
 #define MPGCONN_H
 
-#include "pgSQL.h"
 #include <libpq-fe.h>
+
+class pgSQL;
 
 class mpgConnection {
 protected:

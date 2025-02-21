@@ -21,7 +21,7 @@ bool mpgConnection::connect(void){
 
 		// Connection to the database
 	this->conn = PQconnectdb(this->db->getConnectionString().c_str());
-	if(PQstatus(conn) != CONNECTION_OK){
+	if(PQstatus(this->conn) != CONNECTION_OK){
 		SelLog->Log('E', "[%s] Error : %s", this->db->getNameC(), PQerrorMessage(conn));
 		PQfinish(this->conn);
 		this->conn = NULL;

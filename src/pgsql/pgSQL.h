@@ -7,17 +7,22 @@
 #include "../Object.h"
 #include "../ObjCollection.h"
 #include "../MayBeEmptyString.h"
+#include "mpgConnection.h"
 
 #include <string>
 
 class lua_State;
 
-class pgSQL : public Object {
+class pgSQL : public Object, public mpgConnection {
 	MayBeEmptyString conninfo;
 
 	virtual void readConfigDirective( std::string &l, std::string &name, bool &nameused );
 
+protected:
 public:
+	virtual const char *getNameC(){ return(this->Object::getNameC()); };
+	bool isQuiet(){ return this->Object::isQuiet(); };
+
 	pgSQL(const std::string &fch, std::string &where, std::string &name);
 
 	bool asConnectionString(void){ return(!this->conninfo.isEmpty()); }
