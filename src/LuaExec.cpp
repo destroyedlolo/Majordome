@@ -153,6 +153,30 @@ void LuaExec::readConfigDirective( std::string &l, std::string &name, bool &name
 			SelLog->Log('F', "\t\tShutdown '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
+#ifdef DBASE
+	} else if(!!(arg = striKWcmp( l, "-->> need_feed=" ))){
+		FeedCollection::iterator shut;
+		if( (shut = config.FeedsList.find(arg)) != config.FeedsList.end()){
+			if(verbose)
+				SelLog->Log('C', "\t\tAdded needed Feed '%s'", arg.c_str());
+			this->addNeededFeed( arg );
+			return;
+		} else {
+			SelLog->Log('F', "\t\tFeed '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
+	} else if(!!(arg = striKWcmp( l, "-->> need_namedfeed=" ))){
+		NamedFeedCollection::iterator shut;
+		if( (shut = config.NamedFeedsList.find(arg)) != config.NamedFeedsList.end()){
+			if(verbose)
+				SelLog->Log('C', "\t\tAdded needed NamedFeed '%s'", arg.c_str());
+			this->addNeededNamedFeed( arg );
+			return;
+		} else {
+			SelLog->Log('F', "\t\tNamedFeed '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
+#endif
 	}
 
 	return this->Object::readConfigDirective(l, name, nameused);
@@ -323,6 +347,40 @@ bool LuaExec::feedbyNeeded( lua_State *L, bool require ){
 			return false;
 		}
 	}
+
+#ifdef DBASE
+	for(auto &i : this->needed_feed){
+		try {
+			class Feed *s = config.FeedsList.at( i );
+			class Feed **shut = (class Feed **)lua_newuserdata(L, sizeof(class Feed *));
+			assert(shut);
+
+			*shut = s;
+			luaL_getmetatable(L, "MajordomeFeed");
+			lua_setmetatable(L, -2);
+
+			lua_setglobal(L, i.c_str());
+		} catch( std::out_of_range &e ){	// Not found 
+			return false;
+		}
+	}
+
+	for(auto &i : this->needed_namedfeed){
+		try {
+			class NamedFeed *s = config.NamedFeedsList.at( i );
+			class NamedFeed **shut = (class NamedFeed **)lua_newuserdata(L, sizeof(class NamedFeed *));
+			assert(shut);
+
+			*shut = s;
+			luaL_getmetatable(L, "MajordomeNamedFeed");
+			lua_setmetatable(L, -2);
+
+			lua_setglobal(L, i.c_str());
+		} catch( std::out_of_range &e ){	// Not found 
+			return false;
+		}
+	}
+#endif
 
 	return true;
 }

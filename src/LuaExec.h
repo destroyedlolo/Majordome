@@ -44,6 +44,10 @@ public:
 #ifdef TOILE
 	StringVector needed_renderer;
 #endif
+#ifdef DBASE
+	StringVector needed_feed;
+	StringVector needed_namedfeed;
+#endif
 
 protected:
 	void addNeededTopic( std::string t ){ this->needed_topic.Add(t); }
@@ -57,6 +61,10 @@ protected:
 	void addNeededTracker( std::string t ){ this->needed_tracker.Add(t); }
 #ifdef TOILE
 	void addNeededRenderer( std::string t ){ this->needed_renderer.Add(t); }
+#endif
+#ifdef DBASE
+	void addNeededFeed( std::string t ){ this->needed_feed.Add(t); }
+	void addNeededNamedFeed( std::string t ){ this->needed_namedfeed.Add(t); }
 #endif
 
 	virtual void readConfigDirective( std::string &l, std::string &name, bool &nameused );
