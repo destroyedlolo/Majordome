@@ -25,12 +25,20 @@ This Feed starts as disabled : incoming messages are ignored.
 #### -->> Database=
 Which database to use.`
 
+#### -->> table=
+The table where data will be inserted.
+If not set, the same as "name" or the filename.
+
+> [!TIP]
+> For convenience, it is preferable that the table name's is only in lower-case. Otherwise, it will have
+>  to be surrounded by double quotes in pgsql.
+
 ## at Lua side
 
 ### Exposed variables
 
 - **MAJORDOME_Myself** is automatically created and correspond to the current Feed
-- **MAJORDOME_MINMAX** - Feed's name
+- **MAJORDOME_FEED** - Feed's name
 
 ### Validating incoming data
 Feed definition file can end with a Lua code : 
@@ -38,7 +46,7 @@ Feed definition file can end with a Lua code :
 - "**true**" or no value, the data is accepted
 - In a number is returned, it replace the original value
 
-> [!TIP]  
+> [!TIP]
 > If comming from a [topic](topic.md), the data are stored in **MAJORDOME_PAYLOAD** variable
 
 > [!CAUTION]
