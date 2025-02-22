@@ -13,7 +13,7 @@ PGSQL='-DPGSQL -DDBASE'
 
 # Graphical extension : Toile
 # Not yet !
-#TOILE='-DTOILE'
+TOILE='-DTOILE'
 
 # Enable debugging messages
 DEBUG='-DDEBUG'
@@ -77,17 +77,14 @@ if [ -Z ${PGSQL+x} ]; then
 	echo "PostgreSQL : not compiled"
 else
 	echo "PostgreSQL : included"
-
 	SOURCES+=' pgsql/*.cpp'
 	LIBS+=' -lpq'
 fi
-
 
 if [ -Z ${TOILE+x} ]; then
 	echo "Toile : not compiled"
 else
 	echo "Toile : included"
-
 	SOURCES+=' Toile/*.cpp'
 fi
 
@@ -99,4 +96,3 @@ LFMakeMaker -v +f=Makefile -cc="g++" --opts="-Wall -O2 ${DEBUG} ${TOILE} ${PGSQL
 ${LUA} ${LUALIB} \
 ${LIBS} \
 -I$SELDIR/include -L$SELDIR/lib $SELLIB" ${SOURCES} -t=../Majordome > Makefile
-
