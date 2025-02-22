@@ -20,6 +20,12 @@
 #include "Tracker.h"
 #include "Shutdown.h"
 
+#ifdef PGSQL
+#	include "pgsql/pgSQL.h"
+#	include "pgsql/Feed.h"
+#	include "pgsql/NamedFeed.h"
+#endif
+
 #include <lua.hpp>	/* Lua's state needed */
 #include <string>
 
@@ -52,6 +58,14 @@ public:
 	TrackerCollection TrackersList;
 	ShutdownCollection ShutdownsList;
 
+#ifdef DBASE
+#	ifdef PGSQL
+	pgSQLCollection pgSQLsList;
+#	endif
+
+	FeedCollection FeedsList;
+	NamedFeedCollection NamedFeedsList;
+#endif
 		/* Topics' */
 	void SubscribeTopics( void );	// Subscribe to defined MQTT topics
 

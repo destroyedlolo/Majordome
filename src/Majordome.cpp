@@ -251,6 +251,14 @@ void quit(int){
 
 void bye(void){
 	config.RunShutdowns();
+
+#if DBASE
+		/* Properly close database connection 
+		 * to avoid leaks at server side
+		 */
+	for(auto &i : config.FeedsList)
+		delete(i.second);
+#endif
 }
 
 int main(int ac, char **av){
@@ -404,6 +412,15 @@ int main(int ac, char **av){
 	SelLua->AddStartupFunc(MinMax::initLuaInterface);
 	SelLua->AddStartupFunc(NamedMinMax::initLuaInterface);
 	SelLua->AddStartupFunc(Shutdown::initLuaInterface);
+
+#ifdef DBASE
+#	ifdef PGSQL
+	SelLua->AddStartupFunc(pgSQL::initLuaInterface);
+#	endif
+
+	SelLua->AddStartupFunc(Feed::initLuaInterface);
+	SelLua->AddStartupFunc(NamedFeed::initLuaInterface);
+#endif
 
 		/* **
 		 * After this point, we're running application's code

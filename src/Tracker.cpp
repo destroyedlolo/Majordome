@@ -141,10 +141,8 @@ bool Tracker::execAsync(lua_State *L){
 	}
 	
 	LuaExec::boolRetCode rc;
-	std::string rs;
-	lua_Number retn;
 
-	bool r = this->LuaExec::execSync(L, &rc, &rs, &retn);
+	bool r = this->LuaExec::execSync(L, &rc);
 
 	if( rc == LuaExec::boolRetCode::RCfalse ){
 		this->hm_counter = this->howmany;
@@ -225,21 +223,15 @@ void Tracker::done( void ){
 }
 
 void Tracker::feedState(lua_State *L){
-	try {
-		class Tracker *tsk = config.TrackersList.at( this->getNameC() );
-		class Tracker **task = (class Tracker **)lua_newuserdata(L, sizeof(class Tracker *));
-		assert(task);
+	class Tracker **task = (class Tracker **)lua_newuserdata(L, sizeof(class Tracker *));
+	assert(task);
 
-		*task = tsk;
-		luaL_getmetatable(L, "MajordomeTracker");
-		lua_setmetatable(L, -2);
-		lua_setglobal( L, "MAJORDOME_Myself" );
+	*task = this;
+	luaL_getmetatable(L, "MajordomeTracker");
+	lua_setmetatable(L, -2);
+	lua_setglobal( L, "MAJORDOME_Myself" );
 
-		this->feedHandlersState(L);
-	} catch( std::out_of_range &e ){	// Not found 
-		SelLog->Log('F', "Can't find tracker '%s'", this->getNameC() );
-		exit(EXIT_FAILURE);
-	}
+	this->feedHandlersState(L);
 }
 
 void Tracker::feedHandlersState(lua_State *L){

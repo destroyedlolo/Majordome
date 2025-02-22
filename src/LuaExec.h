@@ -18,8 +18,15 @@
 class LuaExec : virtual public Object {
 	struct elastic_storage func;	// Storage for the function to execute
 
+	bool prepareExecSync(lua_State *L);
+
 public:
-	enum boolRetCode { RCnil=-1, RCfalse=false, RCtrue=true };
+	enum boolRetCode { 
+		RCnil=-1,		// no return
+		RCfalse=false,	// bool false (rejected)
+		RCtrue=true,	// bool true (accepted)
+		RCforced=-2		// value provided
+	};
 
 		/* ***
 		 * Lists of needed
@@ -37,6 +44,13 @@ public:
 #ifdef TOILE
 	StringVector needed_renderer;
 #endif
+#ifdef DBASE
+#	ifdef PGSQL
+	StringVector needed_pgSQL;
+#	endif
+	StringVector needed_feed;
+	StringVector needed_namedfeed;
+#endif
 
 protected:
 	void addNeededTopic( std::string t ){ this->needed_topic.Add(t); }
@@ -50,6 +64,13 @@ protected:
 	void addNeededTracker( std::string t ){ this->needed_tracker.Add(t); }
 #ifdef TOILE
 	void addNeededRenderer( std::string t ){ this->needed_renderer.Add(t); }
+#endif
+#ifdef DBASE
+#	ifdef PGSQL
+	void addNeededpgSQL( std::string t ){ this->needed_pgSQL.Add(t); }
+#	endif
+	void addNeededFeed( std::string t ){ this->needed_feed.Add(t); }
+	void addNeededNamedFeed( std::string t ){ this->needed_namedfeed.Add(t); }
 #endif
 
 	virtual void readConfigDirective( std::string &l, std::string &name, bool &nameused );
@@ -94,8 +115,21 @@ public:
 	 * Run with the same State as its caller.
 	 * Globals objects are accessible and call code will create objects in
 	 * the State.
+	 *
+	 * Notez-bien :
+	 *	- it's up to the caller to clean Lua state
+	 *	- in case of failure, return false, and the Lua state is already cleared
 	 */
-	bool execSync(lua_State *L, enum boolRetCode *rc = NULL, std::string *rs = NULL, lua_Number *retn = NULL);	
+
+		// We are expecting only a YES/NO to accept a value
+		// (default as well if we don't care about the result)
+	bool execSync(lua_State *L, enum boolRetCode *rc=NULL);
+
+		// boolean or value forced
+	bool execSync(lua_State *L, enum boolRetCode *rc, lua_Number *retn);
+
+		// name + boolean or value forced
+	bool execSync(lua_State *L, std::string *rs, enum boolRetCode *rc, lua_Number *retn);	
 };
 
 #endif

@@ -27,11 +27,12 @@ All **need_** directives known by [Lua tasks](Task(lua).md).
 ### MinMax owns
 None
 
+## at Lua side
+
 ### Exposed variables
 - **MAJORDOME_Myself** is automatically created and correspond to the current MinMax
 - **MAJORDOME_MINMAX** - minmax's name
 
-## at Lua side
 ### Validating incoming data
 MinMax definition file can end with a Lua code : if this code returns "**false**", this data submission is ignored. Any other value (or no value), the data is accepted.
 
