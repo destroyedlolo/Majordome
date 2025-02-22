@@ -1,0 +1,65 @@
+# .feed
+
+Store incomming data in a database.
+
+## Syntax
+
+.feed are Lua script where directives are put in its header as following :
+- Each line starting with `-->>` are Majordome's directives.
+- Consequently, --->> are commented out commands (notice the 3 dashes).
+
+## Directives
+
+### Generals
+
+#### -->> name=
+Unique name to identify the Feed. If not set, uses the filename.
+`-->> name=toto`
+#### -->> quiet
+Remove some trace. This option is useful to avoid logging of very noisy topics.
+
+#### -->> disabled
+This Feed starts as disabled : incoming messages are ignored.
+
+### feed's owns
+#### -->> Database=
+Which database to use.`
+
+## at Lua side
+
+### Exposed variables
+
+- **MAJORDOME_Myself** is automatically created and correspond to the current Feed
+- **MAJORDOME_MINMAX** - Feed's name
+
+### Validating incoming data
+Feed definition file can end with a Lua code : 
+- if this code returns "**false**", this data submission is ignored.
+- "**true**" or no value, the data is accepted
+- In a number is returned, it replace the original value
+
+> [!TIP]  
+> If comming from a [topic](topic.md), the data are stored in **MAJORDOME_PAYLOAD** variable
+
+> [!CAUTION]
+> Validation code is running synchronously : consequently, it has to be 
+> * not blocking
+> * as fast as possible
+
+Example :
+```
+if tonumber(MAJORDOME_PAYLOAD) == 85 then
+-- Ignore this value, (85 means underpowered 1-wire probe)
+	return false;
+elseif tonumber(MAJORDOME_PAYLOAD) == 50 then
+-- replace 50 by 49
+	return 49;
+end
+```
+### Exposed objects
+Statistics sequencing and retrieving are done through the **MajordomepgSQL**'s API :
+- `getContainer()` returns the container (directory) in which this pgSQL has been defined
+- `getName()` returns pgSQL's name
+- `isEnabled()` returns a boolean reflecting if this pgSQL is enabled or not
+- `Enable()` to enable this pgSQL
+- `Disable()` to disable this pgSQL 
