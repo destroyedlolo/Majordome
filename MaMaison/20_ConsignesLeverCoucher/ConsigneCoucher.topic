@@ -1,4 +1,5 @@
 -- Heure de coucher
 -->> topic=%ClientID%/HCoucher
 -->> store
+-->> default=22:00
 --->> numeric

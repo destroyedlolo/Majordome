@@ -12,7 +12,6 @@ local timer = MajordomeTimer.find("ConsigneCoucher", true)
 local timerMy = MajordomeTimer.find("ConsigneCoucherMy", true)
 local h,m = string.match(string.gsub( ConsigneCoucher:getVal(), '%.', ':'), "(%d+):(%d+)")
 
-
 -- Heure de coucher d'après la météo
 local couchersoleil = MajordomeTimer.find("HeureDebutSurveillanceCoucherSoleil", true)
 local hs,ms = couchersoleil:getAtHM()
