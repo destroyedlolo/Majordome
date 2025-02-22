@@ -214,7 +214,8 @@ bool LuaExec::feedbyNeeded( lua_State *L, bool require ){
 				enum SharedObjType type;
 				SelSharedVar->getValue( tpc->getNameC(), &type, false );
 				if(type == SOT_UNKNOWN){
-					SelLog->Log('T', "Required topic \"%s\" not set : task/trigger will not be launched", this->getNameC());
+					if(debug && !this->isQuiet())
+						SelLog->Log('D', "[%s] Required topic \"%s\" not set : task/trigger will not be launched", this->getNameC(), tpc->getNameC());
 					return false;
 				}
 
