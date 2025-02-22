@@ -77,22 +77,16 @@ void MinMax::readConfigDirective( std::string &l, std::string &name, bool &nameu
 }
 
 void MinMax::feedState( lua_State *L ){
-	try {
-		class MinMax *mm = config.MinMaxList.at( this->getNameC() );
-		class MinMax **minmax = (class MinMax **)lua_newuserdata(L, sizeof(class MinMax *));
-		assert(minmax);
+	class MinMax **minmax = (class MinMax **)lua_newuserdata(L, sizeof(class MinMax *));
+	assert(minmax);
 
-		lua_pushstring( L, this->getNameC() );	// Push the name of the tracker
-		lua_setglobal( L, "MAJORDOME_MINMAX" );
+	lua_pushstring( L, this->getNameC() );	// Push the name of the tracker
+	lua_setglobal( L, "MAJORDOME_MINMAX" );
 
-		*minmax = mm;
-		luaL_getmetatable(L, "MajordomeMinMax");
-		lua_setmetatable(L, -2);
-		lua_setglobal( L, "MAJORDOME_Myself" );
-	} catch( std::out_of_range &e ){	// Not found 
-		SelLog->Log('F', "Can't find minmax '%s'", this->getNameC() );
-		exit(EXIT_FAILURE);
-	}
+	*minmax = this;
+	luaL_getmetatable(L, "MajordomeMinMax");
+	lua_setmetatable(L, -2);
+	lua_setglobal( L, "MAJORDOME_Myself" );
 }
 
 bool MinMax::execAsync(lua_State *L){
@@ -105,41 +99,42 @@ bool MinMax::execAsync(lua_State *L){
 #endif
 
 	LuaExec::boolRetCode rc;
-	std::string rs;
-	lua_Number retn;
+	lua_Number val;
 
-	bool r = this->LuaExec::execSync(L, &rc, &rs, &retn);
+	bool r = this->LuaExec::execSync(L, &rc, &val);
 
-	if( rc != LuaExec::boolRetCode::RCfalse ){
-
-		lua_Number val;
-		lua_getglobal(L, "MAJORDOME_PAYLOAD");
-		if(lua_isnumber(L, -1)){
-			val = lua_tonumber(L, -1);
-		
-			if(this->empty){
-				this->empty = false;
-				this->nbre = 1;
-				this->min = this->max = this->sum = val; 
-			} else {
-				if(val < this->min)
-					this->min = val;
-				if(val > this->max)
-					this->max = val;
-
-				this->sum += val;
-				this->nbre++;
+	if( rc != LuaExec::boolRetCode::RCfalse ){	// data not rejected
+		if(isnan(val)){	// data unchanged
+			lua_getglobal(L, "MAJORDOME_PAYLOAD");
+			if(lua_isnumber(L, -1))
+				val = lua_tonumber(L, -1);
+			else {
+				SelLog->Log('E', "['%s'] can't find MAJORDOME_PAYLOAD as number", this->getNameC());
+				lua_close(L);
+				return r;
 			}
+		}
+	
+		if(this->empty){
+			this->empty = false;
+			this->nbre = 1;
+			this->min = this->max = this->sum = val; 
+		} else {
+			if(val < this->min)
+				this->min = val;
+			if(val > this->max)
+				this->max = val;
 
-			if(debug)
-				SelLog->Log('T', "[MinMax '%s'] accepting %.0f -> min:%.0f max:%.0f", this->getNameC(), val, this->min, this->max);
-		} else
-			SelLog->Log('E', "[MinMax '%s'] can't find MAJORDOME_PAYLOAD variable", this->getNameC());
+			this->sum += val;
+			this->nbre++;
+		}
+
+		if(debug)
+			SelLog->Log('T', "[MinMax '%s'] accepting %.0f -> min:%.0f max:%.0f", this->getNameC(), val, this->min, this->max);
 	} else
-		SelLog->Log('D', "[MinMax '%s'] Data rejected", this->getNameC());
+		SelLog->Log('E', "[MinMax '%s'] Data rejected", this->getNameC());
 
 	lua_close(L);
-
 	return r;
 }
 

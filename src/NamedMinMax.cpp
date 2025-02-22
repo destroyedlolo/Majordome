@@ -77,74 +77,65 @@ void NamedMinMax::readConfigDirective( std::string &l, std::string &name, bool &
 }
 
 void NamedMinMax::feedState( lua_State *L ){
-	try {
-		class NamedMinMax *nmm = config.NamedMinMaxList.at( this->getNameC() );
-		class NamedMinMax **nminmax = (class NamedMinMax **)lua_newuserdata(L, sizeof(class NamedMinMax *));
-		assert(nminmax);
+	class NamedMinMax **nminmax = (class NamedMinMax **)lua_newuserdata(L, sizeof(class NamedMinMax *));
+	assert(nminmax);
 
-		lua_pushstring( L, this->getNameC() );	// Push the name of the tracker
-		lua_setglobal( L, "MAJORDOME_NAMEDMINMAX" );
+	lua_pushstring( L, this->getNameC() );	// Push the name of the tracker
+	lua_setglobal( L, "MAJORDOME_NAMEDMINMAX" );
 
-		*nminmax = nmm;
-		luaL_getmetatable(L, "MajordomeNamedMinMax");
-		lua_setmetatable(L, -2);
-		lua_setglobal( L, "MAJORDOME_Myself" );
-	} catch( std::out_of_range &e ){	// Not found 
-		SelLog->Log('F', "Can't find namedminmax '%s'", this->getNameC() );
-		exit(EXIT_FAILURE);
-	}
+	*nminmax = this;
+	luaL_getmetatable(L, "MajordomeNamedMinMax");
+	lua_setmetatable(L, -2);
+	lua_setglobal( L, "MAJORDOME_Myself" );
 }
 
 bool NamedMinMax::execAsync(lua_State *L){
-#if 0	// Not needed as already checked within LuaExec::canRun() called by MQTTTopic::execHandlers()
-	if( !this->isEnabled() ){
-		if(verbose)
-			SelLog->Log('T', "MinMax'%s' from '%s' is disabled", this->getNameC(), this->getWhereC() );
-		return false;
-	}
-#endif
-
 	LuaExec::boolRetCode rc;
-	std::string rs;
-	lua_Number retn;
+	std::string rs("orphaned data collection");
+	lua_Number val;
 
-	bool r = this->LuaExec::execSync(L, &rc, &rs, &retn);
+	bool r = this->LuaExec::execSync(L, &rs, &rc, &val);
+	switch(rc){
+	case LuaExec::boolRetCode::RCfalse :	// data rejected
+		SelLog->Log('D', "['%s'] Data rejected", this->getNameC());
+		lua_close(L);
+		return r;
+	
+	case LuaExec::boolRetCode::RCforced :	// value provided
+		break;
 
-	if( rc != LuaExec::boolRetCode::RCfalse ){
-
-		lua_Number val;
+	default:	// Take the payload as data
 		lua_getglobal(L, "MAJORDOME_PAYLOAD");
-		if(lua_isnumber(L, -1)){
+		if(lua_isnumber(L, -1))
 			val = lua_tonumber(L, -1);
+		else {
+			SelLog->Log('E', "['%s'] can't find MAJORDOME_PAYLOAD as number", this->getNameC());
+			lua_close(L);
+			return r;
+		}
+		break;
+	}
 
-			if(retn == retn)	// Lua forced the value
-				val = retn;
+	auto it = this->empty.find(rs);
 
-			auto it = this->empty.find(rs);
+	if(this->empty[rs] || it == this->empty.end()){
+		this->empty[rs] = false;
+		this->nbre[rs] = 1;
+		this->min[rs] = this->max[rs] = this->sum[rs] = val; 
+	} else {
+		if(val < this->min[rs])
+			this->min[rs] = val;
+		if(val > this->max[rs])
+			this->max[rs] = val;
 
-			if(this->empty[rs] || it == this->empty.end()){
-				this->empty[rs] = false;
-				this->nbre[rs] = 1;
-				this->min[rs] = this->max[rs] = this->sum[rs] = val; 
-			} else {
-				if(val < this->min[rs])
-					this->min[rs] = val;
-				if(val > this->max[rs])
-					this->max[rs] = val;
+		this->sum[rs] += val;
+		this->nbre[rs]++;
+	}
 
-				this->sum[rs] += val;
-				this->nbre[rs]++;
-			}
-
-			if(debug)
-				SelLog->Log('T', "NamedMinMax '%s'[%s] min:%.0f max:%.0f", this->getNameC(), rs.c_str(), this->min[rs], this->max[rs]);
-		} else
-			SelLog->Log('E', "[NamedMinMax '%s'] can't find MAJORDOME_PAYLOAD variable", this->getNameC());
-	} else
-		SelLog->Log('D', "[NamedMinMax '%s'] Data rejected", this->getNameC());
+	if(debug && !this->isQuiet())
+		SelLog->Log('T', "NamedMinMax ['%s'/'%s'] min:%.0f max:%.0f", this->getNameC(), rs.c_str(), this->min[rs], this->max[rs]);
 
 	lua_close(L);
-
 	return r;
 }
 

@@ -18,6 +18,10 @@
 
 ### DRM
 
+---
+
+Ajouter les fonctions Lua dans Feed et NamedFeed
+
 --- Migration to v6
 
 MAJORDOME_TRIGGER replaced by MAJORDOME_TOPIC_NAME
@@ -30,7 +34,7 @@ needs : checking will not work if at same level (or lower).
 
 --- Futures
 
-(Named)MinMax handler to run asynchronously.
+(Named)MinMax, [Named]Feed handlers to run asynchronously.
 
 ---
 Add a new Object :

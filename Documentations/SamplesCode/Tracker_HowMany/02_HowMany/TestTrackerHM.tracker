@@ -18,7 +18,7 @@
 --
 -- Indicate MQTT topic(s) to listen to
 -- (more than one "listen" can be present)
--->> listen=TestHM
+-->> listen=Test
 --
 -- Numbers of positive responses before the tracker status become DONE
 -->> howmany=3

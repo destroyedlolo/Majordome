@@ -4,9 +4,16 @@
 
 # configuration
 
-# If set, compile TOILE extension
+# Optional features
+# Uncomment to enable them
+
+# PostgreSQL database access
+# needs postgresql-libs installed
+PGSQL='-DPGSQL -DDBASE'
+
+# Graphical extension : Toile
 # Not yet !
-# TOILE='-DTOILE'
+TOILE='-DTOILE'
 
 # Enable debugging messages
 DEBUG='-DDEBUG'
@@ -63,23 +70,29 @@ DEV
 
 cd src
 
+SOURCES='*.cpp'
+LIBS=''
+
+if [ -Z ${PGSQL+x} ]; then
+	echo "PostgreSQL : not compiled"
+else
+	echo "PostgreSQL : included"
+	SOURCES+=' pgsql/*.cpp'
+	LIBS+=' -lpq'
+fi
+
 if [ -Z ${TOILE+x} ]; then
 	echo "Toile : not compiled"
-
-	echo
-	echo "----------------"
-	echo
-
-	LFMakeMaker -v +f=Makefile -cc="g++" --opts="-Wall -O2 ${DEBUG} -lpthread -lpaho-mqtt3c -ldl \
-	${LUA} ${LUALIB} \
-	-I$SELDIR/include -L$SELDIR/lib $SELLIB" *.cpp -t=../Majordome > Makefile
 else
 	echo "Toile : included"
-	echo
-	echo "----------------"
-	echo
-
-	LFMakeMaker -v +f=Makefile -cc="g++" --opts="-Wall -O2 ${DEBUG} ${TOILE} -lpthread -lpaho-mqtt3c -ldl \
-	${LUA} ${LUALIB} \
-	-I$SELDIR/include -L$SELDIR/lib $SELLIB" *.cpp Toile/*.cpp -t=../Majordome > Makefile
+	SOURCES+=' Toile/*.cpp'
 fi
+
+echo
+echo "----------------"
+echo
+
+LFMakeMaker -v +f=Makefile -cc="g++" --opts="-Wall -O2 ${DEBUG} ${TOILE} ${PGSQL} -lpthread -lpaho-mqtt3c -ldl \
+${LUA} ${LUALIB} \
+${LIBS} \
+-I$SELDIR/include -L$SELDIR/lib $SELLIB" ${SOURCES} -t=../Majordome > Makefile

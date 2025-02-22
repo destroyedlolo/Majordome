@@ -1,7 +1,7 @@
 This is an example of usage of **howmany** : the tracker will wait for *how many* positive checks before becoming DONE.
 
 Following objects are created :
-- `TestHM.topic` - subscribes to a topic **TestHM** to receive data
+- `TestHM.topic` - subscribes to a topic **Test** to receive data
 - `TestTrackerHM.tracker` - A tracker waiting for 3 incoming data > 10
 
 <!---
