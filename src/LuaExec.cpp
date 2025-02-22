@@ -197,7 +197,7 @@ void LuaExec::readConfigDirective( std::string &l, std::string &name, bool &name
 
 bool LuaExec::canRun( void ){
 	if( !this->isEnabled() ){
-		if(verbose)
+		if(verbose && !this->isQuiet())
 			SelLog->Log('T', "Task '%s' from '%s' is disabled", this->getNameC(), this->getWhereC() );
 		return false;
 	}
@@ -502,7 +502,7 @@ bool LuaExec::execSync(lua_State *L, enum boolRetCode *rc, lua_Number *retn){
 	if(!this->prepareExecSync(L))
 		return false;
 
-	if(lua_pcall( L, 0, 1, 0))
+	if(lua_pcall(L, 0, 1, 0))
 		SelLog->Log('E', "Can't execute task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), lua_tostring(L, -1));
 
 	if(lua_isboolean(L, -1))
@@ -524,7 +524,7 @@ bool LuaExec::execSync(lua_State *L, std::string *rs, enum boolRetCode *rc, lua_
 	if(!this->prepareExecSync(L))
 		return false;
 
-	if(lua_pcall( L, 0, 2, 0))
+	if(lua_pcall(L, 0, 2, 0))
 		SelLog->Log('E', "Can't execute task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), lua_tostring(L, -1));
 
 		/* -1 : numeric value if provided

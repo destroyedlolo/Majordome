@@ -13,7 +13,7 @@ void HandlersExecutor::execHandlers(void){
 			i->exec(this);
 
 #ifdef DEBUG
-	} else if( debug ){
+	} else if(debug && !this->isQuiet()){
 		SelLog->Log('D', "Event %s is disabled : no tasks launched", this->getNameC());
 	}
 #endif
