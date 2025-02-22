@@ -1,0 +1,34 @@
+-- This is an example of Decoration script
+--
+-- Decoration paints a surface.
+--
+-- In the header of the script (comment bloc at the very beginning of
+-- the script), each line starting with -->> are Majordome's commands.
+-- Consequently, '--->>' are commented out commands.
+--
+-- Name of this script
+-- if not set, takes the filename
+--->> name=LCD
+--
+-- On which object this decoration will be applied ?
+-- On a Surface object
+-->> ApplyOn=Sub
+-- On a Renderer
+--->> ApplyOnRenderer=
+--
+-- remove some trace
+-- This option is useful to avoid logging of very noisy topics
+--->> quiet
+--
+-- Disable this decoration
+--->> disabled
+
+-- The surface to apply on is embodied as MAJORDOME_PAINTING
+
+-- the surface need to be manually cleared
+-- otherwise, the "behind" is still displayed (transparency)
+MAJORDOME_PAINTING:Clear()
+
+-- write something
+MAJORDOME_PAINTING:WriteString("truc");
+
