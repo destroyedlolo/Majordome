@@ -22,6 +22,11 @@
 #include "MayBeEmptyString.h"
 #include "Config.h"
 
+#ifdef TOILE
+#	include "Toile/Toile.h"
+#	include "Toile/ToileVersion.h"
+#endif
+
 #include <fstream>
 
 #include <cstring>		// strerror()

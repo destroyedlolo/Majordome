@@ -1,14 +1,16 @@
 /* Some Toile's helpers */
 
-#include <cstring>
-
 #include "Toile.h"
+#if 0
 #include "Renderer.h"
 #include "Painting.h"
 #include "Decoration.h"
 #include "Field.h"
+#endif
+#include "../Helpers.h"
 
 #include <iostream>
+#include <cstring>
 
 /* Determine object weight based on its file extension.
  * Will be merged with SubConfigDir ones (and other modules if any.
@@ -33,6 +35,7 @@ uint8_t Toile::objectweight( const char *ext ){
 bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &where, const char *ext, lua_State *L){
 	if(debug) puts("*D*** Toile::readConfigToile()");
 
+#if 0	/* TODO */
 	if( !strcmp(ext,".Renderer") ){
 		if(debug) puts("*D**F Toile::readConfigToile() - Renderer");
 
@@ -94,12 +97,14 @@ bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &
 		if(debug) puts("*D**F Toile::readConfigToile() - Field - true");
 		return true;
 	}
+#endif
 
 	if(debug) puts("*D**F Toile::readConfigToile() false");
 	return false;
 }
 
 bool Toile::execRenderers(){
+#if 0 /* TODO */
 	for(auto &i: config.RendererList){
 		if(!i.second->exec()){
 			if(i.second->getFatal())
@@ -110,11 +115,13 @@ bool Toile::execRenderers(){
 		for(auto &paint: i.second->PaintingList)
 			paint->exec();
 	}
-
+#endif
 	return true;
 }
 
 void Toile::RefreshRenderers(){
+#if 0	/* TODO */
 	for(auto &r: config.RendererList)
 		r.second->refreshAll();
+#endif
 }

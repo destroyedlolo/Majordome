@@ -14,4 +14,4 @@
  *	24/11/2024 - LF - Start of development
  */
 
-#define TOILEVERSION 0.0001
+#define TOILEVERSION 0.0002
