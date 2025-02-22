@@ -154,12 +154,14 @@ void threadEnvironment(lua_State *L){
 	 */
 
 static int mjd_letsgo(lua_State *L){
-	SelLog->Log('D', "Late dependencies building");
+	if(debug || verbose)
+		SelLog->Log('D', "Late dependencies building");
 	
 	SelLua->lateBuildingDependancies(L);
 	SelLua->ApplyStartupFunc(L);
 
-	SelLog->Log('D', "Let's go ...");
+	if(debug || verbose)
+		SelLog->Log('D', "Let's go ...");
 
 	return 0;
 }
@@ -301,11 +303,13 @@ int main(int ac, char **av){
 	case 't':
 		configtest = true;
 	case 'v':
+		if(!quiet){
 #ifdef TOILE
-		SelLog->Log('I', "%s v%.04f %s", basename(av[0]), VERSION, " - Toile v" STRIFY(TOILEVERSION));
+			SelLog->Log('I', "%s v%.04f %s", basename(av[0]), VERSION, " - Toile v" STRIFY(TOILEVERSION));
 #else
-		SelLog->Log('I', "%s v%.04f", basename(av[0]), VERSION);
+			SelLog->Log('I', "%s v%.04f", basename(av[0]), VERSION);
 #endif
+		}
 		verbose = true;
 		quiet = false;
 		break;

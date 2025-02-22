@@ -134,7 +134,7 @@ void Tracker::readConfigDirective( std::string &l, std::string &name, bool &name
 
 bool Tracker::execAsync(lua_State *L){
 	if( !this->isEnabled() || this->status != _status::CHECKING ){
-		if(verbose)
+		if(verbose && !this->isQuiet())
 			SelLog->Log('T', "Tracker '%s' from '%s' is disabled or inactive", this->getNameC(), this->getWhereC() );
 		lua_close( L );
 		return false;
@@ -147,7 +147,7 @@ bool Tracker::execAsync(lua_State *L){
 	if( rc == LuaExec::boolRetCode::RCfalse ){
 		this->hm_counter = this->howmany;
 #ifdef DEBUG
-		if(debug)
+		if(debug && !this->isQuiet())
 			SelLog->Log('D', "[%s] Reset to %u", this->getNameC(), this->getCounter());
 #endif
 	} else if( rc == LuaExec::boolRetCode::RCtrue ){
@@ -189,7 +189,7 @@ void Tracker::start( void ){
 	if( this->isEnabled() && this->getStatus() != _status::CHECKING ){
 		for(auto &t : this->startingTasks)	// Execute attached starting tasks
 			t->exec(this);
-		if(verbose)
+		if(verbose && !this->isQuiet())
 			SelLog->Log('T', "Tracker '%s' is checking", this->getNameC() );
 		this->status = _status::CHECKING;
 		this->hm_counter = this->howmany;
@@ -202,7 +202,7 @@ void Tracker::stop( void ){
 	if( this->isEnabled() && this->getStatus() != _status::WAITING ){
 		for(auto &t : this->stoppingTasks)	// Execute attached stopping tasks
 			t->exec(this);
-		if(verbose)
+		if(verbose && !this->isQuiet())
 			SelLog->Log('T', "Tracker '%s' is waiting", this->getNameC() );
 		this->status = _status::WAITING;
 		this->publishstatus();
@@ -214,7 +214,7 @@ void Tracker::done( void ){
 	if( this->isEnabled() && this->getStatus() == _status::CHECKING ){
 		for(auto &t : *this)	// Execute attached done tasks
 			t->exec(this);
-		if(verbose)
+		if(verbose && !this->isQuiet())
 			SelLog->Log('T', "Tracker '%s' is done", this->getNameC() );
 		this->status = _status::DONE;
 		this->publishstatus();

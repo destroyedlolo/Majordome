@@ -32,7 +32,8 @@ bool NamedFeed::execAsync(lua_State *L){
 	bool r = this->LuaExec::execSync(L, &rs, &rc, &val);
 	switch(rc){
 	case LuaExec::boolRetCode::RCfalse :	// data rejected
-		SelLog->Log('D', "['%s'] Data rejected", this->getNameC());
+		if(debug && !this->isQuiet())
+			SelLog->Log('D', "['%s'] Data rejected", this->getNameC());
 		lua_close(L);
 		return r;
 	
