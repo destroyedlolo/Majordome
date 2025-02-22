@@ -18,9 +18,10 @@
 
 ### DRM
 
----
+--- Bugs
 
-Pour les objets qui ont des scripts de validation ("*MinMax", "*feed"), la donnée doit être rejetée si le script échoue
+- Pour les objets qui ont des scripts de validation ("*MinMax", "*feed"), la donnée doit être rejetée si le script échoue
+- Data rejected ne doit être affiché qu'en mode debug (namedfeed)
 
 --- Migration to v6
 
