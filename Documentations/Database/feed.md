@@ -33,6 +33,15 @@ If not set, the same as "name" or the filename.
 > For convenience, it is preferable that the table name's is only in lower-case. Otherwise, it will have
 >  to be surrounded by double quotes in pgsql.
 
+## SQL table definition
+
+```
+CREATE TABLE test (
+   sample_time TIMESTAMP WITH TIME ZONE,
+   value INTEGER
+);
+```
+
 ## at Lua side
 
 ### Exposed variables
