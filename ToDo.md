@@ -20,7 +20,7 @@
 
 ---
 
-Ajouter les fonctions Lua dans Feed et NamedFeed
+Pour les objets qui ont des scripts de validation ("*MinMax", "*feed"), la donnée doit être rejetée si le script échoue
 
 --- Migration to v6
 
