@@ -13,13 +13,13 @@
 ### Generals
 
 #### -->> name=
-Unique name to identify the MinMax. If not set, uses the filename.
+Unique name to identify the Feed. If not set, uses the filename.
 `-->> name=toto`
 #### -->> quiet
 Remove some trace. This option is useful to avoid logging of very noisy topics.
 
 #### -->> disabled
-This MinMax starts as disabled : stats change and incoming messages are ignored.
+This Feed starts as disabled : incoming messages are ignored.
 
 ### psql's owns
 #### -->> pgConnectionstring=
