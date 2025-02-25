@@ -59,6 +59,7 @@ Feed::Feed(const std::string &fch, std::string &where, std::string &name, lua_St
 
 void Feed::readConfigDirective( std::string &l, std::string &name, bool &nameused ){
 	MayBeEmptyString arg;
+puts("Feed::readConfigDirective");
 
 	if(!!(arg = striKWcmp( l, "-->> listen=" ))){
 		TopicCollection::iterator topic;

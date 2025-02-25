@@ -1,0 +1,42 @@
+-- Table feed declaration
+--
+-- Note : For convenience, it is preferable that the table name's is only
+-- in lower-case. Otherwise, it will have to be surrounded by double quotes
+-- in pgsql.
+--
+-- name of the table to feed
+-- if not set, takes the filename
+--->> name=toto
+--
+-- The database to connect to
+-->> Database=database
+--
+-- The table where data will be inserted
+-- if not set, the same as "name"
+-->> table=ntest
+--
+-- Topic to listen too
+-->> listen=Test
+--
+-- The amount of labels (names) fields to insert.
+-- By default, it's only 1
+-->> labels=2
+--
+-- Remove some tracing messages
+--->> quiet
+
+print("Incomming value", MAJORDOME_PAYLOAD)
+
+-- With 1-wire probe, 85 means underpowered
+-- So we can't accept this data
+if tonumber(MAJORDOME_PAYLOAD) == 85 then -- Rejected
+	return false
+elseif tonumber(MAJORDOME_PAYLOAD) < 10 then -- only accepted, stored in "orphaned data collection" collection
+	return true
+elseif tonumber(MAJORDOME_PAYLOAD) == 20 then
+	return "my data", 21
+elseif tonumber(MAJORDOME_PAYLOAD) > 90 then -- We are not forcing the value, "2" is the name of a collection
+	return 2
+else	-- accepted as such and stored in 
+	return "my data"
+end
