@@ -35,5 +35,5 @@
  *	20/02/2025 - v6.01 - LF - Add PostgreSQL support
  */
 
-#define VERSION 6.0106
+#define VERSION 6.0107
 #define COPYRIGHT "Majordome (c) L.Faillie 2018-2025"
