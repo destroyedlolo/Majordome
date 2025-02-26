@@ -6,8 +6,6 @@
 #include "Feed.h"
 
 class NamedFeed : virtual public Feed {
-	size_t labels;
-
 	virtual void feedState(lua_State *L);
 
 		/* Executable */
