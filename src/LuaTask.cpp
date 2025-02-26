@@ -164,7 +164,7 @@ bool LuaTask::canRun( void ){
 	pthread_mutex_lock( &this->running_access );
 	if( this->running ){
 		pthread_mutex_unlock( &this->running_access );
-		if(verbose)
+		if(verbose && !this->isQuiet())
 			SelLog->Log('T', "Task '%s' from '%s' is already running", this->getNameC(), this->getWhereC() );		
 		return false;
 	}

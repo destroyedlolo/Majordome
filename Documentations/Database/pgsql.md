@@ -36,9 +36,25 @@ Statistics sequencing and retrieving are done through the **MajordomepgSQL**'s A
 - `isEnabled()` returns a boolean reflecting if this pgSQL is enabled or not
 - `Enable()` to enable this pgSQL
 - `Disable()` to disable this pgSQL 
+
+#### Executing SQL
 - `doSQL()` to execute an SQL query (see [Exec_SQL](SamplesCode/Exec_SQL) example).
 
 > [!CAUTION]
 > The result of `doSQL() ` is returned as a table to Lua side.
 > Consequently, querying a large amount of data can lead to a memory shortage
 > and can crash your application.
+
+#### Securing queries
+- `EscapeLiteral()` and `EscapeString()` escape a string for use within an SQL command.
+- `EscapeIdentifier()` escapes a string for use as an SQL identifier, such as a table, column, or function name.
+
+> [!CAUTION]
+> These functions need to connect to the database.
+
+##### Example
+
+This snippet shows how to use these function from a **Feed** or a **NamedFeed**.
+```
+MAJORDOME_Myself:getDatabase():EscapeString( mystring )
+```

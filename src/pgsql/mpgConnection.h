@@ -36,6 +36,8 @@ public:
 	void disconnect(void);
 	bool isConnected(void){ return !!this->conn; };
 
+	/* Accessors */
+	pgSQL *getDatabase(void){ return this->db; };
 	PGconn *getConnection(void){ return this->conn; };
 
 	bool doSQL(const char *);		// Execute a simple query

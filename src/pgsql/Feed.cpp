@@ -71,6 +71,17 @@ void Feed::readConfigDirective( std::string &l, std::string &name, bool &nameuse
 			SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
+	} else if( !!(arg = striKWcmp( l, "-->> when=" ))){
+		TimerCollection::iterator timer;
+		if( (timer = config.TimersList.find(arg)) != config.TimersList.end()){
+			if(verbose)
+				SelLog->Log('C', "\t\tAdded to timer '%s'", arg.c_str());
+			timer->second->addHandler( dynamic_cast<Handler *>(this) );
+//			nameused = true;
+		} else {
+			SelLog->Log('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
 	} else if(!!(arg = striKWcmp( l, "-->> table=" ))){
 		this->TableName = arg;
 			if(verbose)
@@ -177,7 +188,7 @@ static class Feed *checkMajordomeFeed(lua_State *L){
 	return *r;
 }
 
-static int mmm_find(lua_State *L){
+static int lfd_find(lua_State *L){
 	const char *name = luaL_checkstring(L, 1);
 
 	try {
@@ -196,46 +207,66 @@ static int mmm_find(lua_State *L){
 }
 
 static const struct luaL_Reg MajFeedLib [] = {
-	{"find", mmm_find},
+	{"find", lfd_find},
 	{NULL, NULL}
 };
 
-static int mmm_getContainer(lua_State *L){
+static int lfd_getContainer(lua_State *L){
 	class Feed *feed= checkMajordomeFeed(L);
 	lua_pushstring( L, feed->getWhereC() );
 	return 1;
 }
 
-static int mmm_getName(lua_State *L){
+static int lfd_getName(lua_State *L){
 	class Feed *feed= checkMajordomeFeed(L);
 	lua_pushstring( L, feed->getName().c_str() );
 	return 1;
 }
 
-static int mmm_isEnabled( lua_State *L ){
+static int lfd_isEnabled( lua_State *L ){
 	class Feed *feed= checkMajordomeFeed(L);
 	lua_pushboolean( L, feed->isEnabled() );
 	return 1;
 }
 
-static int mmm_enabled( lua_State *L ){
+static int lfd_enabled( lua_State *L ){
 	class Feed *feed= checkMajordomeFeed(L);
 	feed->enable();
 	return 0;
 }
 
-static int mmm_disable( lua_State *L ){
+static int lfd_disable( lua_State *L ){
 	class Feed *feed= checkMajordomeFeed(L);
 	feed->disable();
 	return 0;
 }
 
+static int lfd_getTable(lua_State *L){
+	class Feed *feed= checkMajordomeFeed(L);
+	lua_pushstring( L, feed->getTableName() );
+	return 1;
+}
+
+static int lfd_getDatabase(lua_State *L){
+	class Feed *feed= checkMajordomeFeed(L);
+	class pgSQL **db = (class pgSQL **)lua_newuserdata(L, sizeof(class pgSQL *));
+	assert(db);
+	*db = feed->getDatabase();
+
+	luaL_getmetatable(L, "MajordomepgSQL");
+	lua_setmetatable(L, -2);
+
+	return 1;
+}
+
 static const struct luaL_Reg MajFeedM [] = {
-	{"getContainer", mmm_getContainer},
- 	{"getName", mmm_getName},
-	{"isEnabled", mmm_isEnabled},
-	{"Enable", mmm_enabled},
-	{"Disable", mmm_disable},
+	{"getContainer", lfd_getContainer},
+ 	{"getName", lfd_getName},
+	{"isEnabled", lfd_isEnabled},
+	{"Enable", lfd_enabled},
+	{"Disable", lfd_disable},
+	{"getTable", lfd_getTable},
+	{"getDatabase", lfd_getDatabase},
 	{NULL, NULL}
 };
 
