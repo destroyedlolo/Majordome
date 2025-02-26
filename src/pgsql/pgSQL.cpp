@@ -179,6 +179,38 @@ static int mmm_doSQL( lua_State *L ){
 	return ret;
 }
 
+static int mmm_escapeliteral( lua_State *L ){
+	class pgSQL *pgsql= checkMajordomepgSQL(L);
+	const char *s = luaL_checkstring(L, 2);
+
+	if(!pgsql->connect())
+		return false;
+
+	char *t = PQescapeLiteral(pgsql->getConnection(), s, strlen(s));
+	lua_pushstring(L, t);
+
+	PQfreemem(t);
+	pgsql->disconnect();
+
+	return 1;
+}
+
+static int mmm_escapeidentifier( lua_State *L ){
+	class pgSQL *pgsql= checkMajordomepgSQL(L);
+	const char *s = luaL_checkstring(L, 2);
+
+	if(!pgsql->connect())
+		return false;
+
+	char *t = PQescapeIdentifier(pgsql->getConnection(), s, strlen(s));
+	lua_pushstring(L, t);
+
+	PQfreemem(t);
+	pgsql->disconnect();
+
+	return 1;
+}
+
 static const struct luaL_Reg MajpgSQLM [] = {
 	{"getContainer", mmm_getContainer},
  	{"getName", mmm_getName},
@@ -186,6 +218,9 @@ static const struct luaL_Reg MajpgSQLM [] = {
 	{"Enable", mmm_enabled},
 	{"Disable", mmm_disable},
 	{"doSQL", mmm_doSQL},
+	{"EscapeLiteral", mmm_escapeliteral},
+	{"EscapeString", mmm_escapeliteral},
+	{"EscapeIdentifier", mmm_escapeidentifier},
 	{NULL, NULL}
 };
 
