@@ -8,7 +8,6 @@
 class NamedFeed : virtual public Feed {
 	size_t labels;
 
-	virtual void readConfigDirective( std::string &l, std::string &name, bool &nameused );
 	virtual void feedState(lua_State *L);
 
 		/* Executable */

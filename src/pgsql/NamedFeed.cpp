@@ -8,25 +8,7 @@
 #include <cstring>
 #include <cassert>
 
-NamedFeed::NamedFeed(const std::string &fch, std::string &where, std::string &name, lua_State *L) : Object(fch, where, name), Handler(fch, where, name), Feed(fch, where, name, L), labels(1){
-}
-
-void NamedFeed::readConfigDirective( std::string &l, std::string &name, bool &nameused ){
-	MayBeEmptyString arg;
-
-puts("NamedFeed::readConfigDirective");
-	if(!!(arg = striKWcmp( l, "-->> labels=" ))){
-		int i = std::stoi(arg);
-		if(i>0){
-			this->labels = (size_t)i;
-			if(verbose)
-				SelLog->Log('C', "\t\tLabels %u'", this->labels);
-		} else {
-			SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
-			exit(EXIT_FAILURE);
-		}
-	} else 
-		this->Feed::readConfigDirective(l, name, nameused);
+NamedFeed::NamedFeed(const std::string &fch, std::string &where, std::string &name, lua_State *L) : Object(fch, where, name), Handler(fch, where, name), Feed(fch, where, name, L){
 }
 
 void NamedFeed::feedState( lua_State *L ){
