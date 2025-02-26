@@ -74,9 +74,14 @@ elseif tonumber(MAJORDOME_PAYLOAD) == 50 then
 end
 ```
 ### Exposed objects
-Statistics sequencing and retrieving are done through the **MajordomepgSQL**'s API :
-- `getContainer()` returns the container (directory) in which this pgSQL has been defined
-- `getName()` returns pgSQL's name
-- `isEnabled()` returns a boolean reflecting if this pgSQL is enabled or not
-- `Enable()` to enable this pgSQL
-- `Disable()` to disable this pgSQL 
+Statistics sequencing and retrieving are done through the **MajordomeFeed**'s API :
+- `getContainer()` returns the container (directory) in which this Feed has been defined
+- `getName()` returns Feed's name
+- `isEnabled()` returns a boolean reflecting if this Feed is enabled or not
+- `Enable()` to enable this Feed
+- `Disable()` to disable this Feed
+
+Those are redundant with header declarations, but they are making life easier : all configurations are done in the header, and the code remains unchanged.
+
+- `getTable()` returns the table's name
+- `getDatabase()` returns the database as **MajordomepgSQL** object.
