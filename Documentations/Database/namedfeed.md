@@ -68,7 +68,7 @@ CREATE TABLE ntest (
 ### Exposed variables
 
 - **MAJORDOME_Myself** is automatically created and correspond to the current Feed
-- **MAJORDOME_FEED** - Feed's name
+- **MAJORDOME_NAMEFEED** - Feed's name
 
 ### Data name and validating
 
