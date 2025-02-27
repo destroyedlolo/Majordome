@@ -92,7 +92,7 @@ static class NamedFeed *checkMajordomeNamedFeed(lua_State *L){
 	return *r;
 }
 
-static int mmm_find(lua_State *L){
+static int lnfd_find(lua_State *L){
 	const char *name = luaL_checkstring(L, 1);
 
 	try {
@@ -111,46 +111,66 @@ static int mmm_find(lua_State *L){
 }
 
 static const struct luaL_Reg MajNamedFeedLib [] = {
-	{"find", mmm_find},
+	{"find", lnfd_find},
 	{NULL, NULL}
 };
 
-static int mmm_getContainer(lua_State *L){
+static int lnfd_getContainer(lua_State *L){
 	class NamedFeed *namedfeed= checkMajordomeNamedFeed(L);
 	lua_pushstring( L, namedfeed->getWhereC() );
 	return 1;
 }
 
-static int mmm_getName(lua_State *L){
+static int lnfd_getName(lua_State *L){
 	class NamedFeed *namedfeed= checkMajordomeNamedFeed(L);
 	lua_pushstring( L, namedfeed->getName().c_str() );
 	return 1;
 }
 
-static int mmm_isEnabled( lua_State *L ){
+static int lnfd_isEnabled( lua_State *L ){
 	class NamedFeed *namedfeed= checkMajordomeNamedFeed(L);
 	lua_pushboolean( L, namedfeed->isEnabled() );
 	return 1;
 }
 
-static int mmm_enabled( lua_State *L ){
+static int lnfd_enabled( lua_State *L ){
 	class NamedFeed *namedfeed= checkMajordomeNamedFeed(L);
 	namedfeed->enable();
 	return 0;
 }
 
-static int mmm_disable( lua_State *L ){
+static int lnfd_disable( lua_State *L ){
 	class NamedFeed *namedfeed= checkMajordomeNamedFeed(L);
 	namedfeed->disable();
 	return 0;
 }
 
+static int lnfd_getTable(lua_State *L){
+	class Feed *feed= checkMajordomeNamedFeed(L);
+	lua_pushstring( L, feed->getTableName() );
+	return 1;
+}
+
+static int lnfd_getDatabase(lua_State *L){
+	class Feed *feed= checkMajordomeNamedFeed(L);
+	class pgSQL **db = (class pgSQL **)lua_newuserdata(L, sizeof(class pgSQL *));
+	assert(db);
+	*db = feed->getDatabase();
+
+	luaL_getmetatable(L, "MajordomepgSQL");
+	lua_setmetatable(L, -2);
+
+	return 1;
+}
+
 static const struct luaL_Reg MajNamedFeedM [] = {
-	{"getContainer", mmm_getContainer},
- 	{"getName", mmm_getName},
-	{"isEnabled", mmm_isEnabled},
-	{"Enable", mmm_enabled},
-	{"Disable", mmm_disable},
+	{"getContainer", lnfd_getContainer},
+ 	{"getName", lnfd_getName},
+	{"isEnabled", lnfd_isEnabled},
+	{"Enable", lnfd_enabled},
+	{"Disable", lnfd_disable},
+	{"getTable", lnfd_getTable},
+	{"getDatabase", lnfd_getDatabase},
 	{NULL, NULL}
 };
 

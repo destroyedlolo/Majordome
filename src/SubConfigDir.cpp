@@ -23,16 +23,16 @@
  * Some space are left for modules extensions (like Toile's)
  */
 static const SubConfigDir::extweight fileext[] = {
-	{ ".topic", 0xc0 },
-	{ ".timer", 0xc0 },
-	{ ".rendezvous", 0xc0 },
 #ifdef DBASE
 #	ifdef PGSQL
 	{ ".pgsql", 0xc0 },
 #	endif
-	{ ".feed", 0xa0 },
-	{ ".namedfeed", 0xa0 },
+	{ ".feed", 0x70 },
+	{ ".namedfeed", 0x70 },
 #endif
+	{ ".topic", 0xc0 },
+	{ ".timer", 0xc0 },
+	{ ".rendezvous", 0xc0 },
 	{ ".minmax", 0x80 },
 	{ ".namedminmax", 0x80 },
 	{ ".tracker", 0x80 },
