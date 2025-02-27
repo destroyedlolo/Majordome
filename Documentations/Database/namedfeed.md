@@ -106,3 +106,8 @@ Statistics sequencing and retrieving are done through the **MajordomepgSQL**'s A
 - `isEnabled()` returns a boolean reflecting if this pgSQL is enabled or not
 - `Enable()` to enable this pgSQL
 - `Disable()` to disable this pgSQL 
+
+Those are redundant with header declarations, but they are making life easier : all configurations are done in the header, and the code remains unchanged.
+
+- `getTable()` returns the table's name
+- `getDatabase()` returns the database as **MajordomepgSQL** object.
