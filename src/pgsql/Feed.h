@@ -25,9 +25,6 @@ class Feed : virtual public mpgConnection, virtual public Handler, virtual publi
 protected:
 	void readConfigDirective( std::string &l, std::string &name, bool &nameused );
 
-	virtual const char *getNameC(){ return(this->Object::getNameC()); };
-	bool isQuiet(){ return this->Object::isQuiet(); };
-
 	MayBeEmptyString TableName;
 public:
 	Feed(const std::string &fch, std::string &where, std::string &name, lua_State *L);
@@ -35,6 +32,8 @@ public:
 
 	/* Accessors */
 	const char *getTableName(void);
+	virtual const char *getNameC(){ return(this->Object::getNameC()); };
+	bool isQuiet(){ return this->Object::isQuiet(); };
 
 	/* Create Lua's object */
 	static void initLuaInterface( lua_State *L );
