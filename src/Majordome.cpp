@@ -431,6 +431,23 @@ int main(int ac, char **av){
 	SelLua->AddStartupFunc(NamedFeed::initLuaInterface);
 #endif
 
+#ifdef TOILE
+	if(!Toile::execRenderers()){
+		SelLog->Log('F', "At least fatal renderer failed");
+		exit(EXIT_FAILURE);
+	}
+
+#	ifdef	DEBUG
+	for(auto &r : config.RendererList)
+		r.second->dump();
+
+#if 0	/* TODO Painting */
+	for(auto &r : config.PaintingList)
+		r.second->dump();
+#endif
+#	endif
+#endif
+
 		/* **
 		 * After this point, we're running application's code
 		 * **/

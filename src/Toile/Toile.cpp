@@ -15,11 +15,12 @@
 #include <iostream>
 #include <cstring>
 
+#include "../Config.h"
+#include "../SubConfigDir.h"
+
 /* Determine object weight based on its file extension.
  * Will be merged with SubConfigDir ones (and other modules if any.
  */
-#include "../SubConfigDir.h"
-
 static const SubConfigDir::extweight fileext[] = {
 	{ ".Renderer", 0xc0 },
 	{ ".Painting", 0x80 },
@@ -36,24 +37,27 @@ uint8_t Toile::objectweight( const char *ext ){
 }
 
 bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &where, const char *ext, lua_State *L){
-	if(debug) puts("*D*** Toile::readConfigToile()");
+	if(debug)
+		SelLog->Log('D', "Toile::readConfigToile()");
 
-#if 0 /* TODO */
 	if( !strcmp(ext,".Renderer") ){
-		if(debug) puts("*D**F Toile::readConfigToile() - Renderer");
+		if(debug)
+			SelLog->Log('D', "Toile::readConfigToile() - Renderer");
 
 		std::string name;
 		auto paint = new Renderer( completpath, where, name, L );
 	
-		Config::RendererElements::iterator prev;
+		RendererCollection::iterator prev;
 		if((prev = cfg.RendererList.find(name)) != cfg.RendererList.end()){
 			SelLog->Log('F', "Renderer '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhere().c_str());
 			exit(EXIT_FAILURE);
 		} else
 			cfg.RendererList.insert( std::make_pair(name, paint) );
 	
-		if(debug) puts("*D**F Toile::readConfigToile() - Renderer - true");
+		if(debug)
+			SelLog->Log('D', "Toile::readConfigToile() - Renderer - true");
 		return true;
+#if 0 /* TODO */
 	} else if( !strcmp(ext,".Decoration") ){
 		if(debug) puts("*D** Toile::readConfigToile() - Decoration");
 
@@ -99,33 +103,32 @@ bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &
 
 		if(debug) puts("*D**F Toile::readConfigToile() - Field - true");
 		return true;
-	}
 #endif
+	}
 
-	if(debug) puts("*D**F Toile::readConfigToile() false");
+	if(debug)
+		SelLog->Log('D', "Toile::readConfigToile() false");
 	return false;
 }
 
 bool Toile::execRenderers(){
-#if 0	/* TODO */
 	for(auto &i: config.RendererList){
 		if(!i.second->exec()){
 			if(i.second->getFatal())
 				return false;
 		}
 
+#if 0	/* TODO Painting */
 			// Initialize subsurfaces
 		for(auto &paint: i.second->PaintingList)
 			paint->exec();
-	}
 #endif
+	}
 
 	return true;
 }
 
 void Toile::RefreshRenderers(){
-#if 0	/* TODO */
 	for(auto &r: config.RendererList)
 		r.second->refreshAll();
-#endif
 }

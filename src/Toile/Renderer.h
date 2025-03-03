@@ -9,11 +9,12 @@
 
 #include "../Helpers.h"
 #include "../Object.h"
+#include "../ObjCollection.h"
 #include "../LuaExec.h"
 
 class Config;
 
-#if 0	/* TODO */
+#if 0	/* TODO Painting */
 class Renderer;	// Avoid nested includes
 #include "Painting.h"
 #endif
@@ -27,7 +28,7 @@ class Renderer : public LuaExec {
 	bool fatal;
 
 public:
-#if 0	/* TODO */
+#if 0	/* TODO Decoration Painting */
 	StringVector DecorationsList;			// List of decorations to apply
 	std::vector<Painting *> PaintingList;	// List of painting
 #endif
@@ -65,7 +66,7 @@ public:
 	 * Childs' management
 	 * ***/
 
-#if 0	/* TODO */
+#if 0	/* TODO Decoration Painting */
 	void addDecoration( std::string t ){ this->DecorationsList.Add(t); }
 	void addPainting( Painting *p ){ this->PaintingList.push_back(p); }
 #endif
@@ -80,4 +81,5 @@ public:
 	void refreshAll();	// Refresh renderer and its childs
 };
 
+typedef ObjCollection<Renderer *> RendererCollection;
 #endif

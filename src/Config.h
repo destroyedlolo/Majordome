@@ -26,6 +26,15 @@
 #	include "pgsql/NamedFeed.h"
 #endif
 
+#ifdef TOILE
+#	include "Toile/Renderer.h"
+#if 0 /* TODO Painting Decoration Field */
+#	include "Toile/Painting.h"
+#	include "Toile/Decoration.h"
+#	include "Toile/Field.h"
+#endif
+#endif
+
 #include <lua.hpp>	/* Lua's state needed */
 #include <string>
 
@@ -66,6 +75,13 @@ public:
 	FeedCollection FeedsList;
 	NamedFeedCollection NamedFeedsList;
 #endif
+
+#ifdef TOILE
+	RendererCollection RendererList;
+
+	/* TODO Painting Decoration Field */
+#endif
+
 		/* Topics' */
 	void SubscribeTopics( void );	// Subscribe to defined MQTT topics
 
