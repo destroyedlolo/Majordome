@@ -13,7 +13,7 @@ PGSQL='-DPGSQL -DDBASE'
 
 # Graphical extension : Toile
 # Not yet !
-# TOILE='-DTOILE'
+TOILE='-DTOILE'
 
 # Enable debugging messages
 DEBUG='-DDEBUG'

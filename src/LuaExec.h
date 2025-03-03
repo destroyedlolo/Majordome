@@ -42,7 +42,9 @@ public:
 	StringVector needed_shutdown;
 	StringVector needed_tracker;
 #ifdef TOILE
+/* TODO Renderer
 	StringVector needed_renderer;
+*/
 #endif
 #ifdef DBASE
 #	ifdef PGSQL
@@ -63,7 +65,9 @@ protected:
 	void addNeededShutdown( std::string t ){ this->needed_shutdown.Add(t); }
 	void addNeededTracker( std::string t ){ this->needed_tracker.Add(t); }
 #ifdef TOILE
+/*	TODO Renderer
 	void addNeededRenderer( std::string t ){ this->needed_renderer.Add(t); }
+*/
 #endif
 #ifdef DBASE
 #	ifdef PGSQL
