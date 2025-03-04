@@ -13,7 +13,7 @@
 #include <cstring>
 #include <cassert>
 
-Renderer::Renderer( const std::string &fch, std::string &where, std::string &name, lua_State *L ) : LuaExec(fch, where, name), surface(NULL), fatal(false){
+Renderer::Renderer( const std::string &fch, std::string &where, std::string &name, lua_State *L ) : Object(fch, where, name), LuaExec(fch, where, name), surface(NULL), fatal(false){
 #if DEBUG
 	if(verbose)
 		SelLog->Log('D', "\t\tid : (%p)", this);

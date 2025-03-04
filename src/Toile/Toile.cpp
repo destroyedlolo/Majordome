@@ -14,6 +14,7 @@
 
 #include <iostream>
 #include <cstring>
+#include <cassert>
 
 #include "../Config.h"
 #include "../SubConfigDir.h"
@@ -36,29 +37,27 @@ uint8_t Toile::objectweight( const char *ext ){
 	return 0x00;
 }
 
-bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &where, const char *ext, lua_State *L){
+bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &where, std::string &ext, lua_State *L){
+/*
 	if(debug)
 		SelLog->Log('D', "Toile::readConfigToile()");
+*/
 
-	if( !strcmp(ext,".Renderer") ){
-		if(debug)
-			SelLog->Log('D', "Toile::readConfigToile() - Renderer");
-
+	if(ext == ".Renderer"){
 		std::string name;
-		auto paint = new Renderer( completpath, where, name, L );
+		auto tsk = new Renderer( completpath, where, name, L );
+		assert(tsk);
 	
 		RendererCollection::iterator prev;
 		if((prev = cfg.RendererList.find(name)) != cfg.RendererList.end()){
 			SelLog->Log('F', "Renderer '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhere().c_str());
 			exit(EXIT_FAILURE);
 		} else
-			cfg.RendererList.insert( std::make_pair(name, paint) );
-	
-		if(debug)
-			SelLog->Log('D', "Toile::readConfigToile() - Renderer - true");
+			cfg.RendererList.insert( std::make_pair(name, tsk) );
+
 		return true;
 #if 0 /* TODO */
-	} else if( !strcmp(ext,".Decoration") ){
+	} else if(ext == ".Decoration"){
 		if(debug) puts("*D** Toile::readConfigToile() - Decoration");
 
 		std::string name;
@@ -73,7 +72,7 @@ bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &
 
 		if(debug) puts("*D**F Toile::readConfigToile() - Decoration - true");
 		return true;
-	} else if( !strcmp(ext,".Painting") ){
+	} else if(ext == ".Painting"){
 		if(debug) puts("*D**F Toile::readConfigToile() - Painting");
 
 		std::string name;
@@ -88,7 +87,7 @@ bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &
 
 		if(debug) puts("*D**F Toile::readConfigToile() - Painting - true");
 		return true;
-	} else if( !strcmp(ext,".Field") ){
+	} else if(ext == ".Field"){
 		if(debug) puts("*D**F Toile::readConfigToile() - Field");
 
 		std::string name;
@@ -106,8 +105,10 @@ bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &
 #endif
 	}
 
+/*
 	if(debug)
 		SelLog->Log('D', "Toile::readConfigToile() false");
+*/
 	return false;
 }
 

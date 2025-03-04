@@ -157,7 +157,7 @@ void LuaExec::readConfigDirective( std::string &l, std::string &name, bool &name
 #	ifdef PGSQL
 	} else if(!!(arg = striKWcmp( l, "-->> need_pgSQL=" ))){
 		pgSQLCollection::iterator shut;
-		if( (shut = config.pgSQLsList.find(arg)) != config.pgSQLsList.end()){
+		if( (shut = config.pgSQLsList.find(arg)) != config.pgSQLsList.end() ){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded needed pgSQL '%s'", arg.c_str());
 			this->addNeededpgSQL( arg );
@@ -169,7 +169,7 @@ void LuaExec::readConfigDirective( std::string &l, std::string &name, bool &name
 #	endif
 	} else if(!!(arg = striKWcmp( l, "-->> need_feed=" ))){
 		FeedCollection::iterator shut;
-		if( (shut = config.FeedsList.find(arg)) != config.FeedsList.end()){
+		if( (shut = config.FeedsList.find(arg)) != config.FeedsList.end() ){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded needed Feed '%s'", arg.c_str());
 			this->addNeededFeed( arg );
@@ -180,7 +180,7 @@ void LuaExec::readConfigDirective( std::string &l, std::string &name, bool &name
 		}
 	} else if(!!(arg = striKWcmp( l, "-->> need_namedfeed=" ))){
 		NamedFeedCollection::iterator shut;
-		if( (shut = config.NamedFeedsList.find(arg)) != config.NamedFeedsList.end()){
+		if( (shut = config.NamedFeedsList.find(arg)) != config.NamedFeedsList.end() ){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded needed NamedFeed '%s'", arg.c_str());
 			this->addNeededNamedFeed( arg );
@@ -190,7 +190,20 @@ void LuaExec::readConfigDirective( std::string &l, std::string &name, bool &name
 			exit(EXIT_FAILURE);
 		}
 #endif
-	}
+#ifdef TOILE
+	} else if(!!(arg = striKWcmp( l, "-->> need_renderer=" ))){
+		RendererCollection::iterator renderer;
+		if( (renderer = config.RendererList.find(arg)) != config.RendererList.end() ){
+			if(verbose)
+				SelLog->Log('C', "\t\tAdded needed renderer '%s'", arg.c_str());
+			this->addNeededRenderer( arg );
+			return;
+		} else {
+			SelLog->Log('F', "\t\tRenderer '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
+#endif
+}
 
 	return this->Object::readConfigDirective(l, name, nameused);
 }
@@ -406,6 +419,24 @@ bool LuaExec::feedbyNeeded( lua_State *L, bool require ){
 
 			*shut = s;
 			luaL_getmetatable(L, "MajordomeNamedFeed");
+			lua_setmetatable(L, -2);
+
+			lua_setglobal(L, i.c_str());
+		} catch( std::out_of_range &e ){	// Not found 
+			return false;
+		}
+	}
+#endif
+
+#ifdef TOILE
+	for(auto &i : this->needed_renderer){
+		try {
+			class Renderer *rd = config.RendererList.at( i );
+			class SelGenericSurfaceLua *renderer = (class SelGenericSurfaceLua *)lua_newuserdata(L, sizeof(class SelGenericSurfaceLua));
+			assert(renderer);
+
+			renderer->storage = rd->getSurface();
+			luaL_getmetatable(L, rd->getSurface()->cb->LuaObjectName() );
 			lua_setmetatable(L, -2);
 
 			lua_setglobal(L, i.c_str());
