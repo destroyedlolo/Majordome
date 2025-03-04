@@ -146,9 +146,7 @@ void Renderer::refresh(){
 void Renderer::refreshAll(){
 	this->refresh();
 
-#if 0 /* TODO Paint */
 		// Refresh subsurface
 	for(auto &paint: this->PaintingList)
 		paint->refreshAll();
-#endif
 }

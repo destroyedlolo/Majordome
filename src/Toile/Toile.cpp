@@ -56,7 +56,7 @@ bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &
 			cfg.RendererList.insert( std::make_pair(name, tsk) );
 
 		return true;
-#if 0 /* TODO */
+#if 0 /* TODO Decoration */
 	} else if(ext == ".Decoration"){
 		if(debug) puts("*D** Toile::readConfigToile() - Decoration");
 
@@ -72,21 +72,20 @@ bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &
 
 		if(debug) puts("*D**F Toile::readConfigToile() - Decoration - true");
 		return true;
+#endif
 	} else if(ext == ".Painting"){
-		if(debug) puts("*D**F Toile::readConfigToile() - Painting");
-
 		std::string name;
 		auto paint = new Painting( completpath, where, name, L );
 	
-		Config::PaintingElements::iterator prev;
+		PaintingCollection::iterator prev;
 		if((prev = cfg.PaintingList.find(name)) != cfg.PaintingList.end()){
 			SelLog->Log('F', "Painting '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhere().c_str());
 			exit(EXIT_FAILURE);
 		} else
 			cfg.PaintingList.insert( std::make_pair(name, paint) );
 
-		if(debug) puts("*D**F Toile::readConfigToile() - Painting - true");
 		return true;
+#if 0 /* TODO Field */
 	} else if(ext == ".Field"){
 		if(debug) puts("*D**F Toile::readConfigToile() - Field");
 
@@ -119,11 +118,9 @@ bool Toile::execRenderers(){
 				return false;
 		}
 
-#if 0	/* TODO Painting */
 			// Initialize subsurfaces
 		for(auto &paint: i.second->PaintingList)
 			paint->exec();
-#endif
 	}
 
 	return true;
