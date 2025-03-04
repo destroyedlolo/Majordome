@@ -162,12 +162,8 @@ void Painting::exec(){
 }
 
 void Painting::refresh(){
-#if 0	/* TODO Decoration */
-	for(auto &dn: this->DecorationsList){
-		auto d = config.findDecoration(dn);
+	for(auto &d: this->DecorationsList)
 		d->exec(*this);
-	}
-#endif
 }
 
 void Painting::refreshAll(){

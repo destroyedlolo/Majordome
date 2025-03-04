@@ -3,6 +3,8 @@
  */
 
 #include "Renderer.h"
+#include "Painting.h"
+#include "Decoration.h"
 #include "../LuaExec.h"
 #include "../Config.h"
 
@@ -135,12 +137,8 @@ void Renderer::dump(){
 #endif
 
 void Renderer::refresh(){
-#if 0 /* TODO Decoration */
-	for(auto &dn: this->DecorationsList){
-		auto d = config.findDecoration(dn);
+	for(auto &d: this->DecorationsList)
 		d->exec(*this);
-	}
-#endif
 }
 
 void Renderer::refreshAll(){

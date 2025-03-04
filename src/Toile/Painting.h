@@ -11,6 +11,7 @@ class Painting;	// Avoid nested includes
 
 #include "Toile.h"
 #include "Renderer.h"
+#include "Decoration.h"
 
 #include "../Helpers.h"
 #include "../Object.h"
@@ -28,9 +29,7 @@ protected:
 	Toile::SurfaceGeometry geometry;
 
 public:
-#if 0	/* TODO Decoration */
-	StringVector DecorationsList;
-#endif
+	std::vector<Decoration *> DecorationsList;
 
 	Painting():surface(NULL), parentR(NULL), parentP(NULL){};
 	Painting(const std::string &fch, std::string &where, std::string &name): Object(fch, where, name), surface(NULL), parentR(NULL), parentP(NULL){};
@@ -66,9 +65,7 @@ public:
 	/* ***
 	 * Childs' management
 	 * ***/
-#if 0	/* TODO Decoration */
-	void addDecoration( std::string t ){ this->DecorationsList.Add(t); }
-#endif
+	void addDecoration(Decoration *t){ this->DecorationsList.push_back(t); }
 
 	/* ***
 	 * Renderer own's 

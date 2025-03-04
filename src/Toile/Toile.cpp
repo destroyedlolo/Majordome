@@ -56,23 +56,18 @@ bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &
 			cfg.RendererList.insert( std::make_pair(name, tsk) );
 
 		return true;
-#if 0 /* TODO Decoration */
 	} else if(ext == ".Decoration"){
-		if(debug) puts("*D** Toile::readConfigToile() - Decoration");
-
 		std::string name;
 		auto paint = new Decoration( completpath, where, name, L );
 	
-		Config::DecorationElements::iterator prev;
+		DecorationCollection::iterator prev;
 		if((prev = cfg.DecorationList.find(name)) != cfg.DecorationList.end()){
 			SelLog->Log('F', "Decoration '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhere().c_str());
 			exit(EXIT_FAILURE);
 		} else
 			cfg.DecorationList.insert( std::make_pair(name, paint) );
 
-		if(debug) puts("*D**F Toile::readConfigToile() - Decoration - true");
 		return true;
-#endif
 	} else if(ext == ".Painting"){
 		std::string name;
 		auto paint = new Painting( completpath, where, name, L );

@@ -13,9 +13,13 @@
 #include "../LuaExec.h"
 
 class Config;
-
+class Painting;
+class Decoration;
+/*
 class Renderer;	// Avoid nested includes
 #include "Painting.h"
+#include "Decoration.h"
+*/
 
 #include <Selene/SelGenericSurface.h>
 
@@ -26,10 +30,8 @@ class Renderer : public LuaExec {
 	bool fatal;
 
 public:
-#if 0	/* TODO Decoration */
-	StringVector DecorationsList;			// List of decorations to apply
-#endif
-	std::vector<Painting *> PaintingList;	// List of painting
+	std::vector<Decoration *> DecorationsList;	// List of decorations to apply
+	std::vector<Painting *> PaintingList;		// List of painting
 
 	/* constructor from file
 	 * -> file : file to load
@@ -64,9 +66,7 @@ public:
 	 * Childs' management
 	 * ***/
 
-#if 0	/* TODO Decoration */
-	void addDecoration( std::string t ){ this->DecorationsList.Add(t); }
-#endif
+	void addDecoration( Decoration *t ){ this->DecorationsList.push_back(t); }
 	void addPainting( Painting *p ){ this->PaintingList.push_back(p); }
 
 
