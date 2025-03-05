@@ -157,7 +157,7 @@ void LuaExec::readConfigDirective( std::string &l, std::string &name, bool &name
 #	ifdef PGSQL
 	} else if(!!(arg = striKWcmp( l, "-->> need_pgSQL=" ))){
 		pgSQLCollection::iterator shut;
-		if( (shut = config.pgSQLsList.find(arg)) != config.pgSQLsList.end()){
+		if( (shut = config.pgSQLsList.find(arg)) != config.pgSQLsList.end() ){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded needed pgSQL '%s'", arg.c_str());
 			this->addNeededpgSQL( arg );
@@ -169,7 +169,7 @@ void LuaExec::readConfigDirective( std::string &l, std::string &name, bool &name
 #	endif
 	} else if(!!(arg = striKWcmp( l, "-->> need_feed=" ))){
 		FeedCollection::iterator shut;
-		if( (shut = config.FeedsList.find(arg)) != config.FeedsList.end()){
+		if( (shut = config.FeedsList.find(arg)) != config.FeedsList.end() ){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded needed Feed '%s'", arg.c_str());
 			this->addNeededFeed( arg );
@@ -180,7 +180,7 @@ void LuaExec::readConfigDirective( std::string &l, std::string &name, bool &name
 		}
 	} else if(!!(arg = striKWcmp( l, "-->> need_namedfeed=" ))){
 		NamedFeedCollection::iterator shut;
-		if( (shut = config.NamedFeedsList.find(arg)) != config.NamedFeedsList.end()){
+		if( (shut = config.NamedFeedsList.find(arg)) != config.NamedFeedsList.end() ){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded needed NamedFeed '%s'", arg.c_str());
 			this->addNeededNamedFeed( arg );
@@ -190,7 +190,20 @@ void LuaExec::readConfigDirective( std::string &l, std::string &name, bool &name
 			exit(EXIT_FAILURE);
 		}
 #endif
-	}
+#ifdef TOILE
+	} else if(!!(arg = striKWcmp( l, "-->> need_renderer=" ))){
+		RendererCollection::iterator renderer;
+		if( (renderer = config.RendererList.find(arg)) != config.RendererList.end() ){
+			if(verbose)
+				SelLog->Log('C', "\t\tAdded needed renderer '%s'", arg.c_str());
+			this->addNeededRenderer( arg );
+			return;
+		} else {
+			SelLog->Log('F', "\t\tRenderer '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
+#endif
+}
 
 	return this->Object::readConfigDirective(l, name, nameused);
 }
@@ -415,6 +428,24 @@ bool LuaExec::feedbyNeeded( lua_State *L, bool require ){
 	}
 #endif
 
+#ifdef TOILE
+	for(auto &i : this->needed_renderer){
+		try {
+			class Renderer *rd = config.RendererList.at( i );
+			class SelGenericSurfaceLua *renderer = (class SelGenericSurfaceLua *)lua_newuserdata(L, sizeof(class SelGenericSurfaceLua));
+			assert(renderer);
+
+			renderer->storage = rd->getSurface();
+			luaL_getmetatable(L, rd->getSurface()->cb->LuaObjectName() );
+			lua_setmetatable(L, -2);
+
+			lua_setglobal(L, i.c_str());
+		} catch( std::out_of_range &e ){	// Not found 
+			return false;
+		}
+	}
+#endif
+
 	return true;
 }
 
@@ -483,8 +514,11 @@ bool LuaExec::execSync(lua_State *L, enum boolRetCode *rc){
 	if(!this->prepareExecSync(L))
 		return false;
 
-	if(lua_pcall( L, 0, 1, 0))
+	if(lua_pcall( L, 0, 1, 0)){
 		SelLog->Log('E', "Can't execute task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), lua_tostring(L, -1));
+		*rc = boolRetCode::RCfalse;
+		return false;
+	}
 
 	if(rc){
 		*rc = boolRetCode::RCnil;
@@ -502,8 +536,11 @@ bool LuaExec::execSync(lua_State *L, enum boolRetCode *rc, lua_Number *retn){
 	if(!this->prepareExecSync(L))
 		return false;
 
-	if(lua_pcall(L, 0, 1, 0))
+	if(lua_pcall(L, 0, 1, 0)){
 		SelLog->Log('E', "Can't execute task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), lua_tostring(L, -1));
+		*rc = boolRetCode::RCfalse;
+		return false;
+	}
 
 	if(lua_isboolean(L, -1))
 		*rc = lua_toboolean(L, -1) ? boolRetCode::RCtrue : boolRetCode::RCfalse;
@@ -518,14 +555,17 @@ bool LuaExec::execSync(lua_State *L, enum boolRetCode *rc, lua_Number *retn){
 }
 
 bool LuaExec::execSync(lua_State *L, std::string *rs, enum boolRetCode *rc, lua_Number *retn){
-	*rc = boolRetCode::RCnil;
 	*retn = NAN;
+	*rc = boolRetCode::RCnil;
 
 	if(!this->prepareExecSync(L))
 		return false;
 
-	if(lua_pcall(L, 0, 2, 0))
+	if(lua_pcall(L, 0, 2, 0)){
 		SelLog->Log('E', "Can't execute task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), lua_tostring(L, -1));
+		*rc = boolRetCode::RCfalse;
+		return false;
+	}
 
 		/* -1 : numeric value if provided
 		 * -2 : string value or RC
