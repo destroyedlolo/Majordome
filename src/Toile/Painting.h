@@ -19,7 +19,7 @@ class Painting;	// Avoid nested includes
 
 #include <Selene/SelGenericSurface.h>
 
-class Painting : public Object {
+class Painting : virtual public Object {
 protected:
 	struct SelGenericSurface *surface;
 

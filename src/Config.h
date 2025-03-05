@@ -30,9 +30,7 @@
 #	include "Toile/Renderer.h"
 #	include "Toile/Painting.h"
 #	include "Toile/Decoration.h"
-#if 0 /* TODO Field */
 #	include "Toile/Field.h"
-#endif
 #endif
 
 #include <lua.hpp>	/* Lua's state needed */
@@ -80,6 +78,7 @@ public:
 	RendererCollection RendererList;
 	PaintingCollection PaintingList;
 	DecorationCollection DecorationList;
+	FieldCollection FieldList;
 #endif
 
 		/* Topics' */

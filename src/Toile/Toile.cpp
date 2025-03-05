@@ -80,23 +80,18 @@ bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &
 			cfg.PaintingList.insert( std::make_pair(name, paint) );
 
 		return true;
-#if 0 /* TODO Field */
 	} else if(ext == ".Field"){
-		if(debug) puts("*D**F Toile::readConfigToile() - Field");
-
 		std::string name;
 		auto paint = new Field( completpath, where, name, L );
 	
-		Config::PaintingElements::iterator prev;
-		if((prev = cfg.PaintingList.find(name)) != cfg.PaintingList.end()){
+		FieldCollection::iterator prev;
+		if((prev = cfg.FieldList.find(name)) != cfg.FieldList.end()){
 			SelLog->Log('F', "Field '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhere().c_str());
 			exit(EXIT_FAILURE);
 		} else
-			cfg.PaintingList.insert( std::make_pair(name, paint) );
+			cfg.FieldList.insert( std::make_pair(name, paint) );
 
-		if(debug) puts("*D**F Toile::readConfigToile() - Field - true");
 		return true;
-#endif
 	}
 
 /*
