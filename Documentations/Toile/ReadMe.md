@@ -5,10 +5,12 @@ Toile is an optional module to create smart dashboards based on [Séléné](http
 
 # Objects handled by Toile
 
-- **Renderer** : Link to physical devices to build user interfaces (UI).
-- **Painting** : a painting surface that having its own memory.
-- **Decoration** : task to be called every time a renderer/painting needs to be refreshed.
+- **[Renderer](Renderer.md)** : Link to physical devices to build user interfaces (UI).
+- **[Painting](Painting.md)** : Subpart of a surface to paint on.
+- **[Decoration](Decoration.md)** : task to be called every time a renderer/painting needs to be refreshed.
+<!--
 - **Series** : list of paintings to be displayed.
+-->>
 - **Field** : simple text field.
 
 > [!TIP]
