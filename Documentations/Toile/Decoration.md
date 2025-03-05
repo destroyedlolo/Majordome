@@ -13,10 +13,10 @@ Consequently, `--->>` are commented out commands (notice the 3 dashes).
 ### Generals
 
 #### -->> name=
-Unique name to identify the Renderer. If not set, uses the filename.
+Unique name to identify the Decorations. If not set, uses the filename.
 `-->> name=toto`
 #### -->> quiet
-Remove some trace. This option is useful to avoid logging of very noisy topics.
+Remove some trace.
 
 ### Decoration owns
 
