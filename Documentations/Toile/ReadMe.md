@@ -10,7 +10,7 @@ Toile is an optional module to create smart dashboards based on [Séléné](http
 - **[Decoration](Decoration.md)** : task to be called every time a renderer/painting needs to be refreshed.
 <!--
 - **Series** : list of paintings to be displayed.
--->>
+-->
 - **Field** : simple text field.
 
 > [!TIP]
