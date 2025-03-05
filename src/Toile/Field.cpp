@@ -4,6 +4,7 @@
  */
 
 #include "Field.h"
+#include "../Config.h"
 
 #include <iostream>
 #include <fstream>
@@ -75,6 +76,16 @@ void Field::readConfigDirective( std::string &l, std::string &name, bool &nameus
 		this->geometry.w = arg.length();
 		if(verbose)
 			SelLog->Log('C', "\t\tWidth guessed to : %u", this->geometry.w);
+	} else if( !!(arg = striKWcmp( l, "-->> listen=" ))){
+		TopicCollection::iterator topic;
+		if( (topic = config.TopicsList.find(arg)) != config.TopicsList.end()){
+			if(verbose)
+				SelLog->Log('C', "\t\tAdded to topic '%s'", arg.c_str());
+			topic->second->addHandler( dynamic_cast<Handler *>(this) );
+		} else {
+			SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
 	} else Painting::readConfigDirective(l, name, nameused);
 }
 

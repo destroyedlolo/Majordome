@@ -84,12 +84,12 @@ bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &
 		std::string name;
 		auto paint = new Field( completpath, where, name, L );
 	
-		FieldCollection::iterator prev;
-		if((prev = cfg.FieldList.find(name)) != cfg.FieldList.end()){
+		PaintingCollection::iterator prev;
+		if((prev = cfg.PaintingList.find(name)) != cfg.PaintingList.end()){
 			SelLog->Log('F', "Field '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhere().c_str());
 			exit(EXIT_FAILURE);
 		} else
-			cfg.FieldList.insert( std::make_pair(name, paint) );
+			cfg.PaintingList.insert( std::make_pair(name, paint) );
 
 		return true;
 	}

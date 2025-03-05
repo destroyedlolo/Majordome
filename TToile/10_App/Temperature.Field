@@ -8,6 +8,17 @@
 -- if not set, takes the filename
 --->> name=Toto
 --
+-- Disable this painting
+--->> disabled
+--
+-- remove some trace
+-- This option is useful to avoid logging of very noisy topics
+--->> quiet
+--
+-------------------
+-- Painting related
+-------------------
+--
 -- Parent of this Painting
 -- Only one can be present
 -->> Renderer Parent=LCD
@@ -23,10 +34,13 @@
 -- Notez-Bien :
 --	- set to the size of the parent if the origin is outsize parent surface
 --
--- Disable this painting
---->> disabled
+----------------
+-- Field related
+----------------
 --
--- remove some trace
--- This option is useful to avoid logging of very noisy topics
---->> quiet
+--	Guess the length as per sample value
+-->> Sample=15.5°
+--
+-->> listen=Test
+
 

@@ -78,7 +78,6 @@ public:
 	RendererCollection RendererList;
 	PaintingCollection PaintingList;
 	DecorationCollection DecorationList;
-	FieldCollection FieldList;
 #endif
 
 		/* Topics' */

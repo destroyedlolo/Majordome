@@ -12,7 +12,7 @@
 --
 -- On which object this decoration will be applied ?
 -- On a Surface object
--->> ApplyOn=Sub
+-->> ApplyOn=Temperature
 -- On a Renderer
 --->> ApplyOnRenderer=
 --
@@ -30,5 +30,5 @@
 MAJORDOME_PAINTING:Clear()
 
 -- write something
-MAJORDOME_PAINTING:WriteString("Painting");
+MAJORDOME_PAINTING:WriteString("Field");
 
