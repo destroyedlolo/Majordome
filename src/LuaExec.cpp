@@ -514,8 +514,11 @@ bool LuaExec::execSync(lua_State *L, enum boolRetCode *rc){
 	if(!this->prepareExecSync(L))
 		return false;
 
-	if(lua_pcall( L, 0, 1, 0))
+	if(lua_pcall( L, 0, 1, 0)){
 		SelLog->Log('E', "Can't execute task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), lua_tostring(L, -1));
+		*rc = boolRetCode::RCfalse;
+		return false;
+	}
 
 	if(rc){
 		*rc = boolRetCode::RCnil;
@@ -533,8 +536,11 @@ bool LuaExec::execSync(lua_State *L, enum boolRetCode *rc, lua_Number *retn){
 	if(!this->prepareExecSync(L))
 		return false;
 
-	if(lua_pcall(L, 0, 1, 0))
+	if(lua_pcall(L, 0, 1, 0)){
 		SelLog->Log('E', "Can't execute task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), lua_tostring(L, -1));
+		*rc = boolRetCode::RCfalse;
+		return false;
+	}
 
 	if(lua_isboolean(L, -1))
 		*rc = lua_toboolean(L, -1) ? boolRetCode::RCtrue : boolRetCode::RCfalse;
@@ -549,14 +555,17 @@ bool LuaExec::execSync(lua_State *L, enum boolRetCode *rc, lua_Number *retn){
 }
 
 bool LuaExec::execSync(lua_State *L, std::string *rs, enum boolRetCode *rc, lua_Number *retn){
-	*rc = boolRetCode::RCnil;
 	*retn = NAN;
+	*rc = boolRetCode::RCnil;
 
 	if(!this->prepareExecSync(L))
 		return false;
 
-	if(lua_pcall(L, 0, 2, 0))
+	if(lua_pcall(L, 0, 2, 0)){
 		SelLog->Log('E', "Can't execute task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), lua_tostring(L, -1));
+		*rc = boolRetCode::RCfalse;
+		return false;
+	}
 
 		/* -1 : numeric value if provided
 		 * -2 : string value or RC
