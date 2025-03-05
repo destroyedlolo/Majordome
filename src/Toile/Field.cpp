@@ -101,3 +101,33 @@ void Field::feedState( lua_State *L ){
 	lua_setmetatable(L, -2);
 	lua_setglobal( L, "MAJORDOME_Myself" );
 }
+
+bool Field::execAsync(lua_State *L){
+	LuaExec::boolRetCode rc;
+	lua_Number val;
+	std::string s;
+
+	bool r = this->LuaExec::execSync(L, &s, &rc, &val);
+
+	if( rc != LuaExec::boolRetCode::RCfalse ){	// data not rejected
+		if(isnan(val)){	// data unchanged
+			lua_getglobal(L, "MAJORDOME_PAYLOAD");
+			if(lua_isnumber(L, -1))
+				val = lua_tonumber(L, -1);
+			else if(lua_isstring(L, -1))
+				s = lua_tostring(L, -1);
+			else {
+				SelLog->Log('E', "['%s'] can't find MAJORDOME_PAYLOAD as number", this->getNameC());
+				lua_close(L);
+				return r;
+			}
+		}
+	
+		if(debug)
+			SelLog->Log('T', "[Field '%s'] accepting %.0f", this->getNameC(), val);
+	} else
+		SelLog->Log('E', "[Field '%s'] Data rejected", this->getNameC());
+
+	lua_close(L);
+	return r;
+}

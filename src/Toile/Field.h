@@ -24,7 +24,8 @@ public:
 	 * -> nameused : is the name already used ?
 	 */
 	void readConfigDirective( std::string &l, std::string &, bool &nameused );
-};
 
-typedef ObjCollection<Field *> FieldCollection;
+		/* Executable */
+	virtual bool execAsync(lua_State *L);	// Overloading to handle MinMax data feeding
+};
 #endif
