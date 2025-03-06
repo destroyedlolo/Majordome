@@ -166,12 +166,15 @@ void Painting::refresh(){
 		d->exec(*this);
 }
 
-void Painting::refreshAll(){
-	this->refresh();
-
-#if 0
+void Painting::refreshChild(){
+#if 0	/* TODO */
 		// refresh childs
 	for(auto &paint: this->PaintingList)
 		paint->refreshAll();
 #endif
+}
+
+void Painting::refreshAll(){
+	this->refresh();
+	this->refreshChild();
 }

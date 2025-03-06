@@ -75,8 +75,10 @@ public:
 	 	// Then create the subsurface.
 	 	// Fails in case of error.
 	void exec();
-	void refresh();		// Refresh Painting's own decoration
-	void refreshAll();	// Refresh Painting and its childs
+
+	void refresh();			// Refresh Painting's own decoration (background)
+	void refreshChild();	// Refresh its child
+	void refreshAll();		// Refresh everything
 };
 
 typedef ObjCollection<Painting *> PaintingCollection;

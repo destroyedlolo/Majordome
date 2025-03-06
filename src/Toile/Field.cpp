@@ -102,6 +102,18 @@ void Field::feedState( lua_State *L ){
 	lua_setglobal( L, "MAJORDOME_Myself" );
 }
 
+void Field::update(std::string &rs, lua_Number &rn){
+	this->refresh();		// Refesh background
+
+	if(!rs.empty())
+		this->getSurface()->cb->WriteString(this->getSurface(), rs.c_str());
+	else if(!isnan(rn)){
+		std::string t = std::to_string(rn);
+		this->getSurface()->cb->WriteString(this->getSurface(), t.c_str());
+	}
+	this->refreshChild();	// Refresh forground
+}
+
 bool Field::execAsync(lua_State *L){
 	LuaExec::boolRetCode rc;
 	lua_Number val;
@@ -125,6 +137,8 @@ bool Field::execAsync(lua_State *L){
 	
 		if(debug)
 			SelLog->Log('T', "[Field '%s'] accepting %.0f", this->getNameC(), val);
+
+		this->update(s, val);
 	} else
 		SelLog->Log('E', "[Field '%s'] Data rejected", this->getNameC());
 

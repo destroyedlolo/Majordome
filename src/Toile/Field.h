@@ -13,6 +13,8 @@ class Field : virtual public Object, public Painting, public Handler {
 protected:
 	virtual void feedState(lua_State *L);
 
+		// Update the field when a data arrived
+	void update(std::string &, lua_Number &);
 public:
 	Field( const std::string &file, std::string &where, std::string &name, lua_State *L );
 

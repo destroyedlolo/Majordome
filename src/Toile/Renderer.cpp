@@ -141,10 +141,13 @@ void Renderer::refresh(){
 		d->exec(*this);
 }
 
-void Renderer::refreshAll(){
-	this->refresh();
-
+void Renderer::refreshChild(){
 		// Refresh subsurface
 	for(auto &paint: this->PaintingList)
 		paint->refreshAll();
+}
+
+void Renderer::refreshAll(){
+	this->refresh();
+	this->refreshChild();
 }

@@ -29,6 +29,3 @@
 -- otherwise, the "behind" is still displayed (transparency)
 MAJORDOME_PAINTING:Clear()
 
--- write something
-MAJORDOME_PAINTING:WriteString("Field");
-

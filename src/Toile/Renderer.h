@@ -75,8 +75,9 @@ public:
 	 */
 
 	bool exec(); 		// Run the Lua code to build the renderer
-	void refresh();		// Refresh renderer's own decoration
-	void refreshAll();	// Refresh renderer and its childs
+	void refresh();			// Refresh Painting's own decoration (background)
+	void refreshChild();	// Refresh its child
+	void refreshAll();		// Refresh everything
 };
 
 typedef ObjCollection<Renderer *> RendererCollection;
