@@ -6,7 +6,8 @@
 --
 -- set the topic (mandatory)
 -- if present, %ClientID% will be replaced by Majordome's MQTT client ID
--->> topic=Test
+--->> topic=Test
+-->> topic=maison/Temperature/Congelateur
 --
 -- QOS for this topic between 0 and 2
 -- if outside this range, forced to 0 (which is the default value)

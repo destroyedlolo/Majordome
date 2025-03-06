@@ -453,11 +453,6 @@ int main(int ac, char **av){
 	if(!quiet)
 		SelLog->Log('I', "Application starting ...");
 
-	config.RunStartups();	// Run startup functions
-	config.SubscribeTopics();	// MQTT : activate topics receiving
-	config.LaunchTimers();	// Launch slave timers
-	config.RunImmediates();	// Run immediate & overdue timers tasks
-
 		/* Shutdown's */
 	signal(SIGINT,quit);
 	signal(SIGUSR1,quit);
@@ -467,5 +462,10 @@ int main(int ac, char **av){
 	Toile::RefreshRenderers();
 #endif
 
+	config.RunStartups();	// Run startup functions
+	config.LaunchTimers();	// Launch slave timers
+	config.RunImmediates();	// Run immediate & overdue timers tasks
+
+	config.SubscribeTopics();	// MQTT : activate topics receiving
 	pause();	// Waiting for events, nothing else to do
 }
