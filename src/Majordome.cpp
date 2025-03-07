@@ -438,11 +438,13 @@ int main(int ac, char **av){
 	}
 
 #	ifdef	DEBUG
-	for(auto &r : config.RendererList)
-		r.second->dump();
+	if(debug){
+		for(auto &r : config.RendererList)
+			r.second->dump();
 
-	for(auto &r : config.PaintingList)
-		r.second->dump();
+		for(auto &r : config.PaintingList)
+			r.second->dump();
+	}
 #	endif
 #endif
 
