@@ -584,3 +584,33 @@ bool LuaExec::execSync(lua_State *L, std::string *rs, enum boolRetCode *rc, lua_
 
 	return true;
 }
+
+bool LuaExec::execSync(lua_State *L, enum boolRetCode *rc, lua_Number *retn, std::string *rs){
+	if(retn)
+		*retn = NAN;
+	*rc = boolRetCode::RCnil;
+
+	if(!this->prepareExecSync(L))
+		return false;
+
+	if(lua_pcall(L, 0, 1, 0)){
+		SelLog->Log('E', "Can't execute task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), lua_tostring(L, -1));
+		*rc = boolRetCode::RCfalse;
+		return false;
+	}
+
+	if(lua_isboolean(L, -1))
+		*rc = lua_toboolean(L, -1) ? boolRetCode::RCtrue : boolRetCode::RCfalse;
+
+	if(lua_isstring(L, -1) && rs){
+		*rc = boolRetCode::RCforced;
+		*rs = lua_tostring(L, -1);
+	}
+
+	if(lua_isnumber(L, -1) && retn){
+		*rc = boolRetCode::RCforced;
+		*retn = lua_tonumber(L, -1);
+	}
+
+	return true;
+}
