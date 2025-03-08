@@ -162,6 +162,7 @@ void Painting::exec(){
 }
 
 void Painting::refresh(){
+	this->getSurface()->cb->Clear(this->getSurface());
 	for(auto &d: this->DecorationsList)
 		d->exec(*this);
 }

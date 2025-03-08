@@ -46,6 +46,12 @@ Field::Field( const std::string &fch, std::string &where, std::string &name, lua
 			this->readConfigDirective(l, name, nameused);
 		} while(true);
 
+		/*
+		 * Reading the remaining of the script and keep it as 
+		 * an Lua's script
+		 */
+
+		buffer << file.rdbuf();
 		file.close();
 	} catch(const std::ifstream::failure &e){
 		if(!file.eof()){
@@ -54,6 +60,9 @@ Field::Field( const std::string &fch, std::string &where, std::string &name, lua
 		}
 	}
 
+
+	if( !this->LoadFunc( L, buffer, this->name.c_str() ))
+		exit(EXIT_FAILURE);
 
 		/* ***
 		 * Sanity checks
@@ -119,7 +128,7 @@ bool Field::execAsync(lua_State *L){
 	lua_Number val;
 	std::string s;
 
-	bool r = this->LuaExec::execSync(L, &s, &rc, &val);
+	bool r = this->LuaExec::execSync(L, &rc, &val, &s);
 
 	if( rc != LuaExec::boolRetCode::RCfalse ){	// data not rejected
 		if(isnan(val)){	// data unchanged
