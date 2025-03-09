@@ -22,6 +22,11 @@
 #include "MayBeEmptyString.h"
 #include "Config.h"
 
+#ifdef TOILE
+#	include "Toile/Toile.h"
+#	include "Toile/ToileVersion.h"
+#endif
+
 #include <fstream>
 
 #include <cstring>		// strerror()
@@ -426,17 +431,29 @@ int main(int ac, char **av){
 	SelLua->AddStartupFunc(NamedFeed::initLuaInterface);
 #endif
 
+#ifdef TOILE
+	if(!Toile::execRenderers()){
+		SelLog->Log('F', "At least fatal renderer failed");
+		exit(EXIT_FAILURE);
+	}
+
+#	ifdef	DEBUG
+	if(debug){
+		for(auto &r : config.RendererList)
+			r.second->dump();
+
+		for(auto &r : config.PaintingList)
+			r.second->dump();
+	}
+#	endif
+#endif
+
 		/* **
 		 * After this point, we're running application's code
 		 * **/
 
 	if(!quiet)
 		SelLog->Log('I', "Application starting ...");
-
-	config.RunStartups();	// Run startup functions
-	config.SubscribeTopics();	// MQTT : activate topics receiving
-	config.LaunchTimers();	// Launch slave timers
-	config.RunImmediates();	// Run immediate & overdue timers tasks
 
 		/* Shutdown's */
 	signal(SIGINT,quit);
@@ -447,5 +464,10 @@ int main(int ac, char **av){
 	Toile::RefreshRenderers();
 #endif
 
+	config.RunStartups();	// Run startup functions
+	config.LaunchTimers();	// Launch slave timers
+	config.RunImmediates();	// Run immediate & overdue timers tasks
+
+	config.SubscribeTopics();	// MQTT : activate topics receiving
 	pause();	// Waiting for events, nothing else to do
 }
