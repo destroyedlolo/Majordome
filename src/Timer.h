@@ -55,7 +55,7 @@ public:
 	 * Accessors
 	 */
 	unsigned long getEvery( void ){ return this->every; }
-	void setEvery( unsigned long v ){ this->every = v; }
+	void setEvery( unsigned long v );
 
 		/* Notez-bien :
 		 * 	- To avoid race condition, protect these function within

@@ -75,6 +75,11 @@ void Timer::readConfigDirective( std::string &l, std::string &name, bool &nameus
 		this->Object::readConfigDirective(l, name, nameused);
 }
 
+void Timer::setEvery( unsigned long v ){
+	this->every = v;
+	this->sendCommand(Timer::Commands::RESET);
+}
+
 void *Timer::threadedslave(void *arg){
 	class Timer *me = static_cast<Timer *>(arg);	// 'this' in this thread
 
