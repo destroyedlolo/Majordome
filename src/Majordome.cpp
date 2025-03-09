@@ -22,6 +22,11 @@
 #include "MayBeEmptyString.h"
 #include "Config.h"
 
+#ifdef TOILE
+#	include "Toile/Toile.h"
+#	include "Toile/ToileVersion.h"
+#endif
+
 #include <fstream>
 
 #include <cstring>		// strerror()
@@ -154,12 +159,14 @@ void threadEnvironment(lua_State *L){
 	 */
 
 static int mjd_letsgo(lua_State *L){
-	SelLog->Log('D', "Late dependencies building");
+	if(debug || verbose)
+		SelLog->Log('D', "Late dependencies building");
 	
 	SelLua->lateBuildingDependancies(L);
 	SelLua->ApplyStartupFunc(L);
 
-	SelLog->Log('D', "Let's go ...");
+	if(debug || verbose)
+		SelLog->Log('D', "Let's go ...");
 
 	return 0;
 }
@@ -251,6 +258,14 @@ void quit(int){
 
 void bye(void){
 	config.RunShutdowns();
+
+#if DBASE
+		/* Properly close database connection 
+		 * to avoid leaks at server side
+		 */
+	for(auto &i : config.FeedsList)
+		delete(i.second);
+#endif
 }
 
 int main(int ac, char **av){
@@ -293,11 +308,13 @@ int main(int ac, char **av){
 	case 't':
 		configtest = true;
 	case 'v':
+		if(!quiet){
 #ifdef TOILE
-		SelLog->Log('I', "%s v%.04f %s", basename(av[0]), VERSION, " - Toile v" STRIFY(TOILEVERSION));
+			SelLog->Log('I', "%s v%.04f %s", basename(av[0]), VERSION, " - Toile v" STRIFY(TOILEVERSION));
 #else
-		SelLog->Log('I', "%s v%.04f", basename(av[0]), VERSION);
+			SelLog->Log('I', "%s v%.04f", basename(av[0]), VERSION);
 #endif
+		}
 		verbose = true;
 		quiet = false;
 		break;
@@ -405,17 +422,38 @@ int main(int ac, char **av){
 	SelLua->AddStartupFunc(NamedMinMax::initLuaInterface);
 	SelLua->AddStartupFunc(Shutdown::initLuaInterface);
 
+#ifdef DBASE
+#	ifdef PGSQL
+	SelLua->AddStartupFunc(pgSQL::initLuaInterface);
+#	endif
+
+	SelLua->AddStartupFunc(Feed::initLuaInterface);
+	SelLua->AddStartupFunc(NamedFeed::initLuaInterface);
+#endif
+
+#ifdef TOILE
+	if(!Toile::execRenderers()){
+		SelLog->Log('F', "At least fatal renderer failed");
+		exit(EXIT_FAILURE);
+	}
+
+#	ifdef	DEBUG
+	if(debug){
+		for(auto &r : config.RendererList)
+			r.second->dump();
+
+		for(auto &r : config.PaintingList)
+			r.second->dump();
+	}
+#	endif
+#endif
+
 		/* **
 		 * After this point, we're running application's code
 		 * **/
 
 	if(!quiet)
 		SelLog->Log('I', "Application starting ...");
-
-	config.RunStartups();	// Run startup functions
-	config.SubscribeTopics();	// MQTT : activate topics receiving
-	config.LaunchTimers();	// Launch slave timers
-	config.RunImmediates();	// Run immediate & overdue timers tasks
 
 		/* Shutdown's */
 	signal(SIGINT,quit);
@@ -426,5 +464,10 @@ int main(int ac, char **av){
 	Toile::RefreshRenderers();
 #endif
 
+	config.RunStartups();	// Run startup functions
+	config.LaunchTimers();	// Launch slave timers
+	config.RunImmediates();	// Run immediate & overdue timers tasks
+
+	config.SubscribeTopics();	// MQTT : activate topics receiving
 	pause();	// Waiting for events, nothing else to do
 }
