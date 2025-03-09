@@ -95,6 +95,17 @@ void Field::readConfigDirective( std::string &l, std::string &name, bool &nameus
 			SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
+	} else if( !!(arg = striKWcmp( l, "-->> when=" ))){
+		TimerCollection::iterator timer;
+		if( (timer = config.TimersList.find(arg)) != config.TimersList.end()){
+			if(verbose)
+				SelLog->Log('C', "\t\tAdded to timer '%s'", arg.c_str());
+			timer->second->addHandler( dynamic_cast<Handler *>(this) );
+//			nameused = true;
+		} else {
+			SelLog->Log('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
 	} else if(!this->Painting::readConfigDirectiveOnly(l, name, nameused))
 		this->LuaExec::readConfigDirective(l, name, nameused);
 }
@@ -150,7 +161,7 @@ bool Field::execAsync(lua_State *L){
 
 		this->update(s, val);
 	} else
-		SelLog->Log('E', "[Field '%s'] Data rejected", this->getNameC());
+		SelLog->Log('D', "[Field '%s'] Data rejected", this->getNameC());
 
 	lua_close(L);
 	return r;
