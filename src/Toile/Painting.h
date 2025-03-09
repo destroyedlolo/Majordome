@@ -42,6 +42,7 @@ public:
 	 */
 	Painting( const std::string &file, std::string &where, std::string &name, lua_State *L );
 
+protected:
 	/* Read directives.
 	 * These directives may apply to all derivates.
 	 * Facing unknown directive, LuaExec's is called as well.
@@ -49,8 +50,10 @@ public:
 	 * -> l : directive line to parse
 	 * -> nameused : is the name already used ?
 	 */
-	void readConfigDirective( std::string &l, std::string &name, bool &nameused );
+	bool readConfigDirectiveOnly( std::string &l, std::string &name, bool &nameused );	// doesn't call parent if unknown
+	void readConfigDirective( std::string &l, std::string &name, bool &nameused );	// full stack : call parent if needed
 
+public:
 #ifdef DEBUG
 	void dump();
 #endif

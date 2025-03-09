@@ -66,6 +66,11 @@ Painting::Painting( const std::string &fch, std::string &where, std::string &nam
 }
 
 void Painting::readConfigDirective( std::string &l, std::string &name, bool &nameused ){
+	if(!this->readConfigDirectiveOnly(l, name, nameused))
+		Object::readConfigDirective(l, name, nameused);
+}
+
+bool Painting::readConfigDirectiveOnly( std::string &l, std::string &name, bool &nameused ){
 	MayBeEmptyString arg;
 	if(!!(arg = striKWcmp( l, "-->> Renderer Parent=" ))){
 		if(this->parentR || this->parentP){
@@ -88,6 +93,7 @@ void Painting::readConfigDirective( std::string &l, std::string &name, bool &nam
 			SelLog->Log('F', "\t\tRenderer '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
+		return true;
 	} else if(!!(arg = striKWcmp( l, "-->> Origin=" ))){
 		int r = sscanf(arg.c_str(), "%u,%u", &(this->geometry.x), &(this->geometry.y));
 		if(r != 2)
@@ -95,6 +101,7 @@ void Painting::readConfigDirective( std::string &l, std::string &name, bool &nam
 
 		if(verbose)
 			SelLog->Log('C', "\t\tOrigin : %u,%u", this->geometry.x,this->geometry.y);
+		return true;
 	} else if(!!(arg = striKWcmp( l, "-->> Size=" ))){
 				int r = sscanf(arg.c_str(), "%ux%u", &(this->geometry.w), &(this->geometry.h));
 		if(r != 2)
@@ -102,8 +109,10 @@ void Painting::readConfigDirective( std::string &l, std::string &name, bool &nam
 
 		if(verbose)
 			SelLog->Log('C', "\t\tSize : %ux%u", this->geometry.w,this->geometry.h);
-	} else
-		Object::readConfigDirective(l, name, nameused);
+		return true;
+	}
+
+	return false;
 }
 
 #ifdef DEBUG

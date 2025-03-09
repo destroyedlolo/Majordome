@@ -95,7 +95,8 @@ void Field::readConfigDirective( std::string &l, std::string &name, bool &nameus
 			SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
-	} else Painting::readConfigDirective(l, name, nameused);
+	} else if(!this->Painting::readConfigDirectiveOnly(l, name, nameused))
+		this->LuaExec::readConfigDirective(l, name, nameused);
 }
 
 void Field::feedState( lua_State *L ){
@@ -131,7 +132,7 @@ bool Field::execAsync(lua_State *L){
 	bool r = this->LuaExec::execSync(L, &rc, &val, &s);
 
 	if( rc != LuaExec::boolRetCode::RCfalse ){	// data not rejected
-		if(isnan(val)){	// data unchanged
+		if(isnan(val) && s.empty()){	// data unchanged
 			lua_getglobal(L, "MAJORDOME_PAYLOAD");
 			if(lua_isnumber(L, -1))
 				val = lua_tonumber(L, -1);
