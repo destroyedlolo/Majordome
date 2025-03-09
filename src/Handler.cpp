@@ -37,10 +37,10 @@ bool Handler::exec(HandlersExecutor *h){
 	if(h)
 		h->feedHandlersState(L);
 
-	return this->LuaExec::execAsync(L);
+	return this->execAsync(L);
 }
 
-bool Handler::exec(lua_State *L, enum boolRetCode *rc, std::string *rs, lua_Number *retn){
+bool Handler::exec(lua_State *L /*, enum boolRetCode *rc, std::string *rs, lua_Number *retn*/){
 	if(!this->canRun())
 		return false;
 
@@ -55,5 +55,5 @@ bool Handler::exec(lua_State *L, enum boolRetCode *rc, std::string *rs, lua_Numb
 
 	this->feedState(L);
 
-	return this->LuaExec::execSync(L, rc,rs,retn);
+	return this->LuaExec::execSync(L);
 }

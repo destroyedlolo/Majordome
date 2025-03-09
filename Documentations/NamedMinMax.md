@@ -31,6 +31,16 @@ Consequently, a single NamedMinMax can process several topics, as shown in the p
 
 In addition, it can return a value that will replace the received one.
 
+Consequently :
+#### expected returns
+- `return false` : rejected data
+- `return "my collection"` : accepted and stored in *my collection*
+- `return "my collection", 21` : accepted, and forced to *21* which is stored in *my collection*
+
+#### Probably problematic returns
+- `return true` : data accepted but orphaned
+- `return 2` : stored in "*2*" collection whereas the data is probably expected to be forced to **2**
+
 ### Exposed variables
 - **MAJORDOME_Myself** is automatically created and correspond to the current NamedMinMax
 - **MAJORDOME_NAMEDMINMAX** - NamedMinMax's name

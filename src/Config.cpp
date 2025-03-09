@@ -97,6 +97,21 @@ void Config::SanityChecks( void ){
 			}
 		}
 	}
+
+#ifdef DBASE
+		/* Verify a database is specified */
+	for(auto &i : this->FeedsList)
+		if(!i.second->getDatabase()){
+			SelLog->Log('F', "NamedFeed \"%s\" is not associated to a database",  i.second->getNameC());
+			exit(EXIT_FAILURE);
+		}
+
+	for(auto &i : this->NamedFeedsList)
+		if(!i.second->getDatabase()){
+			SelLog->Log('F', "NamedFeed \"%s\" is not associated to a database",  i.second->getNameC());
+			exit(EXIT_FAILURE);
+		}
+#endif
 }
 
 void Config::SubscribeTopics( void ){

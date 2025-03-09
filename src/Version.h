@@ -32,7 +32,8 @@
  *	24/11/2024 - v5.00 - LF - Introduce Toile
  *		It was only a PoC with bad programming habits.
  *	20/01/2025 - v6.00 - LF - Code redesign
+ *	20/02/2025 - v6.01 - LF - Add PostgreSQL support
  */
 
-#define VERSION 6.0012
+#define VERSION 6.0113
 #define COPYRIGHT "Majordome (c) L.Faillie 2018-2025"

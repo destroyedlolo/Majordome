@@ -153,14 +153,64 @@ void LuaExec::readConfigDirective( std::string &l, std::string &name, bool &name
 			SelLog->Log('F', "\t\tShutdown '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
-	}
+#ifdef DBASE
+#	ifdef PGSQL
+	} else if(!!(arg = striKWcmp( l, "-->> need_pgSQL=" ))){
+		pgSQLCollection::iterator shut;
+		if( (shut = config.pgSQLsList.find(arg)) != config.pgSQLsList.end() ){
+			if(verbose)
+				SelLog->Log('C', "\t\tAdded needed pgSQL '%s'", arg.c_str());
+			this->addNeededpgSQL( arg );
+			return;
+		} else {
+			SelLog->Log('F', "\t\tpgSQL '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
+#	endif
+	} else if(!!(arg = striKWcmp( l, "-->> need_feed=" ))){
+		FeedCollection::iterator shut;
+		if( (shut = config.FeedsList.find(arg)) != config.FeedsList.end() ){
+			if(verbose)
+				SelLog->Log('C', "\t\tAdded needed Feed '%s'", arg.c_str());
+			this->addNeededFeed( arg );
+			return;
+		} else {
+			SelLog->Log('F', "\t\tFeed '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
+	} else if(!!(arg = striKWcmp( l, "-->> need_namedfeed=" ))){
+		NamedFeedCollection::iterator shut;
+		if( (shut = config.NamedFeedsList.find(arg)) != config.NamedFeedsList.end() ){
+			if(verbose)
+				SelLog->Log('C', "\t\tAdded needed NamedFeed '%s'", arg.c_str());
+			this->addNeededNamedFeed( arg );
+			return;
+		} else {
+			SelLog->Log('F', "\t\tNamedFeed '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
+#endif
+#ifdef TOILE
+	} else if(!!(arg = striKWcmp( l, "-->> need_renderer=" ))){
+		RendererCollection::iterator renderer;
+		if( (renderer = config.RendererList.find(arg)) != config.RendererList.end() ){
+			if(verbose)
+				SelLog->Log('C', "\t\tAdded needed renderer '%s'", arg.c_str());
+			this->addNeededRenderer( arg );
+			return;
+		} else {
+			SelLog->Log('F', "\t\tRenderer '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
+#endif
+}
 
 	return this->Object::readConfigDirective(l, name, nameused);
 }
 
 bool LuaExec::canRun( void ){
 	if( !this->isEnabled() ){
-		if(verbose)
+		if(verbose && !this->isQuiet())
 			SelLog->Log('T', "Task '%s' from '%s' is disabled", this->getNameC(), this->getWhereC() );
 		return false;
 	}
@@ -325,6 +375,77 @@ bool LuaExec::feedbyNeeded( lua_State *L, bool require ){
 		}
 	}
 
+#ifdef DBASE
+#	ifdef PGSQL
+	for(auto &i : this->needed_pgSQL){
+		try {
+			class pgSQL *s = config.pgSQLsList.at( i );
+			class pgSQL **db = (class pgSQL **)lua_newuserdata(L, sizeof(class pgSQL *));
+			assert(db);
+
+			*db = s;
+			luaL_getmetatable(L, "MajordomepgSQL");
+			lua_setmetatable(L, -2);
+
+			lua_setglobal(L, i.c_str());
+		} catch( std::out_of_range &e ){	// Not found 
+			return false;
+		}
+	}
+#	endif
+
+
+	for(auto &i : this->needed_feed){
+		try {
+			class Feed *s = config.FeedsList.at( i );
+			class Feed **shut = (class Feed **)lua_newuserdata(L, sizeof(class Feed *));
+			assert(shut);
+
+			*shut = s;
+			luaL_getmetatable(L, "MajordomeFeed");
+			lua_setmetatable(L, -2);
+
+			lua_setglobal(L, i.c_str());
+		} catch( std::out_of_range &e ){	// Not found 
+			return false;
+		}
+	}
+
+	for(auto &i : this->needed_namedfeed){
+		try {
+			class NamedFeed *s = config.NamedFeedsList.at( i );
+			class NamedFeed **shut = (class NamedFeed **)lua_newuserdata(L, sizeof(class NamedFeed *));
+			assert(shut);
+
+			*shut = s;
+			luaL_getmetatable(L, "MajordomeNamedFeed");
+			lua_setmetatable(L, -2);
+
+			lua_setglobal(L, i.c_str());
+		} catch( std::out_of_range &e ){	// Not found 
+			return false;
+		}
+	}
+#endif
+
+#ifdef TOILE
+	for(auto &i : this->needed_renderer){
+		try {
+			class Renderer *rd = config.RendererList.at( i );
+			class SelGenericSurfaceLua *renderer = (class SelGenericSurfaceLua *)lua_newuserdata(L, sizeof(class SelGenericSurfaceLua));
+			assert(renderer);
+
+			renderer->storage = rd->getSurface();
+			luaL_getmetatable(L, rd->getSurface()->cb->LuaObjectName() );
+			lua_setmetatable(L, -2);
+
+			lua_setglobal(L, i.c_str());
+		} catch( std::out_of_range &e ){	// Not found 
+			return false;
+		}
+	}
+#endif
+
 	return true;
 }
 
@@ -375,7 +496,7 @@ bool LuaExec::execAsync( lua_State *L ){
 	return true;
 }
 
-bool LuaExec::execSync(lua_State *L, enum boolRetCode *rc, std::string *rs, lua_Number *retn){
+bool LuaExec::prepareExecSync(lua_State *L){
 	int err;
 	if( (err = SelElasticStorage->loadsharedfunction( L, this->getFunc() )) ){
 		SelLog->Log('E', "Unable to create task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), (err == LUA_ERRSYNTAX) ? "Syntax error" : "Memory error" );
@@ -386,28 +507,79 @@ bool LuaExec::execSync(lua_State *L, enum boolRetCode *rc, std::string *rs, lua_
 	if(verbose && !this->isQuiet())
 		SelLog->Log('T', "Sync running Task '%s' from '%s'", this->getNameC(), this->getWhereC() );
 
-	if(lua_pcall( L, 0, 2, 0))
+	return true;
+}
+
+bool LuaExec::execSync(lua_State *L, enum boolRetCode *rc){
+	if(!this->prepareExecSync(L))
+		return false;
+
+	if(lua_pcall( L, 0, 1, 0)){
 		SelLog->Log('E', "Can't execute task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), lua_tostring(L, -1));
+		*rc = boolRetCode::RCfalse;
+		return false;
+	}
+
+	if(rc){
+		*rc = boolRetCode::RCnil;
+		if(lua_isboolean(L, -1))
+			*rc = lua_toboolean(L, -1) ? boolRetCode::RCtrue : boolRetCode::RCfalse;
+	}
+
+	return true;
+}
+
+bool LuaExec::execSync(lua_State *L, enum boolRetCode *rc, lua_Number *retn){
+	*retn = NAN;
+	*rc = boolRetCode::RCnil;
+
+	if(!this->prepareExecSync(L))
+		return false;
+
+	if(lua_pcall(L, 0, 1, 0)){
+		SelLog->Log('E', "Can't execute task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), lua_tostring(L, -1));
+		*rc = boolRetCode::RCfalse;
+		return false;
+	}
+
+	if(lua_isboolean(L, -1))
+		*rc = lua_toboolean(L, -1) ? boolRetCode::RCtrue : boolRetCode::RCfalse;
+
+	if(lua_isnumber(L, -1)){
+		*rc = boolRetCode::RCforced;
+		*retn = lua_tonumber(L, -1);
+	}
+
+	return true;
+	
+}
+
+bool LuaExec::execSync(lua_State *L, std::string *rs, enum boolRetCode *rc, lua_Number *retn){
+	*retn = NAN;
+	*rc = boolRetCode::RCnil;
+
+	if(!this->prepareExecSync(L))
+		return false;
+
+	if(lua_pcall(L, 0, 2, 0)){
+		SelLog->Log('E', "Can't execute task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), lua_tostring(L, -1));
+		*rc = boolRetCode::RCfalse;
+		return false;
+	}
 
 		/* -1 : numeric value if provided
 		 * -2 : string value or RC
 		 */
-	if(rc){
-		*rc = boolRetCode::RCnil;
-		if(lua_isboolean(L, -2))
-			*rc = lua_toboolean(L, -2) ? boolRetCode::RCtrue : boolRetCode::RCfalse;
-	}
 
-	if(rs){
-		*rs = "";
-		if(lua_isstring(L, -2))
-			*rs = lua_tostring(L, -2);
-	}
+	if(lua_isboolean(L, -2))
+		*rc = lua_toboolean(L, -2) ? boolRetCode::RCtrue : boolRetCode::RCfalse;
 
-	if(retn){
-		*retn = NAN;
-		if(lua_isnumber(L, -1))
-			*retn = lua_tonumber(L, -1);
+	if(lua_isstring(L, -2))
+		*rs = lua_tostring(L, -2);
+
+	if(lua_isnumber(L, -1)){
+		*rc = boolRetCode::RCforced;
+		*retn = lua_tonumber(L, -1);
 	}
 
 	return true;

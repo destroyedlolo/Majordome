@@ -1,0 +1,32 @@
+-- Table feed declaration
+--
+-- Note : For convenience, it is preferable that the table name's is only
+-- in lower-case. Otherwise, it will have to be surrounded by double quotes
+-- in pgsql.
+--
+-- name of the table to feed
+-- if not set, takes the filename
+--->> name=toto
+--
+-- The database to connect to
+-->> Database=database
+--
+-- The table where data will be inserted
+-- if not set, the same as "name"
+--->> table=mytable
+--
+-- Topic to listen too
+-->> listen=Test
+--
+-- Remove some tracing messages
+--->> quiet
+
+print("Data ", MAJORDOME_PAYLOAD)
+
+-- With 1-wire probe, 85 means underpowered
+-- So we can't accept this data
+if tonumber(MAJORDOME_PAYLOAD) == 85 then
+	return false;
+elseif tonumber(MAJORDOME_PAYLOAD) == 50 then
+	return 49;
+end
