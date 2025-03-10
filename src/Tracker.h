@@ -70,7 +70,7 @@ public:
 	void addChanged( LuaTask *t ){ this->changingTasks.Add(t); }
 
 		/* Executable */
-	virtual bool execAsync(lua_State *L);	// Overloading to handle data feeding
+	virtual bool execAsync(lua_State *L);	// Overloading to handle data acceptation 
 
 	/* Create Lua's object */
 	static void initLuaInterface( lua_State *L );

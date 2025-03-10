@@ -23,6 +23,13 @@
  * Some space are left for modules extensions (like Toile's)
  */
 static const SubConfigDir::extweight fileext[] = {
+#ifdef DBASE
+#	ifdef PGSQL
+	{ ".pgsql", 0xc0 },
+#	endif
+	{ ".feed", 0x70 },
+	{ ".namedfeed", 0x70 },
+#endif
 	{ ".topic", 0xc0 },
 	{ ".timer", 0xc0 },
 	{ ".rendezvous", 0xc0 },
@@ -176,6 +183,40 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 				exit(EXIT_FAILURE);
 			} else
 				cfg.NamedMinMaxList.insert( std::make_pair(name, trk) );
+#ifdef DBASE
+#	ifdef PGSQL
+		} else if(ext == ".pgsql"){
+			std::string name;
+			auto pg = new pgSQL( completpath, where, name );
+
+			pgSQLCollection::iterator prev;
+			if((prev = cfg.pgSQLsList.find(name)) != cfg.pgSQLsList.end()){
+				SelLog->Log('F', "pgsql '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhereC());
+				exit(EXIT_FAILURE);
+			} else
+				cfg.pgSQLsList.insert( std::make_pair(name, pg) );
+#	endif
+		} else if(ext == ".feed"){
+			std::string name;
+			auto f = new Feed( completpath, where, name, L );
+
+			FeedCollection::iterator prev;
+			if((prev = cfg.FeedsList.find(name)) != cfg.FeedsList.end()){
+				SelLog->Log('F', "Feed '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhereC());
+				exit(EXIT_FAILURE);
+			} else
+				cfg.FeedsList.insert( std::make_pair(name, f) );
+		} else if(ext == ".namedfeed"){
+			std::string name;
+			auto f = new NamedFeed( completpath, where, name, L );
+
+			NamedFeedCollection::iterator prev;
+			if((prev = cfg.NamedFeedsList.find(name)) != cfg.NamedFeedsList.end()){
+				SelLog->Log('F', "NamedFeed '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhereC());
+				exit(EXIT_FAILURE);
+			} else
+				cfg.NamedFeedsList.insert( std::make_pair(name, f) );
+#endif
 #	ifdef DEBUG
 		} else 
 			if(debug)
