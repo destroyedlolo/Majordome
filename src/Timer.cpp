@@ -75,10 +75,21 @@ void Timer::readConfigDirective( std::string &l, std::string &name, bool &nameus
 		this->Object::readConfigDirective(l, name, nameused);
 }
 
+void Timer::setEvery( unsigned long v ){
+	this->every = v;
+	this->sendCommand(Timer::Commands::RESET);
+}
+
 void *Timer::threadedslave(void *arg){
 	class Timer *me = static_cast<Timer *>(arg);	// 'this' in this thread
 
-	pthread_mutex_lock( &(me->mutex) );
+		/* NOTEZ-BIEN : we are not protecting concurrent access to 
+		 * external object, we are only creating a timer. It's why the mutex
+		 * is released as soon as possible.
+		 * As a bonus, this mutex is still used to avoid race conditions
+		 * on timer parameters. 
+		 */
+
 	for(;;){
 		struct timeval tv;
 		struct timespec ts;
@@ -86,6 +97,7 @@ void *Timer::threadedslave(void *arg){
 		gettimeofday(&tv, NULL);
 		TIMEVAL_TO_TIMESPEC( &tv, &ts );
 
+		pthread_mutex_lock( &(me->mutex) );
 		if( me->every )
 			ts.tv_sec += me->every;
 		else if( me->at != (unsigned short)-1 ){
@@ -125,9 +137,11 @@ void *Timer::threadedslave(void *arg){
 			 * timedwait and let remaining code (handlers launching) executes.
 			 */
 			if( me->cmd == Commands::RESET ){
+				pthread_mutex_unlock( &(me->mutex) );
 				continue;	// Rethink the timer without launching tasks
 			}
 		}
+		pthread_mutex_unlock( &(me->mutex) );
 
 #ifdef DEBUG
 		if(debug && !me->isQuiet()){
@@ -256,7 +270,7 @@ static int mtmr_getEvery( lua_State *L ){
 
 static int mtmr_setEvery( lua_State *L ){
 	class Timer *timer = checkMajordomeTimer(L);
-	timer->setEvery( luaL_checkinteger(L, 2) );
+	timer->setEvery( (unsigned long)luaL_checkinteger(L, 2) );
 	return 0;
 }
 

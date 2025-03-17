@@ -1,0 +1,7 @@
+-- Timer to display the time every minute
+--
+-->> every=60
+--
+-- Launch tasks at startup
+-->> immediate
+
