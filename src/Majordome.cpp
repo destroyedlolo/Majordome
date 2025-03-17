@@ -204,10 +204,8 @@ static int msgarrived(void *actx, char *topic, int tlen, MQTTClient_message *msg
 			if(i.second->match( topic )){
 #ifdef DEBUG
 				if( debug && !i.second->isQuiet() ){
-					if(hideTopicArrival)
+					if(!hideTopicArrival)
 						SelLog->Log('D', "'%s' accepted by topic '%s'", topic, i.second->getNameC() );
-					else
-						SelLog->Log('D', "Accepted by topic '%s'", i.second->getNameC() );
 				}
 #endif
 
