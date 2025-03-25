@@ -134,7 +134,7 @@ bool MQTTTopic::match( const char *intopic ){
 
 void MQTTTopic::execHandlers(MQTTTopic &, const char *topic, const char *payload){
 #ifdef DEBUG
-	if(debug && !this->isQuiet())
+	if(debug && !this->isQuiet() && !hideTopicArrival)
 		SelLog->Log('D', "[%s] MQTTTopic::execHandlers() : %d handler(s) to run", this->getNameC(), this->size());
 #endif
 
@@ -229,7 +229,7 @@ static int mtpc_getVal( lua_State *L ){
 
 #ifdef DEBUG
 	if( !topic->toBeStored() && debug )
-		SelLog->Log('D', "Topic %s is not \"stored\" : getVal() will not works", topic->getNameC() );
+		SelLog->Log('E', "Topic %s is not \"stored\" : getVal() will not works", topic->getNameC() );
 #endif
 
 	enum SharedObjType type;
