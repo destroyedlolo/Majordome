@@ -29,6 +29,7 @@ static const SubConfigDir::extweight fileext[] = {
 #	endif
 	{ ".feed", 0x70 },
 	{ ".namedfeed", 0x70 },
+	{ ".archiving", 0x70 },
 #endif
 	{ ".topic", 0xc0 },
 	{ ".timer", 0xc0 },
@@ -216,6 +217,16 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 				exit(EXIT_FAILURE);
 			} else
 				cfg.NamedFeedsList.insert( std::make_pair(name, f) );
+		} else if(ext == ".archiving"){
+			std::string name;
+			auto f = new Archiving( completpath, where, name, L );
+
+			ArchivingCollection::iterator prev;
+			if((prev = cfg.ArchivingsList.find(name)) != cfg.ArchivingsList.end()){
+				SelLog->Log('F', "Archiving '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhereC());
+				exit(EXIT_FAILURE);
+			} else
+				cfg.ArchivingsList.insert( std::make_pair(name, f) );
 #endif
 #	ifdef DEBUG
 		} else 
