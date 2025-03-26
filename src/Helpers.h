@@ -18,6 +18,7 @@
 	 * Configuration's
 	 * ***/
 extern bool quiet;
+extern bool hideTopicArrival;
 extern bool verbose;
 extern bool debug;
 extern bool trace;
