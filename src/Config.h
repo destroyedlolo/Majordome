@@ -24,6 +24,7 @@
 #	include "pgsql/pgSQL.h"
 #	include "pgsql/Feed.h"
 #	include "pgsql/NamedFeed.h"
+#	include "pgsql/Archive.h"
 #endif
 
 #include <lua.hpp>	/* Lua's state needed */
@@ -65,6 +66,7 @@ public:
 
 	FeedCollection FeedsList;
 	NamedFeedCollection NamedFeedsList;
+	ArchiveCollection ArchivesList;
 #endif
 		/* Topics' */
 	void SubscribeTopics( void );	// Subscribe to defined MQTT topics
