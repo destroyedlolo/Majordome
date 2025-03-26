@@ -1,21 +1,25 @@
 -- Database archiving declaration
 --
--- name of the table to feed
+-- name of this archiving
 -- if not set, takes the filename
--->> name=toto
+--->> name=toto
+--
+-- Remove some tracing messages
+--->> quiet
+--
+-- Disable this archiving
+--->> disabled
+--
+--------------------
+-- Database related
+--------------------
 --
 --- The database to connect to
---->> Database=database
+-->> Database=database
 --
 -- The source table
---->> source=source
+-->> source=source
 --
 -- The table where data will be inserted
 -- if not set, the same as "name"
---->> table=mytable
---
--- Remove some tracing messages
--->> quiet
---
--- Disable this archiving
--->> disabled
+-->> table=mytable

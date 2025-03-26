@@ -51,5 +51,35 @@ Archiving::Archiving(const std::string &fch, std::string &where, std::string &na
 void Archiving::readConfigDirective( std::string &l, std::string &name, bool &nameused ){
 	MayBeEmptyString arg;
 
-	this->Object::readConfigDirective(l, name, nameused);
+	if( !!(arg = striKWcmp( l, "-->> when=" ))){
+		TimerCollection::iterator timer;
+		if( (timer = config.TimersList.find(arg)) != config.TimersList.end()){
+			if(verbose)
+				SelLog->Log('C', "\t\tAdded to timer '%s'", arg.c_str());
+			timer->second->addHandler( dynamic_cast<Handler *>(this) );
+//			nameused = true;
+		} else {
+			SelLog->Log('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
+	} else if(!!(arg = striKWcmp( l, "-->> Database=" ))){
+		pgSQLCollection::iterator db;
+		if( (db = config.pgSQLsList.find(arg)) != config.pgSQLsList.end()){
+			if(verbose)
+				SelLog->Log('C', "\t\tDatabase : %s", arg.c_str());
+			this->db = db->second;
+		} else {
+			SelLog->Log('F', "\t\tDatabase '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
+	} else if(!!(arg = striKWcmp( l, "-->> table=" ))){
+		this->TableName = arg;
+			if(verbose)
+				SelLog->Log('C', "\t\tTarget table : %s", arg.c_str());
+	} else if(!!(arg = striKWcmp( l, "-->> source=" ))){
+		this->SourceName = arg;
+			if(verbose)
+				SelLog->Log('C', "\t\tSource table : %s", arg.c_str());
+	} else
+		this->Object::readConfigDirective(l, name, nameused);
 }
