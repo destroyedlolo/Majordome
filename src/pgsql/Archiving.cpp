@@ -8,7 +8,7 @@
 #include <cstring>
 #include <cassert>
 
-Archiving::Archiving(const std::string &fch, std::string &where, std::string &name, lua_State *L) : Object(fch, where, name), Handler(fch, where, name) {
+Archiving::Archiving(const std::string &fch, std::string &where, std::string &name, lua_State *L) : Object(fch, where, name), Handler(fch, where, name), Aggregation("Day") {
 	/*
 	 * Reading file's content
 	 */
@@ -80,6 +80,10 @@ void Archiving::readConfigDirective( std::string &l, std::string &name, bool &na
 		this->SourceName = arg;
 			if(verbose)
 				SelLog->Log('C', "\t\tSource table : %s", arg.c_str());
+	} else if(!!(arg = striKWcmp( l, "-->> AggregateBy=" ))){
+		this->Aggregation = arg;
+			if(verbose)
+				SelLog->Log('C', "\t\tAggregation : %s", arg.c_str());
 	} else
 		this->Object::readConfigDirective(l, name, nameused);
 }

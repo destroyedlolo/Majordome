@@ -17,6 +17,7 @@ protected:
 
 	MayBeEmptyString SourceName;
 	MayBeEmptyString TableName;
+	std::string Aggregation;
 public:
 	Archiving(const std::string &fch, std::string &where, std::string &name, lua_State *L);
 

@@ -23,3 +23,10 @@
 -- The table where data will be inserted
 -- if not set, the same as "name"
 -->> table=mytable
+--
+-- Aggregation rule
+-- Can be any range supported by SQL's DATE_TRUNC()
+-- likes hour, day (default), week, month, year ...
+-- Notez-bien : check is done at database level. If an unsupported range
+-- is provided, it will create an SQL error.
+--> AggregateBy=day
