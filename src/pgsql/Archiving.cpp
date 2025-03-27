@@ -8,7 +8,7 @@
 #include <cstring>
 #include <cassert>
 
-Archiving::Archiving(const std::string &fch, std::string &where, std::string &name, lua_State *L) : Object(fch, where, name), Handler(fch, where, name), Aggregation("Day") {
+Archiving::Archiving(const std::string &fch, std::string &where, std::string &name, lua_State *L) : Object(fch, where, name), Handler(fch, where, name), Aggregation("Day"), kind(_kind::MINMAX) {
 	/*
 	 * Reading file's content
 	 */
@@ -74,16 +74,29 @@ void Archiving::readConfigDirective( std::string &l, std::string &name, bool &na
 		}
 	} else if(!!(arg = striKWcmp( l, "-->> table=" ))){
 		this->TableName = arg;
-			if(verbose)
-				SelLog->Log('C', "\t\tTarget table : %s", arg.c_str());
+		if(verbose)
+			SelLog->Log('C', "\t\tTarget table : %s", arg.c_str());
 	} else if(!!(arg = striKWcmp( l, "-->> source=" ))){
 		this->SourceName = arg;
-			if(verbose)
-				SelLog->Log('C', "\t\tSource table : %s", arg.c_str());
+		if(verbose)
+			SelLog->Log('C', "\t\tSource table : %s", arg.c_str());
 	} else if(!!(arg = striKWcmp( l, "-->> AggregateBy=" ))){
 		this->Aggregation = arg;
+		if(verbose)
+			SelLog->Log('C', "\t\tAggregation : %s", arg.c_str());
+	} else if(!!(arg = striKWcmp( l, "-->> Kind=" ))){
+		if(arg == "MinMax"){
+			this->kind = _kind::MINMAX;
 			if(verbose)
-				SelLog->Log('C', "\t\tAggregation : %s", arg.c_str());
+				SelLog->Log('C', "\t\tKind : MinMax");
+		} else if(arg == "Delta"){
+			this->kind = _kind::DELTA;
+			if(verbose)
+				SelLog->Log('C', "\t\tKind : Delta");
+		} else {
+			SelLog->Log('F', "\t\tUnknown archiving kind");
+			exit(EXIT_FAILURE);
+		}
 	} else
 		this->Object::readConfigDirective(l, name, nameused);
 }
