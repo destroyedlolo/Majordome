@@ -27,6 +27,8 @@ protected:
 	} kind;
 
 	StringVector keys;
+	std::string parameter;
+
 public:
 	Archiving(const std::string &fch, std::string &where, std::string &name, lua_State *L);
 

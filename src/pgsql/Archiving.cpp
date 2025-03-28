@@ -4,6 +4,7 @@
 #include "../Helpers.h"
 
 #include <fstream>
+#include <sstream>
 
 #include <cstring>
 #include <cassert>
@@ -97,6 +98,27 @@ void Archiving::readConfigDirective( std::string &l, std::string &name, bool &na
 			SelLog->Log('F', "\t\tUnknown archiving kind");
 			exit(EXIT_FAILURE);
 		}
+	} else if(!!(arg = striKWcmp( l, "-->> Keys=" ))){
+		std::istringstream iss(arg);
+		std::string k;
+		while(std::getline(iss, k, ','))
+			this->keys.Add(k);
+
+		if(verbose){
+			k = "\t\tKeys : ";
+			bool first = true;
+			for(auto &i : this->keys){
+				if(!first)
+					k += ", ";
+				k+=i;
+				first = false;
+			}
+			SelLog->Log('C', k.c_str());
+		}
+	} else if(!!(arg = striKWcmp( l, "-->> UpTo=" ))){
+		this->Aggregation = arg;
+		if(verbose)
+			SelLog->Log('C', "\t\tUp to : %s", arg.c_str());
 	} else
 		this->Object::readConfigDirective(l, name, nameused);
 }
