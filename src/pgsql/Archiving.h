@@ -16,7 +16,7 @@ class Archiving : virtual public mpgConnection, virtual public Handler {
 protected:
 	void readConfigDirective( std::string &l, std::string &name, bool &nameused );
 
-	MayBeEmptyString SourceName;
+	std::string SourceName;
 	MayBeEmptyString TableName;
 	std::string Aggregation;
 
@@ -29,11 +29,15 @@ protected:
 	StringVector keys;
 	std::string parameter;
 
+		/* Executable */
+	virtual bool execAsync(lua_State *L);	// Overloading to handle data acceptation
+
 public:
 	Archiving(const std::string &fch, std::string &where, std::string &name, lua_State *L);
 
 	/* Accessors */
-//	const char *getTableName(void);
+	const char *getTableName(void);
+	bool hasSource(void){ return this->SourceName.empty(); };
 	virtual const char *getNameC(){ return(this->Object::getNameC()); };
 	bool isQuiet(){ return this->Object::isQuiet(); };
 

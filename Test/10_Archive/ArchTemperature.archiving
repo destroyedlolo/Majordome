@@ -17,10 +17,10 @@
 --------------------
 --
 --- The database to connect to
--->> Database=database
+---->> Database=database
 --
 -- The source table
--->> source=source
+--->> source=source
 --
 -- The table where data will be inserted
 -- if not set, the same as "name"

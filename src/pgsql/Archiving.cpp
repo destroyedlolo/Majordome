@@ -122,3 +122,15 @@ void Archiving::readConfigDirective( std::string &l, std::string &name, bool &na
 	} else
 		this->Object::readConfigDirective(l, name, nameused);
 }
+
+const char *Archiving::getTableName(void){
+	if(!!this->TableName)
+		return(this->TableName.c_str());
+	else
+		return(this->getNameC());
+}
+
+bool Archiving::execAsync(lua_State *){
+	char *t;
+
+}
