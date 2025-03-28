@@ -37,7 +37,7 @@ public:
 
 	/* Accessors */
 	const char *getTableName(void);
-	bool hasSource(void){ return this->SourceName.empty(); };
+	bool hasSource(void){ return !this->SourceName.empty(); };
 	virtual const char *getNameC(){ return(this->Object::getNameC()); };
 	bool isQuiet(){ return this->Object::isQuiet(); };
 
