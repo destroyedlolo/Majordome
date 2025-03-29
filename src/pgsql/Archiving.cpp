@@ -131,8 +131,6 @@ const char *Archiving::getTableName(void){
 }
 
 bool Archiving::execAsync(lua_State *){
-puts("*** Archiving::execAsync()");
-	/* Build SQL request */
 	if(!this->connect())
 		return false;
 
@@ -142,6 +140,7 @@ puts("*** Archiving::execAsync()");
 	cmd += (t = PQescapeIdentifier(this->conn, this->getTableName(), strlen(this->getTableName())));
 	PQfreemem(t);
 
+	cmd += " (SELECT 
 	SelLog->Log('D', cmd.c_str());
 
 	this->disconnect();
