@@ -6,6 +6,6 @@ As of v6.1, **PostgreSQL** databases are supported.
 
 # Objects
 
-- **pgsql** : Define a PostgreSQL database connection
-- **feed** : Insert a received figure into a database table (single figure per table)
-- **namedfeed** : Insert received named figure in a database table (multiple figures per table)
+- **[pgsql](pgsql.md)** : Define a PostgreSQL database connection
+- **[feed](feed.md)** : Insert a received figure into a database table (single figure per table)
+- **[namedfeed](namedfeed.md)** : Insert received named figure in a database table (multiple figures per table)
