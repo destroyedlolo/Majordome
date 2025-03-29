@@ -169,7 +169,8 @@ bool Archiving::execAsync(lua_State *){
 
 	cmd += "ON CONFLICT DO NOTHING";
 
-	SelLog->Log('D', cmd.c_str());
+	if(!this->doSQL(cmd.c_str()))
+		SelLog->Log('E', "['%s'] %s", this->getNameC(), this->lastError());
 
 	this->disconnect();
 	return true;

@@ -35,7 +35,7 @@
 -- likes hour, day (default), week, month, year ...
 -- Notez-bien : check is done at database level. If an unsupported range
 -- is provided, it will create an SQL error.
---> AggregateBy=month
+---> AggregateBy=Month
 --
 -- Archiving kind
 -- Allowed are :
@@ -60,20 +60,4 @@
 ------------
 --
 -->> when=now
-
--- to be generated : REMOVE IT.
-select distinct( sample_time::date ) from domestik2.electricity_counter 
-where sample_time::date < current_date - interval '1 day';
-
-INSERT INTO electricity_counter_archive 
-SELECT sample_time::date AS date, counter, figure, MAX(value)-MIN(value) AS increase
-FROM electricity_counter
-WHERE  sample_time::date < current_date - interval '1 day'
-GROUP BY counter, figure, date
-ON CONFLICT DO NOTHING;
-
-SELECT DATE_TRUNC('week', sample_time) AS frame, counter, figure, MAX(value)-MIN(value) AS increase
-FROM electricity_counter
-WHERE sample_time::date < current_date - interval '1 day'
-GROUP BY counter, figure, frame;
 
