@@ -27,7 +27,7 @@ protected:
 	} kind;
 
 	StringVector keys;
-	std::string parameter;
+	std::string upto;
 
 		/* Executable */
 	virtual bool execAsync(lua_State *L);	// Overloading to handle data acceptation

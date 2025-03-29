@@ -9,7 +9,7 @@
 #include <cstring>
 #include <cassert>
 
-Archiving::Archiving(const std::string &fch, std::string &where, std::string &name, lua_State *L) : Object(fch, where, name), Handler(fch, where, name), Aggregation("Day"), kind(_kind::MINMAX) {
+Archiving::Archiving(const std::string &fch, std::string &where, std::string &name, lua_State *L) : Object(fch, where, name), Handler(fch, where, name), Aggregation("Day"), kind(_kind::MINMAX), upto("1 day") {
 	/*
 	 * Reading file's content
 	 */
@@ -81,7 +81,7 @@ void Archiving::readConfigDirective( std::string &l, std::string &name, bool &na
 		this->SourceName = arg;
 		if(verbose)
 			SelLog->Log('C', "\t\tSource table : %s", arg.c_str());
-	} else if(!!(arg = striKWcmp( l, "-->> AggregateBy=" ))){
+	} else if(!!(arg = striKWcmp( l, "--> AggregateBy=" ))){
 		this->Aggregation = arg;
 		if(verbose)
 			SelLog->Log('C', "\t\tAggregation : %s", arg.c_str());
@@ -110,13 +110,13 @@ void Archiving::readConfigDirective( std::string &l, std::string &name, bool &na
 			for(auto &i : this->keys){
 				if(!first)
 					k += ", ";
-				k+=i;
+				k += i;
 				first = false;
 			}
 			SelLog->Log('C', k.c_str());
 		}
 	} else if(!!(arg = striKWcmp( l, "-->> UpTo=" ))){
-		this->Aggregation = arg;
+		this->upto= arg;
 		if(verbose)
 			SelLog->Log('C', "\t\tUp to : %s", arg.c_str());
 	} else
@@ -140,7 +140,35 @@ bool Archiving::execAsync(lua_State *){
 	cmd += (t = PQescapeIdentifier(this->conn, this->getTableName(), strlen(this->getTableName())));
 	PQfreemem(t);
 
-	cmd += " (SELECT 
+	cmd += " SELECT DATE_TRUNC(";
+	cmd += (t = PQescapeLiteral(this->conn, this->Aggregation.c_str(), this->Aggregation.length()));
+	PQfreemem(t);
+	cmd += ", sample_time) AS frame";
+	for(auto &i : this->keys){
+		cmd += ", ";
+		cmd += (t = PQescapeIdentifier(this->conn, i.c_str(), i.length()));
+		PQfreemem(t);
+	}
+
+	cmd += ", MAX(value)-MIN(value) FROM ";
+
+	cmd += (t = PQescapeIdentifier(this->conn, this->SourceName.c_str(), this->SourceName.length()));
+	PQfreemem(t);
+
+	cmd += " WHERE sample_time::date < current_date - interval ";
+
+	cmd += (t = PQescapeLiteral(this->conn, this->upto.c_str(), this->upto.length()));
+	PQfreemem(t);
+
+	cmd += "GROUP BY frame";
+	for(auto &i : this->keys){
+		cmd += ", ";
+		cmd += (t = PQescapeIdentifier(this->conn, i.c_str(), i.length()));
+		PQfreemem(t);
+	}
+
+	cmd += "ON CONFLICT DO NOTHING";
+
 	SelLog->Log('D', cmd.c_str());
 
 	this->disconnect();
