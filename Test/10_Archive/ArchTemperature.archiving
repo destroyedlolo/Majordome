@@ -17,14 +17,14 @@
 --------------------
 --
 --- The database to connect to
----->> Database=database
+-->> Database=database
 --
 -- The source table
---->> source=source
+-->> source=domestik2.electricity_counter
 --
 -- The table where data will be inserted
 -- if not set, the same as "name"
--->> table=mytable
+-->> table=domestik2.electricity_counter_archive
 --
 -- Aggregation rule
 -- Can be any range supported by SQL's DATE_TRUNC()
@@ -47,10 +47,21 @@
 -- Will be executed by an SQL sentence like this one :
 -- ... where sample_time::date > current_date - interval 'arg'
 -- Consequently, argument should be :
--- "3 days" to ignore last 3 days
--- "1 month" to ignore a month
+-- "1 day" to ignore last 1 days (default)
+-- "3 months" to ignore 3 last months
 -->> UpTo=1 day
+--
+------------
+-- Launching
+------------
+--
+-->> when=now
 
 -- to be generated : REMOVE IT.
 select distinct( sample_time::date ) from domestik2.electricity_counter 
-where sample_time::date < current_date - interval '1 day'
+where sample_time::date < current_date - interval '1 day';
+
+SELECT sample_time::date AS date, counter, figure, MAX(value)-MIN(value) AS increase
+FROM electricity_counter
+GROUP BY counter, figure, date
+ORDER BY date;

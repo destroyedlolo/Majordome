@@ -117,7 +117,7 @@ void Config::SanityChecks( void ){
 			SelLog->Log('F', "Archiving \"%s\" is not associated to a database",  i.second->getNameC());
 			exit(EXIT_FAILURE);
 		}
-		if(i.second->hasSource()){
+		if(!i.second->hasSource()){
 			SelLog->Log('F', "Archiving \"%s\" has no associated source",  i.second->getNameC());
 			exit(EXIT_FAILURE);
 		}

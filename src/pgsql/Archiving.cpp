@@ -131,6 +131,19 @@ const char *Archiving::getTableName(void){
 }
 
 bool Archiving::execAsync(lua_State *){
-	char *t;
+puts("*** Archiving::execAsync()");
+	/* Build SQL request */
+	if(!this->connect())
+		return false;
 
+	char *t;
+	std::string cmd("INSERT INTO ");
+
+	cmd += (t = PQescapeIdentifier(this->conn, this->getTableName(), strlen(this->getTableName())));
+	PQfreemem(t);
+
+	SelLog->Log('D', cmd.c_str());
+
+	this->disconnect();
+	return true;
 }
