@@ -178,12 +178,6 @@ MIN(value), MAX(value), AVG(value)
 FROM electricity_power
 GROUP BY frame, figure;
  */
-
-	/* Testing only */
-SelLog->Log('D', "['%s'] %s", this->getNameC(), cmd.c_str());
-this->disconnect();
-return false;
-	/* end of testing */
 		break;
 	case _kind::DELTA :
 		cmd += " SELECT DATE_TRUNC(";

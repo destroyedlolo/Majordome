@@ -35,7 +35,7 @@
 -- likes hour, day (default), week, month, year ...
 -- Notez-bien : check is done at database level. If an unsupported range
 -- is provided, it will create an SQL error.
----> AggregateBy=Hour
+--> AggregateBy=Hour
 --
 -- Archiving kind
 -- Allowed are :
