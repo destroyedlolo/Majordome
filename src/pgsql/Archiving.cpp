@@ -140,34 +140,82 @@ bool Archiving::execAsync(lua_State *){
 	cmd += (t = PQescapeIdentifier(this->conn, this->getTableName(), strlen(this->getTableName())));
 	PQfreemem(t);
 
-	cmd += " SELECT DATE_TRUNC(";
-	cmd += (t = PQescapeLiteral(this->conn, this->Aggregation.c_str(), this->Aggregation.length()));
-	PQfreemem(t);
-	cmd += ", sample_time) AS frame";
-	for(auto &i : this->keys){
-		cmd += ", ";
-		cmd += (t = PQescapeIdentifier(this->conn, i.c_str(), i.length()));
+	switch(this->kind){
+	case _kind::MINMAX :
+		cmd += " SELECT DATE_TRUNC(";
+		cmd += (t = PQescapeLiteral(this->conn, this->Aggregation.c_str(), this->Aggregation.length()));
 		PQfreemem(t);
-	}
+		cmd += ", sample_time) AS frame";
+		for(auto &i : this->keys){
+			cmd += ", ";
+			cmd += (t = PQescapeIdentifier(this->conn, i.c_str(), i.length()));
+			PQfreemem(t);
+		}
 
-	cmd += ", MAX(value)-MIN(value) FROM ";
+		cmd += ", MIN(value), MAX(value), AVG(value) FROM ";
 
-	cmd += (t = PQescapeIdentifier(this->conn, this->SourceName.c_str(), this->SourceName.length()));
-	PQfreemem(t);
-
-	cmd += " WHERE sample_time::date < current_date - interval ";
-
-	cmd += (t = PQescapeLiteral(this->conn, this->upto.c_str(), this->upto.length()));
-	PQfreemem(t);
-
-	cmd += "GROUP BY frame";
-	for(auto &i : this->keys){
-		cmd += ", ";
-		cmd += (t = PQescapeIdentifier(this->conn, i.c_str(), i.length()));
+		cmd += (t = PQescapeIdentifier(this->conn, this->SourceName.c_str(), this->SourceName.length()));
 		PQfreemem(t);
-	}
 
-	cmd += "ON CONFLICT DO NOTHING";
+		cmd += " WHERE sample_time::date < current_date - interval ";
+
+		cmd += (t = PQescapeLiteral(this->conn, this->upto.c_str(), this->upto.length()));
+		PQfreemem(t);
+
+		cmd += " GROUP BY frame";
+		for(auto &i : this->keys){
+			cmd += ", ";
+			cmd += (t = PQescapeIdentifier(this->conn, i.c_str(), i.length()));
+			PQfreemem(t);
+		}
+
+		cmd += " ON CONFLICT DO NOTHING";
+
+/*
+INSERT INTO electricity_power_archive
+SELECT DATE_TRUNC('day', sample_time) AS frame, figure,
+MIN(value), MAX(value), AVG(value)
+FROM electricity_power
+GROUP BY frame, figure;
+ */
+
+	/* Testing only */
+SelLog->Log('D', "['%s'] %s", this->getNameC(), cmd.c_str());
+this->disconnect();
+return false;
+	/* end of testing */
+		break;
+	case _kind::DELTA :
+		cmd += " SELECT DATE_TRUNC(";
+		cmd += (t = PQescapeLiteral(this->conn, this->Aggregation.c_str(), this->Aggregation.length()));
+		PQfreemem(t);
+		cmd += ", sample_time) AS frame";
+		for(auto &i : this->keys){
+			cmd += ", ";
+			cmd += (t = PQescapeIdentifier(this->conn, i.c_str(), i.length()));
+			PQfreemem(t);
+		}
+
+		cmd += ", MAX(value)-MIN(value) FROM ";
+
+		cmd += (t = PQescapeIdentifier(this->conn, this->SourceName.c_str(), this->SourceName.length()));
+		PQfreemem(t);
+
+		cmd += " WHERE sample_time::date < current_date - interval ";
+
+		cmd += (t = PQescapeLiteral(this->conn, this->upto.c_str(), this->upto.length()));
+		PQfreemem(t);
+
+		cmd += " GROUP BY frame";
+		for(auto &i : this->keys){
+			cmd += ", ";
+			cmd += (t = PQescapeIdentifier(this->conn, i.c_str(), i.length()));
+			PQfreemem(t);
+		}
+
+		cmd += "ON CONFLICT DO NOTHING";
+		break;
+	}
 
 	if(!this->doSQL(cmd.c_str()))
 		SelLog->Log('E', "['%s'] %s", this->getNameC(), this->lastError());

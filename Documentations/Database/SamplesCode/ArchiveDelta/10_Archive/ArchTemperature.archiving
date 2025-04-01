@@ -20,11 +20,11 @@
 -->> Database=database
 --
 -- The source table
--->> source=electricity_power
+-->> source=electricity_counter
 --
 -- The table where data will be inserted
 -- if not set, the same as "name"
--->> table=electricity_power_archive
+-->> table=electricity_counter_archive
 --
 --------------------
 -- Selection related
@@ -35,17 +35,17 @@
 -- likes hour, day (default), week, month, year ...
 -- Notez-bien : check is done at database level. If an unsupported range
 -- is provided, it will create an SQL error.
----> AggregateBy=Hour
+---> AggregateBy=Month
 --
 -- Archiving kind
 -- Allowed are :
 --	MinMax : Min / Max / Average statistics (default value)
 --	Delta : Delta between the first and the last value
--->> Kind=MinMax
+-->> Kind=Delta
 --
 -- For table feed by namedfeed, indicate the field(s) to group by.
 -- If more than one are provided, they are separated by a comma
--->> Keys=figure
+-->> Keys=counter,figure
 --
 -- Up to when, following SQL syntax.
 -- Will be executed by an SQL sentence like this one :
