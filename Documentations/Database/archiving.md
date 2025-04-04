@@ -97,3 +97,15 @@ this feed will be triggered when this timer is exhausted.
 ```
 -->> when=15s
 ```
+
+### Notification
+[**Rendez-vous**](../rendezvous.md) are triggered when the archiving process is terminated.
+
+> [!TIP]
+> If you want the rendez-vous to be called whatever the result, put it in both.
+
+#### -->> SuccessRDV
+ The Trigger rendez-vous if no SQL error happened.
+
+#### -->> FailRDV
+The Trigger rendez-vous if SQL error happened.
