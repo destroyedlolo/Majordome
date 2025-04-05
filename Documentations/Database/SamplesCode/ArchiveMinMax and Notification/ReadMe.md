@@ -1,4 +1,4 @@
-This example shows how to execute a database purging using **Delta** method.
+This example shows how to execute a database purging using **MinMax** method.
 
 # Context
 
