@@ -73,7 +73,7 @@ The script is launched when provided [**tracker**](tracker.md) is started (beggi
 #### -->> whenDone=
 The script is launched when provided [**tracker**](tracker.md) is done (existing *following* mode cause the condition is met).
 ```
--->> whenStarted=tracker
+-->> whenDone=tracker
 ```
 
 #### -->> whenStopped=
