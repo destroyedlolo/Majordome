@@ -30,6 +30,7 @@ public:
 
 	void addHandler( Handler *h ){ this->push_back(h); }
 	void execHandlers(lua_State *);	// same thread, same State
+	void execHandlers(void){ this->HandlersExecutor::execHandlers(); }
 
 	/* Trackers */
 	void addTrackerEN( Tracker *t ){ this->trackersToEnable.Add(t); }

@@ -66,4 +66,5 @@
 ---------------
 --
 -->> SuccessRDV=ArchivingDone
+-->> FailRDV=ArchivingFailed
 

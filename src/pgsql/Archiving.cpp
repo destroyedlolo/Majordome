@@ -125,11 +125,20 @@ void Archiving::readConfigDirective( std::string &l, std::string &name, bool &na
 			if(verbose)
 				SelLog->Log('C', "\t\tRendezvous '%s' add in successful list", arg.c_str());
 			this->EventSuccessList.Add(event->second);
-//			event->second->addHandler( dynamic_cast<Handler *>(this) );
 		} else {
 			SelLog->Log('F', "\t\tRendezvous '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
-		}		
+		}
+	} else if(!!(arg = striKWcmp( l, "-->> FailRDV=" ))){
+		EventCollection::iterator event;
+		if( (event = config.EventsList.find(arg)) != config.EventsList.end()){
+			if(verbose)
+				SelLog->Log('C', "\t\tRendezvous '%s' add in successful list", arg.c_str());
+			this->EventFailList.Add(event->second);
+		} else {
+			SelLog->Log('F', "\t\tRendezvous '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
 	} else
 		this->Object::readConfigDirective(l, name, nameused);
 }
@@ -181,14 +190,6 @@ bool Archiving::internalExec(void){
 		}
 
 		cmd += " ON CONFLICT DO NOTHING";
-
-/*
-INSERT INTO electricity_power_archive
-SELECT DATE_TRUNC('day', sample_time) AS frame, figure,
-MIN(value), MAX(value), AVG(value)
-FROM electricity_power
-GROUP BY frame, figure;
- */
 		break;
 	case _kind::DELTA :
 		cmd += " SELECT DATE_TRUNC(";
@@ -223,8 +224,8 @@ GROUP BY frame, figure;
 	}
 
 	if(!this->doSQL(cmd.c_str())){
-		this->disconnect();
 		SelLog->Log('E', "['%s'] %s", this->getNameC(), this->lastError());
+		this->disconnect();
 		return false;
 	}
 
@@ -234,6 +235,13 @@ GROUP BY frame, figure;
 
 bool Archiving::execAsync(lua_State *){
 	bool ret = internalExec();
+
+	if(ret)
+		for(auto &i : this->EventSuccessList)
+			i->execHandlers();
+	else
+		for(auto &i : this->EventFailList)
+			i->execHandlers();
 
 	return ret;
 }
