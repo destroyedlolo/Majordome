@@ -101,6 +101,12 @@ this feed will be triggered when this timer is exhausted.
 ### Notification
 [**Rendez-vous**](../rendezvous.md) are triggered when the archiving process is terminated.
 
+> [!NOTE]
+> Handlers attached to these rendez-vous will be called asynchronously. 
+
+> [!CAUTION]
+> if the archiving is disabled, no rendezvous will be triggered
+
 > [!TIP]
 > If you want the rendez-vous to be called whatever the result, put it in both.
 
