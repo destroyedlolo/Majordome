@@ -119,6 +119,17 @@ void Archiving::readConfigDirective( std::string &l, std::string &name, bool &na
 		this->upto= arg;
 		if(verbose)
 			SelLog->Log('C', "\t\tUp to : %s", arg.c_str());
+	} else if(!!(arg = striKWcmp( l, "-->> SuccessRDV=" ))){
+		EventCollection::iterator event;
+		if( (event = config.EventsList.find(arg)) != config.EventsList.end()){
+			if(verbose)
+				SelLog->Log('C', "\t\tRendezvous '%s' add in successful list", arg.c_str());
+			this->EventSuccessList.Add(event->second);
+//			event->second->addHandler( dynamic_cast<Handler *>(this) );
+		} else {
+			SelLog->Log('F', "\t\tRendezvous '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}		
 	} else
 		this->Object::readConfigDirective(l, name, nameused);
 }
@@ -130,7 +141,7 @@ const char *Archiving::getTableName(void){
 		return(this->getNameC());
 }
 
-bool Archiving::execAsync(lua_State *){
+bool Archiving::internalExec(void){
 	if(!this->connect())
 		return false;
 
@@ -211,9 +222,18 @@ GROUP BY frame, figure;
 		break;
 	}
 
-	if(!this->doSQL(cmd.c_str()))
+	if(!this->doSQL(cmd.c_str())){
+		this->disconnect();
 		SelLog->Log('E', "['%s'] %s", this->getNameC(), this->lastError());
+		return false;
+	}
 
 	this->disconnect();
 	return true;
+}
+
+bool Archiving::execAsync(lua_State *){
+	bool ret = internalExec();
+
+	return ret;
 }

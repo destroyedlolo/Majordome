@@ -9,10 +9,14 @@
 #include "../ObjCollection.h"
 #include "../MayBeEmptyString.h"
 #include "../StringVector.h"
+#include "../Event.h"
 
 class Archiving : virtual public mpgConnection, virtual public Handler {
-	void feedState(lua_State *){};
+	EventVector EventSuccessList;
+	EventVector EventFailList;
 
+	void feedState(lua_State *){};
+	bool internalExec(void);
 protected:
 	void readConfigDirective( std::string &l, std::string &name, bool &nameused );
 
