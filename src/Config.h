@@ -24,6 +24,7 @@
 #	include "pgsql/pgSQL.h"
 #	include "pgsql/Feed.h"
 #	include "pgsql/NamedFeed.h"
+#	include "pgsql/Archiving.h"
 #endif
 
 #ifdef TOILE
@@ -72,6 +73,7 @@ public:
 
 	FeedCollection FeedsList;
 	NamedFeedCollection NamedFeedsList;
+	ArchivingCollection ArchivingsList;
 #endif
 
 #ifdef TOILE

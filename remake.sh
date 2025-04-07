@@ -73,7 +73,7 @@ cd src
 SOURCES='*.cpp'
 LIBS=''
 
-if [ -Z ${PGSQL+x} ]; then
+if [ -z ${PGSQL+x} ]; then
 	echo "PostgreSQL : not compiled"
 else
 	echo "PostgreSQL : included"

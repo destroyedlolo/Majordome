@@ -6,13 +6,12 @@
 #include "mpgConnection.h"
 #include "../Object.h"
 #include "../Handler.h"
-#include "../HandlersExecutor.h"
 #include "../ObjCollection.h"
 #include "../MayBeEmptyString.h"
 
 class pgSQL;
 
-class Feed : virtual public mpgConnection, virtual public Handler, virtual public HandlersExecutor {
+class Feed : virtual public mpgConnection, virtual public Handler {
 	virtual void feedState(lua_State *L);
 
 		/* Executable */
