@@ -236,6 +236,9 @@ bool Archiving::internalExec(void){
 bool Archiving::execAsync(lua_State *){
 	bool ret = internalExec();
 
+	if(!this->isQuiet())
+		SelLog->Log('I', "['%s'] as %s run", this->getNameC(), ret ? "successfully" : "unsuccessfully");
+
 	if(ret)
 		for(auto &i : this->EventSuccessList)
 			i->execHandlers();
