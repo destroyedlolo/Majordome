@@ -1,0 +1,32 @@
+-- This is an example of Painting (sub surface)
+--
+-- In the header of the script (comment bloc at the very beginning of
+-- the script), each line starting with -->> are Majordome's commands.
+-- Consequently, '--->>' are commented out commands.
+--
+-- Name of this Painting
+-- if not set, takes the filename
+--->> name=Toto
+--
+-- Parent of this Painting
+-- Only one can be present
+-->> Renderer Parent=LCD
+--->> Painting Parent=another painting
+--
+-- Origin of the surface
+-- 0,0 by default
+-->> Origin=5,2
+--
+-- Size of the surface
+-- If not set, trying to get it from parent
+-->> Size=10x2
+-- Notez-Bien :
+--	- set to the size of the parent if the origin is outsize parent surface
+--
+-- Disable this painting
+--->> disabled
+--
+-- remove some trace
+-- This option is useful to avoid logging of very noisy topics
+--->> quiet
+

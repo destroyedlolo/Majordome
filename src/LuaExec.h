@@ -125,11 +125,16 @@ public:
 		// (default as well if we don't care about the result)
 	bool execSync(lua_State *L, enum boolRetCode *rc=NULL);
 
-		// boolean or value forced
+		// boolean or value forced (numeric only)
 	bool execSync(lua_State *L, enum boolRetCode *rc, lua_Number *retn);
 
-		// name + boolean or value forced
-	bool execSync(lua_State *L, std::string *rs, enum boolRetCode *rc, lua_Number *retn);	
+		// boolean or value forced (numeric or string)
+	bool execSync(lua_State *L, enum boolRetCode *rc, lua_Number *retn, std::string *rs);
+
+		// name + boolean or value forced (numeric only)
+	bool execSync(lua_State *L, std::string *rs, enum boolRetCode *rc, lua_Number *retn);
+
+		// no name + bool or value forced (numeric or string) as not needed for the moment
 };
 
 #endif

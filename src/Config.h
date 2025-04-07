@@ -27,6 +27,13 @@
 #	include "pgsql/Archiving.h"
 #endif
 
+#ifdef TOILE
+#	include "Toile/Renderer.h"
+#	include "Toile/Painting.h"
+#	include "Toile/Decoration.h"
+#	include "Toile/Field.h"
+#endif
+
 #include <lua.hpp>	/* Lua's state needed */
 #include <string>
 
@@ -68,6 +75,13 @@ public:
 	NamedFeedCollection NamedFeedsList;
 	ArchivingCollection ArchivingsList;
 #endif
+
+#ifdef TOILE
+	RendererCollection RendererList;
+	PaintingCollection PaintingList;
+	DecorationCollection DecorationList;
+#endif
+
 		/* Topics' */
 	void SubscribeTopics( void );	// Subscribe to defined MQTT topics
 

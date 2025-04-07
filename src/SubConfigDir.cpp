@@ -228,6 +228,10 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 			} else
 				cfg.ArchivingsList.insert( std::make_pair(name, f) );
 #endif
+#	ifdef TOILE
+		} else if(Toile::readConfigToile(cfg, completpath, where, ext, L)){
+			;
+#	endif
 #	ifdef DEBUG
 		} else 
 			if(debug)
