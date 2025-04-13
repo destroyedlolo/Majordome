@@ -219,7 +219,7 @@ bool Archiving::internalExec(void){
 			PQfreemem(t);
 		}
 
-		cmd += "ON CONFLICT DO NOTHING";
+		cmd += " ON CONFLICT DO NOTHING";
 		break;
 	}
 
