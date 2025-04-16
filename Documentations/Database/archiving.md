@@ -45,7 +45,8 @@ Archiving method as :
 
 ##### MinMax
 
-**Min / Max / Average** statistics. It's the default method.Targeting a table like
+**Min / Max / Average** statistics. It's the default method.
+Targeting a table like
 
 ```
    Column    |           Type           | Collation | Nullable | Default 
@@ -54,6 +55,17 @@ Archiving method as :
  minimum     | integer                  |           |          | 
  maximum     | integer                  |           |          | 
  average     | integer                  |           |          | 
+```
+
+##### Sum
+
+Sumarize data of the time frame. It's targeting a table like
+
+```
+   Column    |           Type           | Collation | Nullable | Default 
+-------------+--------------------------+-----------+----------+---------
+ sample_time | timestamp with time zone |           |          | 
+ value       | integer                  |           |          | 
 ```
 
 ##### Delta

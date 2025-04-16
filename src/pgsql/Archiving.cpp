@@ -90,6 +90,10 @@ void Archiving::readConfigDirective( std::string &l, std::string &name, bool &na
 			this->kind = _kind::MINMAX;
 			if(verbose)
 				SelLog->Log('C', "\t\tKind : MinMax");
+		} else if(arg == "Sum"){
+			this->kind = _kind::SUM;
+			if(verbose)
+				SelLog->Log('C', "\t\tKind : Sum");
 		} else if(arg == "Delta"){
 			this->kind = _kind::DELTA;
 			if(verbose)
@@ -173,6 +177,36 @@ bool Archiving::internalExec(void){
 		}
 
 		cmd += ", MIN(value), MAX(value), AVG(value) FROM ";
+
+		cmd += (t = PQescapeIdentifier(this->conn, this->SourceName.c_str(), this->SourceName.length()));
+		PQfreemem(t);
+
+		cmd += " WHERE sample_time::date < current_date - interval ";
+
+		cmd += (t = PQescapeLiteral(this->conn, this->upto.c_str(), this->upto.length()));
+		PQfreemem(t);
+
+		cmd += " GROUP BY frame";
+		for(auto &i : this->keys){
+			cmd += ", ";
+			cmd += (t = PQescapeIdentifier(this->conn, i.c_str(), i.length()));
+			PQfreemem(t);
+		}
+
+		cmd += " ON CONFLICT DO NOTHING";
+		break;
+	case _kind::SUM:
+		cmd += " SELECT DATE_TRUNC(";
+		cmd += (t = PQescapeLiteral(this->conn, this->Aggregation.c_str(), this->Aggregation.length()));
+		PQfreemem(t);
+		cmd += ", sample_time) AS frame";
+		for(auto &i : this->keys){
+			cmd += ", ";
+			cmd += (t = PQescapeIdentifier(this->conn, i.c_str(), i.length()));
+			PQfreemem(t);
+		}
+		
+		cmd += ", SUM(value) FROM ";
 
 		cmd += (t = PQescapeIdentifier(this->conn, this->SourceName.c_str(), this->SourceName.length()));
 		PQfreemem(t);
