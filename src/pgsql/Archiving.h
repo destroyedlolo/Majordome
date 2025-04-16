@@ -27,6 +27,7 @@ protected:
 		/* Archiving kind */
 	enum _kind {
 		MINMAX,	// Min, Max and average
+		SUM,	// Sumarize
 		DELTA	// Delta between the first and the last value
 	} kind;
 
