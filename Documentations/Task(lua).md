@@ -17,7 +17,7 @@ Unique name to identify the topic. If not set, uses the filename.
 ```
 -->> name=Toto
 ```
-#### --> quiet
+#### -->> quiet
 Removes some trace.
 
 #### -->> disabled
