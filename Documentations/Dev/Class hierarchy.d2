@@ -50,6 +50,14 @@ classes: {
 		shape: hexagon
 	}
 
+	Database:{
+		shape: cylinder
+	}
+
+	Sql: {
+		shape: queue
+		style.fill: yellowgreen
+	}
 }
 
 # Simple Objects
@@ -141,6 +149,34 @@ Tracker {
 Handler -> Tracker
 HandlersExecutor -> Tracker
 
+mpgConnection {
+	class: Database
+}
+
+pgSQL {
+	class: Database
+	style.fill: "linear-gradient(#888888, #f4a261)"
+}
+Object -> pgSQL
+mpgConnection -> pgSQL
+
+Feed {
+	class: Sql
+}
+mpgConnection -> Feed
+Handler -> Feed
+
+NamedFeed {
+	class: Sql
+}
+Feed -> NamedFeed
+
+Archiving {
+	class: Sql
+}
+mpgConnection -> Archiving
+Handler -> Archiving
+
 # Configuration
 
 Config: { 
@@ -183,6 +219,21 @@ Config: {
 		style.multiple: true
 		class: Shutdown
 	}
+
+	FeedsList {
+		style.multiple: true
+		class: Sql
+	}
+
+	NamedFeedsList {
+		style.multiple: true
+		class: Sql
+	}
+
+	pgSQLsList {
+		style.multiple: true
+		class: Database
+	}
 }
 
 Event -> Config.EventsList
@@ -193,3 +244,6 @@ Timer -> Config.TimersList
 MinMax -> Config.MinMaxList
 NamedMinMax -> Config.NamedMinMaxList
 Tracker -> Config.TrackersList
+mpgConnection -> Config.pgSQLsList
+Feed -> Config.FeedsList
+NamedFeed -> Config.NamedFeedsList
