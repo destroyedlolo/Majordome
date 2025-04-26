@@ -1,0 +1,195 @@
+vars: {
+  d2-config: {
+    layout-engine: elk
+    # Terminal theme code
+    theme-id: 100
+  }
+}
+
+# Styles
+# Make it easier to customize classes
+
+classes: {
+	Comment: {
+		style {
+			fill: transparent
+			italic: true
+			stroke: transparent
+		}
+	}
+
+	Task:{
+		shape: step
+	}
+
+	Event:{
+		shape: diamond
+	}
+
+	Topic:{
+		shape: document
+	}
+
+	Timer:{
+		shape: oval
+	}
+
+	MinMax:{
+		shape: hexagon
+	}
+
+	Tracker:{
+		shape: package
+	}
+
+	Shutdown:{
+		shape: step
+	}
+
+	Handler:{
+		shape: hexagon
+	}
+
+}
+
+# Simple Objects
+
+Object.com: {
+	class: Comment
+	label: General parameters
+}
+
+LuaExec {
+	class: Task
+	com {
+		class: Comment
+		label: Can run Lua code
+	}
+}
+Object -> LuaExec
+
+Event{
+	class: Event
+	com {
+		class: Comment
+		label: External will launch children 
+	}
+}
+Object -> Event
+
+Handler {
+	class: Handler
+	com {
+		class: Comment
+		label: Triggered when an event happens 
+	}
+}
+
+LuaExec -> Handler
+
+HandlersExecutor {
+	class: Handler
+	style.multiple: true
+	com {
+		class: Comment
+		label: Can execute handlers
+	}
+}
+
+Handler -> HandlersExecutor
+Object -> HandlersExecutor
+
+HandlersExecutor -> Event
+
+
+LuaTask {
+	class: Task
+}
+Handler -> LuaTask
+
+MinMax {
+	class: MinMax
+}
+Handler -> MinMax
+
+NamedMinMax {
+	class: MinMax
+}
+Handler -> NamedMinMax
+
+MQTTTopic {
+	class: Topic
+}
+Object -> MQTTTopic
+Event -> MQTTTopic
+
+Shutdown {
+	class: Shutdown
+}
+LuaExec -> Shutdown
+
+
+Timer {
+	class: Timer
+}
+Event -> Timer
+HandlersExecutor -> Timer
+
+Tracker {
+	class: Tracker
+}
+Handler -> Tracker
+HandlersExecutor -> Tracker
+
+# Configuration
+
+Config: { 
+	TopicsList {
+		style.multiple: true
+		class: Topic
+	}
+
+	EventsList {
+		style.multiple: true
+		class: Event
+	}
+
+	TimersList {
+		style.multiple: true
+		class: Timer
+	}
+
+	TrackersList {
+		style.multiple: true
+		class: Tracker
+	}
+
+	MinMaxList {
+		style.multiple: true
+		class: MinMax
+	}
+
+	NamedMinMaxList {
+		style.multiple: true
+		class: MinMax
+	}
+
+	TasksList {
+		style.multiple: true
+		class: Task
+	}
+
+	ShutdownsList {
+		style.multiple: true
+		class: Shutdown
+	}
+}
+
+Event -> Config.EventsList
+LuaTask -> Config.TasksList
+MQTTTopic -> Config.TopicsList
+Shutdown -> Config.ShutdownsList
+Timer -> Config.TimersList
+MinMax -> Config.MinMaxList
+NamedMinMax -> Config.NamedMinMaxList
+Tracker -> Config.TrackersList
