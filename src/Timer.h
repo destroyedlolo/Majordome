@@ -34,10 +34,10 @@ public:
 	 * -> where : file's directory
 	 * <- name : this object's name
 	 */
-	Timer( const std::string &file, std::string &where, std::string &name  );
+	Timer( const std::string &file, std::string &where );
 	virtual ~Timer() = default;	// Just to make this class polymorphic
 
-	void readConfigDirective( std::string &l, std::string &name, bool &nameused );
+	virtual void readConfigDirective(std::string &l);
 
 	/* Timers are handled through a dedicated thread ...
 	 * A pointer to this object is passed to it.

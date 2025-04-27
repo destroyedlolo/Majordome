@@ -22,18 +22,18 @@ const char *striKWcmp(const char *s, const char *kw){
 		return s+klen;
 }
 
-MayBeEmptyString striKWcmp(const std::string s, const char *kw){
+std::string striKWcmp(const std::string s, const char *kw){
 	size_t l = strlen( kw );
 
 	if(!s.compare(0, l, kw))
-		return MayBeEmptyString( s.substr(l) );
-	return MayBeEmptyString();
+		return std::string( s.substr(l) );
+	return std::string();
 }
 
-MayBeEmptyString striKWcmp(const std::string &s, const std::string &kw ){
+std::string striKWcmp(const std::string &s, const std::string &kw ){
 	if(!s.compare(0, kw.size(), kw))
-		return MayBeEmptyString( s.substr(kw.size()) );
-	return MayBeEmptyString();
+		return std::string( s.substr(kw.size()) );
+	return std::string();
 }
 
 const char *fileextention( const char *fch ){

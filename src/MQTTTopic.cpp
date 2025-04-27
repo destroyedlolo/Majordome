@@ -67,23 +67,23 @@ MQTTTopic::MQTTTopic(const std::string &fch, std::string &where, std::string &na
 #endif
 }
 
-void MQTTTopic::readConfigDirective( std::string &l, std::string &name, bool &nameused ){
-	MayBeEmptyString arg;
+void MQTTTopic::readConfigDirective(std::string &l){
+	std::string arg;
 
-	if( !!(arg = striKWcmp( l, "-->> topic=" ))){
+	if(!(arg = striKWcmp( l, "-->> topic=" )).empty()){
 		this->topic = std::regex_replace(arg, std::regex("%ClientID%"), MQTT_ClientID);
 		if(verbose)
 			SelLog->Log('C', "\t\ttopic : '%s'", this->topic.c_str());
-	} else if( !!(arg = striKWcmp( l, "-->> qos=" ))){
+	} else if(!(arg = striKWcmp( l, "-->> qos=" )).empty()){
 		if((this->qos = stoi(arg)) > 2)	// If invalid
 			this->qos = 0;
 		if(verbose)
 			SelLog->Log('C', "\t\tqos : '%d'", this->qos);
-	} else if( l == "-->> store" ){
+	} else if(l == "-->> store"){
 		if(verbose)
 			SelLog->Log('C', "\t\tStore in a SelSharedVar");
 		this->store = true;
-	} else if( l == "-->> numeric" ){
+	} else if(l == "-->> numeric"){
 		if(this->alreadydefault){
 			SelLog->Log('F',"'default' must be set after 'numeric'");
 			exit(EXIT_FAILURE);
@@ -91,7 +91,7 @@ void MQTTTopic::readConfigDirective( std::string &l, std::string &name, bool &na
 		if(verbose)
 			SelLog->Log('C', "\t\tStore as a numeric value");
 		this->numeric = true;
-	} else if( !!(arg = striKWcmp( l, "-->> ttl=" )) ){
+	} else if(!(arg = striKWcmp( l, "-->> ttl=" )).empty()){
 		if(this->alreadydefault){
 			SelLog->Log('F',"'ttl' can't be set after 'default'");
 			exit(EXIT_FAILURE);
@@ -99,7 +99,7 @@ void MQTTTopic::readConfigDirective( std::string &l, std::string &name, bool &na
 		this->ttl = strtoul( arg.c_str(), NULL, 0 );
 		if(verbose)
 			SelLog->Log('C', "\t\tTTL = %lu", this->ttl);
-	} else if( !!(arg = striKWcmp( l, "-->> default=" )) ){
+	} else if(!(arg = striKWcmp( l, "-->> default=" )).empty()){
 		this->alreadydefault = true;
 		if( !this->toBeStored() )
 			SelLog->Log('E',"Default value is only useful for a stored topic");
@@ -122,14 +122,7 @@ void MQTTTopic::readConfigDirective( std::string &l, std::string &name, bool &na
 			}
 		}
 	} else 
-		this->Object::readConfigDirective(l, name, nameused);
-}
-
-bool MQTTTopic::match( const char *intopic ){
-	if( this->isEnabled() )
-		return(!SelMQTT->mqtttokcmp(this->getTopicC(), intopic));
-
-	return false;
+		this->Object::readConfigDirective(l);
 }
 
 void MQTTTopic::execHandlers(MQTTTopic &, const char *topic, const char *payload){

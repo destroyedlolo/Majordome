@@ -33,7 +33,8 @@
  *		It was only a PoC with bad programming habits.
  *	20/01/2025 - v6.00 - LF - Code redesign
  *	20/02/2025 - v6.01 - LF - Add PostgreSQL support
+ *	26/03/2025 - V6.02 - LF - Redesign configuration parsing
  */
 
-#define VERSION 6.0117
+#define VERSION 6.0200
 #define COPYRIGHT "Majordome (c) L.Faillie 2018-2025"

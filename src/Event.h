@@ -25,7 +25,7 @@ public:
 	 * -> where : file's directory
 	 * <- name : this object's name
 	 */
-	Event( const std::string &file, std::string &where, std::string &name  );
+	Event( const std::string &file, std::string &where );
 	Event(){};
 
 	void addHandler( Handler *h ){ this->push_back(h); }

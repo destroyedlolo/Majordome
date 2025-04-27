@@ -135,15 +135,14 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 			} else
 				cfg.TopicsList.insert( std::make_pair(name, tpc) );
 		} else if(ext == ".timer" ){
-			std::string name;
-			auto tmr = new Timer( completpath, where, name );
+			auto tmr = new Timer( completpath, where );
 
 			TimerCollection::iterator p;
-			if((p = cfg.TimersList.find(name)) != cfg.TimersList.end()){
-				SelLog->Log('F', "Timer '%s' is defined multiple times (previous one '%s')", name.c_str(), p->second->getWhereC());
+			if((p = cfg.TimersList.find(tmr->getName())) != cfg.TimersList.end()){
+				SelLog->Log('F', "Timer '%s' is defined multiple times (previous one '%s')", tmr->getNameC(), p->second->getWhereC());
 				exit(EXIT_FAILURE);
 			} else
-				cfg.TimersList.insert( std::make_pair(name, tmr) ).first;
+				cfg.TimersList.insert( std::make_pair(tmr->getName(), tmr) ).first;
 		} else if(ext == ".rendezvous"){
 			std::string name;
 			auto evt = new Event( completpath, where, name );
