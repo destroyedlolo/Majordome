@@ -115,15 +115,15 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 				cfg.TasksList.insert( std::make_pair(name, tsk) );
 		} else if(ext == ".shutdown"){
 			std::string name;
-			auto tsk = new Shutdown( completpath, where, name, L );
+			auto tsk = new Shutdown( completpath, where, L );
 			assert(tsk);
 	
 			ShutdownCollection::iterator prev;
-			if((prev = cfg.ShutdownsList.find(name)) != cfg.ShutdownsList.end()){
-				SelLog->Log('F', "Shutdown '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhere().c_str());
+			if((prev = cfg.ShutdownsList.find(tsk->getName())) != cfg.ShutdownsList.end()){
+				SelLog->Log('F', "Shutdown '%s' is defined multiple times (previous one '%s')", tsk->getNameC(), prev->second->getWhere().c_str());
 				exit(EXIT_FAILURE);
 			} else
-				cfg.ShutdownsList.insert( std::make_pair(name, tsk) );
+				cfg.ShutdownsList.insert( std::make_pair(tsk->getName(), tsk) );
 		} else if(ext == ".topic"){
 			std::string name;
 			auto tpc = new MQTTTopic( completpath, where, name );

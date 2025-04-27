@@ -9,7 +9,7 @@
 #include <regex>
 
 Tracker::Tracker(const std::string &fch, std::string &where, lua_State *L) : Object(fch, where), Handler(fch, where){
-	this->loadConfigurationFile(fch, where);
+	this->loadConfigurationFile(fch, where,L);
 }
 
 void Tracker::readConfigDirective( std::string &l ){

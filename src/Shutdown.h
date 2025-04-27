@@ -17,7 +17,7 @@ public:
 	 * <- name : this object's name
 	 * -> L : Lua's state
 	 */
-	Shutdown( const std::string &file, std::string &where, std::string &name, lua_State *L );
+	Shutdown( const std::string &file, std::string &where, lua_State *L );
 
 	void exec( void );
 
