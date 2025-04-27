@@ -19,6 +19,9 @@ class Event : virtual public Object, virtual public HandlersExecutor {
 	TrackerVector trackersToEnable;
 	TrackerVector trackersToDisable;
 
+protected:
+	virtual void readConfigDirective(std::string &l);
+
 public:
 	/* Constructor from a file
 	 * -> file : file to load
