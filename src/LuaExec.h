@@ -20,6 +20,9 @@ class LuaExec : virtual public Object {
 
 	bool prepareExecSync(lua_State *L);
 
+protected:
+	void loadConfigurationFile(const std::string &fch, std::string &where, lua_State *L);
+
 public:
 	enum boolRetCode { 
 		RCnil=-1,		// no return

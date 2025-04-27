@@ -6,6 +6,7 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
+#include <iostream>
 #include <string>
 
 class Object {
@@ -23,7 +24,7 @@ protected:
 		 *
 		 * Need to be explicitly called from derived's constructor.
 		 */
-	void loadConfigurationFile(const std::string &fch, std::string &where, lua_State *L=NULL);
+	void loadConfigurationFile(const std::string &fch, std::string &where, std::stringstream *buffer=NULL);
 
 		/* Read configuration directive
 		 * l -> string to read

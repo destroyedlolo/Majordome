@@ -2,7 +2,6 @@
 #include "Selene.h"
 #include "Helpers.h"
 
-#include <iostream>
 #include <fstream>
 #include <regex>
 
@@ -11,7 +10,7 @@
 Object::Object(const std::string &fch, std::string &where) : disabled(false), quiet(false){
 }
 
-void Object::loadConfigurationFile(const std::string &fch, std::string &where){
+void Object::loadConfigurationFile(const std::string &fch, std::string &where, std::stringstream *buffer){
 	if(verbose)
 		SelLog->Log('L', "\t'%s'", fch.c_str());
 
@@ -22,7 +21,6 @@ void Object::loadConfigurationFile(const std::string &fch, std::string &where){
 		/*
 		 * Read the configuration file
 		 */
-	std::stringstream buffer;
 	std::ifstream file;
 	file.exceptions ( std::ios::eofbit | std::ios::failbit );
 	try {
@@ -51,8 +49,8 @@ void Object::loadConfigurationFile(const std::string &fch, std::string &where){
 		 * Reading the remaining of the script and keep it as 
 		 * an Lua's script
 		 */
-
-		buffer << file.rdbuf();
+		if(buffer)
+			*buffer << file.rdbuf();
 		file.close();
 	} catch(const std::ifstream::failure &e){
 		if(!file.eof()){
@@ -60,9 +58,6 @@ void Object::loadConfigurationFile(const std::string &fch, std::string &where){
 			exit(EXIT_FAILURE);
 		}
 	}
-
-	if( L && !this->LoadFunc( L, buffer, this->name.c_str() ))
-		exit(EXIT_FAILURE);
 }
 
 void Object::extrName( const std::string &fch, std::string &name){

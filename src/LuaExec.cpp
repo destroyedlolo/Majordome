@@ -50,6 +50,14 @@ bool LuaExec::LoadFunc( lua_State *L, std::stringstream &buffer, const char *nam
 	return true;
 }
 
+void loadConfigurationFile(const std::string &fch, std::string &where, lua_State *L){
+	std::stringstream buffer;
+	this->loadConfigurationFile(fch, where, &buffer);
+
+	if( !this->LoadFunc( L, buffer, this->name.c_str() ))
+		exit(EXIT_FAILURE);
+}
+
 void LuaExec::readConfigDirective( std::string &l, std::string &name, bool &nameused ){
 	MayBeEmptyString arg;
 
