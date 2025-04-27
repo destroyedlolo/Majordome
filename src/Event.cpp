@@ -12,7 +12,7 @@ Event::Event(const std::string &fch, std::string &where) : Object(fch, where){
 	this->loadConfigurationFile(fch, where);
 }
 
-void readConfigDirective(std::string &l){
+void Event::readConfigDirective(std::string &l){
 		/* No specific directive */
 	this->Object::readConfigDirective(l);
 }

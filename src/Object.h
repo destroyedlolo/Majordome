@@ -23,7 +23,7 @@ protected:
 		 *
 		 * Need to be explicitly called from derived's constructor.
 		 */
-	void loadConfigurationFile(const std::string &fch, std::string &where);
+	void loadConfigurationFile(const std::string &fch, std::string &where, lua_State *L=NULL);
 
 		/* Read configuration directive
 		 * l -> string to read

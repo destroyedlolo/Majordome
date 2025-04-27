@@ -10,7 +10,9 @@ class HandlersExecutor;
 
 class Handler : public LuaExec {
 protected :
-	Handler(const std::string &fch, std::string &where, std::string &name) : LuaExec(fch, where, name) {};
+	Handler(const std::string &fch, std::string &where) : LuaExec(fch, where) {};
+
+	virtual void readConfigDirective(std::string &l);
 
 public :
 

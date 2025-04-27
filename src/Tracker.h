@@ -20,7 +20,7 @@ class Tracker : public Handler, virtual public HandlersExecutor {	// HandlersExe
 	TaskVector stoppingTasks;	// Tasks to launch when stopping the tracker
 	TaskVector changingTasks;	// Tasks to launch when the tracker's status is changing
 
-	void readConfigDirective( std::string &l, std::string &name, bool &nameused );
+	virtual void readConfigDirective( std::string &l );
 
 public:
 	enum _status {
@@ -45,7 +45,7 @@ public:
 	 * <- name : this object's name
 	 * -> L : Lua's state
 	 */
-	Tracker( const std::string &file, std::string &where, std::string &name, lua_State *L );
+	Tracker( const std::string &file, std::string &where, lua_State *L );
 
 	virtual void feedState(lua_State *L);
 	void feedHandlersState(lua_State *L);

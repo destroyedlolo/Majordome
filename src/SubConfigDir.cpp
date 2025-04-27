@@ -145,17 +145,17 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 				cfg.TimersList.insert( std::make_pair(tmr->getName(), tmr) ).first;
 		} else if(ext == ".rendezvous"){
 			std::string name;
-			auto evt = new Event( completpath, where, name );
+			auto evt = new Event(completpath, where);
 
 			EventCollection::iterator prev;
-			if((prev = cfg.EventsList.find(name)) != cfg.EventsList.end()){
-				SelLog->Log('F', "Event '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhereC());
+			if((prev = cfg.EventsList.find(evt->getName())) != cfg.EventsList.end()){
+				SelLog->Log('F', "Event '%s' is defined multiple times (previous one '%s')", evt->getNameC(), prev->second->getWhereC());
 				exit(EXIT_FAILURE);
 			} else
-				cfg.EventsList.insert( std::make_pair(name, evt) );
+				cfg.EventsList.insert( std::make_pair(evt->getName(), evt) );
 		} else if(ext == ".tracker"){
 			std::string name;
-			auto trk = new Tracker( completpath, where, name, L );
+			auto trk = new Tracker( completpath, where, L );
 	
 			TrackerCollection::iterator prev;
 			if((prev = cfg.TrackersList.find(name)) != cfg.TrackersList.end()){

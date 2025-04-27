@@ -61,6 +61,8 @@ void Object::loadConfigurationFile(const std::string &fch, std::string &where){
 		}
 	}
 
+	if( L && !this->LoadFunc( L, buffer, this->name.c_str() ))
+		exit(EXIT_FAILURE);
 }
 
 void Object::extrName( const std::string &fch, std::string &name){
