@@ -29,7 +29,7 @@ public:
 	 * -> where : file's directory
 	 * <- name : this object's name
 	 */
-	MQTTTopic( const std::string &file, std::string &where, std::string &name  );
+	MQTTTopic( const std::string &file, std::string &where );
 	
 		/* Accessors */
 	std::string &getTopic( void ){ return this->topic; };

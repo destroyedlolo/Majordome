@@ -104,15 +104,15 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 			}
 		} else if(ext == ".lua"){
 			std::string name;
-			auto tsk = new LuaTask( completpath, where, name, L );
+			auto tsk = new LuaTask( completpath, where, L );
 			assert(tsk);
 	
 			TaskCollection::iterator prev;
-			if((prev = cfg.TasksList.find(name)) != cfg.TasksList.end()){
-				SelLog->Log('F', "Task '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhere().c_str());
+			if((prev = cfg.TasksList.find(tsk->getName())) != cfg.TasksList.end()){
+				SelLog->Log('F', "Task '%s' is defined multiple times (previous one '%s')", tsk->getNameC(), prev->second->getWhere().c_str());
 				exit(EXIT_FAILURE);
 			} else
-				cfg.TasksList.insert( std::make_pair(name, tsk) );
+				cfg.TasksList.insert( std::make_pair(tsk->getName(), tsk) );
 		} else if(ext == ".shutdown"){
 			std::string name;
 			auto tsk = new Shutdown( completpath, where, L );
@@ -126,14 +126,14 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 				cfg.ShutdownsList.insert( std::make_pair(tsk->getName(), tsk) );
 		} else if(ext == ".topic"){
 			std::string name;
-			auto tpc = new MQTTTopic( completpath, where, name );
+			auto tpc = new MQTTTopic( completpath, where );
 
 			TopicCollection::iterator prev;
-			if((prev = cfg.TopicsList.find(name)) != cfg.TopicsList.end()){
-				SelLog->Log('F', "Topic '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhereC());
+			if((prev = cfg.TopicsList.find(tpc->getName())) != cfg.TopicsList.end()){
+				SelLog->Log('F', "Topic '%s' is defined multiple times (previous one '%s')", tpc->getNameC(), prev->second->getWhereC());
 				exit(EXIT_FAILURE);
 			} else
-				cfg.TopicsList.insert( std::make_pair(name, tpc) );
+				cfg.TopicsList.insert( std::make_pair(tpc->getName(), tpc) );
 		} else if(ext == ".timer" ){
 			auto tmr = new Timer( completpath, where );
 
@@ -165,24 +165,24 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 				cfg.TrackersList.insert( std::make_pair(name, trk) );
 		} else if(ext == ".minmax"){
 			std::string name;
-			auto trk = new MinMax(completpath, where, name, L );
+			auto trk = new MinMax(completpath, where, L );
 	
 			MinMaxCollection::iterator prev;
-			if((prev = cfg.MinMaxList.find(name)) != cfg.MinMaxList.end()){
-				SelLog->Log('F', "MinMax '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhere().c_str());
+			if((prev = cfg.MinMaxList.find(trk->getName())) != cfg.MinMaxList.end()){
+				SelLog->Log('F', "MinMax '%s' is defined multiple times (previous one '%s')", trk->getNameC(), prev->second->getWhere().c_str());
 				exit(EXIT_FAILURE);
 			} else
-				cfg.MinMaxList.insert( std::make_pair(name, trk) );
+				cfg.MinMaxList.insert( std::make_pair(trk->getName(), trk) );
 		} else if(ext == ".namedminmax"){
 			std::string name;
-			auto trk = new NamedMinMax(completpath, where, name, L );
+			auto trk = new NamedMinMax(completpath, where, L );
 	
 			NamedMinMaxCollection::iterator prev;
-			if((prev = cfg.NamedMinMaxList.find(name)) != cfg.NamedMinMaxList.end()){
-				SelLog->Log('F', "NamedMinMax '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhere().c_str());
+			if((prev = cfg.NamedMinMaxList.find(trk->getName())) != cfg.NamedMinMaxList.end()){
+				SelLog->Log('F', "NamedMinMax '%s' is defined multiple times (previous one '%s')", trk->getNameC(), prev->second->getWhere().c_str());
 				exit(EXIT_FAILURE);
 			} else
-				cfg.NamedMinMaxList.insert( std::make_pair(name, trk) );
+				cfg.NamedMinMaxList.insert( std::make_pair(trk->getName(), trk) );
 #ifdef DBASE
 #	ifdef PGSQL
 		} else if(ext == ".pgsql"){

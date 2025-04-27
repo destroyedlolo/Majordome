@@ -25,9 +25,9 @@ public:
 	 * <- name : this object's name
 	 * -> L : Lua's state
 	 */
-	LuaTask( const std::string &file, std::string &where, std::string &name, lua_State *L );
+	LuaTask( const std::string &file, std::string &where, lua_State *L );
 
-	virtual void readConfigDirective( std::string &l, std::string &name, bool &nameused );
+	virtual void readConfigDirective( std::string &l );
 
 	void setOnce( bool v ){ this->once = v; }
 	bool getOnce( void ){ return this->once; }

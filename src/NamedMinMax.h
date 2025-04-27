@@ -20,7 +20,7 @@ public:	// Made public only to let Lua enumerates
 	std::unordered_map<std::string, lua_Number> sum;
 
 private:
-	virtual void readConfigDirective( std::string &l, std::string &name, bool &nameused );
+	virtual void readConfigDirective( std::string &l );
 	virtual void feedState(lua_State *L);
 
 public:
@@ -30,7 +30,7 @@ public:
 	 * <- name : this object's name
 	 * -> L : Lua's state
 	 */
-	NamedMinMax( const std::string &file, std::string &where, std::string &name, lua_State *L );
+	NamedMinMax( const std::string &file, std::string &where, lua_State *L );
 
 		/* Executable */
 	virtual bool execAsync(lua_State *L);	// Overloading to handle MinMax data feeding
