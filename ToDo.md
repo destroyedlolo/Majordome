@@ -2,6 +2,7 @@
 
 ## General
 - [X] Ensure inherance
+- [ ] D2 generation
 
 ## Devices
 ### LCD

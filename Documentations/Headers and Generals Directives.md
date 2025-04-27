@@ -24,3 +24,24 @@ The first line without these double dash (as line **9**) means that we're not an
 
 Each line starting with `-->>` (line **5**) are Majordome's directives.<br>
 If you want to comment out a directive, use `--->>`, notice the 3 dashes (line **6**).
+
+## General directives
+The following directives are applicable to all Majordome's objects.
+
+### -->> name=
+Unique name to identify the object. If not set, uses the filename.
+```
+-->> name=Toto
+```
+### -->> quiet
+Removes some trace.
+
+### -->> disabled
+This object is disabled : 
+- if a script is not be executed
+- if a MQTTTopic, the incoming messages will be ignored
+- if a timer, it will not trigger children
+
+### -->> desc=
+Add a description to the object.<br>
+This field is useful to generate a small description in automatic generated diagrams (using **D2**, see [Majordome **-2**](Readme.md) option).

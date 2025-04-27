@@ -17,6 +17,9 @@ Some examples are provided also in [SamplesCode](SamplesCode/) and [UseCases](Us
 - `-r` : enable trace messages, even more verbose, noisy
 - `-V` : silence topic arrival messages. Avoid verbosity to be polluted but incoming messages tracking which is very noisy.
 
+## Automatic documentation generation
+- `-2` : Generates a [d2](https://d2lang.com/) script in order to generate application diagrams.
+
 # Majordome own configuration file
 
 A configuration file instructs Majordome about its basic configuration and where are located automation objects.<br>
