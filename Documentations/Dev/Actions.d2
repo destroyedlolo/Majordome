@@ -1,0 +1,43 @@
+...@Style.d2
+
+topic {
+	class : Topic
+}
+
+timer {
+	class : Timer
+}
+
+rendezvous {
+	class : Event
+}
+
+tracker {
+	class : Tracker
+}
+
+Tasks {
+	class : task
+}
+
+topic -> Tasks : listen
+rendezvous -> Tasks : waitfor
+timer-> Tasks : when
+tracker -> Tasks : whenDone
+tracker -> Tasks : whenStopped
+tracker -> Tasks : whenChanged
+
+
+MinMax : "*minmax" {
+	class : MinMax
+}
+
+topic -> MinMax : listen
+topic -> tracker : listen
+
+tracker -> rendezvous : enableRDV
+tracker -> rendezvous : disableRDV
+tracker -> topic : statustopic
+
+timer -> tracker : start
+timer -> tracker : stop

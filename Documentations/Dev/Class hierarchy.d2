@@ -6,59 +6,7 @@ vars: {
   }
 }
 
-# Styles
-# Make it easier to customize classes
-
-classes: {
-	Comment: {
-		style {
-			fill: transparent
-			italic: true
-			stroke: transparent
-		}
-	}
-
-	Task:{
-		shape: step
-	}
-
-	Event:{
-		shape: diamond
-	}
-
-	Topic:{
-		shape: document
-	}
-
-	Timer:{
-		shape: oval
-	}
-
-	MinMax:{
-		shape: hexagon
-	}
-
-	Tracker:{
-		shape: package
-	}
-
-	Shutdown:{
-		shape: step
-	}
-
-	Handler:{
-		shape: hexagon
-	}
-
-	Database:{
-		shape: cylinder
-	}
-
-	Sql: {
-		shape: queue
-		style.fill: yellowgreen
-	}
-}
+...@Style.d2
 
 # Simple Objects
 
@@ -96,8 +44,7 @@ Handler {
 LuaExec -> Handler
 
 HandlersExecutor {
-	class: Handler
-	style.multiple: true
+	class: [Handler ; Collection]
 	com {
 		class: Comment
 		label: Can execute handlers
@@ -181,7 +128,6 @@ Handler -> Archiving
 
 Config: { 
 	TopicsList {
-		style.multiple: true
 		class: Topic
 	}
 
@@ -235,6 +181,7 @@ Config: {
 		class: Database
 	}
 }
+Config.*.style.multiple: true
 
 Event -> Config.EventsList
 LuaTask -> Config.TasksList
