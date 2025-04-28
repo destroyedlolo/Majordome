@@ -66,19 +66,19 @@ static void read_configuration(const char *fch){
 
 		file.open(fch);
 		while(std::getline( file, l)){
-			MayBeEmptyString arg;
+			std::string arg;
 
 			if( l[0]=='#' )
 				continue;
-			else if(!!(arg = striKWcmp( l, "Broker_URL=" ))){
+			else if(!(arg = striKWcmp( l, "Broker_URL=" )).empty()){
 				Broker_URL = arg.c_str();
 				if(verbose)
 					SelLog->Log('C', "Broker_URL : '%s'", Broker_URL.c_str());
-			} else if(!!(arg = striKWcmp( l, "ClientID=" ))){
+			} else if(!(arg = striKWcmp( l, "ClientID=" )).empty()){
 				MQTT_ClientID = arg.c_str();
 				if(verbose)
 					SelLog->Log('C', "Client ID : '%s'", MQTT_ClientID.c_str());
-			} else if(!!(arg = striKWcmp( l, "UserConfiguration=" )) || !!(arg = striKWcmp( l, "ApplicationDirectory=" ))){
+			} else if(!(arg = striKWcmp( l, "UserConfiguration=" )).empty() || !(arg = striKWcmp( l, "ApplicationDirectory=" )).empty()){
 				UserConfigRoot = arg.c_str();
 				if(verbose)
 					SelLog->Log('C', "User configuration directory : '%s'", UserConfigRoot.c_str());
