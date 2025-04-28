@@ -108,13 +108,13 @@ Object -> pgSQL
 mpgConnection -> pgSQL
 
 Feed {
-	class: Sql
+	class: [Sql ; Lua]
 }
 mpgConnection -> Feed
 Handler -> Feed
 
 NamedFeed {
-	class: Sql
+	class: [Sql ; Lua]
 }
 Feed -> NamedFeed
 
@@ -194,3 +194,5 @@ Tracker -> Config.TrackersList
 mpgConnection -> Config.pgSQLsList
 Feed -> Config.FeedsList
 NamedFeed -> Config.NamedFeedsList
+
+COnfig.*.style.stroke: black

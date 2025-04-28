@@ -41,3 +41,14 @@ tracker -> topic : statustopic
 
 timer -> tracker : start
 timer -> tracker : stop
+
+feed : '*feed' {
+	class: [Sql ; Lua]
+}
+feed <- topic : listen
+feed <- timer : when
+
+archive {
+	class: Sql
+}
+archive <- timer : when
