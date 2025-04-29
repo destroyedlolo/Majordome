@@ -8,66 +8,141 @@ vars: {
 
 ...@Style.d2
 
-topic {
-	class : Topic
+diagram {
+	style.fill: white
+	style.3d: false
+
+	topic {
+		class : Topic
+	}
+
+	timer {
+		class : Timer
+	}
+
+	rendezvous {
+		class : Event
+	}
+
+	tracker {
+		class : Tracker
+	}
+
+	Tasks {
+		class : task
+	}
+
+	topic -> Tasks : listen
+	rendezvous -> Tasks : waitfor
+	timer-> Tasks : when
+	tracker -> Tasks : whenDone
+	tracker -> Tasks : whenStopped
+	tracker -> Tasks : whenChanged
+
+
+	MinMax : "*minmax" {
+		class : MinMax
+	}
+
+	topic -> MinMax : listen
+	topic -> tracker : listen
+
+	tracker -> rendezvous : enableRDV
+	tracker -> rendezvous : disableRDV
+	tracker -> topic : statustopic
+
+	timer -> tracker : start
+	timer -> tracker : stop
+
+
+	feed : '*feed' {
+		class: [Sql ; Lua]
+	}
+
+	feed <- topic : listen
+	feed <- timer : when
+
+	archive {
+		class: Sql
+	}
+
+	archive <- timer {
+		label: when
+	}
+
+	(topic -> *)[*].style.stroke: coral
+	(* <- topic)[*].style.stroke: coral
+
+	(timer -> *)[*].style.stroke: darkorange
+	(* <- timer)[*].style.stroke: darkorange
+
+	(tracker -> *)[*].style.stroke: blueviolet
+	(* <- tracker)[*].style.stroke: blueviolet
+
 }
 
-timer {
-	class : Timer
+# """
+# Development information only
+
+Directives reading {
+	grid-columns: 2
+	shape: text
+	style {
+		font-size: 55
+		bold: true
+	}
+
+Object: |md
+# Object::readConfigDirective
+
+General purpose parameters
+
+- name
+- quiet
+- disabled
+- desc
+|
+
+LuaExec: |md
+# LuaExec::readConfigDirective
+
+Everything for Lua inclusion
+
+- need_task
+- need_rendezvous
+- need_topic
+- need_timer
+- need_tracker
+- need_minmax
+- need_namedminmax
+- need_shutdown
+- DATABASE
+  - need_pgSQL
+  - need_feed
+  - need_namedfeed
+- TOILE
+  - need_renderer
+- require_topic
+|
+
+NoData: |md
+# Handler::readConfigDirectiveNoData
+
+- timer
+  - when
+- rendezvous
+  - waitfor
+- tracker
+  - whenDone
+  - whenStopped
+  - whenChanged
+|
+
+withData: |md
+# Handler::readConfigDirectiveData
+- topic
+  - listen
+|
 }
 
-rendezvous {
-	class : Event
-}
-
-tracker {
-	class : Tracker
-}
-
-Tasks {
-	class : task
-}
-
-topic -> Tasks : listen
-rendezvous -> Tasks : waitfor
-timer-> Tasks : when
-tracker -> Tasks : whenDone
-tracker -> Tasks : whenStopped
-tracker -> Tasks : whenChanged
-
-
-MinMax : "*minmax" {
-	class : MinMax
-}
-
-topic -> MinMax : listen
-topic -> tracker : listen
-
-tracker -> rendezvous : enableRDV
-tracker -> rendezvous : disableRDV
-tracker -> topic : statustopic
-
-timer -> tracker : start
-timer -> tracker : stop
-
-feed : '*feed' {
-	class: [Sql ; Lua]
-}
-feed <- topic : listen
-feed <- timer : when
-
-archive {
-	class: Sql
-}
-archive <- timer {
-	label: when
-}
-
-(topic -> *)[*].style.stroke: coral
-(* <- topic)[*].style.stroke: coral
-
-(timer -> *)[*].style.stroke: darkorange
-(* <- timer)[*].style.stroke: darkorange
-
-(tracker -> *)[*].style.stroke: blueviolet
-(* <- tracker)[*].style.stroke: blueviolet
+# """
