@@ -1,3 +1,11 @@
+vars: {
+  d2-config: {
+    layout-engine: elk
+    # Terminal theme code
+    theme-id: 100
+  }
+}
+
 ...@Style.d2
 
 topic {
@@ -51,4 +59,7 @@ feed <- timer : when
 archive {
 	class: Sql
 }
-archive <- timer : when
+archive <- timer {
+	label: when
+}
+
