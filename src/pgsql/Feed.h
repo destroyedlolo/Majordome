@@ -22,11 +22,11 @@ class Feed : virtual public mpgConnection, virtual public Handler {
 	bool getNumerical(void){ return this->numerical; };
 #endif
 protected:
-	void readConfigDirective( std::string &l, std::string &name, bool &nameused );
+	void readConfigDirective( std::string &l );
 
 	MayBeEmptyString TableName;
 public:
-	Feed(const std::string &fch, std::string &where, std::string &name, lua_State *L);
+	Feed(const std::string &fch, std::string &where, lua_State *L);
 	virtual ~Feed(){};
 
 	/* Accessors */

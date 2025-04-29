@@ -12,7 +12,7 @@ class NamedFeed : virtual public Feed {
 	virtual bool execAsync(lua_State *L);	// Overloading to handle data acceptation 
 
 public:
-	NamedFeed(const std::string &, std::string &, std::string &, lua_State *);
+	NamedFeed(const std::string &, std::string &, lua_State *);
 	virtual ~NamedFeed(){};
 
 

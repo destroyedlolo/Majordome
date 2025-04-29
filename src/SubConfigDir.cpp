@@ -186,46 +186,42 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 #ifdef DBASE
 #	ifdef PGSQL
 		} else if(ext == ".pgsql"){
-			std::string name;
-			auto pg = new pgSQL( completpath, where, name );
+			auto pg = new pgSQL( completpath, where );
 
 			pgSQLCollection::iterator prev;
-			if((prev = cfg.pgSQLsList.find(name)) != cfg.pgSQLsList.end()){
-				SelLog->Log('F', "pgsql '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhereC());
+			if((prev = cfg.pgSQLsList.find(pg->getName())) != cfg.pgSQLsList.end()){
+				SelLog->Log('F', "pgsql '%s' is defined multiple times (previous one '%s')", pg->getNameC(), prev->second->getWhereC());
 				exit(EXIT_FAILURE);
 			} else
-				cfg.pgSQLsList.insert( std::make_pair(name, pg) );
+				cfg.pgSQLsList.insert( std::make_pair(pg->getName(), pg) );
 #	endif
 		} else if(ext == ".feed"){
-			std::string name;
-			auto f = new Feed( completpath, where, name, L );
+			auto f = new Feed( completpath, where, L );
 
 			FeedCollection::iterator prev;
-			if((prev = cfg.FeedsList.find(name)) != cfg.FeedsList.end()){
-				SelLog->Log('F', "Feed '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhereC());
+			if((prev = cfg.FeedsList.find(f->getName())) != cfg.FeedsList.end()){
+				SelLog->Log('F', "Feed '%s' is defined multiple times (previous one '%s')", f->getNameC(), prev->second->getWhereC());
 				exit(EXIT_FAILURE);
 			} else
-				cfg.FeedsList.insert( std::make_pair(name, f) );
+				cfg.FeedsList.insert( std::make_pair(f->getName(), f) );
 		} else if(ext == ".namedfeed"){
-			std::string name;
-			auto f = new NamedFeed( completpath, where, name, L );
+			auto f = new NamedFeed( completpath, where, L );
 
 			NamedFeedCollection::iterator prev;
-			if((prev = cfg.NamedFeedsList.find(name)) != cfg.NamedFeedsList.end()){
-				SelLog->Log('F', "NamedFeed '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhereC());
+			if((prev = cfg.NamedFeedsList.find(f->getName())) != cfg.NamedFeedsList.end()){
+				SelLog->Log('F', "NamedFeed '%s' is defined multiple times (previous one '%s')", f->getNameC(), prev->second->getWhereC());
 				exit(EXIT_FAILURE);
 			} else
-				cfg.NamedFeedsList.insert( std::make_pair(name, f) );
+				cfg.NamedFeedsList.insert( std::make_pair(f->getName(), f) );
 		} else if(ext == ".archiving"){
-			std::string name;
-			auto f = new Archiving( completpath, where, name, L );
+			auto f = new Archiving( completpath, where, L );
 
 			ArchivingCollection::iterator prev;
-			if((prev = cfg.ArchivingsList.find(name)) != cfg.ArchivingsList.end()){
-				SelLog->Log('F', "Archiving '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhereC());
+			if((prev = cfg.ArchivingsList.find(f->getName())) != cfg.ArchivingsList.end()){
+				SelLog->Log('F', "Archiving '%s' is defined multiple times (previous one '%s')", f->getNameC(), prev->second->getWhereC());
 				exit(EXIT_FAILURE);
 			} else
-				cfg.ArchivingsList.insert( std::make_pair(name, f) );
+				cfg.ArchivingsList.insert( std::make_pair(f->getName(), f) );
 #endif
 #	ifdef TOILE
 		} else if(Toile::readConfigToile(cfg, completpath, where, ext, L)){

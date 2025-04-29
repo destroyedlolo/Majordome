@@ -8,7 +8,7 @@
 #include <cstring>
 #include <cassert>
 
-NamedFeed::NamedFeed(const std::string &fch, std::string &where, std::string &name, lua_State *L) : Object(fch, where, name), Handler(fch, where, name), Feed(fch, where, name, L){
+NamedFeed::NamedFeed(const std::string &fch, std::string &where, lua_State *L) : Object(fch, where), Handler(fch, where), Feed(fch, where, L){
 }
 
 void NamedFeed::feedState( lua_State *L ){

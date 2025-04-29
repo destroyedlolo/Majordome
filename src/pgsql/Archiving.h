@@ -18,7 +18,7 @@ class Archiving : virtual public mpgConnection, virtual public Handler {
 	void feedState(lua_State *){};
 	bool internalExec(void);
 protected:
-	void readConfigDirective( std::string &l, std::string &name, bool &nameused );
+	void readConfigDirective( std::string &l );
 
 	std::string SourceName;
 	MayBeEmptyString TableName;
@@ -38,7 +38,7 @@ protected:
 	virtual bool execAsync(lua_State *L);	// Overloading to handle data acceptation
 
 public:
-	Archiving(const std::string &fch, std::string &where, std::string &name, lua_State *L);
+	Archiving(const std::string &fch, std::string &where, lua_State *L);
 
 	/* Accessors */
 	const char *getTableName(void);
