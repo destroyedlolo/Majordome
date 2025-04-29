@@ -14,19 +14,19 @@
 class lua_State;
 
 class pgSQL : public Object, public mpgConnection {
-	MayBeEmptyString conninfo;
+	std::string conninfo;
 
-	virtual void readConfigDirective( std::string &l, std::string &name, bool &nameused );
+	virtual void readConfigDirective( std::string &l );
 
 protected:
 public:
 	virtual const char *getNameC(){ return(this->Object::getNameC()); };
 	bool isQuiet(){ return this->Object::isQuiet(); };
 
-	pgSQL(const std::string &fch, std::string &where, std::string &name);
+	pgSQL(const std::string &fch, std::string &where);
 
-	bool asConnectionString(void){ return(!this->conninfo.isEmpty()); }
-	MayBeEmptyString &getConnectionString(void){ return this->conninfo; }
+	bool asConnectionString(void){ return(!this->conninfo.empty()); }
+	std::string &getConnectionString(void){ return this->conninfo; }
 
 	/* Create Lua's object */
 	static void initLuaInterface( lua_State *L );
