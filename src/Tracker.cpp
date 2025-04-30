@@ -31,7 +31,7 @@ void Tracker::readConfigDirective( std::string &l ){
 		if(verbose)
 			SelLog->Log('C', "\t\tHow many: '%d'", this->howmany);
 	} else if(!(arg = striKWcmp( l, "-->> statustopic=" )).empty()){
-		setStatusTopic( std::regex_replace(arg, std::regex("%ClientID%"), MQTT_ClientID) );
+		this->setStatusTopic( std::regex_replace(arg, std::regex("%ClientID%"), MQTT_ClientID) );
 		if(verbose)
 			SelLog->Log('C', "\t\tStatus topic : '%s'", this->getStatusTopic().c_str());
 	} else if(!(arg = striKWcmp( l, "-->> start=" )).empty()){

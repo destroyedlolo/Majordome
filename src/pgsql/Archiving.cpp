@@ -112,7 +112,7 @@ void Archiving::readConfigDirective( std::string &l ){
 }
 
 const char *Archiving::getTableName(void){
-	if(!!this->TableName)
+	if(!this->TableName.empty())
 		return(this->TableName.c_str());
 	else
 		return(this->getNameC());

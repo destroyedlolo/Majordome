@@ -6,7 +6,6 @@
 
 #include "../Object.h"
 #include "../ObjCollection.h"
-#include "../MayBeEmptyString.h"
 #include "mpgConnection.h"
 
 #include <string>

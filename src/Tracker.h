@@ -6,7 +6,6 @@
 #ifndef TRACKER_H
 #define TRACKER_H
 
-#include "MayBeEmptyString.h"
 #include "Handler.h"
 #include "HandlersExecutor.h"
 #include "ObjCollection.h"
@@ -31,7 +30,7 @@ public:
 
 private:
 	enum _status status;
-	MayBeEmptyString statusTopic;
+	std::string statusTopic;
 	unsigned int howmany;		// howmany consign
 	unsigned int hm_counter;	// actual counter value
 
@@ -56,8 +55,8 @@ public:
 	void resetCounter(void){ this->hm_counter = this->howmany; }
 
 	void setStatusTopic( std::string t ){ this->statusTopic = t; }
-	bool asStatusTopic( void ){ return !!this->statusTopic; }
-	MayBeEmptyString &getStatusTopic( void ){ return this->statusTopic; }
+	bool asStatusTopic( void ){ return !this->statusTopic.empty(); }
+	std::string &getStatusTopic( void ){ return this->statusTopic; }
 
 	/* Change tracker status */
 	void start( void );

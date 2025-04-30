@@ -7,7 +7,6 @@
 #include "../Object.h"
 #include "../Handler.h"
 #include "../ObjCollection.h"
-#include "../MayBeEmptyString.h"
 
 class pgSQL;
 
@@ -24,7 +23,7 @@ class Feed : virtual public mpgConnection, virtual public Handler {
 protected:
 	void readConfigDirective( std::string &l );
 
-	MayBeEmptyString TableName;
+	std::string TableName;
 public:
 	Feed(const std::string &fch, std::string &where, lua_State *L);
 	virtual ~Feed(){};

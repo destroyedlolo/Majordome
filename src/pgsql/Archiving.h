@@ -7,7 +7,6 @@
 #include "../Object.h"
 #include "../Handler.h"
 #include "../ObjCollection.h"
-#include "../MayBeEmptyString.h"
 #include "../StringVector.h"
 #include "../Event.h"
 
@@ -21,7 +20,7 @@ protected:
 	void readConfigDirective( std::string &l );
 
 	std::string SourceName;
-	MayBeEmptyString TableName;
+	std::string TableName;
 	std::string Aggregation;
 
 		/* Archiving kind */

@@ -17,7 +17,7 @@ MQTTTopic::MQTTTopic(const std::string &fch, std::string &where) : Object(fch, w
 	 * Sanity checks
 	 */
 
-	if( !this->topic ){
+	if( this->topic.empty() ){
 		SelLog->Log('F', "%s : No topic defined", fch.c_str() );
 		exit(EXIT_FAILURE);
 	}

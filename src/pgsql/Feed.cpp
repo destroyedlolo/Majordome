@@ -76,7 +76,7 @@ void Feed::feedState( lua_State *L ){
 }
 
 const char *Feed::getTableName(void){
-	if(!!this->TableName)
+	if(!this->TableName.empty())
 		return(this->TableName.c_str());
 	else
 		return(this->getNameC());
