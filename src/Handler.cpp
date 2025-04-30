@@ -87,7 +87,6 @@ bool Handler::readConfigDirectiveNoData(std::string &l){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded to tracker '%s' as Stopped task", arg.c_str());
 		 	tracker->second->addStopped( this );
-//			nameused = true;
 		} else {
 			SelLog->Log('F', "\t\tTracker '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
@@ -99,7 +98,6 @@ bool Handler::readConfigDirectiveNoData(std::string &l){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded to tracker '%s' as Changed task", arg.c_str());
 			tracker->second->addChanged( this );
-//			nameused = true;
 		} else {
 			SelLog->Log('F', "\t\ttracker '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
