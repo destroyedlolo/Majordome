@@ -16,9 +16,9 @@ class Tracker : public Handler, virtual public HandlersExecutor {	// HandlersExe
 
 
 		/* notifications */
-	TaskVector startingTasks;	// Tasks to launch when starting the tracker
-	TaskVector stoppingTasks;	// Tasks to launch when stopping the tracker
-	TaskVector changingTasks;	// Tasks to launch when the tracker's status is changing
+	HandlerVector startingHandlers;	// Handlers to launch when starting the tracker
+	HandlerVector stoppingHandlers;	// Handlers to launch when stopping the tracker
+	HandlerVector changingHandlers;	// Handlers to launch when the tracker's status is changing
 
 	virtual void readConfigDirective( std::string &l );
 
@@ -64,10 +64,10 @@ public:
 	void stop( void );
 	void done( void );
 
-	void addDone( LuaTask *t ){ this->push_back(t); }
-	void addStarted( LuaTask *t ){ this->startingTasks.Add(t); }
-	void addStopped( LuaTask *t ){ this->stoppingTasks.Add(t); }
-	void addChanged( LuaTask *t ){ this->changingTasks.Add(t); }
+	void addDone( Handler *t ){ this->push_back(t); }
+	void addStarted( Handler *t ){ this->startingHandlers.Add(t); }
+	void addStopped( Handler *t ){ this->stoppingHandlers.Add(t); }
+	void addChanged( Handler *t ){ this->changingHandlers.Add(t); }
 
 		/* Executable */
 	virtual bool execAsync(lua_State *L);	// Overloading to handle data acceptation 

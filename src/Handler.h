@@ -5,6 +5,7 @@
 #define HANDLER_H
 
 #include "LuaExec.h"
+#include "ObjCollection.h"
 
 class HandlersExecutor;
 
@@ -13,7 +14,8 @@ protected :
 	Handler(const std::string &fch, std::string &where) : LuaExec(fch, where) {};
 
 	virtual void readConfigDirective(std::string &l);
-
+	virtual bool readConfigDirectiveNoData(std::string &l);	// Linked to events only
+	virtual bool readConfigDirectiveData(std::string &l);	// Linked to events that are providing data
 public :
 
 		/* Execute Lua code while an event rise
@@ -26,4 +28,6 @@ public :
 	virtual void feedState(lua_State *L) = 0;	// Feed Lua's state with objects owns
 };
 
+typedef ObjCollection<Handler *> HandlerCollection;
+typedef ObjVector<Handler *> HandlerVector;
 #endif
