@@ -47,8 +47,8 @@ diagram {
 	topic -> MinMax : listen
 	topic -> tracker : listen
 
-	tracker -> rendezvous : enableRDV
-	tracker -> rendezvous : disableRDV
+	tracker <- rendezvous : enableRDV { style.stroke: black }
+	tracker <- rendezvous : disableRDV { style.stroke: black }
 	tracker -> topic : statustopic
 
 	timer -> tracker : start
