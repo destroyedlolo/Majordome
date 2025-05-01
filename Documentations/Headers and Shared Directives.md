@@ -1,4 +1,21 @@
-# Headers
+# Headers and Shared directives
+
+This page describes :
+- how directives are declared in object's header
+- which directives are shared among objects
+
+## Definition
+
+- an **event**  is an object that handle a particular condition to triggers its handlers. Example of event can be 
+  - MQTT message arriving (see [topics](topic.md)). In such case, a data is provided to handlers, the content of the message
+  - when its time to do something (see [timers](timer.md)). In such case, obviously, no data is provided.
+
+- a **Handler** is an object that will be triggered when an event happens. It can be a [Lua Task](Task(lua).md), database [feeding](Database/feed.md), ...
+
+> [!TIP]
+> If the handler can execute Lua code, environment variables help to determine what triggered.
+ 
+## Headers
 
 All Majordome's configuration files starts with a header that contains 
 **comments** and **Majordome directives**, as follows :
@@ -45,3 +62,7 @@ This object is disabled :
 ### -->> desc=
 Add a description to the object.<br>
 This field is useful to generate a small description in automatic generated diagrams (using **D2**, see [Majordome **-2**](Readme.md) option).
+
+## Triggering while providing data
+
+Those directives handle handlers
