@@ -65,4 +65,15 @@ This field is useful to generate a small description in automatic generated diag
 
 ## Triggering while providing data
 
-Those directives handle handlers
+Those directives trigger handlers and provide a data.
+
+### -->> listen=
+Indicates [**MQTT topic**](topic.md) to listen to : this script will be launched when a data
+is received on this topic.
+```
+-->> listen=NoStations
+```
+If a task is woken up by an MQTT topic, the following variables are created at Lua side :
+- **MAJORDOME_TOPIC_NAME**, name of the topic (in the example above `NoStations`)
+- **MAJORDOME_TOPIC**, the MQTT topic itself
+- **MAJORDOME_PAYLOAD**, message's payload.
