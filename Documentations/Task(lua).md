@@ -12,16 +12,7 @@
 In the header of the script (comment block at the very beginning of the script), each line starting with `-->>` (2 dashes) are Majordome's directives.
 If you want to comment out a directive, use `--->>` (3 dashes)
 ### General directives
-#### -->> name=
-Unique name to identify the topic. If not set, uses the filename.
-```
--->> name=Toto
-```
-#### -->> quiet
-Removes some trace.
-
-#### -->> disabled
-This script won't run.
+See [this page](Headers%20and%20Shared%20Directives.md#general-directives).
 
 ### Task's
 #### -->> once
