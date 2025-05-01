@@ -74,6 +74,7 @@ diagram {
 
 	Database.archive <- timer : when
 	tracker -> Database.archive : whenDone\nwhenStopped\nwhenChanged
+	Database.archive -> rendezvous : SuccessRDV\nFailRDV
 
 	(topic -> *)[*].class: Data
 	(* <- topic)[*].class: Data
