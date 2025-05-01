@@ -78,7 +78,7 @@ An error is raised if an object is duplicated.
 Objects configuration is done using plain text files and the suffix determines their kind. Files without known suffix are ignored.
 
 > [!TIP]
-> a very valuable document to read to understand how objects are configured and their categories : **Headers and Shared Directives.md**.
+> a very valuable document to read to understand how objects are configured and their categories : [Headers and Shared Directives.md](Headers%20and%20Shared%20Directives.md).
 
 Supported are :
 - [Timer](timer.md) (`.timer`) : specifies the absolute time or the interval to launch an action
