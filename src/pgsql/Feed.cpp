@@ -15,18 +15,7 @@ Feed::Feed(const std::string &fch, std::string &where, lua_State *L): Object(fch
 void Feed::readConfigDirective( std::string &l ){
 	std::string arg;
 
-	if(!(arg = striKWcmp( l, "-->> listen=" )).empty()){
-		TopicCollection::iterator topic;
-		if( (topic = config.TopicsList.find(arg)) != config.TopicsList.end()){
-			if(verbose)
-				SelLog->Log('C', "\t\tAdded to topic '%s'", arg.c_str());
-			topic->second->addHandler( dynamic_cast<Handler *>(this) );
-//			nameused = true;
-		} else {
-			SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
-			exit(EXIT_FAILURE);
-		}
-	} else if(!(arg = striKWcmp( l, "-->> when=" )).empty()){
+	if(!(arg = striKWcmp( l, "-->> when=" )).empty()){
 		TimerCollection::iterator timer;
 		if( (timer = config.TimersList.find(arg)) != config.TimersList.end()){
 			if(verbose)
@@ -58,7 +47,9 @@ void Feed::readConfigDirective( std::string &l ){
 			SelLog->Log('F', "\t\tDatabase '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
-	} else 
+	} else if(this->readConfigDirectiveNoData(l))
+		;
+	else 
 		this->LuaExec::readConfigDirective(l);
 }
 

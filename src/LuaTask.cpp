@@ -23,16 +23,6 @@ void LuaTask::readConfigDirective( std::string &l ){
 		if(verbose)
 			SelLog->Log('C', "\t\tOnly one instance is allowed to run (once)");
 		this->setOnce( true );
-	} else if(!(arg = striKWcmp( l, "-->> listen=" )).empty()){
-		TopicCollection::iterator topic;
-		if( (topic = config.TopicsList.find(arg)) != config.TopicsList.end()){
-			if(verbose)
-				SelLog->Log('C', "\t\tAdded to topic '%s'", arg.c_str());
-			topic->second->addHandler( dynamic_cast<Handler *>(this) );
-		} else {
-			SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
-			exit(EXIT_FAILURE);
-		}
 	} else if(this->readConfigDirectiveData(l))
 		;
 	else if(this->readConfigDirectiveNoData(l))
