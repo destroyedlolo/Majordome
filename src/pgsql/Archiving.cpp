@@ -11,6 +11,9 @@
 
 Archiving::Archiving(const std::string &fch, std::string &where, lua_State *L) : Object(fch, where), Handler(fch, where), Aggregation("Day"), kind(_kind::MINMAX), upto("1 day") {
 	this->loadConfigurationFile(fch, where, L);
+
+	if(d2)
+		fd2 << this->getName() << ".class: Archiving" << std::endl;
 }
 
 void Archiving::readConfigDirective( std::string &l ){

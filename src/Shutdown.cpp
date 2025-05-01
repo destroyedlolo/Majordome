@@ -10,6 +10,9 @@
 
 Shutdown::Shutdown(const std::string &fch, std::string &where, lua_State *L) : Object(fch, where), LuaExec(fch, where){
 	this->loadConfigurationFile(fch, where, L);
+
+	if(d2)
+		fd2 << this->getName() << ".class: Shutdown" << std::endl;
 }
 
 void Shutdown::exec( void ){

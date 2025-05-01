@@ -10,6 +10,9 @@
 
 Event::Event(const std::string &fch, std::string &where) : Object(fch, where){
 	this->loadConfigurationFile(fch, where);
+
+	if(d2)
+		fd2 << this->getName() << ".class: Event" << std::endl;
 }
 
 void Event::readConfigDirective(std::string &l){

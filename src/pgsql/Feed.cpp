@@ -10,6 +10,9 @@
 
 Feed::Feed(const std::string &fch, std::string &where, lua_State *L): Object(fch, where), Handler(fch, where){
 	this->loadConfigurationFile(fch, where,L);
+
+	if(d2)
+		fd2 << this->getName() << ".class: Feed" << std::endl;
 }
 
 void Feed::readConfigDirective( std::string &l ){
