@@ -77,3 +77,45 @@ If a task is woken up by an MQTT topic, the following variables are created at L
 - **MAJORDOME_TOPIC_NAME**, name of the topic (in the example above `NoStations`)
 - **MAJORDOME_TOPIC**, the MQTT topic itself
 - **MAJORDOME_PAYLOAD**, message's payload.
+
+## Triggering without data
+
+### -->> waitfor=
+Indicate the [**Rendezvous**](rendezvous.md) to wait for.
+```
+-->> waitfor=exemple
+```
+
+### -->> when=
+Indicates the [**Timer**](timer.md) to wait for : 
+this script will be triggered when this timer is exhausted.
+```
+-->> when=15s
+```
+If a task is woken up by a timer, the following variables are created at Lua side.
+- **MAJORDOME_TIMER**, name of the timer (in the example above `15s`)
+
+### -->> whenStarted=
+The script is launched when provided [**tracker**](tracker.md) is started (beggin *following* mode).
+```
+-->> whenStarted=tracker
+```
+**MAJORDOME_TRACKER** is created with tracker's name and **MAJORDOME_TRACKER_STATUS** with its condition.
+
+### -->> whenDone=
+The script is launched when provided [**tracker**](tracker.md) is done (existing *following* mode cause the condition is met).
+```
+-->> whenDone=tracker
+```
+
+### -->> whenStopped=
+The script is launched when a [**tracker**](tracker.md) is stopped.
+```
+-->> whenStopped=tracker
+```
+
+### -->> whenChanged=
+The script is launched when a [**tracker**](tracker.md) status is changed.
+```
+-->> whenChanged=tracker
+```
