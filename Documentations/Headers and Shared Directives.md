@@ -50,6 +50,9 @@ Unique name to identify the object. If not set, uses the filename.
 ```
 -->> name=Toto
 ```
+> [!CAUTION]
+> When doing **D2 diagram generation**, `name=` has to be placed before any other directive, otherwise the diagram will be probably wrong.
+
 ### -->> quiet
 Removes some trace.
 
