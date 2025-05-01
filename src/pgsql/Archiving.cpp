@@ -16,18 +16,7 @@ Archiving::Archiving(const std::string &fch, std::string &where, lua_State *L) :
 void Archiving::readConfigDirective( std::string &l ){
 	std::string arg;
 
-	if(!(arg = striKWcmp( l, "-->> when=" )).empty()){
-		TimerCollection::iterator timer;
-		if( (timer = config.TimersList.find(arg)) != config.TimersList.end()){
-			if(verbose)
-				SelLog->Log('C', "\t\tAdded to timer '%s'", arg.c_str());
-			timer->second->addHandler( dynamic_cast<Handler *>(this) );
-//			nameused = true;
-		} else {
-			SelLog->Log('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
-			exit(EXIT_FAILURE);
-		}
-	} else if(!(arg = striKWcmp( l, "-->> Database=" )).empty()){
+	if(!(arg = striKWcmp( l, "-->> Database=" )).empty()){
 		pgSQLCollection::iterator db;
 		if( (db = config.pgSQLsList.find(arg)) != config.pgSQLsList.end()){
 			if(verbose)
@@ -107,7 +96,9 @@ void Archiving::readConfigDirective( std::string &l ){
 			SelLog->Log('F', "\t\tRendezvous '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
-	} else
+	} else if(this->readConfigDirectiveNoData(l))
+		;
+	else
 		this->Object::readConfigDirective(l);
 }
 
