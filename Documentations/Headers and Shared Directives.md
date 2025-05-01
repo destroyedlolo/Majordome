@@ -119,3 +119,46 @@ The script is launched when a [**tracker**](tracker.md) status is changed.
 ```
 -->> whenChanged=tracker
 ```
+## Dependancies
+### need_
+Handlers usually depend on other objects ; those directives expose them at Lua side without having to manually `find()` them.
+> [!TIP]
+> With V6 and below, needed may fail while looking for same priority objects (i.e : if a **tracker** needs a **minmax** ...). In such case, use the *old way* by using find() function.
+> Here an example :
+```lua
+local tracker = MajordomeTracker.find("TestTracker")
+if not tracker then
+	print("Can't find ".. '"TestTracker"')
+	return
+end
+
+local t15s = MajordomeTimer.find("15s")
+local t25s = MajordomeTimer.find("25s")
+if not t15s or not t25s then
+	SelLog.Log('E',"Can't find '15s' or '25s' timer")
+	return
+end
+```
+
+#### Topics
+##### -->> need_topic=
+Creates an object if a value has been received and its value hasn't expired. Otherwise, the object remains unset.
+
+#### Others
+##### -->> need_rendezvous=, -->> need_tracker=, -->> need_timer=, -->> need_task=, -->> need_minmax, -->> need_namedminmax, -->> need_shutdown
+Create corresponding object.
+
+#### With Toile extension
+##### -->> need_renderer
+Create corresponding object (Only Toile plug-in has been compiled).
+
+### require_
+A handler will be triggered **only** if all these require are assumed.<br>
+As an example, `-->> require_topic=Test` imply a message has been received and it hasn't been discarded by a timeout.
+
+#### Topics
+> [!WARNING]
+> Only `store`d topic can be  needed or required.
+
+##### -->> require_topic=
+Prevents the script to be launched if corresponding value is not valid.
