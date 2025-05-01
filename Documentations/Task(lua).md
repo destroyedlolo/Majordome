@@ -13,14 +13,16 @@ In the header of the script (comment block at the very beginning of the script),
 If you want to comment out a directive, use `--->>` (3 dashes)
 ### General directives
 See [this page](Headers%20and%20Shared%20Directives.md#general-directives).
-
-### Task's
-#### -->> once
-Only one instance is allowed to run at the same time : no concurrency.
-
 ### Triggering
 Following directives determine what will trigger this script.<br>
 Multiple directives may be present, including those of the same kind.
+#### Launched with a data furnished
+See [this page](Headers%20and%20Shared%20Directives.md#triggering-while-providing-data)
+#### Launched without data
+See [this page](Headers%20and%20Shared%20Directives.md#triggering-without-data)
+### Task's
+#### -->> once
+Only one instance is allowed to run at the same time : no concurrency.
 
 #### -->> RunAtStartup
 Run when Majordome starts.
@@ -28,56 +30,7 @@ Run when Majordome starts.
 > Startup tasks run **before** any other actions, i.e., before topics are subscribed, timers started, ...
 > On the other hand, [**Timer**](timer.md)'s immediate functions are launched after everything is configured.
 
-#### -->> listen=
-Indicates [**MQTT topic**](topic.md) to listen to : this script will be launched when a data
-is received on this topic.
-```
--->> listen=NoStations
-```
-If a task is woken up by an MQTT topic, the following variables are created at Lua side :
-- **MAJORDOME_TOPIC_NAME**, name of the topic (in the example above `NoStations`)
-- **MAJORDOME_TOPIC**, the MQTT topic itself
-- **MAJORDOME_PAYLOAD**, message's payload.
 
-#### -->> waitfor=
-Indicate the [**Rendezvous**](rendezvous.md) to wait for.
-```
--->> waitfor=exemple
-```
-
-#### -->> when=
-Indicates the [**Timer**](timer.md) to wait for : 
-this script will be triggered when this timer is exhausted.
-```
--->> when=15s
-```
-If a task is woken up by a timer, the following variables are created at Lua side.
-- **MAJORDOME_TIMER**, name of the timer (in the example above `15s`)
-
-#### -->> whenStarted=
-The script is launched when provided [**tracker**](tracker.md) is started (beggin *following* mode).
-```
--->> whenStarted=tracker
-```
-**MAJORDOME_TRACKER** is created with tracker's name and **MAJORDOME_TRACKER_STATUS** with its condition.
-
-#### -->> whenDone=
-The script is launched when provided [**tracker**](tracker.md) is done (existing *following* mode cause the condition is met).
-```
--->> whenDone=tracker
-```
-
-#### -->> whenStopped=
-The script is launched when a [**tracker**](tracker.md) is stopped.
-```
--->> whenStopped=tracker
-```
-
-#### -->> whenChanged=
-The script is launched when a [**tracker**](tracker.md) status is changed.
-```
--->> whenChanged=tracker
-```
 ### Dependancies
 Tasks usually depends on Majordome's objects ; those directives expose them at Lua level without having to manually `find()` them.
 > [!TIP]
