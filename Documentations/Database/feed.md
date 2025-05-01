@@ -12,6 +12,10 @@ Store incomming data in a database.
 
 ### General directives
 See [this page](Headers%20and%20Shared%20Directives.md#general-directives).
+#### Launched with a data furnished
+See [this page](Headers%20and%20Shared%20Directives.md#triggering-while-providing-data)
+#### Launched without data
+See [this page](Headers%20and%20Shared%20Directives.md#triggering-without-data)
 
 ### feed's owns
 #### -->> Database=
@@ -24,26 +28,6 @@ If not set, the same as "name" or the filename.
 > [!TIP]
 > For convenience, it is preferable that the table name's is only in lower-case. Otherwise, it will have
 >  to be surrounded by double quotes in pgsql.
-
-#### -->> listen=
-Indicates [**MQTT topic**](../topic.md) to listen to : this feed will be launched when a data
-is received on this topic.
-```
--->> listen=NoStations
-```
-If a feed is woken up by an MQTT topic, the following variables are created at Lua side :
-- **MAJORDOME_TOPIC_NAME**, name of the topic (in the example above `NoStations`)
-- **MAJORDOME_TOPIC**, the MQTT topic itself
-- **MAJORDOME_PAYLOAD**, message's payload.
-
-#### -->> when=
-Indicates the [**Timer**](../timer.md) to wait for : 
-this feed will be triggered when this timer is exhausted.
-```
--->> when=15s
-```
-If a feed is woken up by a timer, the following variables are created at Lua side.
-- **MAJORDOME_TIMER**, name of the timer (in the example above `15s`)
 
 ## SQL table definition
 
