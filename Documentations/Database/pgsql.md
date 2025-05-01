@@ -10,16 +10,8 @@
 
 ## Directives
 
-### Generals
-
-#### -->> name=
-Unique name to identify the Feed. If not set, uses the filename.
-`-->> name=toto`
-#### -->> quiet
-Remove some trace. This option is useful to avoid logging of very noisy topics.
-
-#### -->> disabled
-This Feed starts as disabled : incoming messages are ignored.
+### General directives
+See [this page](Headers%20and%20Shared%20Directives.md#general-directives).
 
 ### psql's owns
 #### -->> pgConnectionstring=
