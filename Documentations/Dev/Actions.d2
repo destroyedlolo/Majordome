@@ -35,9 +35,7 @@ diagram {
 	topic -> Tasks : listen
 	rendezvous -> Tasks : waitfor
 	timer-> Tasks : when
-	tracker -> Tasks : whenDone
-	tracker -> Tasks : whenStopped
-	tracker -> Tasks : whenChanged
+	tracker -> tasks : whenDone\nwhenStopped\nwhenChanged
 
 
 	MinMax : "*minmax" {
@@ -54,33 +52,48 @@ diagram {
 	timer -> tracker : start
 	timer -> tracker : stop
 
+	Database {
+		style {
+			border-radius: 5
+			stroke-dash: 2
+		}
 
-	feed : '*feed' {
-		class: [Sql ; Lua]
+		feed : '*feed' {
+			class: [Sql ; Lua]
+		}
+
+		archive {
+			class: Sql
+		}
 	}
 
-	feed <- topic : listen
-	feed <- timer : when
+	Database.feed <- topic : listen
+	Database.feed <- timer : when
+	rendezvous -> Database.feed : waitfor
+	tracker -> Database.feed : whenDone\nwhenStopped\nwhenChanged
 
-	archive {
-		class: Sql
-	}
-
-	archive <- timer {
-		label: when
-	}
+	Database.archive <- timer : when
+	tracker -> Database.archive : whenDone\nwhenStopped\nwhenChanged
 
 	(topic -> *)[*].class: Data
 	(* <- topic)[*].class: Data
+	(topic -> *.*)[*].class: Data
+	(*.* <- topic)[*].class: Data
 
 	(timer -> *)[*].class: NoData
 	(* <- timer)[*].class: NoData
+	(timer -> *.*)[*].class: NoData
+	(*.* <- timer)[*].class: NoData
 
 	(tracker -> *)[*].class: NoData
 	(* <- tracker)[*].class: NoData
+	(tracker -> *.*)[*].class: NoData
+	(*.* <- tracker)[*].class: NoData
 
 	(rendezvous -> *)[*].class: NoData
 	(* <- rendezvous)[*].class: NoData
+	(rendezvous -> *.*)[*].class: NoData
+	(*.* <- rendezvous)[*].class: NoData
 }
 
 # """
