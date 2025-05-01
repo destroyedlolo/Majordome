@@ -12,9 +12,10 @@ Consequently, `--->>` are commented out commands (notice the 3 dashes).
 
 ### Generals
 See [this page](Headers%20and%20Shared%20Directives.md#general-directives).
-
 ### Data arrival
 See [this page](Headers%20and%20Shared%20Directives.md#triggering-while-providing-data)
+### Dependancies
+See [this page](Headers%20and%20Shared%20Directives.md#dependancies)
 
 ### NamedMinMax owns
 None
