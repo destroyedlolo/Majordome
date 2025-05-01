@@ -25,6 +25,9 @@ void Archiving::readConfigDirective( std::string &l ){
 			if(verbose)
 				SelLog->Log('C', "\t\tDatabase : %s", arg.c_str());
 			this->db = db->second;
+
+			if(d2)
+				fd2 << this->getName() << " <- " << arg << ": Database" << std::endl;
 		} else {
 			SelLog->Log('F', "\t\tDatabase '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
@@ -85,6 +88,9 @@ void Archiving::readConfigDirective( std::string &l ){
 			if(verbose)
 				SelLog->Log('C', "\t\tRendezvous '%s' add in successful list", arg.c_str());
 			this->EventSuccessList.Add(event->second);
+
+			if(d2)
+				fd2 << this->getName() << " -> " << arg << ": SuccessRDV" << std::endl;
 		} else {
 			SelLog->Log('F', "\t\tRendezvous '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
@@ -95,6 +101,9 @@ void Archiving::readConfigDirective( std::string &l ){
 			if(verbose)
 				SelLog->Log('C', "\t\tRendezvous '%s' add in successful list", arg.c_str());
 			this->EventFailList.Add(event->second);
+
+			if(d2)
+				fd2 << this->getName() << " -> " << arg << ": FailRDV" << std::endl;
 		} else {
 			SelLog->Log('F', "\t\tRendezvous '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
