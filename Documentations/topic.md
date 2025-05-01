@@ -7,16 +7,8 @@ Define **MQTT topic**
 > As of v6.0 onward, The syntax has changed for **Topic** and is not any more compatible with previous versions.
 
 ### General directives
-#### -->> name=
-Unique name to identify the topic. If not set, uses the filename.
-```
--->> name=Toto
-```
-#### --> quiet
-Removes some trace. This option is useful to avoid logging of very noisy topics.
-
-#### -->> disabled
-Message arrival is ignored
+### Generals
+See [this page](Headers%20and%20Shared%20Directives.md#general-directives).
 
 ### Topics' owns
 #### -->> topic=

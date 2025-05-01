@@ -6,7 +6,6 @@
 #ifndef MQTTTOPIC_H
 #define MQTTTOPIC_H
 
-#include "MayBeEmptyString.h"
 #include "Event.h"
 #include "ObjCollection.h"
 
@@ -16,7 +15,7 @@ class MQTTTopic : virtual public Object, public Event {
 	virtual void readConfigDirective(std::string &l);
 
 protected:
-	MayBeEmptyString topic;	// Topic to look for
+	std::string topic;	// Topic to look for
 	unsigned int qos;		// Associated QoS
 	bool wildcard;			// True if the topic contains wildcard
 	bool store;				// Keep values in a SelShared variable

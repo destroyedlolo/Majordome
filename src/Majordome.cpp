@@ -19,7 +19,6 @@
 #include "Version.h"
 #include "Selene.h"
 #include "Helpers.h"
-#include "MayBeEmptyString.h"
 #include "Config.h"
 
 #ifdef TOILE

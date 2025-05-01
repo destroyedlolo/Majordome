@@ -15,23 +15,13 @@ Tracker::Tracker(const std::string &fch, std::string &where, lua_State *L) : Obj
 void Tracker::readConfigDirective( std::string &l ){
 	std::string arg;
 
-	if(!(arg = striKWcmp( l, "-->> listen=" )).empty()){
-		TopicCollection::iterator topic;
-		if( (topic = config.TopicsList.find(arg)) != config.TopicsList.end()){
-			if(verbose)
-				SelLog->Log('C', "\t\tAdded to topic '%s'", arg.c_str());
-			topic->second->addHandler( dynamic_cast<Handler *>(this) );
-		} else {
-			SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
-			exit(EXIT_FAILURE);
-		}
-	} else if(!(arg = striKWcmp( l, "-->> howmany=" )).empty()){
+	if(!(arg = striKWcmp( l, "-->> howmany=" )).empty()){
 		if((this->howmany = strtoul(arg.c_str(), NULL, 0))<1)
 			this->howmany = 1;
 		if(verbose)
 			SelLog->Log('C', "\t\tHow many: '%d'", this->howmany);
 	} else if(!(arg = striKWcmp( l, "-->> statustopic=" )).empty()){
-		setStatusTopic( std::regex_replace(arg, std::regex("%ClientID%"), MQTT_ClientID) );
+		this->setStatusTopic( std::regex_replace(arg, std::regex("%ClientID%"), MQTT_ClientID) );
 		if(verbose)
 			SelLog->Log('C', "\t\tStatus topic : '%s'", this->getStatusTopic().c_str());
 	} else if(!(arg = striKWcmp( l, "-->> start=" )).empty()){
@@ -79,7 +69,9 @@ void Tracker::readConfigDirective( std::string &l ){
 			SelLog->Log('C', "\t\tActivated at startup");
 		this->status = _status::CHECKING;
 		this->hm_counter = this->howmany;
-	} else 
+	} else if(this->readConfigDirectiveNoData(l))
+		;
+	else 
 		this->Handler::readConfigDirective(l);
 }
 
@@ -131,14 +123,14 @@ void Tracker::publishstatus( void ){
 
 void Tracker::notifyChanged( void ){
 	if( this->isEnabled() ){
-		for(auto &t : this->changingTasks)	// Execute attached starting tasks
+		for(auto &t : this->changingHandlers)	// Execute attached starting tasks
 			t->exec(this);
 	}
 }
 
 void Tracker::start( void ){
 	if( this->isEnabled() && this->getStatus() != _status::CHECKING ){
-		for(auto &t : this->startingTasks)	// Execute attached starting tasks
+		for(auto &t : this->startingHandlers)	// Execute attached starting tasks
 			t->exec(this);
 		if(verbose && !this->isQuiet())
 			SelLog->Log('T', "Tracker '%s' is checking", this->getNameC() );
@@ -151,7 +143,7 @@ void Tracker::start( void ){
 
 void Tracker::stop( void ){
 	if( this->isEnabled() && this->getStatus() != _status::WAITING ){
-		for(auto &t : this->stoppingTasks)	// Execute attached stopping tasks
+		for(auto &t : this->stoppingHandlers)	// Execute attached stopping tasks
 			t->exec(this);
 		if(verbose && !this->isQuiet())
 			SelLog->Log('T', "Tracker '%s' is waiting", this->getNameC() );
