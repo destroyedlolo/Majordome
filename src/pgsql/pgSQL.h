@@ -29,6 +29,8 @@ public:
 
 	/* Create Lua's object */
 	static void initLuaInterface( lua_State *L );
+
+	virtual std::string getTri(){ return "PGS_"; }
 };
 
 typedef ObjCollection<pgSQL *> pgSQLCollection;

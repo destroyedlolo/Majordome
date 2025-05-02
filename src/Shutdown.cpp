@@ -12,7 +12,7 @@ Shutdown::Shutdown(const std::string &fch, std::string &where, lua_State *L) : O
 	this->loadConfigurationFile(fch, where, L);
 
 	if(d2)
-		fd2 << this->getName() << ".class: Shutdown" << std::endl;
+		fd2 << this->getTri() << this->getName() << ".class: Shutdown" << std::endl;
 }
 
 void Shutdown::exec( void ){

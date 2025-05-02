@@ -11,7 +11,7 @@
 NamedFeed::NamedFeed(const std::string &fch, std::string &where, lua_State *L) : Object(fch, where), Handler(fch, where), Feed(fch, where, L){
 
 	if(d2)
-		fd2 << this->getName() << ".class: NamedFeed" << std::endl;}
+		fd2 << this->getTri() << this->getName() << ".class: NamedFeed" << std::endl;}
 
 void NamedFeed::feedState( lua_State *L ){
 	class NamedFeed **feed= (class NamedFeed **)lua_newuserdata(L, sizeof(class NamedFeed *));

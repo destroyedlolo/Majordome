@@ -12,7 +12,7 @@ Feed::Feed(const std::string &fch, std::string &where, lua_State *L): Object(fch
 	this->loadConfigurationFile(fch, where,L);
 
 	if(d2)
-		fd2 << this->getName() << ".class: Feed" << std::endl;
+		fd2 << this->getTri() << this->getName() << ".class: Feed" << std::endl;
 }
 
 void Feed::readConfigDirective( std::string &l ){

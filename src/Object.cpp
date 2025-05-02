@@ -54,7 +54,7 @@ void Object::loadConfigurationFile(const std::string &fch, std::string &where, s
 		file.close();
 
 		if(d2)
-			fd2 << this->getName() << std::endl;
+			fd2 << this->getTri() << this->getName() << ": " << this->getName() << std::endl;
 
 	} catch(const std::ifstream::failure &e){
 		if(!file.eof()){

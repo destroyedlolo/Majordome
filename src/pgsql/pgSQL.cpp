@@ -14,7 +14,7 @@ pgSQL::pgSQL(const std::string &fch, std::string &where) : Object(fch, where) {
 	this->db = this;
 
 	if(d2)
-		fd2 << this->getName() << ".class: Database" << std::endl;
+		fd2 << this->getTri() << this->getName() << ".class: Database" << std::endl;
 }
 
 void pgSQL::readConfigDirective( std::string &l ){

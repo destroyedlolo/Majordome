@@ -12,7 +12,7 @@ Tracker::Tracker(const std::string &fch, std::string &where, lua_State *L) : Obj
 	this->loadConfigurationFile(fch, where,L);
 
 	if(d2)
-		fd2 << this->getName() << ".class: Tracker" << std::endl;
+		fd2 << this->getTri() << this->getName() << ".class: Tracker" << std::endl;
 }
 
 void Tracker::readConfigDirective( std::string &l ){

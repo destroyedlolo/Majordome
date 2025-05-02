@@ -35,6 +35,8 @@ public:
 
 	/* Create Lua's object */
 	static void initLuaInterface( lua_State *L );
+
+	virtual std::string getTri(){ return "FED_"; }
 };
 
 typedef ObjCollection<Feed *> FeedCollection;
