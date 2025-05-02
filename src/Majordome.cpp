@@ -417,7 +417,7 @@ int main(int ac, char **av){
 
 	if(configtest){
 		SelLog->Log('E', "Testing only the configuration ... leaving.");
-		exit(EXIT_FAILURE);
+		exit(EXIT_SUCCESS);
 	}
 
 		/* **
