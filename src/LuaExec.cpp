@@ -68,6 +68,10 @@ void LuaExec::readConfigDirective( std::string &l ){
 		if(verbose)
 			SelLog->Log('C', "\t\tAdded needed task '%s'", arg.c_str());
 		this->addNeededTask( arg );
+
+		if(d2)
+			fd2 << this->getTri() << this->getName() << " -- " << LuaTask::trigramme() << arg << ": need { style.stroke-dash: 2 }" << std::endl;
+
 		return;
 	} else if(!(arg = striKWcmp( l, "-->> need_rendezvous=" )).empty()){
 		EventCollection::iterator event;
@@ -75,6 +79,9 @@ void LuaExec::readConfigDirective( std::string &l ){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded needed rendezvous '%s'", arg.c_str());
 			this->addNeededRendezVous(arg);
+
+			if(d2)
+				fd2 << this->getTri() << this->getName() << " -- " << Event::trigramme() << arg << ": need { style.stroke-dash: 2 }" << std::endl;
 			return;
 		} else {
 			SelLog->Log('F', "\t\tRendezvous '%s' is not (yet ?) defined", arg.c_str());
@@ -86,6 +93,9 @@ void LuaExec::readConfigDirective( std::string &l ){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded needed topic '%s'", arg.c_str());
 			this->addNeededTopic(arg);
+
+			if(d2)
+				fd2 << this->getTri() << this->getName() << " -- " << MQTTTopic::trigramme() << arg << ": need { style.stroke-dash: 2 }" << std::endl;
 			return;
 		} else {
 			SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
@@ -100,6 +110,9 @@ void LuaExec::readConfigDirective( std::string &l ){
 			}
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded required topic '%s'", arg.c_str());
+
+			if(d2)
+				fd2 << this->getTri() << this->getName() << " -- " << MQTTTopic::trigramme() << arg << ": require { style.stroke-dash: 2; style.stroke-width: 4; style.stroke: red}" << std::endl;
 			this->addRequiredTopic(arg);
 			return;
 		} else {
@@ -112,6 +125,9 @@ void LuaExec::readConfigDirective( std::string &l ){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded needed timer '%s'", arg.c_str());
 			this->addNeededTimer(arg);
+
+			if(d2)
+				fd2 << this->getTri() << this->getName() << " -- " << Timer::trigramme() << arg << ": need { style.stroke-dash: 2 }" << std::endl;
 			return;
 		} else {
 			SelLog->Log('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
@@ -123,6 +139,9 @@ void LuaExec::readConfigDirective( std::string &l ){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded needed TrackersList '%s'", arg.c_str());
 			this->addNeededTracker(arg);
+
+			if(d2)
+				fd2 << this->getTri() << this->getName() << " -- " << Tracker::trigramme() << arg << ": need { style.stroke-dash: 2 }" << std::endl;
 			return;
 		} else {
 			SelLog->Log('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
@@ -134,6 +153,9 @@ void LuaExec::readConfigDirective( std::string &l ){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded needed minmax '%s'", arg.c_str());
 			this->addNeededMinMax( arg );
+
+			if(d2)
+				fd2 << this->getTri() << this->getName() << " -- " << MinMax::trigramme() << arg << ": need { style.stroke-dash: 2 }" << std::endl;
 			return;
 		} else {
 			SelLog->Log('F', "\t\tminmax '%s' is not (yet ?) defined", arg.c_str());
@@ -145,6 +167,9 @@ void LuaExec::readConfigDirective( std::string &l ){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded needed namedminmax '%s'", arg.c_str());
 			this->addNeededNamedMinMax( arg );
+
+			if(d2)
+				fd2 << this->getTri() << this->getName() << " -- " << NamedMinMax::trigramme() << arg << ": need { style.stroke-dash: 2 }" << std::endl;
 			return;
 		} else {
 			SelLog->Log('F', "\t\tnamedminmax '%s' is not (yet ?) defined", arg.c_str());
@@ -156,6 +181,9 @@ void LuaExec::readConfigDirective( std::string &l ){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded needed Shutdown '%s'", arg.c_str());
 			this->addNeededShutdown( arg );
+
+			if(d2)
+				fd2 << this->getTri() << this->getName() << " -- " << Shutdown::trigramme() << arg << ": need { style.stroke-dash: 2 }" << std::endl;
 			return;
 		} else {
 			SelLog->Log('F', "\t\tShutdown '%s' is not (yet ?) defined", arg.c_str());
@@ -169,6 +197,9 @@ void LuaExec::readConfigDirective( std::string &l ){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded needed pgSQL '%s'", arg.c_str());
 			this->addNeededpgSQL( arg );
+
+			if(d2)
+				fd2 << this->getTri() << this->getName() << " -- " << pgSQL::trigramme() << arg << ": need { style.stroke-dash: 2 }" << std::endl;
 			return;
 		} else {
 			SelLog->Log('F', "\t\tpgSQL '%s' is not (yet ?) defined", arg.c_str());
@@ -181,6 +212,9 @@ void LuaExec::readConfigDirective( std::string &l ){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded needed Feed '%s'", arg.c_str());
 			this->addNeededFeed( arg );
+
+			if(d2)
+				fd2 << this->getTri() << this->getName() << " -- " << Feed::trigramme() << arg << ": need { style.stroke-dash: 2 }" << std::endl;
 			return;
 		} else {
 			SelLog->Log('F', "\t\tFeed '%s' is not (yet ?) defined", arg.c_str());
@@ -192,6 +226,9 @@ void LuaExec::readConfigDirective( std::string &l ){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded needed NamedFeed '%s'", arg.c_str());
 			this->addNeededNamedFeed( arg );
+
+			if(d2)
+				fd2 << this->getTri() << this->getName() << " -- " << NamedFeed::trigramme() << arg << ": need { style.stroke-dash: 2 }" << std::endl;
 			return;
 		} else {
 			SelLog->Log('F', "\t\tNamedFeed '%s' is not (yet ?) defined", arg.c_str());

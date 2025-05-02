@@ -19,7 +19,8 @@ public:
 	/* Create Lua's object */
 	static void initLuaInterface( lua_State *L );
 
-	virtual std::string getTri(){ return "NFD_"; }
+	virtual std::string getTri(){ return NamedFeed::trigramme(); }
+	static std::string trigramme(){ return "NFD_"; }
 };
 
 typedef ObjCollection<NamedFeed *> NamedFeedCollection;

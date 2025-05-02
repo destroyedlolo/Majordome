@@ -45,7 +45,8 @@ public:
 	/* Create Lua's object */
 	static void initLuaInterface( lua_State *L );
 
-	virtual std::string getTri(){ return "MMX_"; }
+	virtual std::string getTri(){ return MinMax::trigramme(); }
+	static std::string trigramme(){ return "MMX_"; }
 };
 
 typedef ObjCollection<MinMax *> MinMaxCollection;

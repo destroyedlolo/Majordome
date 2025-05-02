@@ -8,10 +8,10 @@
 #include <cstring>
 #include <cassert>
 
-NamedFeed::NamedFeed(const std::string &fch, std::string &where, lua_State *L) : Object(fch, where), Handler(fch, where), Feed(fch, where, L){
+NamedFeed::NamedFeed(const std::string &fch, std::string &where, lua_State *L) : Object(fch, where), Handler(fch, where), Feed(fch, where, L, false){
 
 	if(d2)
-		fd2 << this->getTri() << this->getName() << ".class: NamedFeed" << std::endl;}
+		fd2 << NamedFeed::trigramme() << this->getName() << ".class: NamedFeed" << std::endl;}
 
 void NamedFeed::feedState( lua_State *L ){
 	class NamedFeed **feed= (class NamedFeed **)lua_newuserdata(L, sizeof(class NamedFeed *));

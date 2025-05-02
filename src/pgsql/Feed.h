@@ -25,7 +25,7 @@ protected:
 
 	std::string TableName;
 public:
-	Feed(const std::string &fch, std::string &where, lua_State *L);
+	Feed(const std::string &fch, std::string &where, lua_State *L, bool noD2=false);
 	virtual ~Feed(){};
 
 	/* Accessors */
@@ -36,7 +36,8 @@ public:
 	/* Create Lua's object */
 	static void initLuaInterface( lua_State *L );
 
-	virtual std::string getTri(){ return "FED_"; }
+	virtual std::string getTri(){ return Feed::trigramme(); }
+	static std::string trigramme(){ return "FED_"; }
 };
 
 typedef ObjCollection<Feed *> FeedCollection;

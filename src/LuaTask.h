@@ -44,7 +44,8 @@ public:
 
 	virtual void feedState(lua_State *L);
 
-	virtual std::string getTri(){ return "TSK_"; }
+	virtual std::string getTri(){ return LuaTask::trigramme(); }
+	static std::string trigramme(){ return "TSK_"; }
 };
 
 typedef ObjCollection<LuaTask *> TaskCollection;
