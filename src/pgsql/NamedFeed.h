@@ -13,7 +13,6 @@ class NamedFeed : virtual public Feed {
 
 public:
 	NamedFeed(const std::string &, std::string &, lua_State *);
-	virtual ~NamedFeed(){};
 
 
 	/* Create Lua's object */

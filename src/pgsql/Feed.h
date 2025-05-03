@@ -24,9 +24,12 @@ protected:
 	void readConfigDirective( std::string &l );
 
 	std::string TableName;
+protected:
+	Feed() = default;
+
 public:
-	Feed(const std::string &fch, std::string &where, lua_State *L, bool noD2=false);
-	virtual ~Feed(){};
+	Feed(const std::string &fch, std::string &where, lua_State *L);
+
 
 	/* Accessors */
 	const char *getTableName(void);

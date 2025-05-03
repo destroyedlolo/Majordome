@@ -8,10 +8,10 @@
 #include <cstring>
 #include <cassert>
 
-Feed::Feed(const std::string &fch, std::string &where, lua_State *L, bool noD2): Object(fch, where), Handler(fch, where){
+Feed::Feed(const std::string &fch, std::string &where, lua_State *L): Object(fch, where), Handler(fch, where){
 	this->loadConfigurationFile(fch, where,L);
 
-	if(d2 && !noD2)
+	if(d2)
 		fd2 << this->getTri() << this->getName() << ".class: Feed" << std::endl;
 }
 

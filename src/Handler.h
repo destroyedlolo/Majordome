@@ -12,6 +12,7 @@ class HandlersExecutor;
 class Handler : public LuaExec {
 protected :
 	Handler(const std::string &fch, std::string &where) : LuaExec(fch, where) {};
+	Handler() = default;
 
 	virtual void readConfigDirective(std::string &l);
 	virtual bool readConfigDirectiveNoData(std::string &l);	// Linked to events only
