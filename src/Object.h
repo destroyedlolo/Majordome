@@ -55,6 +55,8 @@ public:
 	const char *getNameC( void ){ return this->name.c_str(); };
 	std::string &getWhere( void ){ return this->where; }; // Object's container (it's father directory)
 	const char *getWhereC( void ){ return this->where.c_str(); };
+	std::string getContainer( void );
+	std::string getFullId( void ){ return(this->getContainer() + "." + this->getTri() + this->getName()); }
 
 	/*
 	 * determine the name from the filename

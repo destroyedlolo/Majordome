@@ -31,7 +31,7 @@ MQTTTopic::MQTTTopic(const std::string &fch, std::string &where) : Object(fch, w
 #endif
 
 	if(d2)
-		fd2 << this->getTri() << this->getName() << ".class: Topic" << std::endl;
+		fd2 << this->getFullId() << ".class: Topic" << std::endl;
 }
 
 void MQTTTopic::readConfigDirective(std::string &l){

@@ -12,7 +12,7 @@ NamedMinMax::NamedMinMax(const std::string &fch, std::string &where, lua_State *
 	this->loadConfigurationFile(fch, where,L);
 
 	if(d2)
-		fd2 << this->getTri() << this->getName() << ".class: NamedMinMax" << std::endl;
+		fd2 << this->getFullId() << ".class: NamedMinMax" << std::endl;
 }
 
 void NamedMinMax::readConfigDirective( std::string &l ){

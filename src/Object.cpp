@@ -4,6 +4,7 @@
 
 #include <fstream>
 #include <regex>
+#include <filesystem>
 
 #include <cstring>	// strerror()
 
@@ -54,11 +55,11 @@ void Object::loadConfigurationFile(const std::string &fch, std::string &where, s
 		file.close();
 
 		if(d2){
-			fd2 << this->getTri() << this->getName() << ": " << this->getName() << std::endl;
+			fd2 << this->getFullId() << ": " << this->getName() << std::endl;
 			if(!this->description.empty())
-				fd2 << this->getTri() << this->getName() << ".tooltip :" << this->description << std::endl;
+				fd2 << this->getFullId() << ".tooltip :" << this->description << std::endl;
 			if(!this->embeddedCom.empty())
-				fd2 << this->getTri() << this->getName() << ".comment :" << this->embeddedCom << " { class: Comment }" << std::endl;
+				fd2 << this->getFullId() << ".comment :" << this->embeddedCom << " { class: Comment }" << std::endl;
 		}
 
 	} catch(const std::ifstream::failure &e){
@@ -78,6 +79,10 @@ void Object::extrName( const std::string &fch, std::string &name){
 	const size_t period_idx = name.rfind('.');	// Remove extension if present.
 	if (std::string::npos != period_idx)
 		name.erase(period_idx);
+}
+
+std::string Object::getContainer( void ){
+	return( std::filesystem::path(this->where).filename() );
 }
 
 void Object::readConfigDirective(std::string &l){

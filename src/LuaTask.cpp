@@ -12,7 +12,7 @@ LuaTask::LuaTask( const std::string &fch, std::string &where, lua_State *L ) : O
 	this->loadConfigurationFile(fch, where,L);
 
 	if(d2)
-		fd2 << this->getTri() << this->getName() << ".class: Task" << std::endl;
+		fd2 << this->getFullId() << ".class: Task" << std::endl;
 }
 
 void LuaTask::readConfigDirective( std::string &l ){
