@@ -64,7 +64,11 @@ This object is disabled :
 
 ### -->> desc=
 Add a description to the object.<br>
-This field is useful to generate a small description in automatic generated diagrams (using **D2**, see [Majordome **-2**](Readme.md) option).
+This field is useful to generate a small description as *tool tips* in automatic generated diagrams (using **D2**, see [Majordome **-2**](Readme.md) option).
+
+### -->> ecom=
+Add a description embedded to an object.<br>
+This field is useful to generate a small information (like units) within shapes in automatic generated diagrams (using **D2**, see [Majordome **-2**](Readme.md) option).
 
 ## Triggering while providing data
 
