@@ -13,11 +13,13 @@ class NamedFeed : virtual public Feed {
 
 public:
 	NamedFeed(const std::string &, std::string &, lua_State *);
-	virtual ~NamedFeed(){};
 
 
 	/* Create Lua's object */
 	static void initLuaInterface( lua_State *L );
+
+	virtual std::string getTri(){ return NamedFeed::trigramme(); }
+	static std::string trigramme(){ return "NFD_"; }
 };
 
 typedef ObjCollection<NamedFeed *> NamedFeedCollection;

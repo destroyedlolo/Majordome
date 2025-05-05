@@ -10,6 +10,9 @@
 
 MinMax::MinMax(const std::string &fch, std::string &where, lua_State *L) : Object(fch, where), Handler(fch, where), empty(true){
 	this->loadConfigurationFile(fch, where,L);
+
+	if(d2)
+		fd2 << this->getTri() << this->getName() << ".class: MinMax" << std::endl;
 }
 
 void MinMax::readConfigDirective( std::string &l ){

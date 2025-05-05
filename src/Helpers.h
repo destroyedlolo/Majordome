@@ -14,6 +14,7 @@
 #include <lua.hpp>	/* Lua's state needed */
 
 #include <string>
+#include <fstream>
 
 	/* ***
 	 * Configuration's
@@ -24,7 +25,8 @@ extern bool verbose;
 extern bool debug;
 extern bool trace;
 extern bool configtest;
-
+extern bool d2;
+extern std::ofstream fd2;
 
 	/* ***
 	 * MQTT

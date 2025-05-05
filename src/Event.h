@@ -45,6 +45,9 @@ public:
 
 	/* Create Lua's object */
 	static void initLuaInterface(lua_State *L);
+
+	virtual std::string getTri(){ return Event::trigramme(); }
+	static std::string trigramme(){ return "EVT_"; }
 };
 
 typedef ObjCollection<Event *> EventCollection;

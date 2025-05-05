@@ -47,6 +47,9 @@ public:
 
 	/* Create Lua's object */
 	static void initLuaInterface( lua_State *L );
+
+	virtual std::string getTri(){ return NamedMinMax::trigramme(); }
+	static std::string trigramme(){ return "NMX_"; }
 };
 
 typedef ObjCollection<NamedMinMax *> NamedMinMaxCollection;

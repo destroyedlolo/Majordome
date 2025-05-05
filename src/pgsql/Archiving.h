@@ -45,6 +45,7 @@ public:
 	virtual const char *getNameC(){ return(this->Object::getNameC()); };
 	bool isQuiet(){ return this->Object::isQuiet(); };
 
+	virtual std::string getTri(){ return "ARC_"; }
 };
 
 typedef ObjCollection<Archiving *> ArchivingCollection;

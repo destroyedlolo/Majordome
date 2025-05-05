@@ -73,6 +73,9 @@ public:
 
 	/* Create Lua's object */
 	static void initLuaInterface( lua_State *L );
+
+	virtual std::string getTri(){ return Tracker::trigramme(); }
+	static std::string trigramme(){ return "TRK_"; }
 };
 
 typedef ObjCollection<Tracker *> TrackerCollection;

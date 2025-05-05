@@ -29,6 +29,9 @@ MQTTTopic::MQTTTopic(const std::string &fch, std::string &where) : Object(fch, w
 	if( this->wildcard && debug )
 		SelLog->Log('D', "\t\tHas wildcard");
 #endif
+
+	if(d2)
+		fd2 << this->getTri() << this->getName() << ".class: Topic" << std::endl;
 }
 
 void MQTTTopic::readConfigDirective(std::string &l){

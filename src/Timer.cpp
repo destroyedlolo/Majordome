@@ -10,6 +10,9 @@
 
 Timer::Timer( const std::string &fch, std::string &where ) : Object(fch, where), every(0), at((unsigned short)-1), immediate(false), runifover(false), cond(PTHREAD_COND_INITIALIZER), mutex(PTHREAD_MUTEX_INITIALIZER) {
 	this->loadConfigurationFile(fch, where);
+
+	if(d2)
+		fd2 << this->getTri() << this->getName() << ".class: Timer" << std::endl;
 }
 
 void Timer::readConfigDirective(std::string &l){

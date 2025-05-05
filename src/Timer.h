@@ -107,6 +107,9 @@ public:
 
 	/* Create Lua's object */
 	static void initLuaInterface(lua_State *L);
+
+	virtual std::string getTri(){ return Timer::trigramme(); }
+	static std::string trigramme(){ return "TMR_"; }
 };
 
 typedef ObjCollection<Timer *> TimerCollection;

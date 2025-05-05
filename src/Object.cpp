@@ -52,6 +52,10 @@ void Object::loadConfigurationFile(const std::string &fch, std::string &where, s
 		if(buffer)
 			*buffer << file.rdbuf();
 		file.close();
+
+		if(d2)
+			fd2 << this->getTri() << this->getName() << ": " << this->getName() << std::endl;
+
 	} catch(const std::ifstream::failure &e){
 		if(!file.eof()){
 			SelLog->Log('F', "%s : %s", fch.c_str(), strerror(errno) );

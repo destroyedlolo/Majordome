@@ -43,6 +43,9 @@ bool Handler::readConfigDirectiveNoData(std::string &l){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded to rendezvous '%s'", arg.c_str());
 			event->second->addHandler( dynamic_cast<Handler *>(this) );
+
+			if(d2)
+				fd2 << this->getTri() << this->getName() << " <- " << event->second->getTri() << arg << ": waitfor" << std::endl;
 		} else {
 			SelLog->Log('F', "\t\tRendezvous '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
@@ -54,6 +57,9 @@ bool Handler::readConfigDirectiveNoData(std::string &l){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded to timer '%s'", arg.c_str());
 			timer->second->addHandler( dynamic_cast<Handler *>(this) );
+
+			if(d2)
+				fd2 << this->getTri() << this->getName() << " <- " << timer->second->getTri() << arg << ": when" << std::endl;
 		} else {
 			SelLog->Log('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
@@ -65,6 +71,9 @@ bool Handler::readConfigDirectiveNoData(std::string &l){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded to tracker '%s' as Done task", arg.c_str());
 			tracker->second->addDone( this );
+
+			if(d2)
+				fd2 << this->getTri() << this->getName() << " <- " << tracker->second->getTri() << arg << ": whenDone" << std::endl;
 		} else {
 			SelLog->Log('F', "\t\tTracker '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
@@ -76,6 +85,9 @@ bool Handler::readConfigDirectiveNoData(std::string &l){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded to tracker '%s' as Started task", arg.c_str());
 	 		tracker->second->addStarted( this );
+
+			if(d2)
+				fd2 << this->getTri() << this->getName() << " <- " << tracker->second->getTri() << arg << ": whenStarted" << std::endl;
 		} else {
 			SelLog->Log('F', "\t\tTracker '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
@@ -87,6 +99,9 @@ bool Handler::readConfigDirectiveNoData(std::string &l){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded to tracker '%s' as Stopped task", arg.c_str());
 		 	tracker->second->addStopped( this );
+
+			if(d2)
+				fd2 << this->getTri() << this->getName() << " <- " << tracker->second->getTri() << arg << ": whenStopped" << std::endl;
 		} else {
 			SelLog->Log('F', "\t\tTracker '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
@@ -98,6 +113,9 @@ bool Handler::readConfigDirectiveNoData(std::string &l){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded to tracker '%s' as Changed task", arg.c_str());
 			tracker->second->addChanged( this );
+
+			if(d2)
+				fd2 << this->getTri() << this->getName() << " <- " << tracker->second->getTri() << arg << ": whenChanged" << std::endl;
 		} else {
 			SelLog->Log('F', "\t\ttracker '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
@@ -117,6 +135,9 @@ bool Handler::readConfigDirectiveData(std::string &l){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded to topic '%s'", arg.c_str());
 			topic->second->addHandler( dynamic_cast<Handler *>(this) );
+
+			if(d2)
+				fd2 << this->getTri() << this->getName() << " <- " << topic->second->getTri() << arg << ": listen" << std::endl;
 		} else {
 			SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);

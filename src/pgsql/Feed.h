@@ -24,9 +24,12 @@ protected:
 	void readConfigDirective( std::string &l );
 
 	std::string TableName;
+protected:
+	Feed() = default;
+
 public:
 	Feed(const std::string &fch, std::string &where, lua_State *L);
-	virtual ~Feed(){};
+
 
 	/* Accessors */
 	const char *getTableName(void);
@@ -35,6 +38,9 @@ public:
 
 	/* Create Lua's object */
 	static void initLuaInterface( lua_State *L );
+
+	virtual std::string getTri(){ return Feed::trigramme(); }
+	static std::string trigramme(){ return "FED_"; }
 };
 
 typedef ObjCollection<Feed *> FeedCollection;

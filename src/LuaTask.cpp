@@ -10,6 +10,9 @@
 
 LuaTask::LuaTask( const std::string &fch, std::string &where, lua_State *L ) : Object(fch, where), Handler(fch, where), once(false), running_access(PTHREAD_MUTEX_INITIALIZER), running(false), runatstartup(false){
 	this->loadConfigurationFile(fch, where,L);
+
+	if(d2)
+		fd2 << this->getTri() << this->getName() << ".class: Task" << std::endl;
 }
 
 void LuaTask::readConfigDirective( std::string &l ){

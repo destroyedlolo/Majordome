@@ -11,6 +11,9 @@
 
 Archiving::Archiving(const std::string &fch, std::string &where, lua_State *L) : Object(fch, where), Handler(fch, where), Aggregation("Day"), kind(_kind::MINMAX), upto("1 day") {
 	this->loadConfigurationFile(fch, where, L);
+
+	if(d2)
+		fd2 << this->getTri() << this->getName() << ".class: Archiving" << std::endl;
 }
 
 void Archiving::readConfigDirective( std::string &l ){
@@ -22,6 +25,9 @@ void Archiving::readConfigDirective( std::string &l ){
 			if(verbose)
 				SelLog->Log('C', "\t\tDatabase : %s", arg.c_str());
 			this->db = db->second;
+
+			if(d2)
+				fd2 << this->getTri() << this->getName() << " <- " << db->second->getTri() << arg << ": Database" << std::endl;
 		} else {
 			SelLog->Log('F', "\t\tDatabase '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
@@ -82,6 +88,9 @@ void Archiving::readConfigDirective( std::string &l ){
 			if(verbose)
 				SelLog->Log('C', "\t\tRendezvous '%s' add in successful list", arg.c_str());
 			this->EventSuccessList.Add(event->second);
+
+			if(d2)
+				fd2 << this->getTri() << this->getName() << " -> " << event->second->getTri() << arg << ": SuccessRDV" << std::endl;
 		} else {
 			SelLog->Log('F', "\t\tRendezvous '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
@@ -92,6 +101,9 @@ void Archiving::readConfigDirective( std::string &l ){
 			if(verbose)
 				SelLog->Log('C', "\t\tRendezvous '%s' add in successful list", arg.c_str());
 			this->EventFailList.Add(event->second);
+
+			if(d2)
+				fd2 << this->getTri() << this->getName() << " -> " << event->second->getTri() << arg << ": FailRDV" << std::endl;
 		} else {
 			SelLog->Log('F', "\t\tRendezvous '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);

@@ -5,7 +5,6 @@
 
 #include <cstring>
 #include <cstdarg>
-#include <cstdio>
 
 char *removeLF(char *s){
 	size_t l=strlen(s);

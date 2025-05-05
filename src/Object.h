@@ -34,6 +34,7 @@ protected:
 		 */
 	virtual void readConfigDirective(std::string &l);
 
+	virtual std::string getTri() = 0;	// Get type's trigram (needed for d2)
 public:
 	Object() : disabled(false), quiet(false){};
 	Object(const std::string &fch, std::string &where);

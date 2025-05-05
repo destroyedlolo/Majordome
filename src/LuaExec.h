@@ -78,8 +78,12 @@ protected:
 
 	virtual void readConfigDirective( std::string &l );
 
+protected:
+	LuaExec() = default;
+
 public:
 	LuaExec(const std::string &fch, std::string &where);
+
 	struct elastic_storage *getFunc( void ){ return &(this->func); }
 
 	lua_State *createLuaState(void);
