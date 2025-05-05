@@ -16,7 +16,8 @@ class Object {
 protected:
 	std::string name;
 	std::string where;
-	std::string description;
+	std::string description;	// Description to be presented as tooltips
+	std::string embeddedCom;	// Small embedded comment (like units)
 
 		/* Load the configuration file.
 		 * Should have been done within the constructor, but in this case,

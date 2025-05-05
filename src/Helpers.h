@@ -70,4 +70,7 @@ extern std::string striKWcmp( const std::string s, const std::string &kw );
  */
 extern const char *fileextention( const char *fch );
 
+/* Secure string by encoding HTML entities */
+extern std::string escapeHTML(std::string);
+
 #endif

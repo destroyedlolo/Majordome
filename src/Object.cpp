@@ -53,8 +53,13 @@ void Object::loadConfigurationFile(const std::string &fch, std::string &where, s
 			*buffer << file.rdbuf();
 		file.close();
 
-		if(d2)
+		if(d2){
 			fd2 << this->getTri() << this->getName() << ": " << this->getName() << std::endl;
+			if(!this->description.empty())
+				fd2 << this->getTri() << this->getName() << ".tooltip :" << this->description << std::endl;
+			if(!this->embeddedCom.empty())
+				fd2 << this->getTri() << this->getName() << ".comment :" << this->embeddedCom << " { class: Comment }" << std::endl;
+		}
 
 	} catch(const std::ifstream::failure &e){
 		if(!file.eof()){
@@ -94,6 +99,10 @@ void Object::readConfigDirective(std::string &l){
 		this->description = arg;
 		if(verbose)
 			SelLog->Log('C', "\t\tDescription : %s", description.c_str());
+	} else if(!(arg = striKWcmp( l, "-->> ecom=" )).empty()){
+		this->embeddedCom = arg;
+		if(verbose)
+			SelLog->Log('C', "\t\tEmbedded comment : %s", embeddedCom.c_str());
 	} else if(!striKWcmp( l, "-->> ").empty()){
 		SelLog->Log('F', "Unknown directive '%s'", l.c_str());
 		exit(EXIT_FAILURE);
