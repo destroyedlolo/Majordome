@@ -12,7 +12,7 @@ Feed::Feed(const std::string &fch, std::string &where, lua_State *L): Object(fch
 	this->loadConfigurationFile(fch, where,L);
 
 	if(d2)
-		fd2 << this->getTri() << this->getName() << ".class: Feed" << std::endl;
+		fd2 << this->getFullId() << ".class: Feed" << std::endl;
 }
 
 void Feed::readConfigDirective( std::string &l ){
@@ -34,7 +34,8 @@ void Feed::readConfigDirective( std::string &l ){
 			if(verbose)
 				SelLog->Log('C', "\t\tDatabase : %s", arg.c_str());
 			this->db = db->second;
-//			nameused = true;
+			if(d2)
+				fd2 << this->getFullId() << " <- " << db->second->getFullId() << ": { class: ldatabase }" << std::endl;
 		} else {
 			SelLog->Log('F', "\t\tDatabase '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);

@@ -37,5 +37,5 @@
  *	01/05/2025 - V6.03 - LF - Generate D2 file
  */
 
-#define VERSION 6.0300
+#define VERSION 6.0301
 #define COPYRIGHT "Majordome (c) L.Faillie 2018-2025"

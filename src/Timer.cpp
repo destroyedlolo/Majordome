@@ -12,7 +12,7 @@ Timer::Timer( const std::string &fch, std::string &where ) : Object(fch, where),
 	this->loadConfigurationFile(fch, where);
 
 	if(d2)
-		fd2 << this->getTri() << this->getName() << ".class: Timer" << std::endl;
+		fd2 << this->getFullId() << ".class: Timer" << std::endl;
 }
 
 void Timer::readConfigDirective(std::string &l){

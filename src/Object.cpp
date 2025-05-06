@@ -4,6 +4,7 @@
 
 #include <fstream>
 #include <regex>
+#include <filesystem>
 
 #include <cstring>	// strerror()
 
@@ -53,8 +54,13 @@ void Object::loadConfigurationFile(const std::string &fch, std::string &where, s
 			*buffer << file.rdbuf();
 		file.close();
 
-		if(d2)
-			fd2 << this->getTri() << this->getName() << ": " << this->getName() << std::endl;
+		if(d2){
+			fd2 << this->getFullId() << ": " << this->getName() << std::endl;
+			if(!this->description.empty())
+				fd2 << this->getFullId() << ".tooltip :" << this->description << std::endl;
+			if(!this->embeddedCom.empty())
+				fd2 << this->getFullId() << ".comment :" << this->embeddedCom << " { class: Comment }" << std::endl;
+		}
 
 	} catch(const std::ifstream::failure &e){
 		if(!file.eof()){
@@ -73,6 +79,10 @@ void Object::extrName( const std::string &fch, std::string &name){
 	const size_t period_idx = name.rfind('.');	// Remove extension if present.
 	if (std::string::npos != period_idx)
 		name.erase(period_idx);
+}
+
+std::string Object::getContainer( void ){
+	return( std::filesystem::path(this->where).filename() );
 }
 
 void Object::readConfigDirective(std::string &l){
@@ -94,6 +104,10 @@ void Object::readConfigDirective(std::string &l){
 		this->description = arg;
 		if(verbose)
 			SelLog->Log('C', "\t\tDescription : %s", description.c_str());
+	} else if(!(arg = striKWcmp( l, "-->> ecom=" )).empty()){
+		this->embeddedCom = arg;
+		if(verbose)
+			SelLog->Log('C', "\t\tEmbedded comment : %s", embeddedCom.c_str());
 	} else if(!striKWcmp( l, "-->> ").empty()){
 		SelLog->Log('F', "Unknown directive '%s'", l.c_str());
 		exit(EXIT_FAILURE);

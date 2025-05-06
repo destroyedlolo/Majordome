@@ -11,7 +11,7 @@
 NamedFeed::NamedFeed(const std::string &fch, std::string &where, lua_State *L) : Object(fch, where), Handler(fch, where){
 	this->loadConfigurationFile(fch, where,L);
 	if(d2)
-		fd2 << NamedFeed::trigramme() << this->getName() << ".class: NamedFeed" << std::endl;
+		fd2 << this->getFullId() << ".class: NamedFeed" << std::endl;
 }
 
 void NamedFeed::feedState( lua_State *L ){
