@@ -27,7 +27,7 @@ void Archiving::readConfigDirective( std::string &l ){
 			this->db = db->second;
 
 			if(d2)
-				fd2 << this->getFullId() << " <- " << db->second->getFullId() << ": Database" << std::endl;
+				fd2 << this->getFullId() << " <- " << db->second->getFullId() << ": { class: ldatabase }" << std::endl;
 		} else {
 			SelLog->Log('F', "\t\tDatabase '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
