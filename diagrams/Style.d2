@@ -13,15 +13,16 @@ classes: {
 	}
 
 	Topic:{
+		icon: https://icons.terrastruct.com/essentials/263-notepad.svg
 		shape: document
 		style.stroke-width: 6
 		style.fill: lightsalmon
 	}
 
 	Timer:{
-		shape: oval
-		style.stroke-width: 6
-		style.fill: gold
+		icon: https://icons.terrastruct.com/essentials/time.svg
+		style.fill: transparent
+		style.stroke: transparent
 	}
 
 	MinMax:{
@@ -52,6 +53,7 @@ classes: {
 	}
 
 	Database:{
+		icon: https://icons.terrastruct.com/dev/postgresql.svg
 		shape: cylinder
 	}
 
@@ -67,6 +69,7 @@ classes: {
 	}
 
 	Archiving: {
+		icon: https://icons.terrastruct.com/infra/011-data-storage.svg
 		shape: stored_data
 		style.fill: yellowgreen
 	}
@@ -80,5 +83,37 @@ classes: {
 			stroke: transparent
 		}
 	}
+
+# Links
+	# let the default settings
+
+	link: {
+		style {
+			stroke: navy
+		}
+	}
+
+	lneed: {
+		style {
+			stroke-dash: 2
+		}
+	}
+
+	lrequiere: {
+		style {
+			stroke-dash: 2
+			stroke-width: 4
+			stroke: red
+		}
+	}
+
+	ldatabase: {
+		label: Database
+		style {
+			stroke: green
+		}
+	}
 }
 
+(* <- *domestik2)[*] : null
+(*domestik2 -> *)[*] : null
