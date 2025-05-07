@@ -19,6 +19,8 @@ See [this page](../Headers%20and%20Shared%20Directives.md#triggering-while-provi
 #### Launched without data
 See [this page](../Headers%20and%20Shared%20Directives.md#triggering-without-data)
 
+A Typical example of launching feeding without providing data is when the said data will be taken from another sources such [MinMax](../minmax.md).
+
 ### feed's owns
 #### -->> Database=
 Which database to use.`
