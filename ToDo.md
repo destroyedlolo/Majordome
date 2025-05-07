@@ -2,7 +2,8 @@
 
 ## General
 - [X] Ensure inherance
-- [ ] D2 generation
+- [X] D2 generation
+- [ ] Add full Lua support to database's (Feed, Archiving, ...)
 
 ## Devices
 ### LCD
@@ -19,25 +20,21 @@
 
 ### DRM
 
---- Bugs
-
-- Pour les objets qui ont des scripts de validation ("*MinMax", "*feed"), la donnée doit être rejetée si le script échoue
-
---- Migration to v6
+## Migration to v6
 
 MAJORDOME_TRIGGER replaced by MAJORDOME_TOPIC_NAME
 
---- Improvement
+## Improvement
 
 needs : checking will not work if at same level (or lower).
 	- remove existance checking in LuaExec
 	- add checking in Config::SanityChecks
 
---- Futures
+## Futures
 
 (Named)MinMax, [Named]Feed handlers to run asynchronously.
 
----
+## Dev notes
 Add a new Object :
 - Config.h
 - SubConfigDir : extension
