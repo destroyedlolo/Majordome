@@ -1,0 +1,199 @@
+vars: {
+  d2-config: {
+    layout-engine: elk
+    # Terminal theme code
+    theme-id: 100
+  }
+}
+
+...@Style.d2
+
+# Simple Objects
+
+Object.com: {
+	class: Comment
+	label: General parameters
+}
+
+LuaExec {
+	class: Task
+	com {
+		class: Comment
+		label: Can run Lua code
+	}
+}
+Object -> LuaExec
+
+Event{
+	class: Event
+	com {
+		class: Comment
+		label: External will launch children 
+	}
+}
+Object -> Event
+
+Handler {
+	class: Handler
+	com {
+		class: Comment
+		label: Triggered when an event happens 
+	}
+}
+
+LuaExec -> Handler
+
+HandlersExecutor {
+	class: [Handler ; Collection]
+	com {
+		class: Comment
+		label: Can execute handlers
+	}
+}
+
+Handler -> HandlersExecutor
+Object -> HandlersExecutor
+
+HandlersExecutor -> Event
+
+
+LuaTask {
+	class: Task
+}
+Handler -> LuaTask
+
+MinMax {
+	class: MinMax
+}
+Handler -> MinMax
+
+NamedMinMax {
+	class: MinMax
+}
+Handler -> NamedMinMax
+
+MQTTTopic {
+	class: Topic
+}
+Object -> MQTTTopic
+Event -> MQTTTopic
+
+Shutdown {
+	class: Shutdown
+}
+LuaExec -> Shutdown
+
+
+Timer {
+	class: Timer
+}
+Event -> Timer
+HandlersExecutor -> Timer
+
+Tracker {
+	class: Tracker
+}
+Handler -> Tracker
+HandlersExecutor -> Tracker
+
+mpgConnection {
+	class: Database
+}
+
+pgSQL {
+	class: Database
+	style.fill: "linear-gradient(#888888, #f4a261)"
+}
+Object -> pgSQL
+mpgConnection -> pgSQL
+
+Feed {
+	class: [Sql ; Lua]
+}
+mpgConnection -> Feed
+Handler -> Feed
+
+NamedFeed {
+	class: [Sql ; Lua]
+}
+Feed -> NamedFeed
+
+Archiving {
+	class: Sql
+}
+mpgConnection -> Archiving
+Handler -> Archiving
+
+# Configuration
+
+Config: { 
+	TopicsList {
+		class: Topic
+	}
+
+	EventsList {
+		style.multiple: true
+		class: Event
+	}
+
+	TimersList {
+		style.multiple: true
+		class: Timer
+	}
+
+	TrackersList {
+		style.multiple: true
+		class: Tracker
+	}
+
+	MinMaxList {
+		style.multiple: true
+		class: MinMax
+	}
+
+	NamedMinMaxList {
+		style.multiple: true
+		class: MinMax
+	}
+
+	TasksList {
+		style.multiple: true
+		class: Task
+	}
+
+	ShutdownsList {
+		style.multiple: true
+		class: Shutdown
+	}
+
+	FeedsList {
+		style.multiple: true
+		class: Sql
+	}
+
+	NamedFeedsList {
+		style.multiple: true
+		class: Sql
+	}
+
+	pgSQLsList {
+		style.multiple: true
+		class: Database
+	}
+}
+Config.*.style.multiple: true
+Config.*.style.stroke-width: 1
+
+Event -> Config.EventsList
+LuaTask -> Config.TasksList
+MQTTTopic -> Config.TopicsList
+Shutdown -> Config.ShutdownsList
+Timer -> Config.TimersList
+MinMax -> Config.MinMaxList
+NamedMinMax -> Config.NamedMinMaxList
+Tracker -> Config.TrackersList
+mpgConnection -> Config.pgSQLsList
+Feed -> Config.FeedsList
+NamedFeed -> Config.NamedFeedsList
+
+COnfig.*.style.stroke: black

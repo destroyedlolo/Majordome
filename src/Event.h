@@ -19,13 +19,16 @@ class Event : virtual public Object, virtual public HandlersExecutor {
 	TrackerVector trackersToEnable;
 	TrackerVector trackersToDisable;
 
+protected:
+	virtual void readConfigDirective(std::string &l);
+
 public:
 	/* Constructor from a file
 	 * -> file : file to load
 	 * -> where : file's directory
 	 * <- name : this object's name
 	 */
-	Event( const std::string &file, std::string &where, std::string &name  );
+	Event( const std::string &file, std::string &where );
 	Event(){};
 
 	void addHandler( Handler *h ){ this->push_back(h); }
@@ -42,6 +45,9 @@ public:
 
 	/* Create Lua's object */
 	static void initLuaInterface(lua_State *L);
+
+	virtual std::string getTri(){ return Event::trigramme(); }
+	static std::string trigramme(){ return "EVT_"; }
 };
 
 typedef ObjCollection<Event *> EventCollection;

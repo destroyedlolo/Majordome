@@ -9,83 +9,42 @@
 #include <cstring>
 #include <cassert>
 
-Archiving::Archiving(const std::string &fch, std::string &where, std::string &name, lua_State *L) : Object(fch, where, name), Handler(fch, where, name), Aggregation("Day"), kind(_kind::MINMAX), upto("1 day") {
-	/*
-	 * Reading file's content
-	 */
+Archiving::Archiving(const std::string &fch, std::string &where, lua_State *L) : Object(fch, where), Handler(fch, where), Aggregation("Day"), kind(_kind::MINMAX), upto("1 day") {
+	this->loadConfigurationFile(fch, where, L);
 
-	std::stringstream buffer;
-	std::ifstream file;
-	file.exceptions ( std::ios::eofbit | std::ios::failbit );
-	try {
-		std::ifstream file(fch);
-		std::streampos pos;
-
-		bool nameused = false;	// if so, the name can't be changed anymore
-
-		/*
-		 * Reading header (Majordome's commands)
-		 */
-
-		do {
-			std::string l;
-			pos = file.tellg();
-
-			std::getline( file, l);
-			if( l.compare(0, 2, "--") ){	// End of comments
-				file.seekg( pos );
-				break;
-			}
-
-			this->readConfigDirective(l, name, nameused);
-		} while(true);
-
-		file.close();
-	} catch(const std::ifstream::failure &e){
-		if(!file.eof()){
-			SelLog->Log('F', "%s : %s", fch.c_str(), strerror(errno) );
-			exit(EXIT_FAILURE);
-		}
-	}
+	if(d2)
+		fd2 << this->getFullId() << ".class: Archiving" << std::endl;
 }
 
-void Archiving::readConfigDirective( std::string &l, std::string &name, bool &nameused ){
-	MayBeEmptyString arg;
+void Archiving::readConfigDirective( std::string &l ){
+	std::string arg;
 
-	if( !!(arg = striKWcmp( l, "-->> when=" ))){
-		TimerCollection::iterator timer;
-		if( (timer = config.TimersList.find(arg)) != config.TimersList.end()){
-			if(verbose)
-				SelLog->Log('C', "\t\tAdded to timer '%s'", arg.c_str());
-			timer->second->addHandler( dynamic_cast<Handler *>(this) );
-//			nameused = true;
-		} else {
-			SelLog->Log('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
-			exit(EXIT_FAILURE);
-		}
-	} else if(!!(arg = striKWcmp( l, "-->> Database=" ))){
+	if(!(arg = striKWcmp( l, "-->> Database=" )).empty()){
 		pgSQLCollection::iterator db;
 		if( (db = config.pgSQLsList.find(arg)) != config.pgSQLsList.end()){
 			if(verbose)
 				SelLog->Log('C', "\t\tDatabase : %s", arg.c_str());
 			this->db = db->second;
+
+			if(d2)
+				fd2 << this->getFullId() << " <- " << db->second->getFullId() << ": { class: ldatabase }" << std::endl;
 		} else {
 			SelLog->Log('F', "\t\tDatabase '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
-	} else if(!!(arg = striKWcmp( l, "-->> table=" ))){
+	} else if(!(arg = striKWcmp( l, "-->> table=" )).empty()){
 		this->TableName = arg;
 		if(verbose)
 			SelLog->Log('C', "\t\tTarget table : %s", arg.c_str());
-	} else if(!!(arg = striKWcmp( l, "-->> source=" ))){
+	} else if(!(arg = striKWcmp( l, "-->> source=" )).empty()){
 		this->SourceName = arg;
 		if(verbose)
 			SelLog->Log('C', "\t\tSource table : %s", arg.c_str());
-	} else if(!!(arg = striKWcmp( l, "--> AggregateBy=" ))){
+	} else if(!(arg = striKWcmp( l, "--> AggregateBy=" )).empty()){
 		this->Aggregation = arg;
 		if(verbose)
 			SelLog->Log('C', "\t\tAggregation : %s", arg.c_str());
-	} else if(!!(arg = striKWcmp( l, "-->> Kind=" ))){
+	} else if(!(arg = striKWcmp( l, "-->> Kind=" )).empty()){
 		if(arg == "MinMax"){
 			this->kind = _kind::MINMAX;
 			if(verbose)
@@ -102,7 +61,7 @@ void Archiving::readConfigDirective( std::string &l, std::string &name, bool &na
 			SelLog->Log('F', "\t\tUnknown archiving kind");
 			exit(EXIT_FAILURE);
 		}
-	} else if(!!(arg = striKWcmp( l, "-->> Keys=" ))){
+	} else if(!(arg = striKWcmp( l, "-->> Keys=" )).empty()){
 		std::istringstream iss(arg);
 		std::string k;
 		while(std::getline(iss, k, ','))
@@ -119,36 +78,44 @@ void Archiving::readConfigDirective( std::string &l, std::string &name, bool &na
 			}
 			SelLog->Log('C', k.c_str());
 		}
-	} else if(!!(arg = striKWcmp( l, "-->> UpTo=" ))){
+	} else if(!(arg = striKWcmp( l, "-->> UpTo=" )).empty()){
 		this->upto= arg;
 		if(verbose)
 			SelLog->Log('C', "\t\tUp to : %s", arg.c_str());
-	} else if(!!(arg = striKWcmp( l, "-->> SuccessRDV=" ))){
+	} else if(!(arg = striKWcmp( l, "-->> SuccessRDV=" )).empty()){
 		EventCollection::iterator event;
 		if( (event = config.EventsList.find(arg)) != config.EventsList.end()){
 			if(verbose)
 				SelLog->Log('C', "\t\tRendezvous '%s' add in successful list", arg.c_str());
 			this->EventSuccessList.Add(event->second);
+
+			if(d2)
+				fd2 << this->getTri() << this->getName() << " -> " << event->second->getTri() << arg << ": SuccessRDV" << std::endl;
 		} else {
 			SelLog->Log('F', "\t\tRendezvous '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
-	} else if(!!(arg = striKWcmp( l, "-->> FailRDV=" ))){
+	} else if(!(arg = striKWcmp( l, "-->> FailRDV=" )).empty()){
 		EventCollection::iterator event;
 		if( (event = config.EventsList.find(arg)) != config.EventsList.end()){
 			if(verbose)
 				SelLog->Log('C', "\t\tRendezvous '%s' add in successful list", arg.c_str());
 			this->EventFailList.Add(event->second);
+
+			if(d2)
+				fd2 << this->getTri() << this->getName() << " -> " << event->second->getTri() << arg << ": FailRDV" << std::endl;
 		} else {
 			SelLog->Log('F', "\t\tRendezvous '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
-	} else
-		this->Object::readConfigDirective(l, name, nameused);
+	} else if(this->readConfigDirectiveNoData(l))
+		;
+	else
+		this->Object::readConfigDirective(l);
 }
 
 const char *Archiving::getTableName(void){
-	if(!!this->TableName)
+	if(!this->TableName.empty())
 		return(this->TableName.c_str());
 	else
 		return(this->getNameC());

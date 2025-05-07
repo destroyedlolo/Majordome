@@ -20,6 +20,9 @@ class LuaExec : virtual public Object {
 
 	bool prepareExecSync(lua_State *L);
 
+protected:
+	void loadConfigurationFile(const std::string &fch, std::string &where, lua_State *L);
+
 public:
 	enum boolRetCode { 
 		RCnil=-1,		// no return
@@ -73,10 +76,14 @@ protected:
 	void addNeededNamedFeed( std::string t ){ this->needed_namedfeed.Add(t); }
 #endif
 
-	virtual void readConfigDirective( std::string &l, std::string &name, bool &nameused );
+	virtual void readConfigDirective( std::string &l );
+
+protected:
+	LuaExec() = default;
 
 public:
-	LuaExec(const std::string &fch, std::string &where, std::string &name);
+	LuaExec(const std::string &fch, std::string &where);
+
 	struct elastic_storage *getFunc( void ){ return &(this->func); }
 
 	lua_State *createLuaState(void);

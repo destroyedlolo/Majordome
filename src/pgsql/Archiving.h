@@ -7,7 +7,6 @@
 #include "../Object.h"
 #include "../Handler.h"
 #include "../ObjCollection.h"
-#include "../MayBeEmptyString.h"
 #include "../StringVector.h"
 #include "../Event.h"
 
@@ -18,10 +17,10 @@ class Archiving : virtual public mpgConnection, virtual public Handler {
 	void feedState(lua_State *){};
 	bool internalExec(void);
 protected:
-	void readConfigDirective( std::string &l, std::string &name, bool &nameused );
+	void readConfigDirective( std::string &l );
 
 	std::string SourceName;
-	MayBeEmptyString TableName;
+	std::string TableName;
 	std::string Aggregation;
 
 		/* Archiving kind */
@@ -38,7 +37,7 @@ protected:
 	virtual bool execAsync(lua_State *L);	// Overloading to handle data acceptation
 
 public:
-	Archiving(const std::string &fch, std::string &where, std::string &name, lua_State *L);
+	Archiving(const std::string &fch, std::string &where, lua_State *L);
 
 	/* Accessors */
 	const char *getTableName(void);
@@ -46,6 +45,7 @@ public:
 	virtual const char *getNameC(){ return(this->Object::getNameC()); };
 	bool isQuiet(){ return this->Object::isQuiet(); };
 
+	virtual std::string getTri(){ return "ARC_"; }
 };
 
 typedef ObjCollection<Archiving *> ArchivingCollection;

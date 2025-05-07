@@ -1,0 +1,168 @@
+vars: {
+  d2-config: {
+    layout-engine: elk
+    # Terminal theme code
+    theme-id: 100
+  }
+}
+
+...@Style.d2
+
+diagram {
+	style.fill: white
+	style.3d: false
+
+	topic {
+		class : Topic
+	}
+
+	timer {
+		class : Timer
+	}
+
+	rendezvous {
+		class : Event
+	}
+
+	tracker {
+		class : Tracker
+	}
+
+	Tasks {
+		class : task
+	}
+
+	topic -> Tasks : listen
+	rendezvous -> Tasks : waitfor
+	timer-> Tasks : when
+	tracker -> tasks : whenDone\nwhenStopped\nwhenChanged
+
+
+	MinMax : "*minmax" {
+		class : MinMax
+	}
+
+	topic -> MinMax : listen
+	topic -> tracker : listen
+
+	tracker <- rendezvous : enableRDV { style.stroke: black }
+	tracker <- rendezvous : disableRDV { style.stroke: black }
+	tracker -> topic : statustopic
+
+	timer -> tracker : start
+	timer -> tracker : stop
+
+	Database {
+		style {
+			border-radius: 5
+			stroke-dash: 2
+		}
+
+		feed : '*feed' {
+			class: [Sql ; Lua]
+		}
+
+		archive {
+			class: Sql
+		}
+	}
+
+	Database.feed <- topic : listen
+	Database.feed <- timer : when
+	rendezvous -> Database.feed : waitfor
+	tracker -> Database.feed : whenDone\nwhenStopped\nwhenChanged
+
+	Database.archive <- timer : when
+	tracker -> Database.archive : whenDone\nwhenStopped\nwhenChanged
+	Database.archive -> rendezvous : SuccessRDV\nFailRDV
+
+	(topic -> *)[*].class: Data
+	(* <- topic)[*].class: Data
+	(topic -> *.*)[*].class: Data
+	(*.* <- topic)[*].class: Data
+
+	(timer -> *)[*].class: NoData
+	(* <- timer)[*].class: NoData
+	(timer -> *.*)[*].class: NoData
+	(*.* <- timer)[*].class: NoData
+
+	(tracker -> *)[*].class: NoData
+	(* <- tracker)[*].class: NoData
+	(tracker -> *.*)[*].class: NoData
+	(*.* <- tracker)[*].class: NoData
+
+	(rendezvous -> *)[*].class: NoData
+	(* <- rendezvous)[*].class: NoData
+	(rendezvous -> *.*)[*].class: NoData
+	(*.* <- rendezvous)[*].class: NoData
+}
+
+# """
+# Development information only
+
+Directives reading {
+	grid-columns: 2
+	shape: text
+	style {
+		font-size: 55
+		bold: true
+	}
+
+	Object: |md
+		# Object::readConfigDirective
+
+		General purpose parameters
+
+		- name
+		- quiet
+		- disabled
+		- desc
+	|
+
+	LuaExec: |md
+		# LuaExec::readConfigDirective
+
+		Everything for Lua inclusion
+
+		- need_task
+		- need_rendezvous
+		- need_topic
+		- need_timer
+		- need_tracker
+		- need_minmax
+		- need_namedminmax
+		- need_shutdown
+		- DATABASE
+		  - need_pgSQL
+		  - need_feed
+		  - need_namedfeed
+		- TOILE
+		  - need_renderer
+		- require_topic
+	|
+
+	NoData: |md
+		# Handler::readConfigDirectiveNoData
+
+		- timer
+		  - when
+		- rendezvous
+		  - waitfor
+		- tracker
+		  - whenDone
+		  - whenStopped
+		  - whenChanged
+	| {
+			class: NoData
+	}
+
+	withData: |md
+		# Handler::readConfigDirectiveData
+		- topic
+		  - listen
+	| {
+			class: Data
+	}
+}
+
+# """

@@ -8,81 +8,17 @@
 #include <cstring>
 #include <cassert>
 
-Feed::Feed(const std::string &fch, std::string &where, std::string &name, lua_State *L): Object(fch, where, name), Handler(fch, where, name) {
-	/*
-	 * Reading file's content
-	 */
+Feed::Feed(const std::string &fch, std::string &where, lua_State *L): Object(fch, where), Handler(fch, where){
+	this->loadConfigurationFile(fch, where,L);
 
-	std::stringstream buffer;
-	std::ifstream file;
-	file.exceptions ( std::ios::eofbit | std::ios::failbit );
-	try {
-		std::ifstream file(fch);
-		std::streampos pos;
-
-		bool nameused = false;	// if so, the name can't be changed anymore
-
-		/*
-		 * Reading header (Majordome's commands)
-		 */
-
-		do {
-			std::string l;
-			pos = file.tellg();
-
-			std::getline( file, l);
-			if( l.compare(0, 2, "--") ){	// End of comments
-				file.seekg( pos );
-				break;
-			}
-
-			this->readConfigDirective(l, name, nameused);
-		} while(true);
-
-
-		/*
-		 * Reading the remaining of the script and keep it as 
-		 * an Lua's script
-		 */
-		buffer << file.rdbuf();
-		file.close();
-	} catch(const std::ifstream::failure &e){
-		if(!file.eof()){
-			SelLog->Log('F', "%s : %s", fch.c_str(), strerror(errno) );
-			exit(EXIT_FAILURE);
-		}
-	}
-
-	if( !this->LoadFunc( L, buffer, this->name.c_str() ))
-		exit(EXIT_FAILURE);
+	if(d2)
+		fd2 << this->getFullId() << ".class: Feed" << std::endl;
 }
 
-void Feed::readConfigDirective( std::string &l, std::string &name, bool &nameused ){
-	MayBeEmptyString arg;
+void Feed::readConfigDirective( std::string &l ){
+	std::string arg;
 
-	if(!!(arg = striKWcmp( l, "-->> listen=" ))){
-		TopicCollection::iterator topic;
-		if( (topic = config.TopicsList.find(arg)) != config.TopicsList.end()){
-			if(verbose)
-				SelLog->Log('C', "\t\tAdded to topic '%s'", arg.c_str());
-			topic->second->addHandler( dynamic_cast<Handler *>(this) );
-//			nameused = true;
-		} else {
-			SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
-			exit(EXIT_FAILURE);
-		}
-	} else if( !!(arg = striKWcmp( l, "-->> when=" ))){
-		TimerCollection::iterator timer;
-		if( (timer = config.TimersList.find(arg)) != config.TimersList.end()){
-			if(verbose)
-				SelLog->Log('C', "\t\tAdded to timer '%s'", arg.c_str());
-			timer->second->addHandler( dynamic_cast<Handler *>(this) );
-//			nameused = true;
-		} else {
-			SelLog->Log('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
-			exit(EXIT_FAILURE);
-		}
-	} else if(!!(arg = striKWcmp( l, "-->> table=" ))){
+	if(!(arg = striKWcmp( l, "-->> table=" )).empty()){
 		this->TableName = arg;
 			if(verbose)
 				SelLog->Log('C', "\t\tTable : %s", arg.c_str());
@@ -92,19 +28,24 @@ void Feed::readConfigDirective( std::string &l, std::string &name, bool &nameuse
 			if(verbose)
 				SelLog->Log('C', "\t\tNumerical");
 #endif
-	} else if(!!(arg = striKWcmp( l, "-->> Database=" ))){
+	} else if(!(arg = striKWcmp( l, "-->> Database=" )).empty()){
 		pgSQLCollection::iterator db;
 		if( (db = config.pgSQLsList.find(arg)) != config.pgSQLsList.end()){
 			if(verbose)
 				SelLog->Log('C', "\t\tDatabase : %s", arg.c_str());
 			this->db = db->second;
-//			nameused = true;
+			if(d2)
+				fd2 << this->getFullId() << " <- " << db->second->getFullId() << ": { class: ldatabase }" << std::endl;
 		} else {
 			SelLog->Log('F', "\t\tDatabase '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
-	} else 
-		this->LuaExec::readConfigDirective(l, name, nameused);
+	} else if(this->readConfigDirectiveData(l))
+		;
+	else if(this->readConfigDirectiveNoData(l))
+		;
+	else 
+		this->LuaExec::readConfigDirective(l);
 }
 
 void Feed::feedState( lua_State *L ){
@@ -121,7 +62,7 @@ void Feed::feedState( lua_State *L ){
 }
 
 const char *Feed::getTableName(void){
-	if(!!this->TableName)
+	if(!this->TableName.empty())
 		return(this->TableName.c_str());
 	else
 		return(this->getNameC());

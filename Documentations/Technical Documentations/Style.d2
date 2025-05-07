@@ -1,0 +1,89 @@
+# Styles
+# Make it easier to customize shapes
+
+# Shapes
+
+classes: {
+	Comment: {
+		style {
+			fill: transparent
+			italic: true
+			stroke: transparent
+		}
+	}
+
+	Task:{
+		shape: step
+		style.stroke: red
+	}
+
+	Event:{
+		shape: diamond
+		style.stroke-width: 6
+		style.fill: aqua
+	}
+
+	Topic:{
+		shape: document
+		style.stroke-width: 6
+		style.fill: lightsalmon
+	}
+
+	Timer:{
+		shape: oval
+		style.stroke-width: 6
+		style.fill: gold
+	}
+
+	MinMax:{
+		shape: hexagon
+		style.stroke: red
+	}
+
+	Tracker:{
+		shape: package
+		style.stroke-width: 6
+		style.fill: thistle
+		style.stroke: red
+	}
+
+	Shutdown:{
+		shape: step
+		style.stroke: red
+	}
+
+	Handler:{
+		shape: hexagon
+	}
+
+	Database:{
+		shape: cylinder
+	}
+
+	Sql: {
+		shape: queue
+		style.fill: yellowgreen
+	}
+
+	Collection: {
+		style.multiple: true
+	}
+
+	Lua: {
+		style.stroke: red
+	}
+}
+
+# styles by function
+
+classes {
+	NoData {
+		style.stroke: steelblue
+		style.fill : lightblue
+	}
+
+	Data {
+		style.stroke: coral
+		style.fill: navajowhite
+	}
+}

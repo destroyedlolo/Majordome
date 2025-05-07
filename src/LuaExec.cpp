@@ -6,7 +6,7 @@
 #include <cassert>
 #include <cmath>
 
-LuaExec::LuaExec(const std::string &fch, std::string &where, std::string &name) : Object(fch, where, name) {
+LuaExec::LuaExec(const std::string &fch, std::string &where) : Object(fch, where){
 	assert( SelElasticStorage->init(&this->func) );	
 }
 
@@ -50,40 +50,58 @@ bool LuaExec::LoadFunc( lua_State *L, std::stringstream &buffer, const char *nam
 	return true;
 }
 
-void LuaExec::readConfigDirective( std::string &l, std::string &name, bool &nameused ){
-	MayBeEmptyString arg;
+void LuaExec::loadConfigurationFile(const std::string &fch, std::string &where, lua_State *L){
+	std::stringstream buffer;
+	this->Object::loadConfigurationFile(fch, where, &buffer);
 
-	if(!!(arg = striKWcmp( l, "-->> need_task=" ))){
+	if( !this->LoadFunc( L, buffer, this->name.c_str() ))
+		exit(EXIT_FAILURE);
+}
+
+void LuaExec::readConfigDirective( std::string &l ){
+	std::string arg;
+
+	if(!(arg = striKWcmp( l, "-->> need_task=" )).empty()){
 			/* No way to test if the task exists or not (as it could be
 			 * defined afterward. Will be part of sanity checks
 			 */
 		if(verbose)
 			SelLog->Log('C', "\t\tAdded needed task '%s'", arg.c_str());
 		this->addNeededTask( arg );
+
+		if(d2)
+			fd2 << this->getFullId() << " -- " << LuaTask::trigramme() << arg << ": need { class: lneed }" << std::endl;
+
 		return;
-	} else if(!!(arg = striKWcmp( l, "-->> need_rendezvous=" ))){
+	} else if(!(arg = striKWcmp( l, "-->> need_rendezvous=" )).empty()){
 		EventCollection::iterator event;
 		if( (event = config.EventsList.find(arg)) != config.EventsList.end()){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded needed rendezvous '%s'", arg.c_str());
 			this->addNeededRendezVous(arg);
+
+			if(d2)
+				fd2 << this->getFullId() << " -- " << event->second->getFullId() << ": need { class: lneed }" << std::endl;
 			return;
 		} else {
 			SelLog->Log('F', "\t\tRendezvous '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
-	} else if(!!(arg = striKWcmp( l, "-->> need_topic=" ))){
+	} else if(!(arg = striKWcmp( l, "-->> need_topic=" )).empty()){
 		TopicCollection::iterator topic;
 		if( (topic = config.TopicsList.find(arg)) != config.TopicsList.end()){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded needed topic '%s'", arg.c_str());
 			this->addNeededTopic(arg);
+
+			if(d2)
+				fd2 << this->getFullId() << " -- " << topic->second->getFullId() << ": need { class: lneed }" << std::endl;
 			return;
 		} else {
 			SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
-	} else if(!!(arg = striKWcmp( l, "-->> require_topic=" ))){
+	} else if(!(arg = striKWcmp( l, "-->> require_topic=" )).empty()){
 		TopicCollection::iterator topic;
 		if( (topic = config.TopicsList.find(arg)) != config.TopicsList.end()){
 			if(!topic->second->toBeStored()){
@@ -92,62 +110,80 @@ void LuaExec::readConfigDirective( std::string &l, std::string &name, bool &name
 			}
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded required topic '%s'", arg.c_str());
+
+			if(d2)
+				fd2 << this->getFullId() << " -- " << topic->second->getFullId() << ": require { class: lrequiere }" << std::endl;
 			this->addRequiredTopic(arg);
 			return;
 		} else {
 			SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
-	} else if(!!(arg = striKWcmp( l, "-->> need_timer=" ))){
+	} else if(!(arg = striKWcmp( l, "-->> need_timer=" )).empty()){
 		TimerCollection::iterator timer;
 		if( (timer = config.TimersList.find(arg)) != config.TimersList.end()){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded needed timer '%s'", arg.c_str());
 			this->addNeededTimer(arg);
+
+			if(d2)
+				fd2 << this->getFullId() << " -- " << timer->second->getFullId() << ": need { class: lneed }" << std::endl;
 			return;
 		} else {
 			SelLog->Log('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
-	} else if(!!(arg = striKWcmp( l, "-->> need_tracker=" ))){
+	} else if(!(arg = striKWcmp( l, "-->> need_tracker=" )).empty()){
 		TrackerCollection::iterator trk;
 		if( (trk = config.TrackersList.find(arg)) != config.TrackersList.end()){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded needed TrackersList '%s'", arg.c_str());
 			this->addNeededTracker(arg);
+
+			if(d2)
+				fd2 << this->getFullId() << " -- " << trk->second->getFullId() << ": need { class: lneed }" << std::endl;
 			return;
 		} else {
 			SelLog->Log('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
-	} else if(!!(arg = striKWcmp( l, "-->> need_minmax=" ))){
+	} else if(!(arg = striKWcmp( l, "-->> need_minmax=" )).empty()){
 		MinMaxCollection::iterator minmax;
 		if( (minmax = config.MinMaxList.find(arg)) != config.MinMaxList.end()){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded needed minmax '%s'", arg.c_str());
 			this->addNeededMinMax( arg );
+
+			if(d2)
+				fd2 << this->getFullId() << " -- " << minmax->second->getFullId() << ": need { class: lneed }" << std::endl;
 			return;
 		} else {
 			SelLog->Log('F', "\t\tminmax '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
-	} else if(!!(arg = striKWcmp( l, "-->> need_namedminmax=" ))){
+	} else if(!(arg = striKWcmp( l, "-->> need_namedminmax=" )).empty()){
 		NamedMinMaxCollection::iterator nminmax;
 		if( (nminmax = config.NamedMinMaxList.find(arg)) != config.NamedMinMaxList.end()){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded needed namedminmax '%s'", arg.c_str());
 			this->addNeededNamedMinMax( arg );
+
+			if(d2)
+				fd2 << this->getFullId() << " -- " << nminmax->second->getFullId() << arg << ": need { class: lneed }" << std::endl;
 			return;
 		} else {
 			SelLog->Log('F', "\t\tnamedminmax '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
-	} else if(!!(arg = striKWcmp( l, "-->> need_shutdown=" ))){
+	} else if(!(arg = striKWcmp( l, "-->> need_shutdown=" )).empty()){
 		ShutdownCollection::iterator shut;
 		if( (shut = config.ShutdownsList.find(arg)) != config.ShutdownsList.end()){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded needed Shutdown '%s'", arg.c_str());
 			this->addNeededShutdown( arg );
+
+			if(d2)
+				fd2 << this->getFullId() << " -- " << shut->second->getFullId() << ": need { class: lneed }" << std::endl;
 			return;
 		} else {
 			SelLog->Log('F', "\t\tShutdown '%s' is not (yet ?) defined", arg.c_str());
@@ -155,35 +191,44 @@ void LuaExec::readConfigDirective( std::string &l, std::string &name, bool &name
 		}
 #ifdef DBASE
 #	ifdef PGSQL
-	} else if(!!(arg = striKWcmp( l, "-->> need_pgSQL=" ))){
+	} else if(!(arg = striKWcmp( l, "-->> need_pgSQL=" )).empty()){
 		pgSQLCollection::iterator shut;
 		if( (shut = config.pgSQLsList.find(arg)) != config.pgSQLsList.end() ){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded needed pgSQL '%s'", arg.c_str());
 			this->addNeededpgSQL( arg );
+
+			if(d2)
+				fd2 << this->getFullId() << " -- " << pgSQL::trigramme() << arg << ": need { class: lneed }" << std::endl;
 			return;
 		} else {
 			SelLog->Log('F', "\t\tpgSQL '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
 #	endif
-	} else if(!!(arg = striKWcmp( l, "-->> need_feed=" ))){
+	} else if(!(arg = striKWcmp( l, "-->> need_feed=" )).empty()){
 		FeedCollection::iterator shut;
 		if( (shut = config.FeedsList.find(arg)) != config.FeedsList.end() ){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded needed Feed '%s'", arg.c_str());
 			this->addNeededFeed( arg );
+
+			if(d2)
+				fd2 << this->getFullId() << " -- " << shut->second->getFullId() << ": need { class: lneed }" << std::endl;
 			return;
 		} else {
 			SelLog->Log('F', "\t\tFeed '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
-	} else if(!!(arg = striKWcmp( l, "-->> need_namedfeed=" ))){
+	} else if(!(arg = striKWcmp( l, "-->> need_namedfeed=" )).empty()){
 		NamedFeedCollection::iterator shut;
 		if( (shut = config.NamedFeedsList.find(arg)) != config.NamedFeedsList.end() ){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded needed NamedFeed '%s'", arg.c_str());
 			this->addNeededNamedFeed( arg );
+
+			if(d2)
+				fd2 << this->getFullId() << " -- " << shut->second->getFullId() << ": need { class: lneed }" << std::endl;
 			return;
 		} else {
 			SelLog->Log('F', "\t\tNamedFeed '%s' is not (yet ?) defined", arg.c_str());
@@ -191,7 +236,7 @@ void LuaExec::readConfigDirective( std::string &l, std::string &name, bool &name
 		}
 #endif
 #ifdef TOILE
-	} else if(!!(arg = striKWcmp( l, "-->> need_renderer=" ))){
+	} else if(!(arg = striKWcmp( l, "-->> need_renderer=" )).empty()){
 		RendererCollection::iterator renderer;
 		if( (renderer = config.RendererList.find(arg)) != config.RendererList.end() ){
 			if(verbose)
@@ -203,9 +248,9 @@ void LuaExec::readConfigDirective( std::string &l, std::string &name, bool &name
 			exit(EXIT_FAILURE);
 		}
 #endif
-}
+	}
 
-	return this->Object::readConfigDirective(l, name, nameused);
+	return this->Object::readConfigDirective(l);
 }
 
 bool LuaExec::canRun( void ){

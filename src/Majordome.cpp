@@ -19,7 +19,6 @@
 #include "Version.h"
 #include "Selene.h"
 #include "Helpers.h"
-#include "MayBeEmptyString.h"
 #include "Config.h"
 
 #ifdef TOILE
@@ -49,6 +48,9 @@ bool hideTopicArrival = false;	// Silence topics arrival
 bool configtest = false;	// Only validate the configuration, then exit
 Config config;			// Application's configuration
 
+bool d2 = false;		// Generate d2 file
+std::ofstream fd2;
+
 	/* *****
 	 * local configuration
 	 * (feed with default values)
@@ -66,19 +68,19 @@ static void read_configuration(const char *fch){
 
 		file.open(fch);
 		while(std::getline( file, l)){
-			MayBeEmptyString arg;
+			std::string arg;
 
 			if( l[0]=='#' )
 				continue;
-			else if(!!(arg = striKWcmp( l, "Broker_URL=" ))){
+			else if(!(arg = striKWcmp( l, "Broker_URL=" )).empty()){
 				Broker_URL = arg.c_str();
 				if(verbose)
 					SelLog->Log('C', "Broker_URL : '%s'", Broker_URL.c_str());
-			} else if(!!(arg = striKWcmp( l, "ClientID=" ))){
+			} else if(!(arg = striKWcmp( l, "ClientID=" )).empty()){
 				MQTT_ClientID = arg.c_str();
 				if(verbose)
 					SelLog->Log('C', "Client ID : '%s'", MQTT_ClientID.c_str());
-			} else if(!!(arg = striKWcmp( l, "UserConfiguration=" )) || !!(arg = striKWcmp( l, "ApplicationDirectory=" ))){
+			} else if(!(arg = striKWcmp( l, "UserConfiguration=" )).empty() || !(arg = striKWcmp( l, "ApplicationDirectory=" )).empty()){
 				UserConfigRoot = arg.c_str();
 				if(verbose)
 					SelLog->Log('C', "User configuration directory : '%s'", UserConfigRoot.c_str());
@@ -274,7 +276,7 @@ int main(int ac, char **av){
 	char c;
 	const char *conf_file = DEFAULT_CONFIGURATION_FILE;
 
-	while((c = getopt(ac, av, "qvVdhrf:t")) != (char)EOF) switch(c){
+	while((c = getopt(ac, av, "qvVdhrf:t2:")) != (char)EOF) switch(c){
 	case 'h':
 		fprintf(stderr, "%s (%.04f%s)\n"
 			"A lightweight event based Automation System\n"
@@ -290,7 +292,8 @@ int main(int ac, char **av){
 #endif
 			"\t-f<file> : read <file> for configuration\n"
 			"\t\t(default is '%s')\n"
-			"\t-t : test configuration file and exit\n",
+			"\t-t : test configuration file and exit\n"
+			"\t-2<file> : generate a d2 diagram source file\n",
 			basename(av[0]), VERSION,
 #ifdef TOILE
 #define STRIFY_HELPER(s) #s
@@ -334,6 +337,14 @@ int main(int ac, char **av){
 #endif
 	case 'f':
 		conf_file = optarg;
+		break;
+	case '2':
+		fd2.open(optarg);
+		if(!fd2.is_open()){
+			perror(optarg);
+			exit(EXIT_FAILURE);
+		}
+		d2 = true;
 		break;
 	default:
 		SelLog->Log('F', "Unknown option '%c'\n%s -h\n\tfor some help\n", c, av[0]);
@@ -401,9 +412,12 @@ int main(int ac, char **av){
 	config.init(UserConfigRoot, SelLua->getLuaState());	// Read user's configuration files
 	config.SanityChecks();
 
+	if(d2)
+		fd2.close();
+
 	if(configtest){
 		SelLog->Log('E', "Testing only the configuration ... leaving.");
-		exit(EXIT_FAILURE);
+		exit(EXIT_SUCCESS);
 	}
 
 		/* **

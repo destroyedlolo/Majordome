@@ -12,12 +12,14 @@ class NamedFeed : virtual public Feed {
 	virtual bool execAsync(lua_State *L);	// Overloading to handle data acceptation 
 
 public:
-	NamedFeed(const std::string &, std::string &, std::string &, lua_State *);
-	virtual ~NamedFeed(){};
+	NamedFeed(const std::string &, std::string &, lua_State *);
 
 
 	/* Create Lua's object */
 	static void initLuaInterface( lua_State *L );
+
+	virtual std::string getTri(){ return NamedFeed::trigramme(); }
+	static std::string trigramme(){ return "NFD_"; }
 };
 
 typedef ObjCollection<NamedFeed *> NamedFeedCollection;
