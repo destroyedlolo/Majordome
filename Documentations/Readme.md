@@ -18,7 +18,15 @@ Some examples are provided also in [SamplesCode](SamplesCode/) and [UseCases](Us
 - `-V` : silence topic arrival messages. Avoid verbosity to be polluted but incoming messages tracking which is very noisy.
 
 ## Automatic documentation generation
-- `-2` : Generates a [d2](https://d2lang.com/) script in order to generate application diagrams.
+- `-2` : Generates a raw [d2](https://d2lang.com/) script in order to generate application diagrams.
+
+In order to customize the resulting diagram, it is wise to externalize rendering directives (classes) in a separate file to be included at the rendering stage. An example is provided in the [diagrams](../diagrams) directory.
+
+An example of usage :
+`/Majordome -tf tst.conf -2 t.d2 && ( cat diagrams/Style.d2 t.d2 | d2 - tst.svg ; )`
+
+> [!TIP]
+> The raw d2 file is here generated as **t.d2** in the current directory and can be modified manually for customization or fine-tuning if needed.
 
 # Majordome own configuration file
 
@@ -26,7 +34,7 @@ A configuration file instructs Majordome about its basic configuration and where
 Lines starting by a hash sign `#` are considered as comment and, as such, ignored.
 
 > [!TIP]
-> Thanks to `-f`, it's possible to specify the configuration file to use, consequently, it's possible to have several instances running with totally separate configuration.
+> Thanks to `-f`, it's possible to specify the configuration file to use, consequently, it's possible to have several instances running with totally separate configuration. 
 
 ## Known configuration directives
 ### Broker_URL
