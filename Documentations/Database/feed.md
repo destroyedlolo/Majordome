@@ -11,15 +11,17 @@ Store incomming data in a database.
 ## Directives
 
 ### General directives
-See [this page](Headers%20and%20Shared%20Directives.md#general-directives).
+See [this page](../Headers%20and%20Shared%20Directives.md#general-directives).
 #### Launched with a data furnished
-See [this page](Headers%20and%20Shared%20Directives.md#triggering-while-providing-data)
+See [this page](../Headers%20and%20Shared%20Directives.md#triggering-while-providing-data)
 #### Launched without data
-See [this page](Headers%20and%20Shared%20Directives.md#triggering-without-data)
+See [this page](../Headers%20and%20Shared%20Directives.md#triggering-without-data)
+
+A Typical example of launching feeding without providing data is when the said data will be taken from another sources such [MinMax](../minmax.md).
 
 ### feed's owns
 #### -->> Database=
-Which database to use.`
+Which database to use.
 
 #### -->> table=
 The table where data will be inserted.

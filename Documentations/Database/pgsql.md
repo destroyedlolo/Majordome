@@ -11,7 +11,7 @@
 ## Directives
 
 ### General directives
-See [this page](Headers%20and%20Shared%20Directives.md#general-directives).
+See [this page](../Headers%20and%20Shared%20Directives.md#general-directives).
 
 ### psql's owns
 #### -->> pgConnectionstring=

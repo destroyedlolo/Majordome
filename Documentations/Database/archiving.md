@@ -11,7 +11,11 @@ The goal is not only to copy data from one table to another, but archiving is do
 
 ## Directives
 ### General directives
-See [this page](Headers%20and%20Shared%20Directives.md#general-directives).
+See [this page](../Headers%20and%20Shared%20Directives.md#general-directives).
+
+### Launching
+
+See [this page](../Headers%20and%20Shared%20Directives.md#triggering-without-data).
 
 ### Database related
 #### -->> Database=
@@ -100,15 +104,6 @@ Will be executed by an SQL sentence like this one `... where sample_time::date >
 Consequently, argument should be something like :
 - *1 day* to ignore last 1 days (default)
 - *3 months* to ignore 3 last months
-
-### Launching
-
-#### -->> when=
-Indicates the [**Timer**](../timer.md) to wait for : 
-this feed will be triggered when this timer is exhausted.
-```
--->> when=15s
-```
 
 ### Notification
 [**Rendez-vous**](../rendezvous.md) are triggered when the archiving process is terminated.

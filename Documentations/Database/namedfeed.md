@@ -10,14 +10,16 @@ Store incomming data in a database associated to a name.
 
 ## Directives
 ### General directives
-See [this page](Headers%20and%20Shared%20Directives.md#general-directives).
+See [this page](../Headers%20and%20Shared%20Directives.md#general-directives).
 ### Triggering
 Following directives determine what will trigger this script.<br>
 Multiple directives may be present, including those of the same kind.
 #### Launched with a data furnished
-See [this page](Headers%20and%20Shared%20Directives.md#triggering-while-providing-data)
+See [this page](../Headers%20and%20Shared%20Directives.md#triggering-while-providing-data)
 #### Launched without data
-See [this page](Headers%20and%20Shared%20Directives.md#triggering-without-data)
+See [this page](../Headers%20and%20Shared%20Directives.md#triggering-without-data)
+
+A Typical example of launching feeding without providing data is when the said data will be taken from another sources such [MinMax](../minmax.md).
 
 ### feed's owns
 #### -->> Database=
