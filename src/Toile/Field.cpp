@@ -17,7 +17,7 @@ Field::Field( const std::string &fch, std::string &where, lua_State *L ) : Objec
 	this->loadConfigurationFile(fch, where, L);
 
 	if(d2)
-		fd2 << this->getFullId() << ".class: Painting" << std::endl;
+		fd2 << this->getFullId() << ".class: Field" << std::endl;
 
 
 		/* ***

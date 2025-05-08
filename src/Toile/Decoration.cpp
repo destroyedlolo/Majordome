@@ -28,6 +28,9 @@ void Decoration::readConfigDirective( std::string &l ){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded to renderer '%s'", arg.c_str());
 			renderer->second->addDecoration( this );
+
+			if(d2)
+				fd2 << renderer->second->getFullId() << " <- " << this->getFullId() << ": ApplyOnRenderer { class: llink }" << std::endl;
 		} else {
 			SelLog->Log('F', "\t\tRenderer '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
@@ -39,6 +42,9 @@ void Decoration::readConfigDirective( std::string &l ){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded to Painting '%s'", arg.c_str());
 			paint->second->addDecoration( this );
+
+			if(d2)
+				fd2 << paint->second->getFullId() << " <- " << this->getFullId() << ": ApplyOn { class: llink }" << std::endl;
 		} else {
 			SelLog->Log('F', "\t\tPainting '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);

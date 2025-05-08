@@ -54,6 +54,9 @@ bool Painting::readConfigDirectiveOnly( std::string &l ){
 #endif
 			this->parentR = renderer->second;
 			renderer->second->addPainting( this );
+
+			if(d2)
+				fd2 << renderer->second->getFullId() << " <- " << this->getFullId() << ": Renderer Parent { class: llink }" << std::endl;
 		} else {
 			SelLog->Log('F', "\t\tRenderer '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
