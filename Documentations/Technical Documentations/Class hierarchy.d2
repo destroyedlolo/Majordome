@@ -128,6 +128,45 @@ pgsql : Database Add On {
 	_.Handler -> Archiving
 }
 
+Toile: Toile Add On {
+	style.stroke-dash: 6
+
+	Renderer {
+		class: [ TRenderer ; Lua ]
+
+		DecorationsList {
+			style.multiple: true
+			class : TDecoration
+		}
+
+		PaintingsList {
+			style.multiple: true
+			class : TPainting
+		}
+	}
+	_.LuaExec -> Renderer 
+
+	Decoration {
+		class: [ TDecoration ; Lua ]
+	}
+	_.LuaExec -> Decoration 
+	Decoration -> Renderer.DecorationsList
+
+	Painting {
+		class: TPainting
+	}
+	_.Object -> Painting
+	Painting -> Renderer.PaintingsList
+
+	Field {
+		class: [ TField ; Lua ]
+		icon: https://icons.terrastruct.com/essentials/021-view.svg
+	}
+	_.Object -> Field
+	_.Handler -> Field
+	Painting -> Field
+}
+
 # Configuration
 
 Config: { 
@@ -136,52 +175,42 @@ Config: {
 	}
 
 	EventsList {
-		style.multiple: true
 		class: Event
 	}
 
 	TimersList {
-		style.multiple: true
 		class: Timer
 	}
 
 	TrackersList {
-		style.multiple: true
 		class: Tracker
 	}
 
 	MinMaxList {
-		style.multiple: true
 		class: MinMax
 	}
 
 	NamedMinMaxList {
-		style.multiple: true
 		class: MinMax
 	}
 
 	TasksList {
-		style.multiple: true
 		class: Task
 	}
 
 	ShutdownsList {
-		style.multiple: true
 		class: Shutdown
 	}
 
 	FeedsList {
-		style.multiple: true
 		class: Sql
 	}
 
 	NamedFeedsList {
-		style.multiple: true
 		class: Sql
 	}
 
 	pgSQLsList {
-		style.multiple: true
 		class: Database
 	}
 }
