@@ -96,33 +96,37 @@ Tracker {
 Handler -> Tracker
 HandlersExecutor -> Tracker
 
-mpgConnection {
-	class: Database
-}
+pgsql : Database Add On {
+	style.stroke-dash: 6
 
-pgSQL {
-	class: Database
-	style.fill: "linear-gradient(#888888, #f4a261)"
-}
-Object -> pgSQL
-mpgConnection -> pgSQL
+	mpgConnection {
+		class: Database
+	}
 
-Feed {
-	class: [Sql ; Lua]
-}
-mpgConnection -> Feed
-Handler -> Feed
+	pgSQL {
+		class: Database
+		style.fill: "linear-gradient(#888888, #f4a261)"
+	}
+	_.Object -> pgSQL
+	mpgConnection -> pgSQL
 
-NamedFeed {
-	class: [Sql ; Lua]
-}
-Feed -> NamedFeed
+	Feed {
+		class: [Sql ; Lua]
+	}
+	mpgConnection -> Feed
+	_.Handler -> Feed
 
-Archiving {
-	class: Sql
+	NamedFeed {
+		class: [Sql ; Lua]
+	}
+	Feed -> NamedFeed
+
+	Archiving {
+		class: Sql
+	}
+	mpgConnection -> Archiving
+	_.Handler -> Archiving
 }
-mpgConnection -> Archiving
-Handler -> Archiving
 
 # Configuration
 
@@ -192,8 +196,9 @@ Timer -> Config.TimersList
 MinMax -> Config.MinMaxList
 NamedMinMax -> Config.NamedMinMaxList
 Tracker -> Config.TrackersList
-mpgConnection -> Config.pgSQLsList
-Feed -> Config.FeedsList
-NamedFeed -> Config.NamedFeedsList
+
+pgsql.mpgConnection -> Config.pgSQLsList
+pgsql.Feed -> Config.FeedsList
+pgsql.NamedFeed -> Config.NamedFeedsList
 
 COnfig.*.style.stroke: black
