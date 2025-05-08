@@ -16,7 +16,7 @@ protected:
 		// Update the field when a data arrived
 	void update(std::string &, lua_Number &);
 public:
-	Field( const std::string &file, std::string &where, std::string &name, lua_State *L );
+	Field( const std::string &file, std::string &where, lua_State *L );
 
 	/* Read directives.
 	 * These directives may apply to all derivates.
@@ -25,9 +25,11 @@ public:
 	 * -> l : directive line to parse
 	 * -> nameused : is the name already used ?
 	 */
-	void readConfigDirective( std::string &l, std::string &, bool &nameused );
+	void readConfigDirective( std::string &l );
 
 		/* Executable */
 	virtual bool execAsync(lua_State *L);	// Overloading to handle MinMax data feeding
+
+	virtual std::string getTri(){ return "FLD_"; }
 };
 #endif

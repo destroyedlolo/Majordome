@@ -29,6 +29,15 @@ class Renderer : public LuaExec {
 	struct SelGenericSurface *surface;
 	bool fatal;
 
+protected:
+	/* Read directives.
+	 * These directives may apply to all derivates.
+	 * Facing unknown directive, LuaExec's is called as well.
+	 *
+	 * -> l : directive line to parse
+	 */
+	void readConfigDirective( std::string &l );
+
 public:
 	std::vector<Decoration *> DecorationsList;	// List of decorations to apply
 	std::vector<Painting *> PaintingList;		// List of painting
@@ -39,20 +48,11 @@ public:
 	 * <- name : this object's name
 	 * -> L : Lua's state
 	 */
-	Renderer( const std::string &file, std::string &where, std::string &name, lua_State *L );
+	Renderer( const std::string &file, std::string &where, lua_State *L );
 	
 #ifdef DEBUG
 	void dump();
 #endif
-
-	/* Read directives.
-	 * These directives may apply to all derivates.
-	 * Facing unknown directive, LuaExec's is called as well.
-	 *
-	 * -> l : directive line to parse
-	 * -> nameused : is the name already used ?
-	 */
-	void readConfigDirective( std::string &l, std::string &name, bool &nameused );
 
 	/* ***
 	 * Accessors
@@ -78,6 +78,8 @@ public:
 	void refresh();			// Refresh Painting's own decoration (background)
 	void refreshChild();	// Refresh its child
 	void refreshAll();		// Refresh everything
+
+	virtual std::string getTri(){ return "RDR_"; }
 };
 
 typedef ObjCollection<Renderer *> RendererCollection;

@@ -44,52 +44,48 @@ bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &
 */
 
 	if(ext == ".Renderer"){
-		std::string name;
-		auto tsk = new Renderer( completpath, where, name, L );
+		auto tsk = new Renderer( completpath, where, L );
 		assert(tsk);
 	
 		RendererCollection::iterator prev;
-		if((prev = cfg.RendererList.find(name)) != cfg.RendererList.end()){
-			SelLog->Log('F', "Renderer '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhere().c_str());
+		if((prev = cfg.RendererList.find(tsk->getName())) != cfg.RendererList.end()){
+			SelLog->Log('F', "Renderer '%s' is defined multiple times (previous one '%s')", tsk->getName().c_str(), prev->second->getWhere().c_str());
 			exit(EXIT_FAILURE);
 		} else
-			cfg.RendererList.insert( std::make_pair(name, tsk) );
+			cfg.RendererList.insert( std::make_pair(tsk->getName(), tsk) );
 
 		return true;
 	} else if(ext == ".Decoration"){
-		std::string name;
-		auto paint = new Decoration( completpath, where, name, L );
+		auto paint = new Decoration( completpath, where, L );
 	
 		DecorationCollection::iterator prev;
-		if((prev = cfg.DecorationList.find(name)) != cfg.DecorationList.end()){
-			SelLog->Log('F', "Decoration '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhere().c_str());
+		if((prev = cfg.DecorationList.find(paint->getName())) != cfg.DecorationList.end()){
+			SelLog->Log('F', "Decoration '%s' is defined multiple times (previous one '%s')", paint->getName().c_str(), prev->second->getWhere().c_str());
 			exit(EXIT_FAILURE);
 		} else
-			cfg.DecorationList.insert( std::make_pair(name, paint) );
+			cfg.DecorationList.insert( std::make_pair(paint->getName(), paint) );
 
 		return true;
 	} else if(ext == ".Painting"){
-		std::string name;
-		auto paint = new Painting( completpath, where, name, L );
+		auto paint = new Painting( completpath, where, L );
 	
 		PaintingCollection::iterator prev;
-		if((prev = cfg.PaintingList.find(name)) != cfg.PaintingList.end()){
-			SelLog->Log('F', "Painting '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhere().c_str());
+		if((prev = cfg.PaintingList.find(paint->getName())) != cfg.PaintingList.end()){
+			SelLog->Log('F', "Painting '%s' is defined multiple times (previous one '%s')", paint->getName().c_str(), prev->second->getWhere().c_str());
 			exit(EXIT_FAILURE);
 		} else
-			cfg.PaintingList.insert( std::make_pair(name, paint) );
+			cfg.PaintingList.insert( std::make_pair(paint->getName(), paint) );
 
 		return true;
 	} else if(ext == ".Field"){
-		std::string name;
-		auto paint = new Field( completpath, where, name, L );
+		auto paint = new Field( completpath, where, L );
 	
 		PaintingCollection::iterator prev;
-		if((prev = cfg.PaintingList.find(name)) != cfg.PaintingList.end()){
-			SelLog->Log('F', "Field '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhere().c_str());
+		if((prev = cfg.PaintingList.find(paint->getName())) != cfg.PaintingList.end()){
+			SelLog->Log('F', "Field '%s' is defined multiple times (previous one '%s')", paint->getName().c_str(), prev->second->getWhere().c_str());
 			exit(EXIT_FAILURE);
 		} else
-			cfg.PaintingList.insert( std::make_pair(name, paint) );
+			cfg.PaintingList.insert( std::make_pair(paint->getName(), paint) );
 
 		return true;
 	}

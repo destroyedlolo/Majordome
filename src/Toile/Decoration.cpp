@@ -12,84 +12,39 @@
 #include <cstring>
 #include <cassert>
 
-Decoration::Decoration( const std::string &fch, std::string &where, std::string &name, lua_State *L ) : Object(fch, where, name), LuaExec(fch, where, name){
-#if DEBUG
-	if(verbose)
-		SelLog->Log('D', "\t\tid : (%p)", this);
-#endif
+Decoration::Decoration( const std::string &fch, std::string &where, lua_State *L ) : Object(fch, where), LuaExec(fch, where){
+	this->loadConfigurationFile(fch, where, L);
 
-	/*
-	 * Reading file's content
-	 */
-
-	std::stringstream buffer;
-	std::ifstream file;
-	file.exceptions ( std::ios::eofbit | std::ios::failbit );
-
-	try {
-		std::ifstream file(fch);
-		std::streampos pos;
-
-		bool nameused = false;	// if so, the name can't be changed anymore
-
-		do {
-			std::string l;
-			pos = file.tellg();
-
-			std::getline( file, l);
-			if( l.compare(0, 2, "--") ){	// End of comments
-				file.seekg( pos );
-				break;
-			}
-
-			this->readConfigDirective(l, name, nameused);
-		} while(true);
-
-		/*
-		 * Reading the remaining of the script and keep it as 
-		 * an Lua's script
-		 */
-		buffer << file.rdbuf();
-		file.close();
-	} catch(const std::ifstream::failure &e){
-		if(!file.eof()){
-			SelLog->Log('F', "%s : %s", fch.c_str(), strerror(errno) );
-			exit(EXIT_FAILURE);
-		}
-	}
-
-	if( !this->LoadFunc( L, buffer, this->name.c_str() ))
-		exit(EXIT_FAILURE);
+	if(d2)
+		fd2 << this->getFullId() << ".class: Decoration" << std::endl;
 }
 
-void Decoration::readConfigDirective( std::string &l, std::string &name, bool &nameused ){
-	MayBeEmptyString arg;
-	if(!!(arg = striKWcmp( l, "-->> ApplyOnRenderer=" ))){
+void Decoration::readConfigDirective( std::string &l ){
+	std::string arg;
+	if(!(arg = striKWcmp( l, "-->> ApplyOnRenderer=" )).empty()){
 			// Search the renderer to apply on
 		RendererCollection::iterator renderer;
 		if((renderer = config.RendererList.find(arg)) != config.RendererList.end()){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded to renderer '%s'", arg.c_str());
-			nameused = true;
 			renderer->second->addDecoration( this );
 		} else {
 			SelLog->Log('F', "\t\tRenderer '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
-	} else if(!!(arg = striKWcmp( l, "-->> ApplyOn=" ))){
+	} else if(!(arg = striKWcmp( l, "-->> ApplyOn=" )).empty()){
 			// Search the Painting to apply on
 		PaintingCollection::iterator paint;
 		if((paint = config.PaintingList.find(arg)) != config.PaintingList.end()){
 			if(verbose)
 				SelLog->Log('C', "\t\tAdded to Painting '%s'", arg.c_str());
-			nameused = true;
 			paint->second->addDecoration( this );
 		} else {
 			SelLog->Log('F', "\t\tPainting '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
 	} else
-		Object::readConfigDirective(l, name, nameused);
+		this->Object::readConfigDirective(l);
 }
 
 void Decoration::exec(struct SelGenericSurface *srf){	/* From LuaExec::execSync() */

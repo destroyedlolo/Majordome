@@ -23,7 +23,7 @@ public:
 	 * <- name : this object's name
 	 * -> L : Lua's state
 	 */
-	Decoration( const std::string &file, std::string &where, std::string &name, lua_State *L );
+	Decoration( const std::string &file, std::string &where, lua_State *L );
 	
 	/* Read directives.
 	 * These directives may apply to all derivates.
@@ -32,12 +32,14 @@ public:
 	 * -> l : directive line to parse
 	 * -> nameused : is the name already used ?
 	 */
-	void readConfigDirective( std::string &l, std::string &name, bool &nameused );
+	void readConfigDirective( std::string &l );
 
 	/* Run the Lua code to build the renderer */
 	void exec(struct SelGenericSurface *);
 	void exec(Renderer &rd);
 	void exec(Painting &pt);
+
+	virtual std::string getTri(){ return "DEC_"; }
 };
 
 typedef ObjCollection<Decoration *> DecorationCollection;

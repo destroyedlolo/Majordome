@@ -32,7 +32,7 @@ public:
 	std::vector<Decoration *> DecorationsList;
 
 	Painting():surface(NULL), parentR(NULL), parentP(NULL){};
-	Painting(const std::string &fch, std::string &where, std::string &name): Object(fch, where, name), surface(NULL), parentR(NULL), parentP(NULL){};
+	Painting(const std::string &fch, std::string &where): Object(fch, where), surface(NULL), parentR(NULL), parentP(NULL){};
 
 	/* constructor from file
 	 * -> file : file to load
@@ -40,7 +40,7 @@ public:
 	 * <- name : this object's name
 	 * -> L : Lua's state
 	 */
-	Painting( const std::string &file, std::string &where, std::string &name, lua_State *L );
+	Painting( const std::string &file, std::string &where, lua_State *L );
 
 protected:
 	/* Read directives.
@@ -50,8 +50,8 @@ protected:
 	 * -> l : directive line to parse
 	 * -> nameused : is the name already used ?
 	 */
-	bool readConfigDirectiveOnly( std::string &l, std::string &name, bool &nameused );	// doesn't call parent if unknown
-	void readConfigDirective( std::string &l, std::string &name, bool &nameused );	// full stack : call parent if needed
+	bool readConfigDirectiveOnly( std::string &l );	// doesn't call parent if unknown
+	void readConfigDirective( std::string &l );	// full stack : call parent if needed
 
 public:
 #ifdef DEBUG
@@ -82,6 +82,8 @@ public:
 	void refresh();			// Refresh Painting's own decoration (background)
 	void refreshChild();	// Refresh its child
 	void refreshAll();		// Refresh everything
+
+	virtual std::string getTri(){ return "PNT_"; }
 };
 
 typedef ObjCollection<Painting *> PaintingCollection;

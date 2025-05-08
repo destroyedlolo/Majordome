@@ -13,56 +13,12 @@
 #include <cstring>
 #include <cassert>
 
-Field::Field( const std::string &fch, std::string &where, std::string &name, lua_State *L ) : Object(fch, where, name), Painting(fch, where, name), Handler(fch, where, name){
-#if DEBUG
-	if(verbose)
-		SelLog->Log('D', "\t\tid : (%p)", this);
-#endif
+Field::Field( const std::string &fch, std::string &where, lua_State *L ) : Object(fch, where), Painting(fch, where), Handler(fch, where){
+	this->loadConfigurationFile(fch, where, L);
 
-	/*
-	 * Reading file's content
-	 */
+	if(d2)
+		fd2 << this->getFullId() << ".class: Painting" << std::endl;
 
-	std::stringstream buffer;
-	std::ifstream file;
-	file.exceptions ( std::ios::eofbit | std::ios::failbit );
-
-	try {
-		std::ifstream file(fch);
-		std::streampos pos;
-
-		bool nameused = false;	// if so, the name can't be changed anymore
-
-		do {
-			std::string l;
-			pos = file.tellg();
-
-			std::getline( file, l);
-			if( l.compare(0, 2, "--") ){	// End of comments
-				file.seekg( pos );
-				break;
-			}
-
-			this->readConfigDirective(l, name, nameused);
-		} while(true);
-
-		/*
-		 * Reading the remaining of the script and keep it as 
-		 * an Lua's script
-		 */
-
-		buffer << file.rdbuf();
-		file.close();
-	} catch(const std::ifstream::failure &e){
-		if(!file.eof()){
-			SelLog->Log('F', "%s : %s", fch.c_str(), strerror(errno) );
-			exit(EXIT_FAILURE);
-		}
-	}
-
-
-	if( !this->LoadFunc( L, buffer, this->name.c_str() ))
-		exit(EXIT_FAILURE);
 
 		/* ***
 		 * Sanity checks
@@ -79,35 +35,13 @@ Field::Field( const std::string &fch, std::string &where, std::string &name, lua
 	}
 }
 
-void Field::readConfigDirective( std::string &l, std::string &name, bool &nameused ){
-	MayBeEmptyString arg;
-	if(!!(arg = striKWcmp( l, "-->> Sample=" ))){
-		this->geometry.w = arg.length();
-		if(verbose)
-			SelLog->Log('C', "\t\tWidth guessed to : %u", this->geometry.w);
-	} else if( !!(arg = striKWcmp( l, "-->> listen=" ))){
-		TopicCollection::iterator topic;
-		if( (topic = config.TopicsList.find(arg)) != config.TopicsList.end()){
-			if(verbose)
-				SelLog->Log('C', "\t\tAdded to topic '%s'", arg.c_str());
-			topic->second->addHandler( dynamic_cast<Handler *>(this) );
-		} else {
-			SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
-			exit(EXIT_FAILURE);
-		}
-	} else if( !!(arg = striKWcmp( l, "-->> when=" ))){
-		TimerCollection::iterator timer;
-		if( (timer = config.TimersList.find(arg)) != config.TimersList.end()){
-			if(verbose)
-				SelLog->Log('C', "\t\tAdded to timer '%s'", arg.c_str());
-			timer->second->addHandler( dynamic_cast<Handler *>(this) );
-//			nameused = true;
-		} else {
-			SelLog->Log('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
-			exit(EXIT_FAILURE);
-		}
-	} else if(!this->Painting::readConfigDirectiveOnly(l, name, nameused))
-		this->LuaExec::readConfigDirective(l, name, nameused);
+void Field::readConfigDirective( std::string &l ){
+	if(this->readConfigDirectiveData(l))
+		;
+	else if(this->readConfigDirectiveNoData(l))
+		;
+	else
+		this->LuaExec::readConfigDirective(l);
 }
 
 void Field::feedState( lua_State *L ){
