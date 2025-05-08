@@ -36,7 +36,14 @@ Field::Field( const std::string &fch, std::string &where, lua_State *L ) : Objec
 }
 
 void Field::readConfigDirective( std::string &l ){
-	if(this->readConfigDirectiveData(l))
+	std::string arg;
+	if(!(arg = striKWcmp( l, "-->> Sample=" )).empty()){
+		this->geometry.w = arg.length();
+		if(verbose)
+			SelLog->Log('C', "\t\tWidth guessed to : %u", this->geometry.w);
+	} else if(this->Painting::readConfigDirectiveOnly(l))
+		;
+	else if(this->readConfigDirectiveData(l))
 		;
 	else if(this->readConfigDirectiveNoData(l))
 		;
