@@ -45,7 +45,7 @@ bool Handler::readConfigDirectiveNoData(std::string &l){
 			event->second->addHandler( dynamic_cast<Handler *>(this) );
 
 			if(d2)
-				fd2 << this->getFullId() << " <- " << event->second->getFullId() << ": waitfor { class: link }" << std::endl;
+				fd2 << this->getFullId() << " <- " << event->second->getFullId() << ": waitfor { class: llink }" << std::endl;
 		} else {
 			SelLog->Log('F', "\t\tRendezvous '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
@@ -59,7 +59,7 @@ bool Handler::readConfigDirectiveNoData(std::string &l){
 			timer->second->addHandler( dynamic_cast<Handler *>(this) );
 
 			if(d2)
-				fd2 << this->getFullId() << " <- " << timer->second->getFullId() << ": when { class: link }" << std::endl;
+				fd2 << this->getFullId() << " <- " << timer->second->getFullId() << ": when { class: llink }" << std::endl;
 		} else {
 			SelLog->Log('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
@@ -73,7 +73,7 @@ bool Handler::readConfigDirectiveNoData(std::string &l){
 			tracker->second->addDone( this );
 
 			if(d2)
-				fd2 << this->getFullId() << " <- " << tracker->second->getFullId() << ": whenDone { class: link }" << std::endl;
+				fd2 << this->getFullId() << " <- " << tracker->second->getFullId() << ": whenDone { class: llink }" << std::endl;
 		} else {
 			SelLog->Log('F', "\t\tTracker '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
@@ -87,7 +87,7 @@ bool Handler::readConfigDirectiveNoData(std::string &l){
 	 		tracker->second->addStarted( this );
 
 			if(d2)
-				fd2 << this->getFullId() << " <- " << tracker->second->getFullId() << ": whenStarted { class: link }" << std::endl;
+				fd2 << this->getFullId() << " <- " << tracker->second->getFullId() << ": whenStarted { class: llink }" << std::endl;
 		} else {
 			SelLog->Log('F', "\t\tTracker '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
@@ -101,7 +101,7 @@ bool Handler::readConfigDirectiveNoData(std::string &l){
 		 	tracker->second->addStopped( this );
 
 			if(d2)
-				fd2 << this->getFullId() << " <- " << tracker->second->getFullId() << ": whenStopped { class: link }" << std::endl;
+				fd2 << this->getFullId() << " <- " << tracker->second->getFullId() << ": whenStopped { class: llink }" << std::endl;
 		} else {
 			SelLog->Log('F', "\t\tTracker '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
@@ -115,7 +115,7 @@ bool Handler::readConfigDirectiveNoData(std::string &l){
 			tracker->second->addChanged( this );
 
 			if(d2)
-				fd2 << this->getFullId() << " <- " << tracker->second->getFullId() << ": whenChanged { class: link }" << std::endl;
+				fd2 << this->getFullId() << " <- " << tracker->second->getFullId() << ": whenChanged { class: llink }" << std::endl;
 		} else {
 			SelLog->Log('F', "\t\ttracker '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
@@ -137,7 +137,7 @@ bool Handler::readConfigDirectiveData(std::string &l){
 			topic->second->addHandler( dynamic_cast<Handler *>(this) );
 
 			if(d2)
-				fd2 << this->getFullId() << " <- " << topic->second->getFullId() << ": listen { class: link }" << std::endl;
+				fd2 << this->getFullId() << " <- " << topic->second->getFullId() << ": listen { class: llink }" << std::endl;
 		} else {
 			SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
