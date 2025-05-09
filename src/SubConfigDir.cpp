@@ -214,7 +214,7 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 			} else
 				cfg.NamedFeedsList.insert( std::make_pair(f->getName(), f) );
 		} else if(ext == ".archiving"){
-			auto f = new Archiving( completpath, where, L );
+			auto f = new Archiving( completpath, where );
 
 			ArchivingCollection::iterator prev;
 			if((prev = cfg.ArchivingsList.find(f->getName())) != cfg.ArchivingsList.end()){

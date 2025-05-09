@@ -37,7 +37,7 @@ protected:
 	virtual bool execAsync(lua_State *L);	// Overloading to handle data acceptation
 
 public:
-	Archiving(const std::string &fch, std::string &where, lua_State *L);
+	Archiving(const std::string &fch, std::string &where);
 
 	/* Accessors */
 	const char *getTableName(void);

@@ -50,6 +50,10 @@ bool LuaExec::LoadFunc( lua_State *L, std::stringstream &buffer, const char *nam
 	return true;
 }
 
+void LuaExec::loadConfigurationFile(const std::string &fch, std::string &where){
+	this->Object::loadConfigurationFile(fch, where);
+}
+
 void LuaExec::loadConfigurationFile(const std::string &fch, std::string &where, lua_State *L){
 	std::stringstream buffer;
 	this->Object::loadConfigurationFile(fch, where, &buffer);

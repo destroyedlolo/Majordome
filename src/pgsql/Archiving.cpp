@@ -9,8 +9,8 @@
 #include <cstring>
 #include <cassert>
 
-Archiving::Archiving(const std::string &fch, std::string &where, lua_State *L) : Object(fch, where), Handler(fch, where), Aggregation("Day"), kind(_kind::MINMAX), upto("1 day") {
-	this->loadConfigurationFile(fch, where, L);
+Archiving::Archiving(const std::string &fch, std::string &where) : Object(fch, where), Handler(fch, where), Aggregation("Day"), kind(_kind::MINMAX), upto("1 day") {
+	this->loadConfigurationFile(fch, where);
 
 	if(d2)
 		fd2 << this->getFullId() << ".class: Archiving" << std::endl;
