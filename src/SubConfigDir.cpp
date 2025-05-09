@@ -213,6 +213,15 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 				exit(EXIT_FAILURE);
 			} else
 				cfg.NamedFeedsList.insert( std::make_pair(f->getName(), f) );
+		} else if(ext == ".purge"){
+			auto f = new Purge( completpath, where );
+
+			PurgeCollection::iterator prev;
+			if((prev = cfg.PurgesList.find(f->getName())) != cfg.PurgesList.end()){
+				SelLog->Log('F', "Purge '%s' is defined multiple times (previous one '%s')", f->getNameC(), prev->second->getWhereC());
+				exit(EXIT_FAILURE);
+			} else
+				cfg.PurgesList.insert( std::make_pair(f->getName(), f) );
 		} else if(ext == ".archiving"){
 			auto f = new Archiving( completpath, where );
 

@@ -9,7 +9,7 @@
 #include <cstring>
 #include <cassert>
 
-Archiving::Archiving(const std::string &fch, std::string &where) : Object(fch, where), Handler(fch, where), Aggregation("Day"), kind(_kind::MINMAX), upto("1 day") {
+Archiving::Archiving(const std::string &fch, std::string &where) : Object(fch, where), Handler(fch, where), Purge(fch, where), Aggregation("Day"), kind(_kind::MINMAX){
 	this->loadConfigurationFile(fch, where);
 
 	if(d2)
@@ -112,13 +112,6 @@ void Archiving::readConfigDirective( std::string &l ){
 		;
 	else
 		this->Object::readConfigDirective(l);
-}
-
-const char *Archiving::getTableName(void){
-	if(!this->TableName.empty())
-		return(this->TableName.c_str());
-	else
-		return(this->getNameC());
 }
 
 bool Archiving::internalExec(void){
@@ -234,18 +227,4 @@ bool Archiving::internalExec(void){
 	return true;
 }
 
-bool Archiving::execAsync(lua_State *){
-	bool ret = internalExec();
 
-	if(!this->isQuiet())
-		SelLog->Log('I', "['%s'] as %s run", this->getNameC(), ret ? "successfully" : "unsuccessfully");
-
-	if(ret)
-		for(auto &i : this->EventSuccessList)
-			i->execHandlers();
-	else
-		for(auto &i : this->EventFailList)
-			i->execHandlers();
-
-	return ret;
-}

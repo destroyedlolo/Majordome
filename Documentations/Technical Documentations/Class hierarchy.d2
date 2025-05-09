@@ -121,11 +121,16 @@ pgsql : Database Add On {
 	}
 	Feed -> NamedFeed
 
+	Purge {
+		class: Sql
+	}
+	mpgConnection -> Purge
+	_.Handler -> Purge
+
 	Archiving {
 		class: Sql
 	}
-	mpgConnection -> Archiving
-	_.Handler -> Archiving
+	Purge -> Archiving
 }
 
 # Configuration

@@ -4,18 +4,17 @@
 #define ARCHIVING_H
 
 #include "mpgConnection.h"
+#include "Purge.h"
 #include "../Object.h"
 #include "../Handler.h"
 #include "../ObjCollection.h"
 #include "../StringVector.h"
 #include "../Event.h"
 
-class Archiving : virtual public mpgConnection, virtual public Handler {
+class Archiving : virtual public Purge {
 	EventVector EventSuccessList;
 	EventVector EventFailList;
 
-	void feedState(lua_State *){};
-	bool internalExec(void);
 protected:
 	void readConfigDirective( std::string &l );
 
@@ -31,19 +30,13 @@ protected:
 	} kind;
 
 	StringVector keys;
-	std::string upto;
 
-		/* Executable */
-	virtual bool execAsync(lua_State *L);	// Overloading to handle data acceptation
-
+	bool internalExec(void);
 public:
 	Archiving(const std::string &fch, std::string &where);
 
 	/* Accessors */
-	const char *getTableName(void);
 	bool hasSource(void){ return !this->SourceName.empty(); };
-	virtual const char *getNameC(){ return(this->Object::getNameC()); };
-	bool isQuiet(){ return this->Object::isQuiet(); };
 
 	virtual std::string getTri(){ return "ARC_"; }
 };

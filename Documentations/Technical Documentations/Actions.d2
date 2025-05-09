@@ -65,12 +65,20 @@ diagram {
 		archive {
 			class: Sql
 		}
+
+		purge {
+			class: Sql
+		}
 	}
 
 	Database.feed <- topic : listen
 	Database.feed <- timer : when
 	rendezvous -> Database.feed : waitfor
 	tracker -> Database.feed : whenDone\nwhenStopped\nwhenChanged
+
+	Database.purge <- timer : when
+	tracker -> Database.purge : whenDone\nwhenStopped\nwhenChanged
+	Database.purge -> rendezvous : SuccessRDV\nFailRDV
 
 	Database.archive <- timer : when
 	tracker -> Database.archive : whenDone\nwhenStopped\nwhenChanged
