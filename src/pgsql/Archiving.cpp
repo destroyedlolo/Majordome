@@ -9,11 +9,12 @@
 #include <cstring>
 #include <cassert>
 
-Archiving::Archiving(const std::string &fch, std::string &where) : Object(fch, where), Handler(fch, where), Purge(fch, where), Aggregation("Day"), kind(_kind::MINMAX){
+Archiving::Archiving(const std::string &fch, std::string &where) : Object(fch, where), Handler(fch, where), Aggregation("Day"), kind(_kind::MINMAX){
 	this->loadConfigurationFile(fch, where);
 
 	if(d2)
 		fd2 << this->getFullId() << ".class: Archiving" << std::endl;
+puts("F - Archiving::Archiving");
 }
 
 void Archiving::readConfigDirective( std::string &l ){

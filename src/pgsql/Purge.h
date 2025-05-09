@@ -18,12 +18,14 @@ protected:
 	std::string TableName;	// Table to purge
 	std::string upto;		// Selection of data to purge
 
-	void readConfigDirective( std::string &l );
+	virtual void readConfigDirective( std::string &l );
 	void feedState(lua_State *){};
 
 		/* Executable */
 	virtual bool execAsync(lua_State *L);	// Overloading to handle data acceptation
 	virtual bool internalExec(void);
+
+	Purge() = default;
 
 public:
 	Purge(const std::string &fch, std::string &where);
