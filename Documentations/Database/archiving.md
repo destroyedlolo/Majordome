@@ -102,7 +102,7 @@ If more than one are provided, they are separated by a comma
 Up to when data will be archived, following SQL syntax.
 Will be executed by an SQL sentence like this one `... where sample_time::date > current_date - interval 'arg'`
 Consequently, argument should be something like :
-- *1 day* to ignore last 1 days (default)
+- *1 day* to ignore last 1 day (default)
 - *3 months* to ignore 3 last months
 
 ### Notification
