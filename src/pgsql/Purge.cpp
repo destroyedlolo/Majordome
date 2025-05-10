@@ -93,5 +93,11 @@ bool Purge::internalExec(void){
 	if(!this->connect())
 		return false;
 
+	char *t;
+	std::string cmd("INSERT INTO ");
+
+	cmd += (t = PQescapeIdentifier(this->conn, this->getTableName(), strlen(this->getTableName())));
+	PQfreemem(t);
+
 	return true;
 }
