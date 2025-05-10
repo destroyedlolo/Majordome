@@ -91,7 +91,7 @@ void Archiving::readConfigDirective( std::string &l ){
 			this->EventSuccessList.Add(event->second);
 
 			if(d2)
-				fd2 << this->getTri() << this->getName() << " -> " << event->second->getTri() << arg << ": SuccessRDV" << std::endl;
+				fd2 << this->getFullId() << " -> " << event->second->getFullId() << ": SuccessRDV" << std::endl;
 		} else {
 			SelLog->Log('F', "\t\tRendezvous '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
@@ -104,7 +104,7 @@ void Archiving::readConfigDirective( std::string &l ){
 			this->EventFailList.Add(event->second);
 
 			if(d2)
-				fd2 << this->getTri() << this->getName() << " -> " << event->second->getTri() << arg << ": FailRDV" << std::endl;
+				fd2 << this->getFullId() << " -> " << event->second->getFullId() << ": FailRDV" << std::endl;
 		} else {
 			SelLog->Log('F', "\t\tRendezvous '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
