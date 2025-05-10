@@ -74,6 +74,8 @@ void Tracker::readConfigDirective( std::string &l ){
 		this->hm_counter = this->howmany;
 	} else if(this->readConfigDirectiveNoData(l))
 		;
+	else if(this->readConfigDirectiveData(l))
+		;
 	else 
 		this->Handler::readConfigDirective(l);
 }

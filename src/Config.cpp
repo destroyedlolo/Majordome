@@ -178,3 +178,15 @@ void Config::RunShutdowns( void ){
 	for(auto &i : this->ShutdownsList)
 		i.second->exec();
 }
+
+#ifdef DEBUG
+void Config::dump(void){
+	std::cout << "Task\n------" << std::endl;
+	for(auto &i : this->TasksList)
+		std::cout << "x:" << i.first << std::endl;
+
+	std::cout << "Tracker\n------" << std::endl;
+	for(auto &i : this->TrackersList)
+		std::cout << "x:" << i.first << std::endl;
+}
+#endif

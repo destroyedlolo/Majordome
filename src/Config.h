@@ -94,6 +94,10 @@ public:
 		/* Execution */
 	void RunStartups( void );	// Executes RunAtStartup marked tasks
 	void RunShutdowns( void );
+
+#ifdef DEBUG
+	void dump(void);
+#endif
 };
 
 extern Config config;
