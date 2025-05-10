@@ -1,4 +1,4 @@
-This example shows how to execute a database purging using **Delta** method.
+This example shows how to execute a database archiving using **Delta** method.
 
 # Context
 
