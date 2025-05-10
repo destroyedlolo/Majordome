@@ -95,6 +95,9 @@ void Config::SanityChecks( void ){
 				SelLog->Log('F', "Task \"%s\" needed by \"%s\" doesn't exist", j.c_str(), i.second->getNameC());
 				exit(EXIT_FAILURE);
 			}
+	
+			if(d2)
+				fd2 << i.second->getFullId() << " -- " << task->second->getFullId() << ": need { class: lneed }" << std::endl;
 		}
 	}
 

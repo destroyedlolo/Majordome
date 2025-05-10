@@ -73,9 +73,6 @@ void LuaExec::readConfigDirective( std::string &l ){
 			SelLog->Log('C', "\t\tAdded needed task '%s'", arg.c_str());
 		this->addNeededTask( arg );
 
-		if(d2)
-			fd2 << this->getFullId() << " -- " << LuaTask::trigramme() << ": need { class: lneed }" << std::endl;
-
 		return;
 	} else if(!(arg = striKWcmp( l, "-->> need_rendezvous=" )).empty()){
 		EventCollection::iterator event;
