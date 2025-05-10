@@ -3,6 +3,8 @@
 #include "../Config.h"
 #include "../Helpers.h"
 
+#include <cstring>
+
 Purge::Purge(const std::string &fch, std::string &where) : Object(fch, where), Handler(fch, where),upto("1 day"){
 	this->loadConfigurationFile(fch, where);
 
@@ -89,15 +91,33 @@ bool Purge::execAsync(lua_State *){
 	return ret;
 }
 
+/*
+ * select * from test where sample_time::date < current_date - interval '3 months';
+ *
+ * 1517857
+ *
+ */
+
 bool Purge::internalExec(void){
 	if(!this->connect())
 		return false;
 
 	char *t;
-	std::string cmd("INSERT INTO ");
+	std::string cmd("DELETE FROM ");
 
 	cmd += (t = PQescapeIdentifier(this->conn, this->getTableName(), strlen(this->getTableName())));
 	PQfreemem(t);
+
+	cmd += " WHERE sample_time::date < current_date - interval ";
+
+	cmd += (t = PQescapeLiteral(this->conn, this->upto.c_str(), this->upto.length()));
+	PQfreemem(t);
+
+	if(!this->doSQL(cmd.c_str())){
+		SelLog->Log('E', "['%s'] %s", this->getNameC(), this->lastError());
+		this->disconnect();
+		return false;
+	}
 
 	return true;
 }

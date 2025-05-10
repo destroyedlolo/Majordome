@@ -30,6 +30,7 @@ static const SubConfigDir::extweight fileext[] = {
 	{ ".feed", 0x70 },
 	{ ".namedfeed", 0x70 },
 	{ ".archiving", 0x70 },
+	{ ".purge", 0x70 },
 #endif
 	{ ".topic", 0xc0 },
 	{ ".timer", 0xc0 },
