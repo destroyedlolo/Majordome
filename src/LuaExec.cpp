@@ -74,7 +74,7 @@ void LuaExec::readConfigDirective( std::string &l ){
 		this->addNeededTask( arg );
 
 		if(d2)
-			fd2 << this->getFullId() << " -- " << LuaTask::trigramme() << arg << ": need { class: lneed }" << std::endl;
+			fd2 << this->getFullId() << " -- " << LuaTask::trigramme() << ": need { class: lneed }" << std::endl;
 
 		return;
 	} else if(!(arg = striKWcmp( l, "-->> need_rendezvous=" )).empty()){
@@ -173,7 +173,7 @@ void LuaExec::readConfigDirective( std::string &l ){
 			this->addNeededNamedMinMax( arg );
 
 			if(d2)
-				fd2 << this->getFullId() << " -- " << nminmax->second->getFullId() << arg << ": need { class: lneed }" << std::endl;
+				fd2 << this->getFullId() << " -- " << nminmax->second->getFullId() << ": need { class: lneed }" << std::endl;
 			return;
 		} else {
 			SelLog->Log('F', "\t\tnamedminmax '%s' is not (yet ?) defined", arg.c_str());
