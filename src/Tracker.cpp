@@ -27,12 +27,20 @@ void Tracker::readConfigDirective( std::string &l ){
 		this->setStatusTopic( std::regex_replace(arg, std::regex("%ClientID%"), MQTT_ClientID) );
 		if(verbose)
 			SelLog->Log('C', "\t\tStatus topic : '%s'", this->getStatusTopic().c_str());
+
+		if(d2){
+			fd2 << this->getFullId() << " -> " << this->getFullId() << "." << this->getStatusTopic() << ": statustopic { class: llink }" << std::endl;
+			fd2 << this->getFullId() << "." << this->getStatusTopic() << " {class: InternalTopic}" << std::endl;
+		}
 	} else if(!(arg = striKWcmp( l, "-->> start=" )).empty()){
 		TimerCollection::iterator timer;
 		if( (timer = config.TimersList.find(arg)) != config.TimersList.end()){
 			if(verbose)
 				SelLog->Log('C', "\t\tStart timer '%s'", arg.c_str());
 			timer->second->addStartTracker( this );
+
+			if(d2)
+				fd2 << this->getFullId() << " <- " << timer->second->getFullId() << ": start { class: llink }" << std::endl;
 		} else {
 			SelLog->Log('F', "\t\tTimer '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
@@ -43,6 +51,9 @@ void Tracker::readConfigDirective( std::string &l ){
 			if(verbose)
 				SelLog->Log('C', "\t\tStop timer '%s'", arg.c_str());
 			timer->second->addStopTracker( this );
+
+			if(d2)
+				fd2 << this->getFullId() << " <- " << timer->second->getFullId() << ": stop { class: llink }" << std::endl;
 		} else {
 			SelLog->Log('F', "\t\tTimer '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
@@ -53,6 +64,9 @@ void Tracker::readConfigDirective( std::string &l ){
 			if(verbose)
 				SelLog->Log('C', "\t\tEnabling rendez-vous '%s'", arg.c_str());
 	 		event->second->addTrackerEN( this );
+
+			if(d2)
+				fd2 << this->getFullId() << " -> " << event->second->getFullId() << ": enableRDV { class: llink }" << std::endl;
 		} else {
 			SelLog->Log('F', "\t\tRendez-vous '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
@@ -63,6 +77,9 @@ void Tracker::readConfigDirective( std::string &l ){
 			if(verbose)
 				SelLog->Log('C', "\t\tDisabling rendez-vous '%s'", arg.c_str());
 	 		event->second->addTrackerDIS( this );
+
+			if(d2)
+				fd2 << this->getFullId() << " -> " << event->second->getFullId() << ": disableRDV { class: llink }" << std::endl;
 		} else {
 			SelLog->Log('F', "\t\tRendez-vous '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
