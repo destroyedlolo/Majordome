@@ -1,0 +1,15 @@
+-- Example of a "Rendez-vous"
+-- 
+-- Directives starting with a '-->>' are took in account.
+-- Ones with a '--->>' are commented out
+--
+-- name of the event
+-- if not set, takes the filename
+--->> name=toto
+--
+-- remove some trace
+-- This option is useful to avoid logging of very noisy topics
+--->> quiet
+--
+-- disable this event
+--->> disabled

@@ -30,6 +30,7 @@ static const SubConfigDir::extweight fileext[] = {
 	{ ".feed", 0x70 },
 	{ ".namedfeed", 0x70 },
 	{ ".archiving", 0x70 },
+	{ ".purge", 0x70 },
 #endif
 	{ ".topic", 0xc0 },
 	{ ".timer", 0xc0 },
@@ -103,7 +104,6 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 				exit(EXIT_FAILURE);
 			}
 		} else if(ext == ".lua"){
-			std::string name;
 			auto tsk = new LuaTask( completpath, where, L );
 			assert(tsk);
 	
@@ -114,7 +114,6 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 			} else
 				cfg.TasksList.insert( std::make_pair(tsk->getName(), tsk) );
 		} else if(ext == ".shutdown"){
-			std::string name;
 			auto tsk = new Shutdown( completpath, where, L );
 			assert(tsk);
 	
@@ -125,7 +124,6 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 			} else
 				cfg.ShutdownsList.insert( std::make_pair(tsk->getName(), tsk) );
 		} else if(ext == ".topic"){
-			std::string name;
 			auto tpc = new MQTTTopic( completpath, where );
 
 			TopicCollection::iterator prev;
@@ -144,7 +142,6 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 			} else
 				cfg.TimersList.insert( std::make_pair(tmr->getName(), tmr) ).first;
 		} else if(ext == ".rendezvous"){
-			std::string name;
 			auto evt = new Event(completpath, where);
 
 			EventCollection::iterator prev;
@@ -154,17 +151,15 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 			} else
 				cfg.EventsList.insert( std::make_pair(evt->getName(), evt) );
 		} else if(ext == ".tracker"){
-			std::string name;
 			auto trk = new Tracker( completpath, where, L );
 	
 			TrackerCollection::iterator prev;
-			if((prev = cfg.TrackersList.find(name)) != cfg.TrackersList.end()){
-				SelLog->Log('F', "Tracker '%s' is defined multiple times (previous one '%s')", name.c_str(), prev->second->getWhereC());
+			if((prev = cfg.TrackersList.find(trk->getName())) != cfg.TrackersList.end()){
+				SelLog->Log('F', "Tracker '%s' is defined multiple times (previous one '%s')", trk->getNameC(), prev->second->getWhereC());
 				exit(EXIT_FAILURE);
 			} else
-				cfg.TrackersList.insert( std::make_pair(name, trk) );
+				cfg.TrackersList.insert( std::make_pair(trk->getName(), trk) );
 		} else if(ext == ".minmax"){
-			std::string name;
 			auto trk = new MinMax(completpath, where, L );
 	
 			MinMaxCollection::iterator prev;
@@ -174,7 +169,6 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 			} else
 				cfg.MinMaxList.insert( std::make_pair(trk->getName(), trk) );
 		} else if(ext == ".namedminmax"){
-			std::string name;
 			auto trk = new NamedMinMax(completpath, where, L );
 	
 			NamedMinMaxCollection::iterator prev;
@@ -213,8 +207,17 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 				exit(EXIT_FAILURE);
 			} else
 				cfg.NamedFeedsList.insert( std::make_pair(f->getName(), f) );
+		} else if(ext == ".purge"){
+			auto f = new Purge( completpath, where );
+
+			PurgeCollection::iterator prev;
+			if((prev = cfg.PurgesList.find(f->getName())) != cfg.PurgesList.end()){
+				SelLog->Log('F', "Purge '%s' is defined multiple times (previous one '%s')", f->getNameC(), prev->second->getWhereC());
+				exit(EXIT_FAILURE);
+			} else
+				cfg.PurgesList.insert( std::make_pair(f->getName(), f) );
 		} else if(ext == ".archiving"){
-			auto f = new Archiving( completpath, where, L );
+			auto f = new Archiving( completpath, where );
 
 			ArchivingCollection::iterator prev;
 			if((prev = cfg.ArchivingsList.find(f->getName())) != cfg.ArchivingsList.end()){

@@ -6,14 +6,17 @@ Max value :    2640.0
 Max Average :    1640.0
 ```
 
----
+# Files
+
+![Objects in this example](Diagram.svg)
+
 
 * `ConsPower.topic` : data source
 * `TestMinMax.minmax` : statistic generator for this example
 * `10s.timer` : Timeframe to generate statistics on
 * `Collector.lua` : display MinMax's statistics
 
----
+# How to test it
 
 To test it, create a config file like this :
 

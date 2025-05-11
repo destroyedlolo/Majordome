@@ -24,6 +24,7 @@
 #	include "pgsql/pgSQL.h"
 #	include "pgsql/Feed.h"
 #	include "pgsql/NamedFeed.h"
+#	include "pgsql/Purge.h"
 #	include "pgsql/Archiving.h"
 #endif
 
@@ -73,6 +74,7 @@ public:
 
 	FeedCollection FeedsList;
 	NamedFeedCollection NamedFeedsList;
+	PurgeCollection PurgesList;
 	ArchivingCollection ArchivingsList;
 #endif
 
@@ -92,6 +94,10 @@ public:
 		/* Execution */
 	void RunStartups( void );	// Executes RunAtStartup marked tasks
 	void RunShutdowns( void );
+
+#ifdef DEBUG
+	void dump(void);
+#endif
 };
 
 extern Config config;

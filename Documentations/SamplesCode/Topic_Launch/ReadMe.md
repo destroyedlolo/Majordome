@@ -1,6 +1,8 @@
 Demonstrates usage of launching a [task](../../Task(lua).md)
 by [topics](../../topic.md) API.
 
+![Objects in this example](Diagram.svg)
+
 - **bip.lua** to be launched
 - **master.lua** will `launch()` bip task.
 

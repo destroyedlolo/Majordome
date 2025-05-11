@@ -9,11 +9,12 @@
 #include <cstring>
 #include <cassert>
 
-Archiving::Archiving(const std::string &fch, std::string &where, lua_State *L) : Object(fch, where), Handler(fch, where), Aggregation("Day"), kind(_kind::MINMAX), upto("1 day") {
-	this->loadConfigurationFile(fch, where, L);
+Archiving::Archiving(const std::string &fch, std::string &where) : Object(fch, where), Handler(fch, where), Aggregation("Day"), kind(_kind::MINMAX){
+	this->loadConfigurationFile(fch, where);
 
 	if(d2)
 		fd2 << this->getFullId() << ".class: Archiving" << std::endl;
+puts("F - Archiving::Archiving");
 }
 
 void Archiving::readConfigDirective( std::string &l ){
@@ -90,7 +91,7 @@ void Archiving::readConfigDirective( std::string &l ){
 			this->EventSuccessList.Add(event->second);
 
 			if(d2)
-				fd2 << this->getTri() << this->getName() << " -> " << event->second->getTri() << arg << ": SuccessRDV" << std::endl;
+				fd2 << this->getFullId() << " -> " << event->second->getFullId() << ": SuccessRDV" << std::endl;
 		} else {
 			SelLog->Log('F', "\t\tRendezvous '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
@@ -103,7 +104,7 @@ void Archiving::readConfigDirective( std::string &l ){
 			this->EventFailList.Add(event->second);
 
 			if(d2)
-				fd2 << this->getTri() << this->getName() << " -> " << event->second->getTri() << arg << ": FailRDV" << std::endl;
+				fd2 << this->getFullId() << " -> " << event->second->getFullId() << ": FailRDV" << std::endl;
 		} else {
 			SelLog->Log('F', "\t\tRendezvous '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
@@ -112,13 +113,6 @@ void Archiving::readConfigDirective( std::string &l ){
 		;
 	else
 		this->Object::readConfigDirective(l);
-}
-
-const char *Archiving::getTableName(void){
-	if(!this->TableName.empty())
-		return(this->TableName.c_str());
-	else
-		return(this->getNameC());
 }
 
 bool Archiving::internalExec(void){
@@ -234,18 +228,4 @@ bool Archiving::internalExec(void){
 	return true;
 }
 
-bool Archiving::execAsync(lua_State *){
-	bool ret = internalExec();
 
-	if(!this->isQuiet())
-		SelLog->Log('I', "['%s'] as %s run", this->getNameC(), ret ? "successfully" : "unsuccessfully");
-
-	if(ret)
-		for(auto &i : this->EventSuccessList)
-			i->execHandlers();
-	else
-		for(auto &i : this->EventFailList)
-			i->execHandlers();
-
-	return ret;
-}

@@ -50,6 +50,10 @@ bool LuaExec::LoadFunc( lua_State *L, std::stringstream &buffer, const char *nam
 	return true;
 }
 
+void LuaExec::loadConfigurationFile(const std::string &fch, std::string &where){
+	this->Object::loadConfigurationFile(fch, where);
+}
+
 void LuaExec::loadConfigurationFile(const std::string &fch, std::string &where, lua_State *L){
 	std::stringstream buffer;
 	this->Object::loadConfigurationFile(fch, where, &buffer);
@@ -68,9 +72,6 @@ void LuaExec::readConfigDirective( std::string &l ){
 		if(verbose)
 			SelLog->Log('C', "\t\tAdded needed task '%s'", arg.c_str());
 		this->addNeededTask( arg );
-
-		if(d2)
-			fd2 << this->getFullId() << " -- " << LuaTask::trigramme() << arg << ": need { class: lneed }" << std::endl;
 
 		return;
 	} else if(!(arg = striKWcmp( l, "-->> need_rendezvous=" )).empty()){
@@ -169,7 +170,7 @@ void LuaExec::readConfigDirective( std::string &l ){
 			this->addNeededNamedMinMax( arg );
 
 			if(d2)
-				fd2 << this->getFullId() << " -- " << nminmax->second->getFullId() << arg << ": need { class: lneed }" << std::endl;
+				fd2 << this->getFullId() << " -- " << nminmax->second->getFullId() << ": need { class: lneed }" << std::endl;
 			return;
 		} else {
 			SelLog->Log('F', "\t\tnamedminmax '%s' is not (yet ?) defined", arg.c_str());
@@ -199,7 +200,7 @@ void LuaExec::readConfigDirective( std::string &l ){
 			this->addNeededpgSQL( arg );
 
 			if(d2)
-				fd2 << this->getFullId() << " -- " << pgSQL::trigramme() << arg << ": need { class: lneed }" << std::endl;
+				fd2 << this->getFullId() << " -- " << shut->second->getFullId() << ": need { class: lneed }" << std::endl;
 			return;
 		} else {
 			SelLog->Log('F', "\t\tpgSQL '%s' is not (yet ?) defined", arg.c_str());
