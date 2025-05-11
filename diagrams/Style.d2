@@ -1,0 +1,130 @@
+# grid-columns : 5
+
+classes: {
+	Task:{
+		shape: step
+		style.stroke: red
+	}
+
+	Event:{
+		shape: diamond
+		style.stroke-width: 6
+		style.fill: aqua
+	}
+
+	Topic:{
+		icon: https://icons.terrastruct.com/essentials/263-notepad.svg
+		shape: document
+		style.stroke-width: 6
+		style.fill: lightsalmon
+	}
+
+	InternalTopic:{
+		icon: https://icons.terrastruct.com/essentials/263-notepad.svg
+		style.italic: true
+		style.fill: transparent
+		style.stroke: transparent
+	}
+
+	Timer:{
+		icon: https://icons.terrastruct.com/essentials/time.svg
+		style.fill: transparent
+		style.stroke: transparent
+	}
+
+	MinMax:{
+		shape: hexagon
+		style.stroke: red
+	}
+
+	NamedMinMax:{
+		shape: hexagon
+		style.stroke: red
+		style.stroke-dash: 2
+	}
+
+	Tracker:{
+		shape: package
+		style.stroke-width: 6
+		style.fill: thistle
+		style.stroke: red
+	}
+
+	Shutdown:{
+		shape: step
+		style.stroke: red
+	}
+
+	Handler:{
+		shape: hexagon
+	}
+
+	Database:{
+		icon: https://icons.terrastruct.com/dev/postgresql.svg
+		shape: cylinder
+	}
+
+	Feed: {
+		shape: queue
+		style.fill: yellowgreen
+	}
+
+	NamedFeed: {
+		shape: queue
+		style.fill: yellowgreen
+		style.stroke-dash: 5
+	}
+
+	Archiving: {
+		icon: https://icons.terrastruct.com/infra/011-data-storage.svg
+		shape: stored_data
+		style.fill: yellowgreen
+	}
+
+	Purge: {
+		icon: https://icons.terrastruct.com/infra/011-delete.svg
+		shape: stored_data
+		style.fill: yellowgreen
+	}
+
+	Comment: {
+		label.near: bottom-right
+		style {
+			fill: transparent
+			italic: true
+			bold: true
+			stroke: transparent
+		}
+	}
+
+# Links
+	# let the default settings
+
+	llink: {
+		style {
+			stroke: navy
+		}
+	}
+
+	lneed: {
+		style {
+			stroke-dash: 2
+		}
+	}
+
+	lrequiere: {
+		style {
+			stroke-dash: 2
+			stroke-width: 4
+			stroke: red
+		}
+	}
+
+	ldatabase: {
+		label: Database
+		style {
+			stroke: green
+		}
+	}
+}
+

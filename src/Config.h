@@ -24,6 +24,15 @@
 #	include "pgsql/pgSQL.h"
 #	include "pgsql/Feed.h"
 #	include "pgsql/NamedFeed.h"
+#	include "pgsql/Purge.h"
+#	include "pgsql/Archiving.h"
+#endif
+
+#ifdef TOILE
+#	include "Toile/Renderer.h"
+#	include "Toile/Painting.h"
+#	include "Toile/Decoration.h"
+#	include "Toile/Field.h"
 #endif
 
 #include <lua.hpp>	/* Lua's state needed */
@@ -65,7 +74,16 @@ public:
 
 	FeedCollection FeedsList;
 	NamedFeedCollection NamedFeedsList;
+	PurgeCollection PurgesList;
+	ArchivingCollection ArchivingsList;
 #endif
+
+#ifdef TOILE
+	RendererCollection RendererList;
+	PaintingCollection PaintingList;
+	DecorationCollection DecorationList;
+#endif
+
 		/* Topics' */
 	void SubscribeTopics( void );	// Subscribe to defined MQTT topics
 
@@ -76,6 +94,10 @@ public:
 		/* Execution */
 	void RunStartups( void );	// Executes RunAtStartup marked tasks
 	void RunShutdowns( void );
+
+#ifdef DEBUG
+	void dump(void);
+#endif
 };
 
 extern Config config;

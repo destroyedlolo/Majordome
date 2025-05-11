@@ -2,6 +2,8 @@ This example demonstrates how **MinMax**'s validation script can reject or modif
 
 # Files
 
+![Objects in this example](Diagram.svg)
+
 * `Test.topic` : data source
 * `TestMinMax.namedminmax` : validation script inside namedminmax object definition
 * `30s.timer` : Timeframe to generate statistics on

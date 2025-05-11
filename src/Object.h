@@ -6,6 +6,7 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
+#include <iostream>
 #include <string>
 
 class Object {
@@ -15,22 +16,31 @@ class Object {
 protected:
 	std::string name;
 	std::string where;
+	std::string description;	// Description to be presented as tooltips
+	std::string embeddedCom;	// Small embedded comment (like units)
+
+		/* Load the configuration file.
+		 * Should have been done within the constructor, but in this case,
+		 * derived methods are not called.
+		 *
+		 * Need to be explicitly called from derived's constructor.
+		 */
+	void loadConfigurationFile(const std::string &fch, std::string &where, std::stringstream *buffer=NULL);
 
 		/* Read configuration directive
 		 * l -> string to read
-		 * nameused -> boolean holding 'true' if the object's name has been
-		 *		already stored in a list. So the name can't be change anymore.
 		 *
-		 * NOTEZ-BIEN : this function will FAIL if the directive is not 
-		 * 		recognized ; it has to be called lastly.
+		 * NOTEZ-BIEN : Object's one will fail if the option is not recognized.
+		 * Consequently, it has to be called lastly.
 		 */
-	void readConfigDirective(std::string &l, std::string &name, bool &nameused);
+	virtual void readConfigDirective(std::string &l);
 
+	virtual std::string getTri() = 0;	// Get type's trigram (needed for d2)
 public:
 	Object() : disabled(false), quiet(false){};
-	Object(const std::string &fch, std::string &where, std::string &name);
+	Object(const std::string &fch, std::string &where);
 
-	Object& operator=(const Object&) = default;	/* avoid "defaulted move" warning */
+//	Object& operator=(const Object&) = default;	/* avoid "defaulted move" warning */
 
 	void enable( void ){ this->disabled = false; };
 	void disable( void ){ this->disabled = true; };
@@ -45,6 +55,8 @@ public:
 	const char *getNameC( void ){ return this->name.c_str(); };
 	std::string &getWhere( void ){ return this->where; }; // Object's container (it's father directory)
 	const char *getWhereC( void ){ return this->where.c_str(); };
+	std::string getContainer( void );
+	std::string getFullId( void ){ return(this->getContainer() + "." + this->getTri() + this->getName()); }
 
 	/*
 	 * determine the name from the filename

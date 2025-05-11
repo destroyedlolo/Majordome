@@ -1,5 +1,7 @@
 Demonstrate useage of rendez-vous.
 
+![Objects in this example](Diagram.svg)
+
 **Startup.lua** will be launched at Majordome's startup and will launch **Result.lua** task through **example** rendez-vous.
 
 To test it, create a config file like this

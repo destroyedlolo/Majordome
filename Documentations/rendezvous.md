@@ -7,17 +7,8 @@ Typical usage is to synchronize automation within Majordome without having to us
 > [!IMPORTANT]  
 > As of v6.0 onward, The syntax has changed for **Rendezvous** and is not any more compatible with previous versions.
 
-### General directives
-#### -->> name=
-Unique name to identify the rendez-vous. If not set, uses the filename.
-```
--->> name=Toto
-```
-#### --> quiet
-Removes some trace.
-
-#### -->> disabled
-This rendez-vous will not trigger any handler.
+### Generals
+See [this page](Headers%20and%20Shared%20Directives.md#general-directives).
 
 ## Example
 File **test.rendezvous**
