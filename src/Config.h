@@ -24,6 +24,7 @@
 #	include "pgsql/pgSQL.h"
 #	include "pgsql/Feed.h"
 #	include "pgsql/NamedFeed.h"
+#	include "pgsql/AggregatedFeed.h"
 #	include "pgsql/Purge.h"
 #	include "pgsql/Archiving.h"
 #endif
@@ -74,6 +75,7 @@ public:
 
 	FeedCollection FeedsList;
 	NamedFeedCollection NamedFeedsList;
+	AggregatedFeedCollection AggregatedFeedsList;
 	PurgeCollection PurgesList;
 	ArchivingCollection ArchivingsList;
 #endif
