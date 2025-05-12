@@ -77,7 +77,7 @@ bool MinMax::execAsync(lua_State *L){
 			this->nbre++;
 		}
 
-		if(debug)
+		if(debug  && !this->isQuiet())
 			SelLog->Log('T', "[MinMax '%s'] accepting %.0f -> min:%.0f max:%.0f", this->getNameC(), val, this->min, this->max);
 	} else
 		SelLog->Log('E', "[MinMax '%s'] Data rejected", this->getNameC());
