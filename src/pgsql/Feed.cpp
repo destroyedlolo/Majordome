@@ -117,10 +117,10 @@ bool Feed::execAsync(lua_State *L){
 			SelLog->Log('E', "['%s'] %s", this->getNameC(), this->lastError());
 	
 		this->disconnect();
-		lua_close(L);
 	} else
 		SelLog->Log('D', "['%s'] Data rejected", this->getNameC());
 
+	lua_close(L);
 	return r;
 }
 

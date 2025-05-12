@@ -2,7 +2,7 @@
 --
 -- repeating delay (in seconds)
 --ignored if null
--->> every=15
+-->> every=30
 --
 --->> immediate
 --->> runifover

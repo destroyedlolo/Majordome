@@ -7,6 +7,10 @@
 --
 -- The figure to store
 -- can be 'Average' (default), 'Min' or 'Max'
--->> figure=Average
+--->> figure=Max
 --
--->> quiet
+-- Where to store
+-->> Database=domestik2
+-->> table=test
+--
+--->> quiet
