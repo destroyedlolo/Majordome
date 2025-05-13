@@ -10,7 +10,7 @@
 --->> quiet
 --
 -- Disable this service
---->> disabled
+-->> disabled
 --
 
 print ""
