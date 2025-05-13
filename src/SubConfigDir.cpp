@@ -29,6 +29,7 @@ static const SubConfigDir::extweight fileext[] = {
 #	endif
 	{ ".feed", 0x70 },
 	{ ".namedfeed", 0x70 },
+	{ ".aggregatedfeed", 0x70 },
 	{ ".archiving", 0x70 },
 	{ ".purge", 0x70 },
 #endif
@@ -207,6 +208,15 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 				exit(EXIT_FAILURE);
 			} else
 				cfg.NamedFeedsList.insert( std::make_pair(f->getName(), f) );
+		} else if(ext == ".aggregatedfeed"){
+			auto f = new AggregatedFeed( completpath, where, L );
+
+			AggregatedFeedCollection::iterator prev;
+			if((prev = cfg.AggregatedFeedsList.find(f->getName())) != cfg.AggregatedFeedsList.end()){
+				SelLog->Log('F', "AggregatedFeed '%s' is defined multiple times (previous one '%s')", f->getNameC(), prev->second->getWhereC());
+				exit(EXIT_FAILURE);
+			} else
+				cfg.AggregatedFeedsList.insert( std::make_pair(f->getName(), f) );
 		} else if(ext == ".purge"){
 			auto f = new Purge( completpath, where );
 

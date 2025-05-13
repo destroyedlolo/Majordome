@@ -12,6 +12,12 @@ NamedFeed::NamedFeed(const std::string &fch, std::string &where, lua_State *L) :
 	this->loadConfigurationFile(fch, where,L);
 	if(d2)
 		fd2 << this->getFullId() << ".class: NamedFeed" << std::endl;
+
+		/* Sanity checks */
+	if(!this->db){
+		SelLog->Log('F', "[%s] No database defined", this->getNameC());
+		exit(EXIT_FAILURE);
+	}
 }
 
 void NamedFeed::feedState( lua_State *L ){
