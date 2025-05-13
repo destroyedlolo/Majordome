@@ -12,7 +12,7 @@
 --
 -- Where to store
 -->> Database=domestik2
--->> table=ntest
+--->> table=ntest
 --
 --->> quiet
 --->> disabled
