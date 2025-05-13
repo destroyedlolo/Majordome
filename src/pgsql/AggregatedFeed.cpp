@@ -64,6 +64,23 @@ void AggregatedFeed::readConfigDirective( std::string &l ){
 			SelLog->Log('F', "\t\tMinMax '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
+	} else if(!(arg = striKWcmp( l, "-->> from NamedMinMax=" )).empty()){
+		if(this->minmax || this->nminmax){
+			SelLog->Log('F', "[%s] a source has been already defined", this->getNameC());
+			exit(EXIT_FAILURE);
+		}
+
+		NamedMinMaxCollection::iterator mm;
+		if( (mm = config.NamedMinMaxList.find(arg)) != config.NamedMinMaxList.end()){
+			if(verbose)
+				SelLog->Log('C', "\t\tNamedMinMax : %s", arg.c_str());
+			this->nminmax = mm->second;
+			if(d2)
+				fd2 << this->getFullId() << " <- " << mm->second->getFullId() << ": from { class: llink }" << std::endl;
+		} else {
+			SelLog->Log('F', "\t\tNamedMinMax '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
 	} else if(!(arg = striKWcmp( l, "-->> figure=" )).empty()){
 		if(arg == "Average" || arg == "AVG")
 			this->figure = _which::AVG;
@@ -111,27 +128,14 @@ bool AggregatedFeed::execAsync(lua_State *L){
 		if(debug && !this->isQuiet())
 			SelLog->Log('T', "['%s'] accepting", this->getNameC());
 
-		if(isnan(val)){	// data not forced
 #if DEBUG
-			if(debug && !this->isQuiet())
+		if(debug && !this->isQuiet()){
+			if(this->minmax)
 				this->minmax->dump();
-#endif
-			switch(this->figure){
-			case _which::AVG:
-				val = this->minmax->getAverage();
-				break;
-			case _which::MIN:
-				val = this->minmax->getMin();
-				break;
-			case _which::MAX:
-				val = this->minmax->getMax();
-				break;
-			case _which::SUM:
-				val = this->minmax->getSum();
-				break;
-			}
-			this->minmax->Clear();
+			else
+				this->nminmax->dump();
 		}
+#endif
 
 		/* Build SQL request */
 		if(!this->connect()){
@@ -141,6 +145,24 @@ bool AggregatedFeed::execAsync(lua_State *L){
 
 		char *t;
 		if(this->minmax){
+			if(isnan(val)){	// data not forced
+				switch(this->figure){
+				case _which::AVG:
+					val = this->minmax->getAverage();
+					break;
+				case _which::MIN:
+					val = this->minmax->getMin();
+					break;
+				case _which::MAX:
+					val = this->minmax->getMax();
+					break;
+				case _which::SUM:
+					val = this->minmax->getSum();
+					break;
+				}
+				this->minmax->Clear();
+			}
+
 			std::string cmd("INSERT INTO ");
 			cmd += (t = PQescapeIdentifier(this->conn, this->getTableName(), strlen(this->getTableName())));
 			PQfreemem(t);
@@ -151,6 +173,39 @@ bool AggregatedFeed::execAsync(lua_State *L){
 
 			if(!this->doSQL(cmd.c_str()))
 				SelLog->Log('E', "['%s'] %s", this->getNameC(), this->lastError());
+		} else { // this->nminmax
+			for(auto & it: this->nminmax->getEmptyList()){	// Iterating against keys
+				switch(this->figure){
+				case _which::AVG:
+					val = this->nminmax->getAverage(it.first);
+					break;
+				case _which::MIN:
+					val = this->nminmax->getMin(it.first);
+					break;
+				case _which::MAX:
+					val = this->nminmax->getMax(it.first);
+					break;
+				case _which::SUM:
+					val = this->nminmax->getSum(it.first);
+					break;
+				}
+				this->nminmax->Clear(it.first);
+	
+				std::string cmd("INSERT INTO ");
+				cmd += (t = PQescapeIdentifier(this->conn, this->getTableName(), strlen(this->getTableName())));
+				PQfreemem(t);
+
+				cmd += " VALUES ( now(), ",
+				cmd += (t = PQescapeLiteral(this->conn, it.first.c_str(), it.first.length()));
+				PQfreemem(t);
+	
+				cmd += ", ";
+				cmd += std::to_string(val);
+				cmd += " )";
+
+				if(!this->doSQL(cmd.c_str()))
+					SelLog->Log('E', "['%s'] %s", this->getNameC(), this->lastError());
+			}
 		}
 	
 		this->disconnect();		
