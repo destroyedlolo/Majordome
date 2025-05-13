@@ -40,7 +40,7 @@ If not set, the same as "name" or the filename.
 CREATE TABLE ntest (
    sample_time TIMESTAMP WITH TIME ZONE,
    figure TEXT NOT NULL,
-   value INTEGER
+   value INTEGER -- Or any numeric datatype
 );
 ```
 
