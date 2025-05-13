@@ -8,7 +8,7 @@
 #include <cstring>
 #include <cassert>
 
-AggregatedFeed::AggregatedFeed(const std::string &fch, std::string &where, lua_State *L) : Object(fch, where), Handler(fch, where), minmax(NULL), figure(_which::AVG){
+AggregatedFeed::AggregatedFeed(const std::string &fch, std::string &where, lua_State *L) : Object(fch, where), Handler(fch, where), minmax(NULL), nminmax(NULL), figure(_which::AVG){
 	this->loadConfigurationFile(fch, where,L);
 	if(d2)
 		fd2 << this->getFullId() << ".class: AggregatedFeed" << std::endl;
@@ -19,7 +19,7 @@ AggregatedFeed::AggregatedFeed(const std::string &fch, std::string &where, lua_S
 		exit(EXIT_FAILURE);
 	}
 
-	if(!this->minmax){
+	if(!this->minmax && !this->nminmax){
 		SelLog->Log('F', "[%s] No source defined", this->getNameC());
 		exit(EXIT_FAILURE);
 	}
@@ -48,6 +48,11 @@ void AggregatedFeed::readConfigDirective( std::string &l ){
 			exit(EXIT_FAILURE);
 		}
 	} else if(!(arg = striKWcmp( l, "-->> from MinMax=" )).empty()){
+		if(this->minmax || this->nminmax){
+			SelLog->Log('F', "[%s] a source has been already defined", this->getNameC());
+			exit(EXIT_FAILURE);
+		}
+
 		MinMaxCollection::iterator mm;
 		if( (mm = config.MinMaxList.find(arg)) != config.MinMaxList.end()){
 			if(verbose)
@@ -66,6 +71,8 @@ void AggregatedFeed::readConfigDirective( std::string &l ){
 			this->figure = _which::MIN;
 		else if(arg == "Max")
 			this->figure = _which::MAX;
+		else if(arg == "Sum")
+			this->figure = _which::SUM;
 		else {
 			SelLog->Log('F', "\t\tFigure '%s' is not known", arg.c_str());
 			exit(EXIT_FAILURE);
@@ -118,6 +125,9 @@ bool AggregatedFeed::execAsync(lua_State *L){
 				break;
 			case _which::MAX:
 				val = this->minmax->getMax();
+				break;
+			case _which::SUM:
+				val = this->minmax->getSum();
 				break;
 			}
 			this->minmax->Clear();

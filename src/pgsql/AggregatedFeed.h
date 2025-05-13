@@ -5,13 +5,15 @@
 
 #include "Feed.h"
 #include "../MinMax.h"
+#include "../NamedMinMax.h"
 
 class AggregatedFeed : virtual public Feed {
 	MinMax *minmax;
+	NamedMinMax *nminmax;
 
 		// Which data to store
 	enum _which {
-		MIN, MAX, AVG
+		MIN, MAX, AVG, SUM
 	} figure;
 
 	virtual void feedState(lua_State *L);
