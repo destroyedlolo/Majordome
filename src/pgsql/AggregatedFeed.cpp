@@ -13,7 +13,12 @@ AggregatedFeed::AggregatedFeed(const std::string &fch, std::string &where, lua_S
 	if(d2)
 		fd2 << this->getFullId() << ".class: AggregatedFeed" << std::endl;
 
-		/* Sanity check */
+		/* Sanity checks */
+	if(!this->db){
+		SelLog->Log('F', "[%s] No database defined", this->getNameC());
+		exit(EXIT_FAILURE);
+	}
+
 	if(!this->minmax){
 		SelLog->Log('F', "[%s] No source defined", this->getNameC());
 		exit(EXIT_FAILURE);
@@ -92,20 +97,56 @@ void AggregatedFeed::feedState( lua_State *L ){
 
 bool AggregatedFeed::execAsync(lua_State *L){
 	LuaExec::boolRetCode rc;
+	lua_Number val;
 
-	bool r = this->LuaExec::execSync(L, &rc);
+	bool r = this->LuaExec::execSync(L, &rc, &val);
 	if( rc != LuaExec::boolRetCode::RCfalse ){	// data not rejected
 		if(debug && !this->isQuiet())
 			SelLog->Log('T', "['%s'] accepting", this->getNameC());
+
+		if(isnan(val)){	// data not forced
+#if DEBUG
+			if(debug && !this->isQuiet())
+				this->minmax->dump();
+#endif
+			switch(this->figure){
+			case _which::AVG:
+				val = this->minmax->getAverage();
+				break;
+			case _which::MIN:
+				val = this->minmax->getMin();
+				break;
+			case _which::MAX:
+				val = this->minmax->getMax();
+				break;
+			}
+			this->minmax->Clear();
+		}
 
 		/* Build SQL request */
 		if(!this->connect()){
 			lua_close(L);
 			return false;
 		}
-		
+
+		char *t;
+		if(this->minmax){
+			std::string cmd("INSERT INTO ");
+			cmd += (t = PQescapeIdentifier(this->conn, this->getTableName(), strlen(this->getTableName())));
+			PQfreemem(t);
+
+			cmd += " VALUES ( now(), ",
+			cmd += std::to_string(val);
+			cmd += " )";
+
+			if(!this->doSQL(cmd.c_str()))
+				SelLog->Log('E', "['%s'] %s", this->getNameC(), this->lastError());
+		}
+	
+		this->disconnect();		
 	} else
 		SelLog->Log('D', "['%s'] Data rejected", this->getNameC());
 
+	lua_close(L);
 	return r;
 }

@@ -86,6 +86,14 @@ bool MinMax::execAsync(lua_State *L){
 	return r;
 }
 
+#if DEBUG
+void MinMax::dump(){
+	std::cout << "Number of samples : " << this->getSamplesNumber() << std::endl;
+	std::cout << "Min value : " << this->getMin() << std::endl;
+	std::cout << "Max value : " << this->getMax() << std::endl;
+	std::cout << "Average value : " << this->getAverage() << std::endl;
+}
+#endif
 	/*****
 	 * Lua exposed functions
 	 *****/

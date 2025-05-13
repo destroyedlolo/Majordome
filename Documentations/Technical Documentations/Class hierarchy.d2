@@ -121,6 +121,11 @@ pgsql : Database Add On {
 	}
 	Feed -> NamedFeed
 
+	AggregatedFeed {
+		class: [Sql ; Lua]
+	}
+	Feed -> AggregatedFeed
+
 	Purge {
 		class: Sql
 	}
@@ -185,6 +190,11 @@ Config: {
 		class: Sql
 	}
 
+	AggregatedFeedsList {
+		style.multiple: true
+		class: Sql
+	}
+
 	pgSQLsList {
 		style.multiple: true
 		class: Database
@@ -205,5 +215,6 @@ Tracker -> Config.TrackersList
 pgsql.mpgConnection -> Config.pgSQLsList
 pgsql.Feed -> Config.FeedsList
 pgsql.NamedFeed -> Config.NamedFeedsList
+pgsql.AggregatedFeed -> Config.AggregatedFeedsList
 
 COnfig.*.style.stroke: black

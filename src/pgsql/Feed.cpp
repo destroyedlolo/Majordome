@@ -10,9 +10,14 @@
 
 Feed::Feed(const std::string &fch, std::string &where, lua_State *L): Object(fch, where), Handler(fch, where){
 	this->loadConfigurationFile(fch, where,L);
-
 	if(d2)
 		fd2 << this->getFullId() << ".class: Feed" << std::endl;
+
+		/* Sanity checks */
+	if(!this->db){
+		SelLog->Log('F', "[%s] No database defined", this->getNameC());
+		exit(EXIT_FAILURE);
+	}
 }
 
 void Feed::readConfigDirective( std::string &l ){
@@ -112,10 +117,10 @@ bool Feed::execAsync(lua_State *L){
 			SelLog->Log('E', "['%s'] %s", this->getNameC(), this->lastError());
 	
 		this->disconnect();
-		lua_close(L);
 	} else
 		SelLog->Log('D', "['%s'] Data rejected", this->getNameC());
 
+	lua_close(L);
 	return r;
 }
 

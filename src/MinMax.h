@@ -47,6 +47,10 @@ public:
 
 	virtual std::string getTri(){ return MinMax::trigramme(); }
 	static std::string trigramme(){ return "MMX_"; }
+
+#if DEBUG
+	void dump();
+#endif
 };
 
 typedef ObjCollection<MinMax *> MinMaxCollection;

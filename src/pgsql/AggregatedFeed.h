@@ -16,7 +16,10 @@ class AggregatedFeed : virtual public Feed {
 
 	virtual void feedState(lua_State *L);
 
-		/* Executable */
+		/* Executable
+		 *
+		 * CAUTION : if the data is rejected, the MinMax is not cleared
+		 */
 	virtual bool execAsync(lua_State *L);	// Overloading to handle data acceptation 
 
 protected:
