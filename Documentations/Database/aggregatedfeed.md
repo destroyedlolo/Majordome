@@ -89,12 +89,12 @@ The script can return :
 > * as fast as possible
 
 ### Exposed objects
-Statistics sequencing and retrieving are done through the **MajordomepgSQL**'s API :
-- `getContainer()` returns the container (directory) in which this pgSQL has been defined
-- `getName()` returns pgSQL's name
-- `isEnabled()` returns a boolean reflecting if this pgSQL is enabled or not
-- `Enable()` to enable this pgSQL
-- `Disable()` to disable this pgSQL 
+Statistics sequencing and retrieving are done through the **MajordomeAggregatedFeed**'s API :
+- `getContainer()` returns the container (directory) in which this object has been defined
+- `getName()` returns object's name
+- `isEnabled()` returns a boolean reflecting if this object is enabled or not
+- `Enable()` to enable this object
+- `Disable()` to disable this object 
 
 Those are redundant with header declarations, but they are making life easier : all configurations are done in the header, and the code remains unchanged.
 
