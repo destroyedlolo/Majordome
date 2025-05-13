@@ -441,6 +441,7 @@ int main(int ac, char **av){
 
 	SelLua->AddStartupFunc(Feed::initLuaInterface);
 	SelLua->AddStartupFunc(NamedFeed::initLuaInterface);
+	SelLua->AddStartupFunc(AggregatedFeed::initLuaInterface);
 #endif
 
 #ifdef TOILE

@@ -32,6 +32,10 @@ public:
 
 	virtual std::string getTri(){ return AggregatedFeed::trigramme(); }
 	static std::string trigramme(){ return "AFD_"; }
+
+	/* Create Lua's object */
+	static void initLuaInterface( lua_State *L );
+
 };
 
 typedef ObjCollection<AggregatedFeed *> AggregatedFeedCollection;
