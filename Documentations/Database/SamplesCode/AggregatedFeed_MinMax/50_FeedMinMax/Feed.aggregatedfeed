@@ -10,7 +10,7 @@
 --->> figure=Max
 --
 -- Where to store
--->> Database=domestik2
+-->> Database=database
 -->> table=test
 --
 --->> quiet
