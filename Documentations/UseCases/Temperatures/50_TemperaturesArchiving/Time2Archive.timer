@@ -1,0 +1,7 @@
+--desc=When temperatures have to be archived
+--
+-->> at=0330
+--
+--->> immediate
+--->> runifover
+--->> disabled
