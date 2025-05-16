@@ -1,6 +1,6 @@
--- Database archiving declaration
+-- Database purging declaration
 --
--- name of this archiving
+-- name of this purging
 -- if not set, takes the filename
 --->> name=toto
 --
