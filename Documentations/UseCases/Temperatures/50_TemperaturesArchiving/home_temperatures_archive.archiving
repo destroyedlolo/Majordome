@@ -65,6 +65,6 @@
 -- Notification
 ---------------
 --
---->> SuccessRDV=ArchivingDone
+-->> SuccessRDV=ht_archiving_Done
 --->> FailRDV=ArchivingFailed
 
