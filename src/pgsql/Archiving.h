@@ -12,9 +12,6 @@
 #include "../Event.h"
 
 class Archiving : virtual public Purge {
-	EventVector EventSuccessList;
-	EventVector EventFailList;
-
 protected:
 	virtual void readConfigDirective( std::string &l );
 
