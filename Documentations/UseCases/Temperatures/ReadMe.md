@@ -7,5 +7,4 @@ Temperatures came from topic `maison/Temperature/#` hierarchy, randomly, at freq
 There is no usage to keep such *high* frequency for a database storage, so data are first aggregated using **namedminmax** facilities.<br>
 Finally, data are aggregated further for long term storage and hot data table purged
 
-
 ![Objects in this example](Diagram.svg)
