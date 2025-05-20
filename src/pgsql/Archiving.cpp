@@ -14,7 +14,6 @@ Archiving::Archiving(const std::string &fch, std::string &where) : Object(fch, w
 
 	if(d2)
 		fd2 << this->getFullId() << ".class: Archiving" << std::endl;
-puts("F - Archiving::Archiving");
 }
 
 void Archiving::readConfigDirective( std::string &l ){

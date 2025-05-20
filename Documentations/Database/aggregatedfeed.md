@@ -1,10 +1,10 @@
-# .namefeed
+# .aggregatedfeed
 
-Store incomming data in a database associated to a name.
+Store data aggregated in a [MinMax](../minmax.md) in a database (with or without name associated).
 
 ## Syntax
 
-.namedfeed are Lua script where directives are put in its header as following :
+.aggregatedfeed are Lua script where directives are put in its header as following :
 - Each line starting with `-->>` are Majordome's directives.
 - Consequently, --->> are commented out commands (notice the 3 dashes).
 
@@ -14,14 +14,12 @@ See [this page](../Headers%20and%20Shared%20Directives.md#general-directives).
 ### Triggering
 Following directives determine what will trigger this script.<br>
 Multiple directives may be present, including those of the same kind.
-#### Launched with a data furnished
-See [this page](../Headers%20and%20Shared%20Directives.md#triggering-while-providing-data)
 #### Launched without data
 See [this page](../Headers%20and%20Shared%20Directives.md#triggering-without-data)
 
 A Typical example of launching feeding without providing data is when the said data will be taken from another sources such [MinMax](../minmax.md).
 
-### feed's owns
+### aggregatedfeed's owns
 #### -->> Database=
 Which database to use.`
 
@@ -33,9 +31,33 @@ If not set, the same as "name" or the filename.
 > For convenience, it is preferable that the table name's is only in lower-case. Otherwise, it will have
 >  to be surrounded by double quotes in pgsql.
 
+#### Sources 
+> [!CAUTION]
+> A source is **mandatory**. Only one source can be provided
+
+##### -->> from MinMax=
+Indicate the [MinMax](../minmax.md) source.
+##### -->> from NamedMinMax=
+Indicate the [NamedMinMax](../NamedMinMax.md) source.
+
+#### -->> figure=
+Which field to consider. Can be
+- **Average** (or **AVG**)
+- **Min**
+- **Max**
+- **Sum**
 
 ## SQL table definition
+### From MinMax
+```
+CREATE TABLE ntest (
+   sample_time TIMESTAMP WITH TIME ZONE,
+   figure TEXT NOT NULL,
+   value INTEGER -- Or any numeric datatype
+);
+```
 
+### From NamedMinMax
 ```
 CREATE TABLE ntest (
    sample_time TIMESTAMP WITH TIME ZONE,
@@ -49,14 +71,14 @@ CREATE TABLE ntest (
 ### Exposed variables
 
 - **MAJORDOME_Myself** is automatically created and correspond to the current Feed
-- **MAJORDOME_NAMEFEED** - Feed's name
+- **MAJORDOME_AGGREGATEDFEED** - Feed's name
 
 ### Data name and validating
 
-The script is expected to return the name of the data to store.
-Consequently, a single NamedFeed can process several topics, as shown in the provided example.
-
-In addition, it can return a value that will replace the received one.
+The script can return :
+- `true` the content is accepted (the default value)
+- `false` the content is rejected
+- a numeric value : force this value to be injected instead of source's content (MinMax only).
 
 > [!TIP]  
 > If comming from a [topic](topic.md), the data are stored in **MAJORDOME_PAYLOAD** variable
@@ -66,22 +88,8 @@ In addition, it can return a value that will replace the received one.
 > * not blocking
 > * as fast as possible
 
-Consequently :
-#### expected returns
-- `return false` : rejected data
-- `return "my data"` : accepted and stored as *my data*
-- `return "my data", 21` : accepted, and forced to *21* and stored as *my data*
-
-#### Probably problematic returns
-- `return true` : data accepted but orphaned
-- `return 2` : stored in "*2*" collection whereas the data is probably expected to be forced to **2**
-
-### Exposed variables
-- **MAJORDOME_Myself** is automatically created and correspond to the current NamedMinMax
-- **MAJORDOME_NAMEDMINMAX** - NamedMinMax's name
-
 ### Exposed objects
-Statistics sequencing and retrieving are done through the **MajordomeNamedFeed**'s API :
+Statistics sequencing and retrieving are done through the **MajordomeAggregatedFeed**'s API :
 - `getContainer()` returns the container (directory) in which this object has been defined
 - `getName()` returns object's name
 - `isEnabled()` returns a boolean reflecting if this object is enabled or not

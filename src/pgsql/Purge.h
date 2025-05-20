@@ -11,10 +11,10 @@
 #include "../Event.h"
 
 class Purge : virtual public mpgConnection, virtual public Handler {
+protected:
 	EventVector EventSuccessList;
 	EventVector EventFailList;
 
-protected:
 	std::string TableName;	// Table to purge
 	std::string upto;		// Selection of data to purge
 

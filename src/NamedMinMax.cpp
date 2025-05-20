@@ -88,6 +88,18 @@ bool NamedMinMax::execAsync(lua_State *L){
 	return r;
 }
 
+#if DEBUG
+void NamedMinMax::dump(){
+	for(auto & it: this->empty){	// Iterating against keys
+		std::cout << "\n" << it.first << std::endl << "-------"  << std::endl;
+		std::cout << "Number of samples : " << this->getSamplesNumber(it.first) << std::endl;
+		std::cout << "Min value : " << this->getMin(it.first) << std::endl;
+		std::cout << "Max value : " << this->getMax(it.first) << std::endl;
+		std::cout << "Average value : " << this->getAverage(it.first) << std::endl;
+	}
+}
+#endif
+
 	/*****
 	 * Lua exposed functions
 	 *****/

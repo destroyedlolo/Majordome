@@ -1,0 +1,70 @@
+-- Archive temperatures
+--	Notez-bien : this object aims to handle day based windows.
+-- If you need to archive on plain month basis, write a custom SQL instead.
+--
+-- name of this archiving
+-- if not set, takes the filename
+--->> name=toto
+--
+-- Remove some tracing messages
+--->> quiet
+--
+-- Disable this archiving
+--->> disabled
+--
+--------------------
+-- Database related
+--------------------
+--
+--- The database to connect to
+-->> Database=domestik2
+--
+-- The source table
+-->> source=home_temperatures
+--
+-- The table where data will be inserted
+-- if not set, the same as "name"
+--->> table=
+--
+--------------------
+-- Selection related
+--------------------
+--
+-- Aggregation rule
+-- Can be any range supported by SQL's DATE_TRUNC()
+-- likes hour, day (default), week, month, year ...
+-- Notez-bien : check is done at database level. If an unsupported range
+-- is provided, it will create an SQL error.
+--> AggregateBy=Day
+--
+-- Archiving kind
+-- Allowed are :
+--	MinMax : Min / Max / Average statistics (default value)
+--	Delta : Delta between the first and the last value
+-->> Kind=MinMax
+--
+-- For table feed by namedfeed, indicate the field(s) to group by.
+-- If more than one are provided, they are separated by a comma
+-->> Keys=figure
+--
+-- Up to when, following SQL syntax.
+-- Will be executed by an SQL sentence like this one :
+-- ... where sample_time::date > current_date - interval 'arg'
+-- Consequently, argument should be :
+-- "1 day" to ignore last 1 days (default)
+-- "3 months" to ignore 3 last months
+-->> UpTo=1 day
+--
+------------
+-- Launching
+------------
+--
+-->> when=Time2Archive
+--
+---------------
+-- Notification
+---------------
+--
+-->> SuccessRDV=ht_archiving_Done
+--->> FailRDV=ArchivingFailed
+

@@ -36,7 +36,7 @@ If not set, the same as "name" or the filename.
 ```
 CREATE TABLE test (
    sample_time TIMESTAMP WITH TIME ZONE,
-   value INTEGER
+   value INTEGER -- Or any numeric type
 );
 ```
 

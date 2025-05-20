@@ -1,0 +1,16 @@
+--
+-- When to gather information
+-->> when=Periode
+--
+-- Where data come
+-->> from MinMax=Aggregator
+--
+-- The figure to store
+-- can be 'Average' (default), 'Min' or 'Max'
+--->> figure=Max
+--
+-- Where to store
+-->> Database=database
+-->> table=test
+--
+--->> quiet

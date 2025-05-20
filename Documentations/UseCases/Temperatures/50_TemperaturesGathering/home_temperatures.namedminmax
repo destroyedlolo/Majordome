@@ -1,11 +1,8 @@
--->> desc=Store home temperatures
+-->> desc=Aggregate values to save disc space.
 --
 -->> listen=HomeTemperatures
 -->> need_topic=HomeTemperatures
--->> Database=domestik2
---
---	No need to specify table's name : it's the same as this service name.
---->> table=home_temperatures
+-->> quiet
 
 -- Extract probe name
 local _, nlevel=HomeTemperatures:getTopic():gsub("/","")	-- amount of level

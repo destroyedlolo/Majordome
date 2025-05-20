@@ -77,7 +77,7 @@ bool MinMax::execAsync(lua_State *L){
 			this->nbre++;
 		}
 
-		if(debug)
+		if(debug  && !this->isQuiet())
 			SelLog->Log('T', "[MinMax '%s'] accepting %.0f -> min:%.0f max:%.0f", this->getNameC(), val, this->min, this->max);
 	} else
 		SelLog->Log('E', "[MinMax '%s'] Data rejected", this->getNameC());
@@ -86,6 +86,14 @@ bool MinMax::execAsync(lua_State *L){
 	return r;
 }
 
+#if DEBUG
+void MinMax::dump(){
+	std::cout << "Number of samples : " << this->getSamplesNumber() << std::endl;
+	std::cout << "Min value : " << this->getMin() << std::endl;
+	std::cout << "Max value : " << this->getMax() << std::endl;
+	std::cout << "Average value : " << this->getAverage() << std::endl;
+}
+#endif
 	/*****
 	 * Lua exposed functions
 	 *****/

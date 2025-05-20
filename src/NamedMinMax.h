@@ -36,20 +36,25 @@ public:
 	virtual bool execAsync(lua_State *L);	// Overloading to handle MinMax data feeding
 
 		/* Accessor */
-	lua_Number getMin(const char *n){ return(this->empty[n] ? 0 : this->min[n]); }
-	lua_Number getMax(const char *n){ return(this->empty[n] ? 0 : this->max[n]); }
-	lua_Number getAverage(const char *n){ return(this->empty[n] ? INFINITY : this->sum[n]/this->nbre[n]); }
-	lua_Number getSum(const char *n){ return(this->empty[n] ? 0 : this->sum[n]); }
-	lua_Number getSamplesNumber(const char *n){ return(this->empty[n] ? 0 : this->nbre[n]); }
+	std::unordered_map<std::string, bool> &getEmptyList() { return this->empty; }
+	lua_Number getMin(std::string n){ return(this->empty[n] ? 0 : this->min[n]); }
+	lua_Number getMax(std::string n){ return(this->empty[n] ? 0 : this->max[n]); }
+	lua_Number getAverage(std::string n){ return(this->empty[n] ? INFINITY : this->sum[n]/this->nbre[n]); }
+	lua_Number getSum(std::string n){ return(this->empty[n] ? 0 : this->sum[n]); }
+	lua_Number getSamplesNumber(std::string n){ return(this->empty[n] ? 0 : this->nbre[n]); }
 
-	bool isEmpty(const char *n){ return this->empty[n]; }
-	void Clear(const char *n){ this->empty[n] = true; }
+	bool isEmpty(std::string n){ return this->empty[n]; }
+	void Clear(std::string n){ this->empty[n] = true; }
 
 	/* Create Lua's object */
 	static void initLuaInterface( lua_State *L );
 
 	virtual std::string getTri(){ return NamedMinMax::trigramme(); }
 	static std::string trigramme(){ return "NMX_"; }
+
+#if DEBUG
+	void dump();
+#endif
 };
 
 typedef ObjCollection<NamedMinMax *> NamedMinMaxCollection;
