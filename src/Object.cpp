@@ -108,8 +108,22 @@ void Object::readConfigDirective(std::string &l){
 		this->embeddedCom = arg;
 		if(verbose)
 			SelLog->Log('C', "\t\tEmbedded comment : %s", embeddedCom.c_str());
+	} else if(!(arg = striKWcmp( l, "-->> group=" )).empty()){
+		this->group = arg;
+		if(verbose)
+			SelLog->Log('C', "\t\tBelong to group : %s", group.c_str());
 	} else if(!striKWcmp( l, "-->> ").empty()){
 		SelLog->Log('F', "Unknown directive '%s'", l.c_str());
 		exit(EXIT_FAILURE);
 	}
+}
+
+std::string Object::getFullId( void ){
+	std::string ret;
+
+	if(!this->group.empty())
+		ret = this->group + '.';
+	ret += this->getContainer() + "." + this->getTri() + this->getName();
+
+	return(ret);
 }

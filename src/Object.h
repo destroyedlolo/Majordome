@@ -18,6 +18,7 @@ protected:
 	std::string where;
 	std::string description;	// Description to be presented as tooltips
 	std::string embeddedCom;	// Small embedded comment (like units)
+	std::string group;			// to group object during D2 generation
 
 		/* Load the configuration file.
 		 * Should have been done within the constructor, but in this case,
@@ -56,7 +57,7 @@ public:
 	std::string &getWhere( void ){ return this->where; }; // Object's container (it's father directory)
 	const char *getWhereC( void ){ return this->where.c_str(); };
 	std::string getContainer( void );
-	std::string getFullId( void ){ return(this->getContainer() + "." + this->getTri() + this->getName()); }
+	std::string getFullId( void );
 
 	/*
 	 * determine the name from the filename

@@ -35,7 +35,8 @@
  *	20/02/2025 - v6.01 - LF - Add PostgreSQL support
  *	26/03/2025 - V6.02 - LF - Redesign configuration parsing
  *	01/05/2025 - V6.03 - LF - Generate D2 file
+ *	22/05/2025 - V6.04 - LF - Add group
  */
 
-#define VERSION 6.0307
+#define VERSION 6.0400
 #define COPYRIGHT "Majordome (c) L.Faillie 2018-2025"

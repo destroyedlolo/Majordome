@@ -70,6 +70,17 @@ This field is useful to generate a small description as *tool tips* in automatic
 Add a description embedded to an object.<br>
 This field is useful to generate a small information (like units) within shapes in automatic generated diagrams (using **D2**, see [Majordome **-2**](Readme.md) option).
 
+### -->> group=
+This object belongs to the given group, used to improve D2 diagram visuel.
+
+> [!CAUTION]
+> No syntax check is done. To get the correct diagrams, you **have** to
+> follow D2 syntax. As a consequence, you can create nested groups by
+>  separating them with a dot '**.**' .
+
+> [!WARNING]
+> You have to use this directive **before** any linking directive.
+
 ## Triggering while providing data
 
 Those directives trigger handlers and provide a data.
