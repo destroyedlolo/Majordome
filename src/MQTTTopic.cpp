@@ -39,15 +39,15 @@ void MQTTTopic::readConfigDirective(std::string &l){
 
 	if(!(arg = striKWcmp( l, "-->> topic=" )).empty()){
 		this->topic = std::regex_replace(arg, std::regex("%ClientID%"), MQTT_ClientID);
-		if(verbose)
+		if(::verbose)
 			SelLog->Log('C', "\t\ttopic : '%s'", this->topic.c_str());
 	} else if(!(arg = striKWcmp( l, "-->> qos=" )).empty()){
 		if((this->qos = stoi(arg)) > 2)	// If invalid
 			this->qos = 0;
-		if(verbose)
+		if(::verbose)
 			SelLog->Log('C', "\t\tqos : '%d'", this->qos);
 	} else if(l == "-->> store"){
-		if(verbose)
+		if(::verbose)
 			SelLog->Log('C', "\t\tStore in a SelSharedVar");
 		this->store = true;
 	} else if(l == "-->> numeric"){
@@ -55,7 +55,7 @@ void MQTTTopic::readConfigDirective(std::string &l){
 			SelLog->Log('F',"'default' must be set after 'numeric'");
 			exit(EXIT_FAILURE);
 		}
-		if(verbose)
+		if(::verbose)
 			SelLog->Log('C', "\t\tStore as a numeric value");
 		this->numeric = true;
 	} else if(!(arg = striKWcmp( l, "-->> ttl=" )).empty()){
@@ -64,7 +64,7 @@ void MQTTTopic::readConfigDirective(std::string &l){
 			exit(EXIT_FAILURE);
 		}
 		this->ttl = strtoul( arg.c_str(), NULL, 0 );
-		if(verbose)
+		if(::verbose)
 			SelLog->Log('C', "\t\tTTL = %lu", this->ttl);
 	} else if(!(arg = striKWcmp( l, "-->> default=" )).empty()){
 		this->alreadydefault = true;
@@ -76,7 +76,7 @@ void MQTTTopic::readConfigDirective(std::string &l){
 					double val = std::stod( arg );
 					SelSharedVar->setNumber( this->getNameC(), val, this->ttl );
 
-					if(verbose)
+					if(::verbose)
 						SelLog->Log('C', "\t\tdefault = %lf", val);
 				} catch( ... ){
 					SelLog->Log('F', "Topic '%s' is expecting a number : no convertion done ", this->getNameC() );
@@ -84,7 +84,7 @@ void MQTTTopic::readConfigDirective(std::string &l){
 				}
 			} else {
 				SelSharedVar->setString( this->getNameC(), arg.c_str(), this->ttl );
-				if(verbose)
+				if(::verbose)
 					SelLog->Log('C', "\t\tdefault = \"%s\"", arg.c_str());
 			}
 		}
@@ -179,7 +179,7 @@ static int mtpc_Publish(lua_State *L){
 
 	if( topic->isEnabled() )
 		SelMQTT->mqttpublish( MQTT_client, topic->getTopicC(), strlen(val), (void *)val, retain );
-	else if(verbose)
+	else if(::verbose)
 		SelLog->Log('I', "'%s' is disabled : sending ignored", topic->getTopic());
 
 	return 0;

@@ -96,6 +96,10 @@ void Object::readConfigDirective(std::string &l){
 		if(verbose)
 			SelLog->Log('C', "\t\tBe quiet");
 		this->beQuiet();
+	} else if( l == "-->> verbose" ){
+		if(verbose)
+			SelLog->Log('C', "\t\tBe verbose");
+		this->beVerbose();
 	} else if( l == "-->> disabled" ){
 		if(verbose)
 			SelLog->Log('C', "\t\tDisabled");
@@ -126,4 +130,13 @@ std::string Object::getFullId( void ){
 	ret += this->getContainer() + "." + this->getTri() + this->getName();
 
 	return(ret);
+}
+
+bool Object::isVerbose(void){
+	if(this->verbose)
+		return true;
+	else if(this->quiet)
+		return false;
+	else
+		return ::verbose;
 }

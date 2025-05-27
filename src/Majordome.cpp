@@ -74,15 +74,15 @@ static void read_configuration(const char *fch){
 				continue;
 			else if(!(arg = striKWcmp( l, "Broker_URL=" )).empty()){
 				Broker_URL = arg.c_str();
-				if(verbose)
+				if(::verbose)
 					SelLog->Log('C', "Broker_URL : '%s'", Broker_URL.c_str());
 			} else if(!(arg = striKWcmp( l, "ClientID=" )).empty()){
 				MQTT_ClientID = arg.c_str();
-				if(verbose)
+				if(::verbose)
 					SelLog->Log('C', "Client ID : '%s'", MQTT_ClientID.c_str());
 			} else if(!(arg = striKWcmp( l, "UserConfiguration=" )).empty() || !(arg = striKWcmp( l, "ApplicationDirectory=" )).empty()){
 				UserConfigRoot = arg.c_str();
-				if(verbose)
+				if(::verbose)
 					SelLog->Log('C', "User configuration directory : '%s'", UserConfigRoot.c_str());
 			} 
 		}
@@ -104,7 +104,7 @@ static void read_configuration(const char *fch){
 		char l[strlen(h) + 20];
 		sprintf(l, "Majordome-%s-%u", h, getpid());
 		MQTT_ClientID = l;
-		if(verbose)
+		if(::verbose)
 			SelLog->Log('C', "MQTT Client ID : '%s' (computed)", MQTT_ClientID.c_str());
 	}
 }
@@ -138,7 +138,7 @@ void threadEnvironment(lua_State *L){
 	lua_pushstring( L, config.getConfigDir().c_str() );
 	lua_setglobal( L, "MAJORDOME_CONFIGURATION_DIRECTORY" );
 
-	if(verbose){
+	if(::verbose){
 		lua_pushinteger( L, 1 );
 		lua_setglobal( L, "MAJORDOME_VERBOSE" );
 	}
@@ -161,13 +161,13 @@ void threadEnvironment(lua_State *L){
 	 */
 
 static int mjd_letsgo(lua_State *L){
-	if(debug || verbose)
+	if(debug || ::verbose)
 		SelLog->Log('D', "Late dependencies building");
 	
 	SelLua->lateBuildingDependancies(L);
 	SelLua->ApplyStartupFunc(L);
 
-	if(debug || verbose)
+	if(debug || ::verbose)
 		SelLog->Log('D', "Let's go ...");
 
 	return 0;
@@ -198,7 +198,7 @@ MQTTClient MQTT_client;
  * already running.
  */
 static int msgarrived(void *actx, char *topic, int tlen, MQTTClient_message *msg){
-	if(verbose && !hideTopicArrival)
+	if(::verbose && !hideTopicArrival)
 		SelLog->Log('T', "Receiving '%s'", topic);
 
 		// Convert the payload to a string
@@ -316,7 +316,7 @@ int main(int ac, char **av){
 			SelLog->Log('I', "%s v%.04f", basename(av[0]), VERSION);
 #endif
 		}
-		verbose = true;
+		::verbose = true;
 		quiet = false;
 		break;
 	case 'r':
@@ -326,7 +326,7 @@ int main(int ac, char **av){
 		hideTopicArrival = true;
 		break;
 	case 'q':
-		if(!verbose)
+		if(!::verbose)
 			quiet = true;
 		break;
 #ifdef DEBUG

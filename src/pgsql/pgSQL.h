@@ -20,7 +20,7 @@ class pgSQL : public Object, public mpgConnection {
 protected:
 public:
 	virtual const char *getNameC(){ return(this->Object::getNameC()); };
-	bool isQuiet(){ return this->Object::isQuiet(); };
+	bool isQuiet(){ return !this->Object::isVerbose(); };
 
 	pgSQL(const std::string &fch, std::string &where);
 

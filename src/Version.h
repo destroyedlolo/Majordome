@@ -36,7 +36,8 @@
  *	26/03/2025 - V6.02 - LF - Redesign configuration parsing
  *	01/05/2025 - V6.03 - LF - Generate D2 file
  *	22/05/2025 - V6.04 - LF - Add group
+ *	22/05/2025 - V6.05 - LF - Add local verbosity
  */
 
-#define VERSION 6.0400
+#define VERSION 6.0500
 #define COPYRIGHT "Majordome (c) L.Faillie 2018-2025"

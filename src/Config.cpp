@@ -142,7 +142,7 @@ void Config::SubscribeTopics( void ){
 		qoss[nbre++] = i.second->getQOS();
 	}
 #ifdef DEBUG
-	if(verbose)
+	if(::verbose)
 		SelLog->Log('C', "Subscribing to %ld topics", nbre);
 #endif
 
