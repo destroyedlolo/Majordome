@@ -12,7 +12,7 @@ Object::Object(const std::string &fch, std::string &where) : disabled(false), qu
 }
 
 void Object::loadConfigurationFile(const std::string &fch, std::string &where, std::stringstream *buffer){
-	if(verbose)
+	if(::verbose)
 		SelLog->Log('L', "\t'%s'", fch.c_str());
 
 	this->extrName( fch, name );
@@ -90,31 +90,31 @@ void Object::readConfigDirective(std::string &l){
 
 	if(!(arg = striKWcmp( l, "-->> name=" )).empty()){
 		this->name = arg;
-		if(verbose)
+		if(::verbose)
 			SelLog->Log('C', "\t\tChanging name to '%s'", this->getNameC());
 	} else if( l == "-->> quiet" ){
-		if(verbose)
+		if(::verbose)
 			SelLog->Log('C', "\t\tBe quiet");
 		this->beQuiet();
 	} else if( l == "-->> verbose" ){
-		if(verbose)
+		if(::verbose)
 			SelLog->Log('C', "\t\tBe verbose");
 		this->beVerbose();
 	} else if( l == "-->> disabled" ){
-		if(verbose)
+		if(::verbose)
 			SelLog->Log('C', "\t\tDisabled");
 		this->disable();
 	} else if(!(arg = striKWcmp( l, "-->> desc=" )).empty()){
 		this->description = arg;
-		if(verbose)
+		if(::verbose)
 			SelLog->Log('C', "\t\tDescription : %s", description.c_str());
 	} else if(!(arg = striKWcmp( l, "-->> ecom=" )).empty()){
 		this->embeddedCom = arg;
-		if(verbose)
+		if(::verbose)
 			SelLog->Log('C', "\t\tEmbedded comment : %s", embeddedCom.c_str());
 	} else if(!(arg = striKWcmp( l, "-->> group=" )).empty()){
 		this->group = arg;
-		if(verbose)
+		if(::verbose)
 			SelLog->Log('C', "\t\tBelong to group : %s", group.c_str());
 	} else if(!striKWcmp( l, "-->> ").empty()){
 		SelLog->Log('F', "Unknown directive '%s'", l.c_str());
