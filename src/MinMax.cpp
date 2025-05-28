@@ -88,6 +88,7 @@ void MinMax::dump(){
 	std::cout << "Min value : " << this->getMin() << std::endl;
 	std::cout << "Max value : " << this->getMax() << std::endl;
 	std::cout << "Average value : " << this->getAverage() << std::endl;
+	std::cout << "Sum value : " << this->getSum() << std::endl;
 }
 #endif
 	/*****

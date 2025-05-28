@@ -100,6 +100,7 @@ void NamedMinMax::dump(){
 		std::cout << "Min value : " << this->getMin(it.first) << std::endl;
 		std::cout << "Max value : " << this->getMax(it.first) << std::endl;
 		std::cout << "Average value : " << this->getAverage(it.first) << std::endl;
+		std::cout << "Sum value : " << this->getSum(it.first) << std::endl;
 	}
 }
 #endif
