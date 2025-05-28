@@ -37,6 +37,27 @@ void NamedMinMax::feedState( lua_State *L ){
 	lua_setglobal( L, "MAJORDOME_Myself" );
 }
 
+void NamedMinMax::push(std::string rs,lua_Number val){
+	auto it = this->empty.find(rs);
+
+	if(this->empty[rs] || it == this->empty.end()){
+		this->empty[rs] = false;
+		this->nbre[rs] = 1;
+		this->min[rs] = this->max[rs] = this->sum[rs] = val; 
+	} else {
+		if(val < this->min[rs])
+			this->min[rs] = val;
+		if(val > this->max[rs])
+			this->max[rs] = val;
+
+		this->sum[rs] += val;
+		this->nbre[rs]++;
+	}
+
+	if(debug && !this->isQuiet())
+		SelLog->Log('T', "NamedMinMax ['%s'/'%s'] min:%.0f max:%.0f", this->getNameC(), rs, this->min[rs], this->max[rs]);
+}
+
 bool NamedMinMax::execAsync(lua_State *L){
 	LuaExec::boolRetCode rc;
 	std::string rs("orphaned data collection");
@@ -65,24 +86,7 @@ bool NamedMinMax::execAsync(lua_State *L){
 		break;
 	}
 
-	auto it = this->empty.find(rs);
-
-	if(this->empty[rs] || it == this->empty.end()){
-		this->empty[rs] = false;
-		this->nbre[rs] = 1;
-		this->min[rs] = this->max[rs] = this->sum[rs] = val; 
-	} else {
-		if(val < this->min[rs])
-			this->min[rs] = val;
-		if(val > this->max[rs])
-			this->max[rs] = val;
-
-		this->sum[rs] += val;
-		this->nbre[rs]++;
-	}
-
-	if(debug && !this->isQuiet())
-		SelLog->Log('T', "NamedMinMax ['%s'/'%s'] min:%.0f max:%.0f", this->getNameC(), rs.c_str(), this->min[rs], this->max[rs]);
+	this->push(rs, val);
 
 	lua_close(L);
 	return r;
