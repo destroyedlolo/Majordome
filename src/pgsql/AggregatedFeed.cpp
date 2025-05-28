@@ -33,12 +33,12 @@ void AggregatedFeed::readConfigDirective( std::string &l ){
 
 	if(!(arg = striKWcmp( l, "-->> table=" )).empty()){
 		this->TableName = arg;
-		if(verbose)
+		if(::verbose)
 			SelLog->Log('C', "\t\tTable : %s", arg.c_str());
 	} else if(!(arg = striKWcmp( l, "-->> Database=" )).empty()){
 		pgSQLCollection::iterator db;
 		if( (db = config.pgSQLsList.find(arg)) != config.pgSQLsList.end()){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tDatabase : %s", arg.c_str());
 			this->db = db->second;
 			if(d2)
@@ -55,7 +55,7 @@ void AggregatedFeed::readConfigDirective( std::string &l ){
 
 		MinMaxCollection::iterator mm;
 		if( (mm = config.MinMaxList.find(arg)) != config.MinMaxList.end()){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tMinMax : %s", arg.c_str());
 			this->minmax = mm->second;
 			if(d2)
@@ -72,7 +72,7 @@ void AggregatedFeed::readConfigDirective( std::string &l ){
 
 		NamedMinMaxCollection::iterator mm;
 		if( (mm = config.NamedMinMaxList.find(arg)) != config.NamedMinMaxList.end()){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tNamedMinMax : %s", arg.c_str());
 			this->nminmax = mm->second;
 			if(d2)
@@ -95,7 +95,7 @@ void AggregatedFeed::readConfigDirective( std::string &l ){
 			exit(EXIT_FAILURE);
 		}
 
-		if(verbose)
+		if(::verbose)
 			SelLog->Log('C', "\t\tFigure : %s", arg.c_str());
 	} else if(this->readConfigDirectiveData(l))
 		;

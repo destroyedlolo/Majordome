@@ -46,6 +46,8 @@ public:
 	bool isEmpty(std::string n){ return this->empty[n]; }
 	void Clear(std::string n){ this->empty[n] = true; }
 
+	void push(std::string, lua_Number);	// Push a new data
+
 	/* Create Lua's object */
 	static void initLuaInterface( lua_State *L );
 

@@ -40,7 +40,7 @@ bool Handler::readConfigDirectiveNoData(std::string &l){
 	if(!(arg = striKWcmp( l, "-->> waitfor=" )).empty()){
 		EventCollection::iterator event;
 		if( (event = config.EventsList.find(arg)) != config.EventsList.end()){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tAdded to rendezvous '%s'", arg.c_str());
 			event->second->addHandler( dynamic_cast<Handler *>(this) );
 
@@ -54,7 +54,7 @@ bool Handler::readConfigDirectiveNoData(std::string &l){
 	} else if(!(arg = striKWcmp( l, "-->> when=" )).empty()){
 		TimerCollection::iterator timer;
 		if( (timer = config.TimersList.find(arg)) != config.TimersList.end()){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tAdded to timer '%s'", arg.c_str());
 			timer->second->addHandler( dynamic_cast<Handler *>(this) );
 
@@ -68,7 +68,7 @@ bool Handler::readConfigDirectiveNoData(std::string &l){
 	} else if(!(arg = striKWcmp( l, "-->> whenDone=" )).empty()){
 		TrackerCollection::iterator tracker;
 		if( (tracker = config.TrackersList.find(arg)) != config.TrackersList.end()){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tAdded to tracker '%s' as Done task", arg.c_str());
 			tracker->second->addDone( this );
 
@@ -82,7 +82,7 @@ bool Handler::readConfigDirectiveNoData(std::string &l){
 	} else if(!(arg = striKWcmp( l, "-->> whenStarted=" )).empty()){
 		TrackerCollection::iterator tracker;
 		if( (tracker = config.TrackersList.find(arg)) != config.TrackersList.end()){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tAdded to tracker '%s' as Started task", arg.c_str());
 	 		tracker->second->addStarted( this );
 
@@ -96,7 +96,7 @@ bool Handler::readConfigDirectiveNoData(std::string &l){
 	} else if(!(arg = striKWcmp( l, "-->> whenStopped=" )).empty()){
 		TrackerCollection::iterator tracker;
 		if( (tracker = config.TrackersList.find(arg)) != config.TrackersList.end()){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tAdded to tracker '%s' as Stopped task", arg.c_str());
 		 	tracker->second->addStopped( this );
 
@@ -110,7 +110,7 @@ bool Handler::readConfigDirectiveNoData(std::string &l){
 	} else if(!(arg = striKWcmp( l, "-->> whenChanged=" )).empty()){
 		TrackerCollection::iterator tracker;
 		if( (tracker = config.TrackersList.find(arg)) != config.TrackersList.end()){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tAdded to tracker '%s' as Changed task", arg.c_str());
 			tracker->second->addChanged( this );
 
@@ -132,7 +132,7 @@ bool Handler::readConfigDirectiveData(std::string &l){
 	if(!(arg = striKWcmp( l, "-->> listen=" )).empty()){
 		TopicCollection::iterator topic;
 		if( (topic = config.TopicsList.find(arg)) != config.TopicsList.end()){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tAdded to topic '%s'", arg.c_str());
 			topic->second->addHandler( dynamic_cast<Handler *>(this) );
 

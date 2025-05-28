@@ -19,11 +19,11 @@ void LuaTask::readConfigDirective( std::string &l ){
 	std::string arg;
 
 	if( l == "-->> RunAtStartup" ){
-		if(verbose)
+		if(::verbose)
 			SelLog->Log('C', "\t\tRun at startup");
 		this->setRunAtStartup( true );
 	} else if( l == "-->> once" ){
-		if(verbose)
+		if(::verbose)
 			SelLog->Log('C', "\t\tOnly one instance is allowed to run (once)");
 		this->setOnce( true );
 	} else if(this->readConfigDirectiveData(l))
@@ -48,7 +48,7 @@ bool LuaTask::canRun( void ){
 	pthread_mutex_lock( &this->running_access );
 	if( this->running ){
 		pthread_mutex_unlock( &this->running_access );
-		if(verbose && !this->isQuiet())
+		if(this->isVerbose())
 			SelLog->Log('T', "Task '%s' from '%s' is already running", this->getNameC(), this->getWhereC() );		
 		return false;
 	}

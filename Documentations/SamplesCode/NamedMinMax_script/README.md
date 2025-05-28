@@ -1,4 +1,4 @@
-This example demonstrates how **MinMax**'s validation script can reject or modify incoming data.
+This example demonstrates how **NamedMinMax**'s validation script can reject or modify incoming data.
 
 # Files
 

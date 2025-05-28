@@ -53,8 +53,17 @@ Unique name to identify the object. If not set, uses the filename.
 > [!CAUTION]
 > When doing **D2 diagram generation**, `name=` has to be placed before any other directive, otherwise the diagram will be probably wrong.
 
+### -->> verbose
+Force verbosity
+
 ### -->> quiet
 Removes some trace.
+
+> [!TIP]
+> Precedence over verbosity:
+> - Object's `verbose`
+> - Object's `quiet`
+> - Global verbosity `-v`
 
 ### -->> disabled
 This object is disabled : 
