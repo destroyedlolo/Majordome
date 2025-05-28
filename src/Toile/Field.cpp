@@ -30,7 +30,7 @@ Field::Field( const std::string &fch, std::string &where, lua_State *L ) : Objec
 
 	if(!this->geometry.h){
 		this->geometry.h = 1;
-		if(verbose)
+		if(::verbose)
 			SelLog->Log('C', "\t\tHeight defaulted to : 1");
 	}
 }
@@ -39,7 +39,7 @@ void Field::readConfigDirective( std::string &l ){
 	std::string arg;
 	if(!(arg = striKWcmp( l, "-->> Sample=" )).empty()){
 		this->geometry.w = arg.length();
-		if(verbose)
+		if(::verbose)
 			SelLog->Log('C', "\t\tWidth guessed to : %u", this->geometry.w);
 	} else if(this->Painting::readConfigDirectiveOnly(l))
 		;

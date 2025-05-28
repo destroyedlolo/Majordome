@@ -46,7 +46,7 @@ bool Painting::readConfigDirectiveOnly( std::string &l ){
 			// Search the parent renderer
 		RendererCollection::iterator renderer;
 		if((renderer = config.RendererList.find(arg)) != config.RendererList.end()){
-			if(verbose)
+			if(::verbose)
 #ifdef DEBUG
 				SelLog->Log('C', "\t\tThe Parent is Renderer '%s' (%p)", arg.c_str(), &(renderer->second));
 #else
@@ -67,7 +67,7 @@ bool Painting::readConfigDirectiveOnly( std::string &l ){
 		if(r != 2)
 			SelLog->Log('W', "Wasn't able to read Origine='s arguments");
 
-		if(verbose)
+		if(::verbose)
 			SelLog->Log('C', "\t\tOrigin : %u,%u", this->geometry.x,this->geometry.y);
 		return true;
 	} else if(!(arg = striKWcmp( l, "-->> Size=" )).empty()){
@@ -75,7 +75,7 @@ bool Painting::readConfigDirectiveOnly( std::string &l ){
 		if(r != 2)
 			SelLog->Log('W', "Wasn't able to read Size='s arguments");
 
-		if(verbose)
+		if(::verbose)
 			SelLog->Log('C', "\t\tSize : %ux%u", this->geometry.w,this->geometry.h);
 		return true;
 	}

@@ -25,7 +25,7 @@ void Decoration::readConfigDirective( std::string &l ){
 			// Search the renderer to apply on
 		RendererCollection::iterator renderer;
 		if((renderer = config.RendererList.find(arg)) != config.RendererList.end()){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tAdded to renderer '%s'", arg.c_str());
 			renderer->second->addDecoration( this );
 
@@ -39,7 +39,7 @@ void Decoration::readConfigDirective( std::string &l ){
 			// Search the Painting to apply on
 		PaintingCollection::iterator paint;
 		if((paint = config.PaintingList.find(arg)) != config.PaintingList.end()){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tAdded to Painting '%s'", arg.c_str());
 			paint->second->addDecoration( this );
 
@@ -87,7 +87,7 @@ void Decoration::exec(struct SelGenericSurface *srf){	/* From LuaExec::execSync(
 		return;
 	}
 
-	if(verbose && !this->isQuiet())
+	if(this->isVerbose())
 		SelLog->Log('T', "Running Decoration '%s' from '%s'", this->getNameC(), this->getWhereC() );
 
 	if(lua_pcall( L, 0, 0, 0)){

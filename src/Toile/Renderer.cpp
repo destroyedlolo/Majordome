@@ -24,7 +24,7 @@ Renderer::Renderer( const std::string &fch, std::string &where, lua_State *L ) :
 
 void Renderer::readConfigDirective( std::string &l ){
 	if( l == "-->> Fatal" ){
-		if(verbose)
+		if(::verbose)
 			SelLog->Log('C', "\t\tFailure is fatal");
 		this->fatal = true;
 	} else
@@ -51,7 +51,7 @@ bool Renderer::exec(){	/* From LuaExec::execSync() */
 		return false;
 	}
 
-	if(verbose && !this->isQuiet())
+	if(this->isVerbose())
 		SelLog->Log('T', "Running Renderer '%s' from '%s'", this->getNameC(), this->getWhereC() );
 
 	if(lua_pcall( L, 0, 1, 0)){
