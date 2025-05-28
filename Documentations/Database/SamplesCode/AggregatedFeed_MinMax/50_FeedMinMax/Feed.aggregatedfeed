@@ -6,7 +6,7 @@
 -->> from MinMax=Aggregator
 --
 -- The figure to store
--- can be 'Average' (default), 'Min' or 'Max'
+-- can be 'Average' (default), 'Min', 'Max' or 'Sum'
 --->> figure=Max
 --
 -- Where to store
