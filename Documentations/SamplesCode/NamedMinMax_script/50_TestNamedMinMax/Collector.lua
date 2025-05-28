@@ -14,7 +14,7 @@
 -- (more than one "when" can be present)
 -->> when=30s
 --
--- Create this rendez-vous object
+-- Create NamedMinMax object
 -->> need_namedminmax=TestNamedMinMax
 --
 -- remove some trace
