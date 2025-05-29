@@ -39,5 +39,5 @@
  *	22/05/2025 - V6.05 - LF - Add local verbosity
  */
 
-#define VERSION 6.0500
+#define VERSION 6.0501
 #define COPYRIGHT "Majordome (c) L.Faillie 2018-2025"
