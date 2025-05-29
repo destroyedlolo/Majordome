@@ -47,6 +47,30 @@ Which field to consider. Can be
 - **Max**
 - **Sum**
 
+#### preprocess=
+Unlike [feed](feed.md), the main Lua code can't be used to modify inserted data in aggregatedfeed. Here, you can specify a function to be called before the data is inserted in the database.
+
+If the data source is a [MinMax](../minmax.md), the function signature is
+```
+function (numeric val)
+```
+where `val` is the original value to insert.<br>
+If the data source is a [NamedMinMax](../NamedMinMax.md), the function signature is
+```
+function (numeric val, string name)
+```
+where `name` is the collection's name.<br>
+In both cases, the function has to return the modified value.
+
+As example, a preprosessing function to convert to do data conversion.
+``` Lua
+-- Comvert aggregated value to Wh
+function toWh( val, name )
+	val = val * (SavingAggregation:getEvery() / 3600)
+	return val
+end
+```
+
 ## SQL table definition
 ### From MinMax
 ```
