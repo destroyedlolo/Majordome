@@ -54,8 +54,9 @@ void NamedMinMax::push(std::string rs,lua_Number val){
 		this->nbre[rs]++;
 	}
 
-	if(debug && !this->isQuiet())
-		SelLog->Log('T', "NamedMinMax ['%s'/'%s'] min:%.0f max:%.0f", this->getNameC(), rs, this->min[rs], this->max[rs]);
+	if(debug && !this->isQuiet()){
+		SelLog->Log('T', "NamedMinMax ['%s'/'%s'] n:%.0f min:%.0f max:%.0f sum:%.0f", this->getNameC(), rs.c_str(), this->getSamplesNumber(rs), this->min[rs], this->max[rs], this->sum[rs]);
+	}
 }
 
 bool NamedMinMax::execAsync(lua_State *L){
@@ -94,6 +95,7 @@ bool NamedMinMax::execAsync(lua_State *L){
 
 #if DEBUG
 void NamedMinMax::dump(){
+	std::cout << "\n" << this->getName() << std::endl << "======="  << std::endl;
 	for(auto & it: this->empty){	// Iterating against keys
 		std::cout << "\n" << it.first << std::endl << "-------"  << std::endl;
 		std::cout << "Number of samples : " << this->getSamplesNumber(it.first) << std::endl;

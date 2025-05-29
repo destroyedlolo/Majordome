@@ -11,6 +11,8 @@ class AggregatedFeed : virtual public Feed {
 	MinMax *minmax;
 	NamedMinMax *nminmax;
 
+	std::string func;
+
 		// Which data to store
 	enum _which {
 		MIN, MAX, AVG, SUM
