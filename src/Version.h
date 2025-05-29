@@ -37,7 +37,8 @@
  *	01/05/2025 - V6.03 - LF - Generate D2 file
  *	22/05/2025 - V6.04 - LF - Add group
  *	22/05/2025 - V6.05 - LF - Add local verbosity
+ *	29/05/2025 - v6.06 - LF - Add AggregatedFeed's preprocessing function
  */
 
-#define VERSION 6.0501
+#define VERSION 6.0600
 #define COPYRIGHT "Majordome (c) L.Faillie 2018-2025"
