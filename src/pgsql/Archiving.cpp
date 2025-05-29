@@ -22,7 +22,7 @@ void Archiving::readConfigDirective( std::string &l ){
 	if(!(arg = striKWcmp( l, "-->> Database=" )).empty()){
 		pgSQLCollection::iterator db;
 		if( (db = config.pgSQLsList.find(arg)) != config.pgSQLsList.end()){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tDatabase : %s", arg.c_str());
 			this->db = db->second;
 
@@ -34,28 +34,28 @@ void Archiving::readConfigDirective( std::string &l ){
 		}
 	} else if(!(arg = striKWcmp( l, "-->> table=" )).empty()){
 		this->TableName = arg;
-		if(verbose)
+		if(::verbose)
 			SelLog->Log('C', "\t\tTarget table : %s", arg.c_str());
 	} else if(!(arg = striKWcmp( l, "-->> source=" )).empty()){
 		this->SourceName = arg;
-		if(verbose)
+		if(::verbose)
 			SelLog->Log('C', "\t\tSource table : %s", arg.c_str());
 	} else if(!(arg = striKWcmp( l, "--> AggregateBy=" )).empty()){
 		this->Aggregation = arg;
-		if(verbose)
+		if(::verbose)
 			SelLog->Log('C', "\t\tAggregation : %s", arg.c_str());
 	} else if(!(arg = striKWcmp( l, "-->> Kind=" )).empty()){
 		if(arg == "MinMax"){
 			this->kind = _kind::MINMAX;
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tKind : MinMax");
 		} else if(arg == "Sum"){
 			this->kind = _kind::SUM;
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tKind : Sum");
 		} else if(arg == "Delta"){
 			this->kind = _kind::DELTA;
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tKind : Delta");
 		} else {
 			SelLog->Log('F', "\t\tUnknown archiving kind");
@@ -67,7 +67,7 @@ void Archiving::readConfigDirective( std::string &l ){
 		while(std::getline(iss, k, ','))
 			this->keys.Add(k);
 
-		if(verbose){
+		if(::verbose){
 			k = "\t\tKeys : ";
 			bool first = true;
 			for(auto &i : this->keys){
@@ -80,12 +80,12 @@ void Archiving::readConfigDirective( std::string &l ){
 		}
 	} else if(!(arg = striKWcmp( l, "-->> UpTo=" )).empty()){
 		this->upto= arg;
-		if(verbose)
+		if(::verbose)
 			SelLog->Log('C', "\t\tUp to : %s", arg.c_str());
 	} else if(!(arg = striKWcmp( l, "-->> SuccessRDV=" )).empty()){
 		EventCollection::iterator event;
 		if( (event = config.EventsList.find(arg)) != config.EventsList.end()){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tRendezvous '%s' add in successful list", arg.c_str());
 			this->EventSuccessList.Add(event->second);
 
@@ -98,7 +98,7 @@ void Archiving::readConfigDirective( std::string &l ){
 	} else if(!(arg = striKWcmp( l, "-->> FailRDV=" )).empty()){
 		EventCollection::iterator event;
 		if( (event = config.EventsList.find(arg)) != config.EventsList.end()){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tRendezvous '%s' add in successful list", arg.c_str());
 			this->EventFailList.Add(event->second);
 

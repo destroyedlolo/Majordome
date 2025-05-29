@@ -12,6 +12,7 @@
 class Object {
 	bool disabled;
 	bool quiet;
+	bool verbose;
 
 protected:
 	std::string name;
@@ -50,6 +51,9 @@ public:
 		// Remove some messages
 	void beQuiet( void ){ this->quiet = true; };
 	void beNoisy( void ){ this->quiet = false; };
+	void beVerbose( void ){ this->verbose = true; };
+	void beTerse( void ){ this->verbose = false; };
+	bool isVerbose( void );
 	bool isQuiet( void ){ return this->quiet; };
 
 	std::string &getName( void ){ return this->name; };	// Object's name

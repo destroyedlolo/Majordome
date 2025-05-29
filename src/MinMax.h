@@ -42,6 +42,8 @@ public:
 		/* Executable */
 	virtual bool execAsync(lua_State *L);	// Overloading to handle MinMax data feeding
 
+	void push(lua_Number);	// Push a new data
+
 	/* Create Lua's object */
 	static void initLuaInterface( lua_State *L );
 

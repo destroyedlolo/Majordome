@@ -23,7 +23,7 @@ void pgSQL::readConfigDirective( std::string &l ){
 	if(!(arg = striKWcmp( l, "-->> pgConnectionstring=" )).empty()){
 		this->conninfo = arg;
 
-		if(verbose)
+		if(::verbose)
 			SelLog->Log('C', "\t\tConnexion string : '%s'", this->conninfo.c_str());
 	} else 
 		this->Object::readConfigDirective(l);

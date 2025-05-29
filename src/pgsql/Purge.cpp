@@ -18,7 +18,7 @@ void Purge::readConfigDirective( std::string &l ){
 	if(!(arg = striKWcmp( l, "-->> Database=" )).empty()){
 		pgSQLCollection::iterator db;
 		if( (db = config.pgSQLsList.find(arg)) != config.pgSQLsList.end()){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tDatabase : %s", arg.c_str());
 			this->db = db->second;
 
@@ -30,16 +30,16 @@ void Purge::readConfigDirective( std::string &l ){
 		}
 	} else if(!(arg = striKWcmp( l, "-->> table=" )).empty()){
 		this->TableName = arg;
-		if(verbose)
+		if(::verbose)
 			SelLog->Log('C', "\t\tTable : %s", arg.c_str());
 	} else if(!(arg = striKWcmp( l, "-->> Keep=" )).empty()){
 		this->upto= arg;
-		if(verbose)
+		if(::verbose)
 			SelLog->Log('C', "\t\tKeep : %s", arg.c_str());
 	} else if(!(arg = striKWcmp( l, "-->> SuccessRDV=" )).empty()){
 		EventCollection::iterator event;
 		if( (event = config.EventsList.find(arg)) != config.EventsList.end()){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tRendezvous '%s' add in successful list", arg.c_str());
 			this->EventSuccessList.Add(event->second);
 
@@ -52,7 +52,7 @@ void Purge::readConfigDirective( std::string &l ){
 	} else if(!(arg = striKWcmp( l, "-->> FailRDV=" )).empty()){
 		EventCollection::iterator event;
 		if( (event = config.EventsList.find(arg)) != config.EventsList.end()){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tRendezvous '%s' add in successful list", arg.c_str());
 			this->EventFailList.Add(event->second);
 

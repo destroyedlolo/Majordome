@@ -37,15 +37,26 @@ void MinMax::feedState( lua_State *L ){
 	lua_setglobal( L, "MAJORDOME_Myself" );
 }
 
-bool MinMax::execAsync(lua_State *L){
-#if 0	// Not needed as already checked within LuaExec::canRun() called by MQTTTopic::execHandlers()
-	if( !this->isEnabled() ){
-		if(verbose)
-			SelLog->Log('T', "MinMax'%s' from '%s' is disabled", this->getNameC(), this->getWhereC() );
-		return false;
-	}
-#endif
+void MinMax::push(lua_Number val){
+	if(this->empty){
+		this->empty = false;
+		this->nbre = 1;
+		this->min = this->max = this->sum = val; 
+	} else {
+		if(val < this->min)
+			this->min = val;
+		if(val > this->max)
+			this->max = val;
 
+		this->sum += val;
+		this->nbre++;
+	}
+
+	if(debug  && !this->isQuiet())
+		SelLog->Log('T', "[MinMax '%s'] accepting %.0f -> min:%.0f max:%.0f", this->getNameC(), val, this->min, this->max);
+}
+
+bool MinMax::execAsync(lua_State *L){
 	LuaExec::boolRetCode rc;
 	lua_Number val;
 
@@ -63,22 +74,7 @@ bool MinMax::execAsync(lua_State *L){
 			}
 		}
 	
-		if(this->empty){
-			this->empty = false;
-			this->nbre = 1;
-			this->min = this->max = this->sum = val; 
-		} else {
-			if(val < this->min)
-				this->min = val;
-			if(val > this->max)
-				this->max = val;
-
-			this->sum += val;
-			this->nbre++;
-		}
-
-		if(debug  && !this->isQuiet())
-			SelLog->Log('T', "[MinMax '%s'] accepting %.0f -> min:%.0f max:%.0f", this->getNameC(), val, this->min, this->max);
+		this->push(val);
 	} else
 		SelLog->Log('E', "[MinMax '%s'] Data rejected", this->getNameC());
 
@@ -92,6 +88,7 @@ void MinMax::dump(){
 	std::cout << "Min value : " << this->getMin() << std::endl;
 	std::cout << "Max value : " << this->getMax() << std::endl;
 	std::cout << "Average value : " << this->getAverage() << std::endl;
+	std::cout << "Sum value : " << this->getSum() << std::endl;
 }
 #endif
 	/*****
@@ -187,6 +184,13 @@ static int mmm_getSamplesNumber( lua_State *L ){
 	return 1;
 }
 
+static int mmm_Push( lua_State *L ){
+	class MinMax *minmax= checkMajordomeMinMax(L);
+	lua_Number val = luaL_checknumber(L, 2);
+	minmax->push(val);
+	return 0;
+}
+
 static int mmm_Clear( lua_State *L ){
 	class MinMax *minmax= checkMajordomeMinMax(L);
 	minmax->Clear();
@@ -204,6 +208,7 @@ static const struct luaL_Reg MajMinMaxM [] = {
 	{"getAverage", mmm_getAverage},
 	{"getSum", mmm_getSum},
 	{"getSamplesNumber", mmm_getSamplesNumber},
+	{"Push", mmm_Push},
 	{"Clear", mmm_Clear},
 	{"Reset", mmm_Clear},
 	{NULL, NULL}

@@ -25,18 +25,18 @@ void Feed::readConfigDirective( std::string &l ){
 
 	if(!(arg = striKWcmp( l, "-->> table=" )).empty()){
 		this->TableName = arg;
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tTable : %s", arg.c_str());
 #if 0/* For the moment, the value can be only numeric */
 	} else if(l == "-->> Numerical"){
 		this->numerical = true;
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tNumerical");
 #endif
 	} else if(!(arg = striKWcmp( l, "-->> Database=" )).empty()){
 		pgSQLCollection::iterator db;
 		if( (db = config.pgSQLsList.find(arg)) != config.pgSQLsList.end()){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tDatabase : %s", arg.c_str());
 			this->db = db->second;
 			if(d2)

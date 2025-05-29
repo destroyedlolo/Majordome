@@ -69,7 +69,7 @@ void LuaExec::readConfigDirective( std::string &l ){
 			/* No way to test if the task exists or not (as it could be
 			 * defined afterward. Will be part of sanity checks
 			 */
-		if(verbose)
+		if(::verbose)
 			SelLog->Log('C', "\t\tAdded needed task '%s'", arg.c_str());
 		this->addNeededTask( arg );
 
@@ -77,7 +77,7 @@ void LuaExec::readConfigDirective( std::string &l ){
 	} else if(!(arg = striKWcmp( l, "-->> need_rendezvous=" )).empty()){
 		EventCollection::iterator event;
 		if( (event = config.EventsList.find(arg)) != config.EventsList.end()){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tAdded needed rendezvous '%s'", arg.c_str());
 			this->addNeededRendezVous(arg);
 
@@ -91,7 +91,7 @@ void LuaExec::readConfigDirective( std::string &l ){
 	} else if(!(arg = striKWcmp( l, "-->> need_topic=" )).empty()){
 		TopicCollection::iterator topic;
 		if( (topic = config.TopicsList.find(arg)) != config.TopicsList.end()){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tAdded needed topic '%s'", arg.c_str());
 			this->addNeededTopic(arg);
 
@@ -109,7 +109,7 @@ void LuaExec::readConfigDirective( std::string &l ){
 				SelLog->Log('F', "Can't required \"%s\" topic : not stored", arg.c_str());
 				exit(EXIT_FAILURE);
 			}
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tAdded required topic '%s'", arg.c_str());
 
 			if(d2)
@@ -123,7 +123,7 @@ void LuaExec::readConfigDirective( std::string &l ){
 	} else if(!(arg = striKWcmp( l, "-->> need_timer=" )).empty()){
 		TimerCollection::iterator timer;
 		if( (timer = config.TimersList.find(arg)) != config.TimersList.end()){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tAdded needed timer '%s'", arg.c_str());
 			this->addNeededTimer(arg);
 
@@ -137,7 +137,7 @@ void LuaExec::readConfigDirective( std::string &l ){
 	} else if(!(arg = striKWcmp( l, "-->> need_tracker=" )).empty()){
 		TrackerCollection::iterator trk;
 		if( (trk = config.TrackersList.find(arg)) != config.TrackersList.end()){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tAdded needed TrackersList '%s'", arg.c_str());
 			this->addNeededTracker(arg);
 
@@ -151,7 +151,7 @@ void LuaExec::readConfigDirective( std::string &l ){
 	} else if(!(arg = striKWcmp( l, "-->> need_minmax=" )).empty()){
 		MinMaxCollection::iterator minmax;
 		if( (minmax = config.MinMaxList.find(arg)) != config.MinMaxList.end()){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tAdded needed minmax '%s'", arg.c_str());
 			this->addNeededMinMax( arg );
 
@@ -165,7 +165,7 @@ void LuaExec::readConfigDirective( std::string &l ){
 	} else if(!(arg = striKWcmp( l, "-->> need_namedminmax=" )).empty()){
 		NamedMinMaxCollection::iterator nminmax;
 		if( (nminmax = config.NamedMinMaxList.find(arg)) != config.NamedMinMaxList.end()){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tAdded needed namedminmax '%s'", arg.c_str());
 			this->addNeededNamedMinMax( arg );
 
@@ -179,7 +179,7 @@ void LuaExec::readConfigDirective( std::string &l ){
 	} else if(!(arg = striKWcmp( l, "-->> need_shutdown=" )).empty()){
 		ShutdownCollection::iterator shut;
 		if( (shut = config.ShutdownsList.find(arg)) != config.ShutdownsList.end()){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tAdded needed Shutdown '%s'", arg.c_str());
 			this->addNeededShutdown( arg );
 
@@ -195,7 +195,7 @@ void LuaExec::readConfigDirective( std::string &l ){
 	} else if(!(arg = striKWcmp( l, "-->> need_pgSQL=" )).empty()){
 		pgSQLCollection::iterator shut;
 		if( (shut = config.pgSQLsList.find(arg)) != config.pgSQLsList.end() ){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tAdded needed pgSQL '%s'", arg.c_str());
 			this->addNeededpgSQL( arg );
 
@@ -210,7 +210,7 @@ void LuaExec::readConfigDirective( std::string &l ){
 	} else if(!(arg = striKWcmp( l, "-->> need_feed=" )).empty()){
 		FeedCollection::iterator shut;
 		if( (shut = config.FeedsList.find(arg)) != config.FeedsList.end() ){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tAdded needed Feed '%s'", arg.c_str());
 			this->addNeededFeed( arg );
 
@@ -224,7 +224,7 @@ void LuaExec::readConfigDirective( std::string &l ){
 	} else if(!(arg = striKWcmp( l, "-->> need_namedfeed=" )).empty()){
 		NamedFeedCollection::iterator shut;
 		if( (shut = config.NamedFeedsList.find(arg)) != config.NamedFeedsList.end() ){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tAdded needed NamedFeed '%s'", arg.c_str());
 			this->addNeededNamedFeed( arg );
 
@@ -240,7 +240,7 @@ void LuaExec::readConfigDirective( std::string &l ){
 	} else if(!(arg = striKWcmp( l, "-->> need_renderer=" )).empty()){
 		RendererCollection::iterator renderer;
 		if( (renderer = config.RendererList.find(arg)) != config.RendererList.end() ){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tAdded needed renderer '%s'", arg.c_str());
 			this->addNeededRenderer( arg );
 			return;
@@ -256,7 +256,7 @@ void LuaExec::readConfigDirective( std::string &l ){
 
 bool LuaExec::canRun( void ){
 	if( !this->isEnabled() ){
-		if(verbose && !this->isQuiet())
+		if(!this->isVerbose())
 			SelLog->Log('T', "Task '%s' from '%s' is disabled", this->getNameC(), this->getWhereC() );
 		return false;
 	}
@@ -527,7 +527,7 @@ bool LuaExec::execAsync( lua_State *L ){
 		return false;
 	}
 
-	if(verbose && !this->isQuiet())
+	if(this->isVerbose())
 		SelLog->Log('T', "Async running Task '%s' from '%s'", this->getNameC(), this->getWhereC() );
 
 	pthread_t tid;	// No need to be kept
@@ -550,7 +550,7 @@ bool LuaExec::prepareExecSync(lua_State *L){
 		return false;
 	}
 
-	if(verbose && !this->isQuiet())
+	if(this->isVerbose())
 		SelLog->Log('T', "Sync running Task '%s' from '%s'", this->getNameC(), this->getWhereC() );
 
 	return true;

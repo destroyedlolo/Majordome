@@ -22,19 +22,19 @@ void Timer::readConfigDirective(std::string &l){
 		uint32_t v = strtoul( arg.c_str(), NULL, 10 );
 		this->at = v / 100;
 		this->min = v % 100;
-		if(verbose)
+		if(::verbose)
 			SelLog->Log('C', "\t\tRunning at %u:%u", this->at, this->min);
 	} else if(!(arg = striKWcmp( l, "-->> every=" )).empty()){
 		this->every = strtoul( arg.c_str(), NULL, 0 );
-		if(verbose)
+		if(::verbose)
 			SelLog->Log('C', "\t\tRunning every %lu second%c", this->every, this->every > 1 ? 's':' ');
 	} else if(l == "-->> immediate"){
 		this->immediate = true;
-		if(verbose)
+		if(::verbose)
 			SelLog->Log('C', "\t\tImmediate");
 	} else if(l == "-->> runifover"){
 		this->runifover = true;
-		if(verbose)
+		if(::verbose)
 			SelLog->Log('C', "\t\tRun if over");
  	} else 
 		this->Event::readConfigDirective(l);

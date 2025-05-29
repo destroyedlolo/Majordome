@@ -1,0 +1,29 @@
+-- This is an example of Tracker script
+-- In the header of the script (comment bloc at the very beginning of
+-- the script), each line starting with -->> are Majordome's commands.
+-- Consequently, '--->>' are commented out commands.
+--
+-- Name of this script
+-- if not set, takes the filename
+-- Notez-bien : if used, this directive MUST be defined before any
+-- listen directive.
+--->> name=Toto
+--
+-- remove some trace
+-- This option is useful to avoid logging of very noisy topics
+--->> quiet
+--
+-- Disable this trigger
+--->> disabled
+--
+-- Indicate MQTT topic(s) to listen to
+-- More than one "listen" can be present
+-- In such case, it's wise for this function to return different name.
+--->> listen=
+--
+-- The function bellow has to return the name of the figure
+-- (or nothing if the data has to be rejected)
+-- As a second (optional) argument, it can force the value
+
+-- Data are pushed directly by feed.lua
+-- Code bellow, if any, is totally useless

@@ -34,7 +34,7 @@ public:
 	const char *getTableName(void);
 
 	virtual const char *getNameC(){ return(this->Object::getNameC()); };
-	bool isQuiet(){ return this->Object::isQuiet(); };
+	bool isQuiet(){ return !this->Object::isVerbose(); };
 
 	virtual std::string getTri(){ return "PRG_"; }
 };

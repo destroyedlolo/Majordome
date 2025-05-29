@@ -21,11 +21,11 @@ void Tracker::readConfigDirective( std::string &l ){
 	if(!(arg = striKWcmp( l, "-->> howmany=" )).empty()){
 		if((this->howmany = strtoul(arg.c_str(), NULL, 0))<1)
 			this->howmany = 1;
-		if(verbose)
+		if(::verbose)
 			SelLog->Log('C', "\t\tHow many: '%d'", this->howmany);
 	} else if(!(arg = striKWcmp( l, "-->> statustopic=" )).empty()){
 		this->setStatusTopic( std::regex_replace(arg, std::regex("%ClientID%"), MQTT_ClientID) );
-		if(verbose)
+		if(::verbose)
 			SelLog->Log('C', "\t\tStatus topic : '%s'", this->getStatusTopic().c_str());
 
 		if(d2){
@@ -35,7 +35,7 @@ void Tracker::readConfigDirective( std::string &l ){
 	} else if(!(arg = striKWcmp( l, "-->> start=" )).empty()){
 		TimerCollection::iterator timer;
 		if( (timer = config.TimersList.find(arg)) != config.TimersList.end()){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tStart timer '%s'", arg.c_str());
 			timer->second->addStartTracker( this );
 
@@ -48,7 +48,7 @@ void Tracker::readConfigDirective( std::string &l ){
 	} else if(!(arg = striKWcmp( l, "-->> stop=" )).empty()){
 		TimerCollection::iterator timer;
 		if( (timer = config.TimersList.find(arg)) != config.TimersList.end()){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tStop timer '%s'", arg.c_str());
 			timer->second->addStopTracker( this );
 
@@ -61,7 +61,7 @@ void Tracker::readConfigDirective( std::string &l ){
 	} else if(!(arg = striKWcmp( l, "-->> enableRDV=" )).empty()){
 		EventCollection::iterator event;
 		if( (event = config.EventsList.find(arg)) != config.EventsList.end()){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tEnabling rendez-vous '%s'", arg.c_str());
 	 		event->second->addTrackerEN( this );
 
@@ -74,7 +74,7 @@ void Tracker::readConfigDirective( std::string &l ){
 	} else if(!(arg = striKWcmp( l, "-->> disableRDV=" )).empty()){
 		EventCollection::iterator event;
 		if( (event = config.EventsList.find(arg)) != config.EventsList.end()){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tDisabling rendez-vous '%s'", arg.c_str());
 	 		event->second->addTrackerDIS( this );
 
@@ -85,7 +85,7 @@ void Tracker::readConfigDirective( std::string &l ){
 			exit(EXIT_FAILURE);
 		}
 	} else if(l == "-->> activated"){
-		if(verbose)
+		if(::verbose)
 			SelLog->Log('C', "\t\tActivated at startup");
 		this->status = _status::CHECKING;
 		this->hm_counter = this->howmany;
@@ -99,7 +99,7 @@ void Tracker::readConfigDirective( std::string &l ){
 
 bool Tracker::execAsync(lua_State *L){
 	if( !this->isEnabled() || this->status != _status::CHECKING ){
-		if(verbose && !this->isQuiet())
+		if(this->isVerbose())
 			SelLog->Log('T', "Tracker '%s' from '%s' is disabled or inactive", this->getNameC(), this->getWhereC() );
 		lua_close( L );
 		return false;
@@ -154,7 +154,7 @@ void Tracker::start( void ){
 	if( this->isEnabled() && this->getStatus() != _status::CHECKING ){
 		for(auto &t : this->startingHandlers)	// Execute attached starting tasks
 			t->exec(this);
-		if(verbose && !this->isQuiet())
+		if(this->isVerbose())
 			SelLog->Log('T', "Tracker '%s' is checking", this->getNameC() );
 		this->status = _status::CHECKING;
 		this->hm_counter = this->howmany;
@@ -167,7 +167,7 @@ void Tracker::stop( void ){
 	if( this->isEnabled() && this->getStatus() != _status::WAITING ){
 		for(auto &t : this->stoppingHandlers)	// Execute attached stopping tasks
 			t->exec(this);
-		if(verbose && !this->isQuiet())
+		if(this->isVerbose())
 			SelLog->Log('T', "Tracker '%s' is waiting", this->getNameC() );
 		this->status = _status::WAITING;
 		this->publishstatus();
@@ -179,7 +179,7 @@ void Tracker::done( void ){
 	if( this->isEnabled() && this->getStatus() == _status::CHECKING ){
 		for(auto &t : *this)	// Execute attached done tasks
 			t->exec(this);
-		if(verbose && !this->isQuiet())
+		if(this->isVerbose())
 			SelLog->Log('T', "Tracker '%s' is done", this->getNameC() );
 		this->status = _status::DONE;
 		this->publishstatus();

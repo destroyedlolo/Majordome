@@ -90,7 +90,7 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 				continue;
 			}
 
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('L', "\t'Init.lua'");
 				
 			lua_pushstring(L, where.c_str());

@@ -37,6 +37,28 @@ void NamedMinMax::feedState( lua_State *L ){
 	lua_setglobal( L, "MAJORDOME_Myself" );
 }
 
+void NamedMinMax::push(std::string rs,lua_Number val){
+	auto it = this->empty.find(rs);
+
+	if(this->empty[rs] || it == this->empty.end()){
+		this->empty[rs] = false;
+		this->nbre[rs] = 1;
+		this->min[rs] = this->max[rs] = this->sum[rs] = val; 
+	} else {
+		if(val < this->min[rs])
+			this->min[rs] = val;
+		if(val > this->max[rs])
+			this->max[rs] = val;
+
+		this->sum[rs] += val;
+		this->nbre[rs]++;
+	}
+
+	if(debug && !this->isQuiet()){
+		SelLog->Log('T', "NamedMinMax ['%s'/'%s'] n:%.0f min:%.0f max:%.0f sum:%.0f", this->getNameC(), rs.c_str(), this->getSamplesNumber(rs), this->min[rs], this->max[rs], this->sum[rs]);
+	}
+}
+
 bool NamedMinMax::execAsync(lua_State *L){
 	LuaExec::boolRetCode rc;
 	std::string rs("orphaned data collection");
@@ -65,24 +87,7 @@ bool NamedMinMax::execAsync(lua_State *L){
 		break;
 	}
 
-	auto it = this->empty.find(rs);
-
-	if(this->empty[rs] || it == this->empty.end()){
-		this->empty[rs] = false;
-		this->nbre[rs] = 1;
-		this->min[rs] = this->max[rs] = this->sum[rs] = val; 
-	} else {
-		if(val < this->min[rs])
-			this->min[rs] = val;
-		if(val > this->max[rs])
-			this->max[rs] = val;
-
-		this->sum[rs] += val;
-		this->nbre[rs]++;
-	}
-
-	if(debug && !this->isQuiet())
-		SelLog->Log('T', "NamedMinMax ['%s'/'%s'] min:%.0f max:%.0f", this->getNameC(), rs.c_str(), this->min[rs], this->max[rs]);
+	this->push(rs, val);
 
 	lua_close(L);
 	return r;
@@ -90,12 +95,14 @@ bool NamedMinMax::execAsync(lua_State *L){
 
 #if DEBUG
 void NamedMinMax::dump(){
+	std::cout << "\n" << this->getName() << std::endl << "======="  << std::endl;
 	for(auto & it: this->empty){	// Iterating against keys
 		std::cout << "\n" << it.first << std::endl << "-------"  << std::endl;
 		std::cout << "Number of samples : " << this->getSamplesNumber(it.first) << std::endl;
 		std::cout << "Min value : " << this->getMin(it.first) << std::endl;
 		std::cout << "Max value : " << this->getMax(it.first) << std::endl;
 		std::cout << "Average value : " << this->getAverage(it.first) << std::endl;
+		std::cout << "Sum value : " << this->getSum(it.first) << std::endl;
 	}
 }
 #endif
@@ -198,6 +205,15 @@ static int mmm_getSamplesNumber( lua_State *L ){
 	return 1;
 }
 
+static int mmm_Push( lua_State *L ){
+	class NamedMinMax *minmax= checkMajordomeNamedMinMax(L);
+	const char *n = luaL_checkstring(L, 2);
+	lua_Number val = luaL_checknumber(L, 3);
+
+	minmax->push(n, val);
+	return 0;
+}
+
 static int mmm_Clear( lua_State *L ){
 	class NamedMinMax *minmax= checkMajordomeNamedMinMax(L);
 	const char *n = luaL_checkstring(L, 2);
@@ -235,6 +251,7 @@ static const struct luaL_Reg MajNamedMinMaxM [] = {
 	{"getAverage", mmm_getAverage},
 	{"getSum", mmm_getSum},
 	{"getSamplesNumber", mmm_getSamplesNumber},
+	{"Push", mmm_Push},
 	{"Clear", mmm_Clear},
 	{"Reset", mmm_Clear},
 	{"FiguresNames", mmm_FiguresNames},

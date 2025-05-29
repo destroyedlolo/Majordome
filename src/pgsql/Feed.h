@@ -34,7 +34,7 @@ public:
 	/* Accessors */
 	const char *getTableName(void);
 	virtual const char *getNameC(){ return(this->Object::getNameC()); };
-	bool isQuiet(){ return this->Object::isQuiet(); };
+	bool isQuiet(){ return !this->Object::isVerbose(); };
 
 	/* Create Lua's object */
 	static void initLuaInterface( lua_State *L );
