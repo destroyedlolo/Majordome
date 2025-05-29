@@ -167,6 +167,20 @@ bool AggregatedFeed::execAsync(lua_State *L){
 				this->minmax->Clear();
 			}
 
+			if(!this->func.empty()){	// Need to preprocess the data
+				lua_getglobal(L, this->func.c_str() );
+				lua_pushnumber(L, val);
+				if(lua_pcall(L, 1, 1, 0) != LUA_OK){
+					SelLog->Log('E', "['%s'/'%s'] %s", this->getNameC(), this->func.c_str(), lua_tostring(L, -1));
+					lua_pop(L, 1);
+					this->disconnect();
+					lua_close(L);
+					return false;
+				}
+				val = lua_tonumber(L, -1);
+				lua_pop(L, 1);
+			}
+
 			std::string cmd("INSERT INTO ");
 			cmd += (t = PQescapeIdentifier(this->conn, this->getTableName(), strlen(this->getTableName())));
 			PQfreemem(t);
@@ -197,8 +211,8 @@ bool AggregatedFeed::execAsync(lua_State *L){
 
 				if(!this->func.empty()){	// Need to preprocess the data
 					lua_getglobal(L, this->func.c_str() );
-					lua_pushstring(L, it.first.c_str());
 					lua_pushnumber(L, val);
+					lua_pushstring(L, it.first.c_str());
 					if(lua_pcall(L, 2, 1, 0) != LUA_OK){
 						SelLog->Log('E', "['%s'/'%s'] %s", this->getNameC(), this->func.c_str(), lua_tostring(L, -1));
 						lua_pop(L, 1);
