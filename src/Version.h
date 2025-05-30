@@ -40,5 +40,5 @@
  *	29/05/2025 - v6.06 - LF - Add AggregatedFeed's preprocessing function
  */
 
-#define VERSION 6.0600
+#define VERSION 6.0601
 #define COPYRIGHT "Majordome (c) L.Faillie 2018-2025"
