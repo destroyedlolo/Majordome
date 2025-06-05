@@ -33,8 +33,8 @@ void Event::execHandlers(lua_State *L){
 #ifdef DEBUG
 	} else if(debug && !this->isQuiet()){
 		SelLog->Log('D', "Event %s is disabled : no tasks launched", this->getNameC());
-	}
 #endif
+	}
 }
 
 void Event::enableTrackers( void ){
