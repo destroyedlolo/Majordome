@@ -12,8 +12,8 @@ void HandlersExecutor::execHandlers(void){
 		for(auto &i : *this){
 			if(i->isEnabled())
 				i->exec(this);
-			else
 #ifdef DEBUG
+			else
 				if(debug && !this->isQuiet())
 					SelLog->Log('D', "[%s] is disabled", i->getNameC());
 #endif
@@ -23,7 +23,7 @@ void HandlersExecutor::execHandlers(void){
 #ifdef DEBUG
 	} else if(debug && !this->isQuiet()){
 		SelLog->Log('D', "Event %s is disabled : no tasks launched", this->getNameC());
-	}
 #endif
+	}
 }
 
