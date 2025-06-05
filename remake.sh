@@ -9,11 +9,11 @@
 
 # PostgreSQL database access
 # needs postgresql-libs installed
-PGSQL='-DPGSQL -DDBASE'
+BUILD_PGSQL='-DPGSQL -DDBASE'
 
 # Graphical extension : Toile
 # Not yet !
-# TOILE='-DTOILE'
+# BUILD_TOILE='-DTOILE'
 
 # Enable debugging messages
 DEBUG='-DDEBUG'
@@ -73,7 +73,7 @@ cd src
 SOURCES='*.cpp'
 LIBS=''
 
-if [ -z ${PGSQL+x} ]; then
+if [ -z ${BUILD_PGSQL+x} ]; then
 	echo "PostgreSQL : not compiled"
 else
 	echo "PostgreSQL : included"
@@ -81,7 +81,7 @@ else
 	LIBS+=' -lpq'
 fi
 
-if [ -Z ${TOILE+x} ]; then
+if [ -Z ${BUILD_TOILE+x} ]; then
 	echo "Toile : not compiled"
 else
 	echo "Toile : included"
@@ -92,7 +92,7 @@ echo
 echo "----------------"
 echo
 
-LFMakeMaker -v +f=Makefile -cc="g++" --opts="-Wall -O2 ${DEBUG} ${TOILE} ${PGSQL} -lpthread -lpaho-mqtt3c -ldl \
+LFMakeMaker -v +f=Makefile -cc="g++" --opts="-Wall -O2 ${DEBUG} ${BUILD_TOILE} ${BUILD_PGSQL} -lpthread -lpaho-mqtt3c -ldl \
 ${LUA} ${LUALIB} \
 ${LIBS} \
 -I$SELDIR/include -L$SELDIR/lib $SELLIB" ${SOURCES} -t=../Majordome > Makefile
