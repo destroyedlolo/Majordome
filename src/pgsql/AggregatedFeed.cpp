@@ -216,7 +216,6 @@ bool AggregatedFeed::execAsync(lua_State *L){
 			}
 			cmd += " )";
 
-puts(cmd.c_str());
 			if(!this->doSQL(cmd.c_str()))
 				SelLog->Log('E', "['%s'] %s", this->getNameC(), this->lastError());
 		} else { // this->nminmax
@@ -234,20 +233,40 @@ puts(cmd.c_str());
 				case _which::SUM:
 					val = this->nminmax->getSum(it.first);
 					break;
+				default: /* _which::MMA */
+					val = this->nminmax->getMin(it.first);
+					max = this->nminmax->getMax(it.first);
+					avg = this->nminmax->getAverage(it.first);
+					break;
 				}
 				this->nminmax->Clear(it.first);
 
 				if(!this->func.empty()){	// Need to preprocess the data
 					lua_getglobal(L, this->func.c_str() );
 					lua_pushnumber(L, val);
-					lua_pushstring(L, it.first.c_str());
-					if(lua_pcall(L, 2, 1, 0)){
-						SelLog->Log('E', "['%s'/'%s'] %s", this->getNameC(), this->func.c_str(), lua_tostring(L, -1));
+					if(this->figure == _which::MMA){
+						lua_pushnumber(L, max);
+						lua_pushnumber(L, avg);
+						lua_pushstring(L, it.first.c_str());
+						if(lua_pcall(L, 4, 3, 0)){
+							SelLog->Log('E', "['%s'/'%s'] %s", this->getNameC(), this->func.c_str(), lua_tostring(L, -1));
+							lua_pop(L, 1);
+							continue;
+						}
+						val = lua_tonumber(L, -3);
+						max = lua_tonumber(L, -2);
+						avg = lua_tonumber(L, -1);
+						lua_pop(L, 3);
+					} else {
+						lua_pushstring(L, it.first.c_str());
+						if(lua_pcall(L, 2, 1, 0)){
+							SelLog->Log('E', "['%s'/'%s'] %s", this->getNameC(), this->func.c_str(), lua_tostring(L, -1));
+							lua_pop(L, 1);
+							continue;	// data not processed
+						}
+						val = lua_tonumber(L, -1);
 						lua_pop(L, 1);
-						continue;	// data not processed
 					}
-					val = lua_tonumber(L, -1);
-					lua_pop(L, 1);
 				}
 
 				std::string cmd("INSERT INTO ");
@@ -260,6 +279,10 @@ puts(cmd.c_str());
 	
 				cmd += ", ";
 				cmd += std::to_string(val);
+				if(this->figure == _which::MMA){
+					cmd += "," + std::to_string(max);
+					cmd += "," + std::to_string(avg);
+				}
 				cmd += " )";
 
 				if(!this->doSQL(cmd.c_str()))
