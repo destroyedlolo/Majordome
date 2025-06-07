@@ -90,6 +90,8 @@ void AggregatedFeed::readConfigDirective( std::string &l ){
 			this->figure = _which::MAX;
 		else if(arg == "Sum")
 			this->figure = _which::SUM;
+		else if(arg == "MMA")
+			this->figure = _which::MMA;
 		else {
 			SelLog->Log('F', "\t\tFigure '%s' is not known", arg.c_str());
 			exit(EXIT_FAILURE);
@@ -125,7 +127,7 @@ void AggregatedFeed::feedState( lua_State *L ){
 
 bool AggregatedFeed::execAsync(lua_State *L){
 	LuaExec::boolRetCode rc;
-	lua_Number val;
+	lua_Number val, max = 0, avg = 0;
 
 	bool r = this->LuaExec::execSync(L, &rc, &val);
 	if( rc != LuaExec::boolRetCode::RCfalse ){	// data not rejected
@@ -149,7 +151,7 @@ bool AggregatedFeed::execAsync(lua_State *L){
 
 		char *t;
 		if(this->minmax){
-			if(isnan(val)){	// data not forced
+			if(isnan(val) || this->figure == _which::MMA){	// data not forced
 				switch(this->figure){
 				case _which::AVG:
 					val = this->minmax->getAverage();
@@ -163,6 +165,11 @@ bool AggregatedFeed::execAsync(lua_State *L){
 				case _which::SUM:
 					val = this->minmax->getSum();
 					break;
+				default: /* _which::MMA */
+					val = this->minmax->getMin();
+					max = this->minmax->getMax();
+					avg = this->minmax->getAverage();
+					break;
 				}
 				this->minmax->Clear();
 			}
@@ -170,15 +177,31 @@ bool AggregatedFeed::execAsync(lua_State *L){
 			if(!this->func.empty()){	// Need to preprocess the data
 				lua_getglobal(L, this->func.c_str() );
 				lua_pushnumber(L, val);
-				if(lua_pcall(L, 1, 1, 0)){
-					SelLog->Log('E', "['%s'/'%s'] %s", this->getNameC(), this->func.c_str(), lua_tostring(L, -1));
+				if(this->figure == _which::MMA){
+					lua_pushnumber(L, max);
+					lua_pushnumber(L, avg);
+					if(lua_pcall(L, 3, 3, 0)){
+						SelLog->Log('E', "['%s'/'%s'] %s", this->getNameC(), this->func.c_str(), lua_tostring(L, -1));
+						lua_pop(L, 1);
+						this->disconnect();
+						lua_close(L);
+						return false;
+					}
+					val = lua_tonumber(L, -3);
+					max = lua_tonumber(L, -2);
+					avg = lua_tonumber(L, -1);
+					lua_pop(L, 3);
+				} else {
+					if(lua_pcall(L, 1, 1, 0)){
+						SelLog->Log('E', "['%s'/'%s'] %s", this->getNameC(), this->func.c_str(), lua_tostring(L, -1));
+						lua_pop(L, 1);
+						this->disconnect();
+						lua_close(L);
+						return false;
+					}
+					val = lua_tonumber(L, -1);
 					lua_pop(L, 1);
-					this->disconnect();
-					lua_close(L);
-					return false;
 				}
-				val = lua_tonumber(L, -1);
-				lua_pop(L, 1);
 			}
 
 			std::string cmd("INSERT INTO ");
@@ -187,6 +210,10 @@ bool AggregatedFeed::execAsync(lua_State *L){
 
 			cmd += " VALUES ( now(), ",
 			cmd += std::to_string(val);
+			if(this->figure == _which::MMA){
+				cmd += "," + std::to_string(max);
+				cmd += "," + std::to_string(avg);
+			}
 			cmd += " )";
 
 			if(!this->doSQL(cmd.c_str()))
@@ -206,20 +233,40 @@ bool AggregatedFeed::execAsync(lua_State *L){
 				case _which::SUM:
 					val = this->nminmax->getSum(it.first);
 					break;
+				default: /* _which::MMA */
+					val = this->nminmax->getMin(it.first);
+					max = this->nminmax->getMax(it.first);
+					avg = this->nminmax->getAverage(it.first);
+					break;
 				}
 				this->nminmax->Clear(it.first);
 
 				if(!this->func.empty()){	// Need to preprocess the data
 					lua_getglobal(L, this->func.c_str() );
 					lua_pushnumber(L, val);
-					lua_pushstring(L, it.first.c_str());
-					if(lua_pcall(L, 2, 1, 0)){
-						SelLog->Log('E', "['%s'/'%s'] %s", this->getNameC(), this->func.c_str(), lua_tostring(L, -1));
+					if(this->figure == _which::MMA){
+						lua_pushnumber(L, max);
+						lua_pushnumber(L, avg);
+						lua_pushstring(L, it.first.c_str());
+						if(lua_pcall(L, 4, 3, 0)){
+							SelLog->Log('E', "['%s'/'%s'] %s", this->getNameC(), this->func.c_str(), lua_tostring(L, -1));
+							lua_pop(L, 1);
+							continue;
+						}
+						val = lua_tonumber(L, -3);
+						max = lua_tonumber(L, -2);
+						avg = lua_tonumber(L, -1);
+						lua_pop(L, 3);
+					} else {
+						lua_pushstring(L, it.first.c_str());
+						if(lua_pcall(L, 2, 1, 0)){
+							SelLog->Log('E', "['%s'/'%s'] %s", this->getNameC(), this->func.c_str(), lua_tostring(L, -1));
+							lua_pop(L, 1);
+							continue;	// data not processed
+						}
+						val = lua_tonumber(L, -1);
 						lua_pop(L, 1);
-						continue;	// data not processed
 					}
-					val = lua_tonumber(L, -1);
-					lua_pop(L, 1);
 				}
 
 				std::string cmd("INSERT INTO ");
@@ -232,6 +279,10 @@ bool AggregatedFeed::execAsync(lua_State *L){
 	
 				cmd += ", ";
 				cmd += std::to_string(val);
+				if(this->figure == _which::MMA){
+					cmd += "," + std::to_string(max);
+					cmd += "," + std::to_string(avg);
+				}
 				cmd += " )";
 
 				if(!this->doSQL(cmd.c_str()))
