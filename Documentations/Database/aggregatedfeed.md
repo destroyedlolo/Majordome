@@ -48,6 +48,11 @@ Which field to consider. Can be
 - **Sum**
 - **MMA** (for Min, Max, Average)
 
+#### -->> ignore empty
+
+Ignore collections with no entry.
+
+
 #### preprocess=
 Unlike [feed](feed.md), the main Lua code can't be used to modify inserted data (but if the source is a MinMax and figure is different of MMA) in aggregatedfeed in case of. Here, you can specify a function to be called before the data is inserted in the database.
 

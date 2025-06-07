@@ -41,5 +41,5 @@
  *	29/05/2025 - v6.07 - LF - Add MMA to AggregatedFeed
  */
 
-#define VERSION 6.0700
+#define VERSION 6.0702
 #define COPYRIGHT "Majordome (c) L.Faillie 2018-2025"

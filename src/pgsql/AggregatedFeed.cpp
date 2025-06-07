@@ -8,7 +8,7 @@
 #include <cstring>
 #include <cassert>
 
-AggregatedFeed::AggregatedFeed(const std::string &fch, std::string &where, lua_State *L) : Object(fch, where), Handler(fch, where), minmax(NULL), nminmax(NULL), figure(_which::AVG){
+AggregatedFeed::AggregatedFeed(const std::string &fch, std::string &where, lua_State *L) : Object(fch, where), Handler(fch, where), minmax(NULL), nminmax(NULL), figure(_which::AVG), noEmpty(false){
 	this->loadConfigurationFile(fch, where,L);
 	if(d2)
 		fd2 << this->getFullId() << ".class: AggregatedFeed" << std::endl;
@@ -103,6 +103,11 @@ void AggregatedFeed::readConfigDirective( std::string &l ){
 		this->func = arg;
 		if(::verbose)
 			SelLog->Log('C', "\t\tPreprocessing function : %s", arg.c_str());
+	} else if( l == "-->> ignore empty" ){
+		this->noEmpty = true;
+		if(::verbose)
+			SelLog->Log('C', "\t\tIgnore empty records");
+
 	} else if(this->readConfigDirectiveData(l))
 		;
 	else if(this->readConfigDirectiveNoData(l))
@@ -143,15 +148,14 @@ bool AggregatedFeed::execAsync(lua_State *L){
 		}
 #endif
 
-		/* Build SQL request */
-		if(!this->connect()){
-			lua_close(L);
-			return false;
-		}
-
 		char *t;
 		if(this->minmax){
 			if(isnan(val) || this->figure == _which::MMA){	// data not forced
+				if(this->noEmpty && this->minmax->isEmpty()){	// Let it work if the data is forced
+					lua_close(L);
+					return false;
+				}
+
 				switch(this->figure){
 				case _which::AVG:
 					val = this->minmax->getAverage();
@@ -183,7 +187,6 @@ bool AggregatedFeed::execAsync(lua_State *L){
 					if(lua_pcall(L, 3, 3, 0)){
 						SelLog->Log('E', "['%s'/'%s'] %s", this->getNameC(), this->func.c_str(), lua_tostring(L, -1));
 						lua_pop(L, 1);
-						this->disconnect();
 						lua_close(L);
 						return false;
 					}
@@ -195,13 +198,18 @@ bool AggregatedFeed::execAsync(lua_State *L){
 					if(lua_pcall(L, 1, 1, 0)){
 						SelLog->Log('E', "['%s'/'%s'] %s", this->getNameC(), this->func.c_str(), lua_tostring(L, -1));
 						lua_pop(L, 1);
-						this->disconnect();
 						lua_close(L);
 						return false;
 					}
 					val = lua_tonumber(L, -1);
 					lua_pop(L, 1);
 				}
+			}
+
+			/* Build SQL request */
+			if(!this->connect()){
+				lua_close(L);
+				return false;
 			}
 
 			std::string cmd("INSERT INTO ");
@@ -219,7 +227,16 @@ bool AggregatedFeed::execAsync(lua_State *L){
 			if(!this->doSQL(cmd.c_str()))
 				SelLog->Log('E', "['%s'] %s", this->getNameC(), this->lastError());
 		} else { // this->nminmax
+			/* Build SQL request */
+			if(!this->connect()){
+				lua_close(L);
+				return false;
+			}
+
 			for(auto & it: this->nminmax->getEmptyList()){	// Iterating against keys
+				if(this->noEmpty && this->nminmax->isEmpty(it.first))
+					continue;
+
 				switch(this->figure){
 				case _which::AVG:
 					val = this->nminmax->getAverage(it.first);
