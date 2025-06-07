@@ -82,15 +82,11 @@ void Object::extrName( const std::string &fch, std::string &name){
 }
 
 std::string Object::getContainer( void ){
-#if __STDC_VERSION__ < 201710L
+#if __cplusplus < 201710L
 	char t[this->where.length()+1];
 	strcpy(t, this->where.c_str());
 	char *sep = strrchr(t, '/');
-	if(sep){
-		*sep = 0;
-		return t;
-	} else
-		return("");
+	return(sep ? ++sep:t);
 #else
 	return( std::filesystem::path(this->where).filename() );
 #endif
