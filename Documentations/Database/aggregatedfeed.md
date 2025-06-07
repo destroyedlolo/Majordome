@@ -46,9 +46,17 @@ Which field to consider. Can be
 - **Min**
 - **Max**
 - **Sum**
+- **MMA** (for Min, Max, Average)
+
+#### -->> ignore empty
+
+Ignore collections with no entry.
+
 
 #### preprocess=
-Unlike [feed](feed.md), the main Lua code can't be used to modify inserted data in aggregatedfeed. Here, you can specify a function to be called before the data is inserted in the database.
+Unlike [feed](feed.md), the main Lua code can't be used to modify inserted data (but if the source is a MinMax and figure is different of MMA) in aggregatedfeed in case of. Here, you can specify a function to be called before the data is inserted in the database.
+
+##### If figure is different of MMA
 
 If the data source is a [MinMax](../minmax.md), the function signature is
 ```
@@ -70,6 +78,20 @@ function toWh( val, name )
 	return val
 end
 ```
+
+##### If figure is MMA
+
+If the data source is a [MinMax](../minmax.md), the function signature is
+```
+function (numeric min, numeric max, numeric average)
+```
+which are the original value to insert.<br>
+If the data source is a [NamedMinMax](../NamedMinMax.md), the function signature is
+```
+function (numeric min, numeric max, numeric average, string name)
+```
+where `name` is the collection's name.<br>
+In both cases, the function has to return the modified min, max, average values.
 
 ## SQL table definition
 ### From MinMax

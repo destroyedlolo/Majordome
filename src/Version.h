@@ -38,7 +38,8 @@
  *	22/05/2025 - V6.04 - LF - Add group
  *	22/05/2025 - V6.05 - LF - Add local verbosity
  *	29/05/2025 - v6.06 - LF - Add AggregatedFeed's preprocessing function
+ *	29/05/2025 - v6.07 - LF - Add MMA to AggregatedFeed
  */
 
-#define VERSION 6.0604
+#define VERSION 6.0702
 #define COPYRIGHT "Majordome (c) L.Faillie 2018-2025"

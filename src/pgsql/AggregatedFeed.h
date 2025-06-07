@@ -15,8 +15,9 @@ class AggregatedFeed : virtual public Feed {
 
 		// Which data to store
 	enum _which {
-		MIN, MAX, AVG, SUM
+		MIN, MAX, AVG, SUM, MMA
 	} figure;
+	bool noEmpty;	// Ignore empty aggregation
 
 	virtual void feedState(lua_State *L);
 

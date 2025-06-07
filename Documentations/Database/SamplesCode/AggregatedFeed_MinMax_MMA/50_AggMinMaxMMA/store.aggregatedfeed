@@ -1,0 +1,18 @@
+-->> desc=Store the data
+--
+-->> when=timer
+-->> from MinMax=genStat
+-->> figure=MMA
+-->> preprocess=forcevalue
+--
+-->> Database=domestik2
+-->> table=mtest
+-->> 
+--->> quiet
+
+function forcevalue(min, max, avg)
+	print(min, max, avg)
+
+	-- Reverce min/max for testing purpose
+	return max,min, avg
+end
