@@ -1,4 +1,4 @@
-#include "MinMax.h"
+#include "NamedMinMax.h"
 #include "Config.h"
 #include "Helpers.h"
 
@@ -16,8 +16,6 @@ NamedMinMax::NamedMinMax(const std::string &fch, std::string &where, lua_State *
 }
 
 void NamedMinMax::readConfigDirective( std::string &l ){
-	std::string arg;
-
 	if(this->readConfigDirectiveData(l))
 		;
 	else 
