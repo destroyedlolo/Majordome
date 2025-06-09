@@ -176,6 +176,20 @@ void LuaExec::readConfigDirective( std::string &l ){
 			SelLog->Log('F', "\t\tnamedminmax '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
+	} else if(!(arg = striKWcmp( l, "-->> need_multikeysminmax=" )).empty()){
+		MultiKeysMinMaxCollection::iterator nminmax;
+		if( (nminmax = config.MultiKeysMinMaxList.find(arg)) != config.MultiKeysMinMaxList.end()){
+			if(::verbose)
+				SelLog->Log('C', "\t\tAdded needed namedminmax '%s'", arg.c_str());
+			this->addNeededMultiKeysMinMax( arg );
+
+			if(d2)
+				fd2 << this->getFullId() << " -- " << nminmax->second->getFullId() << ": need { class: lneed }" << std::endl;
+			return;
+		} else {
+			SelLog->Log('F', "\t\tnamedminmax '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
 	} else if(!(arg = striKWcmp( l, "-->> need_shutdown=" )).empty()){
 		ShutdownCollection::iterator shut;
 		if( (shut = config.ShutdownsList.find(arg)) != config.ShutdownsList.end()){
@@ -397,6 +411,22 @@ bool LuaExec::feedbyNeeded( lua_State *L, bool require ){
 
 			*nminmax = nmm;
 			luaL_getmetatable(L, "MajordomeNamedMinMax");
+			lua_setmetatable(L, -2);
+
+			lua_setglobal(L, i.c_str());
+		} catch( std::out_of_range &e ){	// Not found 
+			return false;
+		}
+	}
+
+	for(auto &i : this->needed_multikeysminmax){
+		try {
+			class MultiKeysMinMax *nmm = config.MultiKeysMinMaxList.at( i );
+			class MultiKeysMinMax **nminmax = (class MultiKeysMinMax **)lua_newuserdata(L, sizeof(class MultiKeysMinMax *));
+			assert(nminmax);
+
+			*nminmax = nmm;
+			luaL_getmetatable(L, "MajordomeMultiKeysMinMax");
 			lua_setmetatable(L, -2);
 
 			lua_setglobal(L, i.c_str());

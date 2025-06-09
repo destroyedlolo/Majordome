@@ -65,6 +65,7 @@ protected:
 	void addNeededTimer( std::string t ){ this->needed_timer.Add(t); }
 	void addNeededMinMax( std::string t ){ this->needed_minmax.Add(t); }
 	void addNeededNamedMinMax( std::string t ){ this->needed_namedminmax.Add(t); }
+	void addNeededMultiKeysMinMax( std::string t ){ this->needed_multikeysminmax.Add(t); }
 	void addNeededShutdown( std::string t ){ this->needed_shutdown.Add(t); }
 	void addNeededTracker( std::string t ){ this->needed_tracker.Add(t); }
 #ifdef TOILE
