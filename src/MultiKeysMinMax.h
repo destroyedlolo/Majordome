@@ -20,6 +20,8 @@ struct MKuMapH {
 
 class MultiKeysMinMax : public Handler {
 	uint8_t nk;
+
+public:
 	std::unordered_map<std::vector<std::string>, bool, MKuMapH> empty;
 	std::unordered_map<std::vector<std::string>, lua_Number, MKuMapH> min,max;
 	std::unordered_map<std::vector<std::string>, size_t, MKuMapH> nbre;	// Number of handled values

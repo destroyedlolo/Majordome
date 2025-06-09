@@ -154,14 +154,14 @@ void MultiKeysMinMax::readKeys(lua_State *L, int idx, std::vector<std::string> &
 	keys.clear();
 
 	lua_pushnil(L);
-	while(lua_next(L, idx)){
-		if(lua_type(L, -2) == LUA_TSTRING)
-			keys.push_back(lua_tostring(L, -2));
-		else {
+	while(lua_next(L, -2)){
+		if(lua_type(L, -1) == LUA_TSTRING){
+			keys.push_back(lua_tostring(L, -1));
+		lua_pop(L, 1);	// Remove the value
+		} else {
 			SelLog->Log('E', "['%s'] experted an array of strings, got something else", this->getNameC());
 			exit(EXIT_FAILURE);
 		}
-		lua_pop(L, 1);	// Remove the value
 	}
 
 	if(!this->keysSanityCheck(keys)){
@@ -238,6 +238,85 @@ static int mmm_getMin( lua_State *L ){
 	return 1;
 }
 
+static int mmm_getMax( lua_State *L ){
+	class MultiKeysMinMax *minmax= checkMajordomeMultiKeysMinMax(L);
+	std::vector<std::string> keys;
+	minmax->readKeys(L, 2, keys);
+
+	lua_pushnumber( L, minmax->getMax(keys) );
+	return 1;
+}
+
+static int mmm_getAverage( lua_State *L ){
+	class MultiKeysMinMax *minmax= checkMajordomeMultiKeysMinMax(L);
+	std::vector<std::string> keys;
+	minmax->readKeys(L, 2, keys);
+
+	lua_pushnumber( L, minmax->getAverage(keys) );
+	return 1;
+}
+
+static int mmm_getSum( lua_State *L ){
+	class MultiKeysMinMax *minmax= checkMajordomeMultiKeysMinMax(L);
+	std::vector<std::string> keys;
+	minmax->readKeys(L, 2, keys);
+
+	lua_pushnumber( L, minmax->getSum(keys) );
+	return 1;
+}
+
+static int mmm_getSamplesNumber( lua_State *L ){
+	class MultiKeysMinMax *minmax= checkMajordomeMultiKeysMinMax(L);
+	std::vector<std::string> keys;
+	minmax->readKeys(L, 2, keys);
+
+	lua_pushnumber( L, minmax->getSamplesNumber(keys) );
+	return 1;
+}
+
+static int mmm_Push( lua_State *L ){
+	class MultiKeysMinMax *minmax= checkMajordomeMultiKeysMinMax(L);
+	std::vector<std::string> keys;
+	minmax->readKeys(L, 2, keys);
+	lua_Number val = luaL_checknumber(L, 3);
+
+	minmax->push(keys, val);
+	return 0;
+}
+
+static int mmm_Clear( lua_State *L ){
+	class MultiKeysMinMax *minmax= checkMajordomeMultiKeysMinMax(L);
+	std::vector<std::string> keys;
+	minmax->readKeys(L, 2, keys);
+	minmax->Clear(keys);
+	return 0;
+}
+
+static int mmm_FiguresNames( lua_State *L ){
+	/* Instead of using Lua's iterator which will lead to race issue,
+	 * We're returning here the list of keys. After all, we are not expecting
+	 * to store zillions of keys.
+	 */
+	class MultiKeysMinMax *minmax= checkMajordomeMultiKeysMinMax(L);
+
+	if(minmax->empty.empty())
+		return 0;
+
+	int nbre = 0;
+	for(auto &it: minmax->empty){
+		nbre++;
+
+		lua_newtable(L);
+		size_t i=0;
+		for(auto &k: it.first){
+			lua_pushstring( L, k.c_str() );
+			lua_seti(L, -2, static_cast<lua_Integer>(++i));
+		}
+	}
+
+	return nbre;
+}
+
 static const struct luaL_Reg MajMultiKeysMinMaxM [] = {
 	{"getContainer", mmm_getContainer},
  	{"getName", mmm_getName},
@@ -246,7 +325,6 @@ static const struct luaL_Reg MajMultiKeysMinMaxM [] = {
 	{"Disable", mmm_disable},
 	{"dump", mmm_dump},
 	{"getMin", mmm_getMin},
-/*
 	{"getMax", mmm_getMax},
 	{"getAverage", mmm_getAverage},
 	{"getSum", mmm_getSum},
@@ -255,7 +333,6 @@ static const struct luaL_Reg MajMultiKeysMinMaxM [] = {
 	{"Clear", mmm_Clear},
 	{"Reset", mmm_Clear},
 	{"FiguresNames", mmm_FiguresNames},
-*/
 	{NULL, NULL}
 };
 

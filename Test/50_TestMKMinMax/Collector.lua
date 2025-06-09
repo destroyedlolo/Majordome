@@ -28,6 +28,13 @@ print ""
 
 genstat:dump()
 
+local t = genstat:FiguresNames()
+for i, v in ipairs(t) do
+    print(i, v)
+end
+
+
+
 --[[
 --	Iterate against stored values
 for _,v in ipairs( table.pack(TestNamedMinMax:FiguresNames()) ) do
