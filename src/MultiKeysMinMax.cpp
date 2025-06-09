@@ -134,3 +134,62 @@ void MultiKeysMinMax::dump(){
 	}
 }
 #endif
+
+
+	/*****
+	 * Lua exposed functions
+	 *****/
+
+static class MultiKeysMinMax *checkMajordomeMultiKeysMinMax(lua_State *L){
+	class MultiKeysMinMax **r = (class MultiKeysMinMax **)SelLua->testudata(L, 1, "MajordomeMultiKeysMinMax");
+	luaL_argcheck(L, r != NULL, 1, "'MajordomeMultiKeysMinMax' expected");
+	return *r;
+}
+
+static int mmm_find(lua_State *L){
+	const char *name = luaL_checkstring(L, 1);
+
+	try {
+		class MultiKeysMinMax *mm = config.MultiKeysMinMaxList.at( name );
+		class MultiKeysMinMax **minmax = (class MultiKeysMinMax **)lua_newuserdata(L, sizeof(class MultiKeysMinMax *));
+		assert(minmax);
+
+		*minmax = mm;
+		luaL_getmetatable(L, "MajordomeMultiKeysMinMax");
+		lua_setmetatable(L, -2);
+
+		return 1;
+	} catch( std::out_of_range &e ){	// Not found 
+		return 0;
+	}
+}
+
+static const struct luaL_Reg MajMultiKeysMinMaxLib [] = {
+	{"find", mmm_find},
+	{NULL, NULL}
+};
+
+static const struct luaL_Reg MajMultiKeysMinMaxM [] = {
+/*
+	{"getContainer", mmm_getContainer},
+ 	{"getName", mmm_getName},
+	{"isEnabled", mmm_isEnabled},
+	{"Enable", mmm_enabled},
+	{"Disable", mmm_disable},
+	{"getMin", mmm_getMin},
+	{"getMax", mmm_getMax},
+	{"getAverage", mmm_getAverage},
+	{"getSum", mmm_getSum},
+	{"getSamplesNumber", mmm_getSamplesNumber},
+	{"Push", mmm_Push},
+	{"Clear", mmm_Clear},
+	{"Reset", mmm_Clear},
+	{"FiguresNames", mmm_FiguresNames},
+*/
+	{NULL, NULL}
+};
+
+void MultiKeysMinMax::initLuaInterface( lua_State *L ){
+	SelLua->objFuncs( L, "MajordomeMultiKeysMinMax", MajMultiKeysMinMaxM );
+	SelLua->libCreateOrAddFuncs( L, "MajordomeMultiKeysMinMax", MajMultiKeysMinMaxLib );
+}

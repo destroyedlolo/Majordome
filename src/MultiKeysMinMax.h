@@ -58,6 +58,9 @@ public:
 
 	void push(std::vector<std::string> &, lua_Number);	// Push a new data
 
+	/* Create Lua's object */
+	static void initLuaInterface( lua_State *L );
+
 	virtual std::string getTri(){ return MultiKeysMinMax::trigramme(); }
 	static std::string trigramme(){ return "MKM_"; }
 
