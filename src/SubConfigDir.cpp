@@ -38,7 +38,7 @@ static const SubConfigDir::extweight fileext[] = {
 	{ ".rendezvous", 0xc0 },
 	{ ".minmax", 0x80 },
 	{ ".namedminmax", 0x80 },
-	{ ".multikaysminmax", 0x80 },
+	{ ".multikeysminmax", 0x80 },
 	{ ".tracker", 0x80 },
 	{ ".shutdown", 0x50 },
 	{ ".lua", 0x40 },

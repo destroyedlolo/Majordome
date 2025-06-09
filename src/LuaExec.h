@@ -43,6 +43,7 @@ public:
 	StringVector needed_timer;
 	StringVector needed_minmax;
 	StringVector needed_namedminmax;
+	StringVector needed_multikeysminmax;
 	StringVector needed_shutdown;
 	StringVector needed_tracker;
 #ifdef TOILE

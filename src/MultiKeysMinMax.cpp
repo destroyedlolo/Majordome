@@ -18,8 +18,13 @@ std::size_t MKuMapH::operator()(const std::vector<std::string> &a) const {
 MultiKeysMinMax::MultiKeysMinMax(const std::string &fch, std::string &where, lua_State *L) : Object(fch, where), Handler(fch, where), nk(0){
 	this->loadConfigurationFile(fch, where,L);
 
+	if(!nk){
+		SelLog->Log('F', "NumberOfKeys is missing");
+		exit(EXIT_FAILURE);
+	}
+
 	if(d2)
-		fd2 << this->getFullId() << ".class: NamedMinMax" << std::endl;
+		fd2 << this->getFullId() << ".class: MultiKeysMinMax" << std::endl;
 }
 
 void MultiKeysMinMax::readConfigDirective( std::string &l ){
@@ -69,7 +74,7 @@ void MultiKeysMinMax::push(std::vector<std::string> &rs,lua_Number val){
 		this->nbre[rs]++;
 	}
 
-	if(debug && !this->isQuiet()){
+	if(this->isVerbose()){
 		std::string msg;
 		for(auto e : rs)
 			msg += "/'"+ e +"'";
@@ -112,3 +117,20 @@ bool MultiKeysMinMax::execAsync(lua_State *L){
 }
 
 
+#if DEBUG
+void MultiKeysMinMax::dump(){
+	std::cout << "\n" << this->getName() << std::endl << "======="  << std::endl;
+	for(auto & it: this->empty){	// Iterating against keys
+		std::cout << "\n";
+		for(auto n : it.first)
+			std::cout << n << "/";
+		std::cout << std::endl << "-------"  << std::endl;
+
+		std::cout << "Number of samples : " << this->getSamplesNumber(it.first) << std::endl;
+		std::cout << "Min value : " << this->getMin(it.first) << std::endl;
+		std::cout << "Max value : " << this->getMax(it.first) << std::endl;
+		std::cout << "Average value : " << this->getAverage(it.first) << std::endl;
+		std::cout << "Sum value : " << this->getSum(it.first) << std::endl;
+	}
+}
+#endif

@@ -690,7 +690,7 @@ bool LuaExec::execSync(lua_State *L, std::vector<std::string> &rs, uint8_t nk, e
 	} else {
 		lua_Integer len = luaL_len(L, -2);	// Read the table's length
 		if(len != nk){
-			SelLog->Log('E', "'%s' from '%s' : Expecting an array of %s strings, got %d, data ignored", this->getNameC(), this->getWhereC(), nk, len);
+			SelLog->Log('E', "'%s' from '%s' : Expecting an array of %u strings, got %d, data ignored", this->getNameC(), this->getWhereC(), nk, len);
 			*rc = boolRetCode::RCfalse;
 		} else {
 			for(lua_Integer i = 1; i <= len; ++i){
@@ -702,6 +702,7 @@ bool LuaExec::execSync(lua_State *L, std::vector<std::string> &rs, uint8_t nk, e
 					break;
 				}
 				rs.emplace_back(s);
+				lua_pop(L, 1);
 			}
 			
 			if(*rc != boolRetCode::RCfalse && lua_isnumber(L, -1)){	// A potential forced value ?
