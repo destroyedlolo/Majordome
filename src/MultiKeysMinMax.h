@@ -31,7 +31,7 @@ private:
 	virtual void readConfigDirective( std::string &l );
 	virtual void feedState(lua_State *L);
 
-	bool keysSanityCheck(std::vector<std::string> &arg){ return(arg.size() == this->nk); }
+	bool keysSanityCheck(const std::vector<std::string> &arg){ return(arg.size() == this->nk); }
 
 public:
 	/* Constructor from a file
@@ -50,16 +50,16 @@ public:
 	uint8_t getNumberOfKeys(){ return this->nk; }
 
 	std::unordered_map<std::vector<std::string>, bool, MKuMapH> &getEmptyList() { return this->empty; }
-	lua_Number getMin(std::vector<std::string> n){ return(this->empty[n] ? 0 : this->min[n]); }
-	lua_Number getMax(std::vector<std::string> n){ return(this->empty[n] ? 0 : this->max[n]); }
-	lua_Number getAverage(std::vector<std::string> n){ return(this->empty[n] ? INFINITY : this->sum[n]/this->nbre[n]); }
-	lua_Number getSum(std::vector<std::string> n){ return(this->empty[n] ? 0 : this->sum[n]); }
-	lua_Number getSamplesNumber(std::vector<std::string> n){ return(this->empty[n] ? 0 : this->nbre[n]); }
+	lua_Number getMin(const std::vector<std::string> n){ return(this->empty[n] ? 0 : this->min[n]); }
+	lua_Number getMax(const std::vector<std::string> n){ return(this->empty[n] ? 0 : this->max[n]); }
+	lua_Number getAverage(const std::vector<std::string> n){ return(this->empty[n] ? INFINITY : this->sum[n]/this->nbre[n]); }
+	lua_Number getSum(const std::vector<std::string> n){ return(this->empty[n] ? 0 : this->sum[n]); }
+	lua_Number getSamplesNumber(const std::vector<std::string> n){ return(this->empty[n] ? 0 : this->nbre[n]); }
 
-	bool isEmpty(std::vector<std::string> &n){ return this->empty[n]; }
-	void Clear(std::vector<std::string> &n){ if(this->keysSanityCheck(n)) this->empty[n] = true; }
+	bool isEmpty(const std::vector<std::string> &n){ return this->empty[n]; }
+	void Clear(const std::vector<std::string> &n){ if(this->keysSanityCheck(n)) this->empty[n] = true; }
 
-	void push(std::vector<std::string> &, lua_Number);	// Push a new data
+	void push(const std::vector<std::string> &, lua_Number);	// Push a new data
 
 	/* Create Lua's object */
 	static void initLuaInterface( lua_State *L );

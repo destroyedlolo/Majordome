@@ -57,7 +57,7 @@ void MultiKeysMinMax::feedState( lua_State *L ){
 	lua_setglobal( L, "MAJORDOME_Myself" );
 }
 
-void MultiKeysMinMax::push(std::vector<std::string> &rs,lua_Number val){
+void MultiKeysMinMax::push(const std::vector<std::string> &rs,lua_Number val){
 	auto it = this->empty.find(rs);
 
 	if(this->empty[rs] || it == this->empty.end()){

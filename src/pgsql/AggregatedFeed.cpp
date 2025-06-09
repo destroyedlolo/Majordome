@@ -8,7 +8,7 @@
 #include <cstring>
 #include <cassert>
 
-AggregatedFeed::AggregatedFeed(const std::string &fch, std::string &where, lua_State *L) : Object(fch, where), Handler(fch, where), minmax(NULL), nminmax(NULL), figure(_which::AVG), noEmpty(false){
+AggregatedFeed::AggregatedFeed(const std::string &fch, std::string &where, lua_State *L) : Object(fch, where), Handler(fch, where), minmax(NULL), nminmax(NULL), mkminmax(NULL), figure(_which::AVG), noEmpty(false){
 	this->loadConfigurationFile(fch, where,L);
 	if(d2)
 		fd2 << this->getFullId() << ".class: AggregatedFeed" << std::endl;
@@ -19,7 +19,7 @@ AggregatedFeed::AggregatedFeed(const std::string &fch, std::string &where, lua_S
 		exit(EXIT_FAILURE);
 	}
 
-	if(!this->minmax && !this->nminmax){
+	if(!this->minmax && !this->nminmax && !this->mkminmax){
 		SelLog->Log('F', "[%s] No source defined", this->getNameC());
 		exit(EXIT_FAILURE);
 	}
@@ -48,7 +48,7 @@ void AggregatedFeed::readConfigDirective( std::string &l ){
 			exit(EXIT_FAILURE);
 		}
 	} else if(!(arg = striKWcmp( l, "-->> from MinMax=" )).empty()){
-		if(this->minmax || this->nminmax){
+		if(this->minmax || this->nminmax || this->mkminmax){
 			SelLog->Log('F', "[%s] a source has been already defined", this->getNameC());
 			exit(EXIT_FAILURE);
 		}
@@ -65,7 +65,7 @@ void AggregatedFeed::readConfigDirective( std::string &l ){
 			exit(EXIT_FAILURE);
 		}
 	} else if(!(arg = striKWcmp( l, "-->> from NamedMinMax=" )).empty()){
-		if(this->minmax || this->nminmax){
+		if(this->minmax || this->nminmax || this->mkminmax){
 			SelLog->Log('F', "[%s] a source has been already defined", this->getNameC());
 			exit(EXIT_FAILURE);
 		}
@@ -79,6 +79,23 @@ void AggregatedFeed::readConfigDirective( std::string &l ){
 				fd2 << this->getFullId() << " <- " << mm->second->getFullId() << ": from { class: llink }" << std::endl;
 		} else {
 			SelLog->Log('F', "\t\tNamedMinMax '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
+	} else if(!(arg = striKWcmp( l, "-->> from MultiKeysMinMax=" )).empty()){
+		if(this->minmax || this->nminmax || this->mkminmax){
+			SelLog->Log('F', "[%s] a source has been already defined", this->getNameC());
+			exit(EXIT_FAILURE);
+		}
+
+		MultiKeysMinMaxCollection::iterator mm;
+		if( (mm = config.MultiKeysMinMaxList.find(arg)) != config.MultiKeysMinMaxList.end()){
+			if(::verbose)
+				SelLog->Log('C', "\t\tMultiKeysMinMax : %s", arg.c_str());
+			this->mkminmax = mm->second;
+			if(d2)
+				fd2 << this->getFullId() << " <- " << mm->second->getFullId() << ": from { class: llink }" << std::endl;
+		} else {
+			SelLog->Log('F', "\t\tMultiKeysMinMax '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
 	} else if(!(arg = striKWcmp( l, "-->> figure=" )).empty()){
@@ -136,15 +153,17 @@ bool AggregatedFeed::execAsync(lua_State *L){
 
 	bool r = this->LuaExec::execSync(L, &rc, &val);
 	if( rc != LuaExec::boolRetCode::RCfalse ){	// data not rejected
-		if(debug && !this->isQuiet())
+		if(this->isVerbose())
 			SelLog->Log('T', "['%s'] accepting", this->getNameC());
 
 #if DEBUG
-		if(debug && !this->isQuiet()){
+		if(this->isVerbose()){
 			if(this->minmax)
 				this->minmax->dump();
-			else
+			else if(this->nminmax)
 				this->nminmax->dump();
+			else
+				this->mkminmax->dump();
 		}
 #endif
 
@@ -226,7 +245,7 @@ bool AggregatedFeed::execAsync(lua_State *L){
 
 			if(!this->doSQL(cmd.c_str()))
 				SelLog->Log('E', "['%s'] %s", this->getNameC(), this->lastError());
-		} else { // this->nminmax
+		} else if(this->nminmax){
 			/* Build SQL request */
 			if(!this->connect()){
 				lua_close(L);
@@ -304,6 +323,100 @@ bool AggregatedFeed::execAsync(lua_State *L){
 
 				if(!this->doSQL(cmd.c_str()))
 					SelLog->Log('E', "['%s'] %s", this->getNameC(), this->lastError());
+			}
+		} else {
+			/* Build SQL request */
+			if(!this->connect()){
+				lua_close(L);
+				return false;
+			}
+
+			for(auto & it: this->mkminmax->getEmptyList()){	// Iterating against keys
+				if(this->noEmpty && this->mkminmax->isEmpty(it.first))
+					continue;
+
+				switch(this->figure){
+				case _which::AVG:
+					val = this->mkminmax->getAverage(it.first);
+					break;
+				case _which::MIN:
+					val = this->mkminmax->getMin(it.first);
+					break;
+				case _which::MAX:
+					val = this->mkminmax->getMax(it.first);
+					break;
+				case _which::SUM:
+					val = this->mkminmax->getSum(it.first);
+					break;
+				default: /* _which::MMA */
+					val = this->mkminmax->getMin(it.first);
+					max = this->mkminmax->getMax(it.first);
+					avg = this->mkminmax->getAverage(it.first);
+					break;
+				}
+				this->mkminmax->Clear(it.first);
+
+				if(!this->func.empty()){	// Need to preprocess the data
+					lua_getglobal(L, this->func.c_str() );
+					lua_pushnumber(L, val);
+					if(this->figure == _which::MMA){
+						lua_pushnumber(L, max);
+						lua_pushnumber(L, avg);
+
+						lua_newtable(L);
+						size_t i=0;
+						for(auto &k: it.first){
+							lua_pushstring( L, k.c_str() );
+							lua_seti(L, -2, static_cast<lua_Integer>(++i));
+						}
+
+						if(lua_pcall(L, 4, 3, 0)){
+							SelLog->Log('E', "['%s'/'%s'] %s", this->getNameC(), this->func.c_str(), lua_tostring(L, -1));
+							lua_pop(L, 1);
+							continue;
+						}
+						val = lua_tonumber(L, -3);
+						max = lua_tonumber(L, -2);
+						avg = lua_tonumber(L, -1);
+						lua_pop(L, 3);
+					} else {
+						lua_newtable(L);
+						size_t i=0;
+						for(auto &k: it.first){
+							lua_pushstring( L, k.c_str() );
+							lua_seti(L, -2, static_cast<lua_Integer>(++i));
+						}
+
+						if(lua_pcall(L, 2, 1, 0)){
+							SelLog->Log('E', "['%s'/'%s'] %s", this->getNameC(), this->func.c_str(), lua_tostring(L, -1));
+							lua_pop(L, 1);
+							continue;	// data not processed
+						}
+						val = lua_tonumber(L, -1);
+						lua_pop(L, 1);
+					}
+				}
+
+#if 0
+				std::string cmd("INSERT INTO ");
+				cmd += (t = PQescapeIdentifier(this->conn, this->getTableName(), strlen(this->getTableName())));
+				PQfreemem(t);
+
+				cmd += " VALUES ( now(), ",
+				cmd += (t = PQescapeLiteral(this->conn, it.first.c_str(), it.first.length()));
+				PQfreemem(t);
+	
+				cmd += ", ";
+				cmd += std::to_string(val);
+				if(this->figure == _which::MMA){
+					cmd += "," + std::to_string(max);
+					cmd += "," + std::to_string(avg);
+				}
+				cmd += " )";
+
+				if(!this->doSQL(cmd.c_str()))
+					SelLog->Log('E', "['%s'] %s", this->getNameC(), this->lastError());
+#endif
 			}
 		}
 	
