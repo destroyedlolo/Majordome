@@ -42,6 +42,7 @@ public:
 
 		/* Executable */
 	virtual bool execAsync(lua_State *L);	// Overloading to handle MinMax data feeding
+	void readKeys(lua_State *, int , std::vector<std::string> &);
 
 		/* Accessors */
 	uint8_t getNumberOfKeys(){ return this->nk; }

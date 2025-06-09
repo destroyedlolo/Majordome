@@ -146,6 +146,30 @@ static class MultiKeysMinMax *checkMajordomeMultiKeysMinMax(lua_State *L){
 	return *r;
 }
 
+void MultiKeysMinMax::readKeys(lua_State *L, int idx, std::vector<std::string> &keys){
+	if(!lua_istable(L, idx)){
+		SelLog->Log('E', "['%s'] experted an array of keys", this->getNameC());
+		exit(EXIT_FAILURE);
+	}
+	keys.clear();
+
+	lua_pushnil(L);
+	while(lua_next(L, idx)){
+		if(lua_type(L, -2) == LUA_TSTRING)
+			keys.push_back(lua_tostring(L, -2));
+		else {
+			SelLog->Log('E', "['%s'] experted an array of strings, got something else", this->getNameC());
+			exit(EXIT_FAILURE);
+		}
+		lua_pop(L, 1);	// Remove the value
+	}
+
+	if(!this->keysSanityCheck(keys)){
+		SelLog->Log('E', "['%s'] experted an array of %d keys, got %d", this->getNameC(), this->getNumberOfKeys(), keys.size());
+		exit(EXIT_FAILURE);
+	}
+}
+
 static int mmm_find(lua_State *L){
 	const char *name = luaL_checkstring(L, 1);
 
@@ -169,14 +193,60 @@ static const struct luaL_Reg MajMultiKeysMinMaxLib [] = {
 	{NULL, NULL}
 };
 
+static int mmm_getContainer(lua_State *L){
+	class MultiKeysMinMax *minmax= checkMajordomeMultiKeysMinMax(L);
+	lua_pushstring( L, minmax->getWhereC() );
+	return 1;
+}
+
+static int mmm_getName(lua_State *L){
+	class MultiKeysMinMax *minmax= checkMajordomeMultiKeysMinMax(L);
+	lua_pushstring( L, minmax->getName().c_str() );
+	return 1;
+}
+
+static int mmm_isEnabled( lua_State *L ){
+	class MultiKeysMinMax *minmax= checkMajordomeMultiKeysMinMax(L);
+	lua_pushboolean( L, minmax->isEnabled() );
+	return 1;
+}
+
+static int mmm_enabled( lua_State *L ){
+	class MultiKeysMinMax *minmax= checkMajordomeMultiKeysMinMax(L);
+	minmax->enable();
+	return 0;
+}
+
+static int mmm_disable( lua_State *L ){
+	class MultiKeysMinMax *minmax= checkMajordomeMultiKeysMinMax(L);
+	minmax->disable();
+	return 0;
+}
+
+static int mmm_dump( lua_State *L ){
+	class MultiKeysMinMax *minmax= checkMajordomeMultiKeysMinMax(L);
+	minmax->dump();
+	return 0;
+}
+
+static int mmm_getMin( lua_State *L ){
+	class MultiKeysMinMax *minmax= checkMajordomeMultiKeysMinMax(L);
+	std::vector<std::string> keys;
+	minmax->readKeys(L, 2, keys);
+
+	lua_pushnumber( L, minmax->getMin(keys) );
+	return 1;
+}
+
 static const struct luaL_Reg MajMultiKeysMinMaxM [] = {
-/*
 	{"getContainer", mmm_getContainer},
  	{"getName", mmm_getName},
 	{"isEnabled", mmm_isEnabled},
 	{"Enable", mmm_enabled},
 	{"Disable", mmm_disable},
+	{"dump", mmm_dump},
 	{"getMin", mmm_getMin},
+/*
 	{"getMax", mmm_getMax},
 	{"getAverage", mmm_getAverage},
 	{"getSum", mmm_getSum},
