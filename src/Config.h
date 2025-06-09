@@ -17,7 +17,7 @@
 #include "Timer.h"
 #include "MinMax.h"
 #include "NamedMinMax.h"
-#include "MultiKeyMinMax.h"
+#include "MultiKeysMinMax.h"
 #include "Tracker.h"
 #include "Shutdown.h"
 
@@ -66,7 +66,7 @@ public:
 	TimerCollection TimersList;
 	MinMaxCollection MinMaxList;
 	NamedMinMaxCollection NamedMinMaxList;
-	MultiKeyMinMaxCollection MultiKeyMinMaxList;
+	MultiKeysMinMaxCollection MultiKeysMinMaxList;
 	TrackerCollection TrackersList;
 	ShutdownCollection ShutdownsList;
 

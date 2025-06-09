@@ -660,3 +660,57 @@ bool LuaExec::execSync(lua_State *L, enum boolRetCode *rc, lua_Number *retn, std
 
 	return true;
 }
+
+bool LuaExec::execSync(lua_State *L, std::vector<std::string> &rs, uint8_t nk, enum boolRetCode *rc, lua_Number *retn){
+	*retn = NAN;
+	*rc = boolRetCode::RCnil;
+
+	if(!this->prepareExecSync(L))
+		return false;
+
+	if(lua_pcall(L, 0, 2, 0)){
+		SelLog->Log('E', "Can't execute task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), lua_tostring(L, -1));
+		*rc = boolRetCode::RCfalse;
+		return false;
+	}
+
+		/* -1 : numeric value if provided
+		 * -2 : array of strings or RC (false only)
+		 */
+
+	if(lua_isboolean(L, -2)){
+		*rc = lua_toboolean(L, -2) ? boolRetCode::RCtrue : boolRetCode::RCfalse;
+		if(*rc != boolRetCode::RCfalse){
+			SelLog->Log('E', "'%s' from '%s' : The return can be only a false or an array of strings, data ignored", this->getNameC(), this->getWhereC());
+			*rc = boolRetCode::RCfalse;
+		}
+	} else if(!lua_istable(L, -2)){
+		SelLog->Log('E', "'%s' from '%s' : The return can be only a false or an array of strings, data ignored", this->getNameC(), this->getWhereC());
+		*rc = boolRetCode::RCfalse;
+	} else {
+		lua_Integer len = luaL_len(L, -2);	// Read the table's length
+		if(len != nk){
+			SelLog->Log('E', "'%s' from '%s' : Expecting an array of %s strings, got %d, data ignored", this->getNameC(), this->getWhereC(), nk, len);
+			*rc = boolRetCode::RCfalse;
+		} else {
+			for(lua_Integer i = 1; i <= len; ++i){
+				lua_geti(L, -2, i);	// Push element
+				const char *s = lua_tolstring(L, -1, NULL);
+				if(!s){
+					SelLog->Log('E', "'%s' from '%s' : Expecting an array of strings, %d isn't, data ignored", this->getNameC(), this->getWhereC(), i);
+					*rc = boolRetCode::RCfalse;
+					break;
+				}
+				rs.emplace_back(s);
+			}
+			
+			if(*rc != boolRetCode::RCfalse && lua_isnumber(L, -1)){	// A potential forced value ?
+				*rc = boolRetCode::RCforced;
+				*retn = lua_tonumber(L, -1);
+			}
+		}
+	}
+
+	return true;
+}
+

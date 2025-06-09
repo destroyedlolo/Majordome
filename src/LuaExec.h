@@ -142,7 +142,9 @@ public:
 		// name + boolean or value forced (numeric only)
 	bool execSync(lua_State *L, std::string *rs, enum boolRetCode *rc, lua_Number *retn);
 
-		// no name + bool or value forced (numeric or string) as not needed for the moment
+		// array of names (mandatory) + boolean or value forced (numeric only)
+	bool execSync(lua_State *L, std::vector<std::string> &rs, uint8_t, enum boolRetCode *rc, lua_Number *retn);
+
 };
 
 #endif

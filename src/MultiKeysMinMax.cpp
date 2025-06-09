@@ -1,4 +1,4 @@
-#include "MultiKeyMinMax.h"
+#include "MultiKeysMinMax.h"
 #include "Config.h"
 #include "Helpers.h"
 
@@ -15,14 +15,14 @@ std::size_t MKuMapH::operator()(const std::vector<std::string> &a) const {
 	return h;
 }
 
-MultiKeyMinMax::MultiKeyMinMax(const std::string &fch, std::string &where, lua_State *L) : Object(fch, where), Handler(fch, where), nk(0){
+MultiKeysMinMax::MultiKeysMinMax(const std::string &fch, std::string &where, lua_State *L) : Object(fch, where), Handler(fch, where), nk(0){
 	this->loadConfigurationFile(fch, where,L);
 
 	if(d2)
 		fd2 << this->getFullId() << ".class: NamedMinMax" << std::endl;
 }
 
-void MultiKeyMinMax::readConfigDirective( std::string &l ){
+void MultiKeysMinMax::readConfigDirective( std::string &l ){
 	std::string arg;
 
 	if(!(arg = striKWcmp( l, "-->> NumberOfKeys=" )).empty()){
@@ -39,20 +39,20 @@ void MultiKeyMinMax::readConfigDirective( std::string &l ){
 		this->LuaExec::readConfigDirective(l);
 }
 
-void MultiKeyMinMax::feedState( lua_State *L ){
-	class MultiKeyMinMax **nminmax = (class MultiKeyMinMax **)lua_newuserdata(L, sizeof(class MultiKeyMinMax *));
+void MultiKeysMinMax::feedState( lua_State *L ){
+	class MultiKeysMinMax **nminmax = (class MultiKeysMinMax **)lua_newuserdata(L, sizeof(class MultiKeysMinMax *));
 	assert(nminmax);
 
 	lua_pushstring( L, this->getNameC() );	// Push the name of the tracker
 	lua_setglobal( L, "MAJORDOME_MULTIKEYMINMAX" );
 
 	*nminmax = this;
-	luaL_getmetatable(L, "MajordomeMultiKeyMinMax");
+	luaL_getmetatable(L, "MajordomeMultiKeysMinMax");
 	lua_setmetatable(L, -2);
 	lua_setglobal( L, "MAJORDOME_Myself" );
 }
 
-void MultiKeyMinMax::push(std::vector<std::string> &rs,lua_Number val){
+void MultiKeysMinMax::push(std::vector<std::string> &rs,lua_Number val){
 	auto it = this->empty.find(rs);
 
 	if(this->empty[rs] || it == this->empty.end()){
@@ -73,16 +73,16 @@ void MultiKeyMinMax::push(std::vector<std::string> &rs,lua_Number val){
 		std::string msg;
 		for(auto e : rs)
 			msg += "/'"+ e +"'";
-		SelLog->Log('T', "MultiKeyMinMax ['%s' : %s] n:%.0f min:%.0f max:%.0f sum:%.0f", this->getNameC(), msg.c_str(), this->getSamplesNumber(rs), this->min[rs], this->max[rs], this->sum[rs]);
+		SelLog->Log('T', "MultiKeysMinMax ['%s' : %s] n:%.0f min:%.0f max:%.0f sum:%.0f", this->getNameC(), msg.c_str(), this->getSamplesNumber(rs), this->min[rs], this->max[rs], this->sum[rs]);
 	}
 }
 
-bool MultiKeyMinMax::execAsync(lua_State *L){
+bool MultiKeysMinMax::execAsync(lua_State *L){
 	LuaExec::boolRetCode rc;
-	std::string rs("orphaned data collection");
+	std::vector<std::string> rs;
 	lua_Number val;
 
-	bool r = this->LuaExec::execSync(L, &rs, &rc, &val);
+	bool r = this->LuaExec::execSync(L, rs, this->nk, &rc, &val);
 	switch(rc){
 	case LuaExec::boolRetCode::RCfalse :	// data rejected
 		if(debug && !this->isQuiet())

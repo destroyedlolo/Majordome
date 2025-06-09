@@ -38,6 +38,7 @@ static const SubConfigDir::extweight fileext[] = {
 	{ ".rendezvous", 0xc0 },
 	{ ".minmax", 0x80 },
 	{ ".namedminmax", 0x80 },
+	{ ".multikaysminmax", 0x80 },
 	{ ".tracker", 0x80 },
 	{ ".shutdown", 0x50 },
 	{ ".lua", 0x40 },
@@ -178,6 +179,15 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 				exit(EXIT_FAILURE);
 			} else
 				cfg.NamedMinMaxList.insert( std::make_pair(trk->getName(), trk) );
+		} else if(ext == ".multikeysminmax"){
+			auto trk = new MultiKeysMinMax(completpath, where, L );
+	
+			MultiKeysMinMaxCollection::iterator prev;
+			if((prev = cfg.MultiKeysMinMaxList.find(trk->getName())) != cfg.MultiKeysMinMaxList.end()){
+				SelLog->Log('F', "MultiKeysMinMax '%s' is defined multiple times (previous one '%s')", trk->getNameC(), prev->second->getWhere().c_str());
+				exit(EXIT_FAILURE);
+			} else
+				cfg.MultiKeysMinMaxList.insert( std::make_pair(trk->getName(), trk) );
 #ifdef DBASE
 #	ifdef PGSQL
 		} else if(ext == ".pgsql"){

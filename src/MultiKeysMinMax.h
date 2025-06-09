@@ -18,7 +18,7 @@ struct MKuMapH {
 	std::size_t operator()(const std::vector<std::string> &) const;
 };
 
-class MultiKeyMinMax : public Handler {
+class MultiKeysMinMax : public Handler {
 	uint8_t nk;
 	std::unordered_map<std::vector<std::string>, bool, MKuMapH> empty;
 	std::unordered_map<std::vector<std::string>, lua_Number, MKuMapH> min,max;
@@ -38,7 +38,7 @@ public:
 	 * <- name : this object's name
 	 * -> L : Lua's state
 	 */
-	MultiKeyMinMax( const std::string &file, std::string &where, lua_State *L );
+	MultiKeysMinMax( const std::string &file, std::string &where, lua_State *L );
 
 		/* Executable */
 	virtual bool execAsync(lua_State *L);	// Overloading to handle MinMax data feeding
@@ -58,10 +58,7 @@ public:
 
 	void push(std::vector<std::string> &, lua_Number);	// Push a new data
 
-		/* Executable */
-	virtual bool execAsync(lua_State *L);	// Overloading to handle MinMax data feeding
-
-	virtual std::string getTri(){ return MultiKeyMinMax::trigramme(); }
+	virtual std::string getTri(){ return MultiKeysMinMax::trigramme(); }
 	static std::string trigramme(){ return "MKM_"; }
 
 #if DEBUG
@@ -69,5 +66,5 @@ public:
 #endif
 };
 
-typedef ObjCollection<MultiKeyMinMax *> MultiKeyMinMaxCollection;
+typedef ObjCollection<MultiKeysMinMax *> MultiKeysMinMaxCollection;
 #endif
