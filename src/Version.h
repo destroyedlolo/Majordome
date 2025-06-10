@@ -42,5 +42,5 @@
  *	10/06/2025 - v6.08 - LF - Add MultiKeyMinMax
  */
 
-#define VERSION 6.0801
+#define VERSION 6.0802
 #define COPYRIGHT "Majordome (c) L.Faillie 2018-2025"

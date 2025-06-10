@@ -151,10 +151,7 @@ bool AggregatedFeed::execAsync(lua_State *L){
 	LuaExec::boolRetCode rc;
 	lua_Number val, max = 0, avg = 0;
 
-printf("**** 00000 : %d\n", lua_gettop(L));
 	bool r = this->LuaExec::execSync(L, &rc, &val);
-printf("**** 00001 : %d\n", lua_gettop(L));
-SelLua->dumpstack(L);
 
 	if( rc != LuaExec::boolRetCode::RCfalse ){	// data not rejected
 		if(this->isVerbose())
@@ -203,6 +200,9 @@ SelLua->dumpstack(L);
 
 			if(!this->func.empty()){	// Need to preprocess the data
 				lua_getglobal(L, this->func.c_str() );
+				if(lua_isnil(L, -1))
+					SelLog->Log('E', "['%s'] Can't find function '%s'", this->getNameC(), this->func.c_str());
+
 				lua_pushnumber(L, val);
 				if(this->figure == _which::MMA){
 					lua_pushnumber(L, max);
@@ -283,6 +283,9 @@ SelLua->dumpstack(L);
 
 				if(!this->func.empty()){	// Need to preprocess the data
 					lua_getglobal(L, this->func.c_str() );
+					if(lua_isnil(L, -1))
+						SelLog->Log('E', "['%s'] Can't find function '%s'", this->getNameC(), this->func.c_str());
+
 					lua_pushnumber(L, val);
 					if(this->figure == _which::MMA){
 						lua_pushnumber(L, max);
@@ -362,6 +365,11 @@ SelLua->dumpstack(L);
 
 				if(!this->func.empty()){	// Need to preprocess the data
 					lua_getglobal(L, this->func.c_str() );
+					if(lua_isnil(L, -1)){
+						SelLog->Log('E', "['%s'] Can't find function '%s'", this->getNameC(), this->func.c_str());
+						lua_pop(L, 1);
+						continue;	// data not processed
+					}
 					lua_pushnumber(L, val);
 					if(this->figure == _which::MMA){
 						lua_pushnumber(L, max);
@@ -374,8 +382,6 @@ SelLua->dumpstack(L);
 							lua_seti(L, -2, static_cast<lua_Integer>(++i));
 						}
 
-puts("**** Avant");
-SelLua->dumpstack(L);
 						if(lua_pcall(L, 4, 3, 0)){
 							SelLog->Log('E', "['%s'/'%s'] %s", this->getNameC(), this->func.c_str(), lua_tostring(L, -1));
 							lua_pop(L, 1);
