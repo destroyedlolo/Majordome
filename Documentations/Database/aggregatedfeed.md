@@ -39,9 +39,7 @@ If not set, the same as "name" or the filename.
 Indicates the [MinMax](../minmax.md) source.
 ##### -->> from NamedMinMax=
 Indicates the [NamedMinMax](../NamedMinMax.md) source.
-##### -->> from NamedMinMax=
-Indicates the [NamedMinMax](../NamedMinMax.md) source.
-##### -->> from NamedMinMax=
+##### -->> from MultiKeysMinMax=
 Indicates the [MultiKeysMinMax](../MultiKeysMinMax.md) source.
 
 #### -->> figure=
