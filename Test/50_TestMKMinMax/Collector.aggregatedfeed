@@ -1,0 +1,36 @@
+-- desc=Store data in the databse
+--
+-- Indicate the Timer(s) to wait for
+-- (more than one "when" can be present)
+-->> when=tempo
+--
+-->> from MultiKeysMinMax=genstat
+-->> figure=MMA
+-->> Database=domestik2
+-->> table=mktest
+--
+-->> preprocess=changeValues
+--
+-->> need_multikeysminmax=genstat
+--
+-- remove some trace
+-- This option is useful to avoid logging of very noisy topics
+--->> quiet
+--
+-- Disable this script
+--->> disabled
+--
+
+function changeValue(min, max, avg, k)
+	print "bip"
+--	print(min, max, avg, k)
+
+--[[
+	for y,v in ipairs(k) do
+		print(y, v)
+	end
+]]
+end
+
+-- genstat:dump()
+

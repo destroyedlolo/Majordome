@@ -43,6 +43,7 @@ public:
 	StringVector needed_timer;
 	StringVector needed_minmax;
 	StringVector needed_namedminmax;
+	StringVector needed_multikeysminmax;
 	StringVector needed_shutdown;
 	StringVector needed_tracker;
 #ifdef TOILE
@@ -64,6 +65,7 @@ protected:
 	void addNeededTimer( std::string t ){ this->needed_timer.Add(t); }
 	void addNeededMinMax( std::string t ){ this->needed_minmax.Add(t); }
 	void addNeededNamedMinMax( std::string t ){ this->needed_namedminmax.Add(t); }
+	void addNeededMultiKeysMinMax( std::string t ){ this->needed_multikeysminmax.Add(t); }
 	void addNeededShutdown( std::string t ){ this->needed_shutdown.Add(t); }
 	void addNeededTracker( std::string t ){ this->needed_tracker.Add(t); }
 #ifdef TOILE
@@ -142,7 +144,9 @@ public:
 		// name + boolean or value forced (numeric only)
 	bool execSync(lua_State *L, std::string *rs, enum boolRetCode *rc, lua_Number *retn);
 
-		// no name + bool or value forced (numeric or string) as not needed for the moment
+		// array of names (mandatory) + boolean or value forced (numeric only)
+	bool execSync(lua_State *L, std::vector<std::string> &rs, uint8_t, enum boolRetCode *rc, lua_Number *retn);
+
 };
 
 #endif
