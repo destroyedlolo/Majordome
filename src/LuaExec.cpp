@@ -601,7 +601,8 @@ bool LuaExec::execSync(lua_State *L, enum boolRetCode *rc){
 		if(lua_isboolean(L, -1))
 			*rc = lua_toboolean(L, -1) ? boolRetCode::RCtrue : boolRetCode::RCfalse;
 	}
-
+	lua_pop(L, 1);	// Remove return code
+	
 	return true;
 }
 
@@ -626,8 +627,8 @@ bool LuaExec::execSync(lua_State *L, enum boolRetCode *rc, lua_Number *retn){
 		*retn = lua_tonumber(L, -1);
 	}
 
+	lua_pop(L, 1);	// Remove return code
 	return true;
-	
 }
 
 bool LuaExec::execSync(lua_State *L, std::string *rs, enum boolRetCode *rc, lua_Number *retn){
@@ -658,6 +659,7 @@ bool LuaExec::execSync(lua_State *L, std::string *rs, enum boolRetCode *rc, lua_
 		*retn = lua_tonumber(L, -1);
 	}
 
+	lua_pop(L, 2);	// Remove return code
 	return true;
 }
 
@@ -688,6 +690,7 @@ bool LuaExec::execSync(lua_State *L, enum boolRetCode *rc, lua_Number *retn, std
 		*retn = lua_tonumber(L, -1);
 	}
 
+	lua_pop(L, 1);	// Remove return code
 	return true;
 }
 
@@ -742,6 +745,7 @@ bool LuaExec::execSync(lua_State *L, std::vector<std::string> &rs, uint8_t nk, e
 		}
 	}
 
+	lua_pop(L, 2);	// Remove return code
 	return true;
 }
 
