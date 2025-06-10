@@ -39,8 +39,8 @@
  *	22/05/2025 - V6.05 - LF - Add local verbosity
  *	29/05/2025 - v6.06 - LF - Add AggregatedFeed's preprocessing function
  *	02/06/2025 - v6.07 - LF - Add MMA to AggregatedFeed
- *	10/06/2025 - v6.07 - LF - Add MultiKeyMinMax
+ *	10/06/2025 - v6.08 - LF - Add MultiKeyMinMax
  */
 
-#define VERSION 6.0800
+#define VERSION 6.0801
 #define COPYRIGHT "Majordome (c) L.Faillie 2018-2025"
