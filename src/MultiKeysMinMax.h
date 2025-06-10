@@ -67,9 +67,7 @@ public:
 	virtual std::string getTri(){ return MultiKeysMinMax::trigramme(); }
 	static std::string trigramme(){ return "MKM_"; }
 
-#if DEBUG
 	void dump();
-#endif
 };
 
 typedef ObjCollection<MultiKeysMinMax *> MultiKeysMinMaxCollection;

@@ -409,16 +409,17 @@ bool AggregatedFeed::execAsync(lua_State *L){
 					}
 				}
 
-#if 0
 				std::string cmd("INSERT INTO ");
 				cmd += (t = PQescapeIdentifier(this->conn, this->getTableName(), strlen(this->getTableName())));
 				PQfreemem(t);
 
-				cmd += " VALUES ( now(), ",
-				cmd += (t = PQescapeLiteral(this->conn, it.first.c_str(), it.first.length()));
-				PQfreemem(t);
+				cmd += " VALUES ( now(), ";
+				for(auto &e : it.first){
+					cmd += (t = PQescapeLiteral(this->conn, e.c_str(), e.length()));
+					PQfreemem(t);
+					cmd += ", ";
+				}
 	
-				cmd += ", ";
 				cmd += std::to_string(val);
 				if(this->figure == _which::MMA){
 					cmd += "," + std::to_string(max);
@@ -428,7 +429,6 @@ bool AggregatedFeed::execAsync(lua_State *L){
 
 				if(!this->doSQL(cmd.c_str()))
 					SelLog->Log('E', "['%s'] %s", this->getNameC(), this->lastError());
-#endif
 			}
 		}
 	
