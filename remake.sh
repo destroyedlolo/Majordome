@@ -15,7 +15,7 @@ BUILD_PGSQL='-DPGSQL -DDBASE'
 BUILD_TOILE='-DTOILE'
 
 # Enable debugging messages
-# DEBUG='-DDEBUG'
+DEBUG='-DDEBUG'
 
 # Environment discovering
 

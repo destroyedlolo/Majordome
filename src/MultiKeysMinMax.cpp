@@ -117,7 +117,6 @@ bool MultiKeysMinMax::execAsync(lua_State *L){
 }
 
 
-#if DEBUG
 void MultiKeysMinMax::dump(){
 	std::cout << "\n" << this->getName() << std::endl << "======="  << std::endl;
 	for(auto & it: this->empty){	// Iterating against keys
@@ -133,7 +132,6 @@ void MultiKeysMinMax::dump(){
 		std::cout << "Sum value : " << this->getSum(it.first) << std::endl;
 	}
 }
-#endif
 
 
 	/*****

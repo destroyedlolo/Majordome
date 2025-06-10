@@ -21,15 +21,12 @@
 --->> disabled
 --
 
-function changeValue(min, max, avg, k)
-	print "bip"
---	print(min, max, avg, k)
+function changeValues(min, max, avg, k)
+	print(min, max, avg, k)
 
---[[
 	for y,v in ipairs(k) do
 		print(y, v)
 	end
-]]
 end
 
 -- genstat:dump()
