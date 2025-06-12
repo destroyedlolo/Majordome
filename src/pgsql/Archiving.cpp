@@ -9,7 +9,7 @@
 #include <cstring>
 #include <cassert>
 
-Archiving::Archiving(const std::string &fch, std::string &where) : Object(fch, where), Handler(fch, where), Aggregation("Day"), kind(_kind::MINMAX){
+Archiving::Archiving(const std::string &fch, std::string &where) : Object(fch, where), Handler(fch, where), SourceField("value"), Aggregation("Day"), kind(_kind::MINMAX){
 	this->loadConfigurationFile(fch, where);
 
 	if(d2)
@@ -36,6 +36,10 @@ void Archiving::readConfigDirective( std::string &l ){
 		this->TableName = arg;
 		if(::verbose)
 			SelLog->Log('C', "\t\tTarget table : %s", arg.c_str());
+	} else if(!(arg = striKWcmp( l, "-->> field=" )).empty()){
+		this->SourceField = arg;
+		if(::verbose)
+			SelLog->Log('C', "\t\tTarget table's field : %s", arg.c_str());
 	} else if(!(arg = striKWcmp( l, "-->> source=" )).empty()){
 		this->SourceName = arg;
 		if(::verbose)
@@ -136,7 +140,12 @@ bool Archiving::internalExec(void){
 			PQfreemem(t);
 		}
 
-		cmd += ", MIN(value), MAX(value), AVG(value) FROM ";
+		cmd += ", MIN(";
+		cmd += (t = PQescapeIdentifier(this->conn, this->SourceField.c_str(), this->SourceField.length()));
+		cmd += "), MAX("; cmd += t;
+		cmd += "), AVG("; cmd += t;
+		cmd += ") FROM ";
+		PQfreemem(t);
 
 		cmd += (t = PQescapeIdentifier(this->conn, this->SourceName.c_str(), this->SourceName.length()));
 		PQfreemem(t);
@@ -166,7 +175,10 @@ bool Archiving::internalExec(void){
 			PQfreemem(t);
 		}
 		
-		cmd += ", SUM(value) FROM ";
+		cmd += ", SUM(";
+		cmd += (t = PQescapeIdentifier(this->conn, this->SourceField.c_str(), this->SourceField.length()));
+		cmd += ") FROM ";
+		PQfreemem(t);
 
 		cmd += (t = PQescapeIdentifier(this->conn, this->SourceName.c_str(), this->SourceName.length()));
 		PQfreemem(t);
@@ -196,7 +208,11 @@ bool Archiving::internalExec(void){
 			PQfreemem(t);
 		}
 
-		cmd += ", MAX(value)-MIN(value) FROM ";
+		cmd += ", MAX(";
+		cmd += (t = PQescapeIdentifier(this->conn, this->SourceField.c_str(), this->SourceField.length()));
+		cmd += ")-MIN("; cmd += t;
+		cmd += ") FROM ";
+		PQfreemem(t);
 
 		cmd += (t = PQescapeIdentifier(this->conn, this->SourceName.c_str(), this->SourceName.length()));
 		PQfreemem(t);

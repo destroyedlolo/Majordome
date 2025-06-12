@@ -40,7 +40,8 @@
  *	29/05/2025 - v6.06 - LF - Add AggregatedFeed's preprocessing function
  *	02/06/2025 - v6.07 - LF - Add MMA to AggregatedFeed
  *	10/06/2025 - v6.08 - LF - Add MultiKeyMinMax
+ *	12/06/2025 - v6.09 - LF - Add field in archiving
  */
 
-#define VERSION 6.0802
+#define VERSION 6.0900
 #define COPYRIGHT "Majordome (c) L.Faillie 2018-2025"
