@@ -104,3 +104,23 @@ return {figure}
 The `-->> listen=UPS` indicates which topic to listen too, here the defined previously in `UPS.topic`.
 
 The trailing Lua code extracts the figure name from the incoming topic, which is expected as the code's return value.
+
+---
+
+## 📦 Archiving
+
+Older data don't need to be so precise : they are archived to save disk space.
+
+---
+
+## 🧹 Purging
+
+Only the archived data are kept : the recent-data table is purged for obsolete data.
+
+---
+
+## 📊 Reporting
+
+---
+
+## 🚀 Running
