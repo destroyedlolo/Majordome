@@ -40,11 +40,55 @@ onduleur/ups.load	35
 
 ## ⚙️ Project setup
 
-Create a directory dedicated to this project and copy inside `00_Majordome` from the
+Creates a directory dedicated to this project and copy inside `00_Majordome` from the
 examples provided in this repository. It will implemente Majordome's own log cycling.
 
 ![structures](Resources/00_Majordome.png)
 
+`10_Configuration` will contain a timer definition used to cadence the statistics aggregation : `5Minutes.timer`
+
+```
+-->> desc=Timer to launch an action every 5 minutes
+-->> every=300
+```
+
 ---
 
-## 📡 Data gathering
+## 📡 Data gathering - 50_UPS
+
+1. Defines incoming topic : `UPS.topic`
+
+```
+-->> desc=Root of the UPS topic tree
+-->> group=UPS
+--
+-->> topic=onduleur/#
+--
+-->> quiet
+--->> disabled
+```
+
+2. Defines statistics generator : `UPSGenStat.namedminmax`
+
+This collection will have only one key : the name of the figure to store. As a consequence, a **namedminmax** is used.
+
+```lua
+-->> desc=Collect and aggregate data
+-->> group=UPS
+--
+-->> listen=UPS
+--
+-->> quiet
+
+local figure = MAJORDOME_TOPIC:match("onduleur/(.+)")
+
+if MAJORDOME_VERBOSE then
+	SelLog.Log("I", "Got figure ".. figure)
+end
+
+return {figure}
+```
+
+The `-->> listen=UPS` indicates which topic to listen too, here the defined previously in `UPS.topic`.
+
+The trailing Lua code extracts the figure name from the incoming topic, which is expected as the code's return value.
