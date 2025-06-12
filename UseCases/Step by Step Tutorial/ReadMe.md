@@ -40,16 +40,28 @@ onduleur/ups.load	35
 
 ## ⚙️ Project setup
 
-Creates a directory dedicated to this project and copy inside `00_Majordome` from the
+1. Creates a directory dedicated to this project and copy inside `00_Majordome` from the
 examples provided in this repository. It will implemente Majordome's own log cycling.
 
 ![structures](Resources/00_Majordome.png)
 
-`10_Configuration` will contain a timer definition used to cadence the statistics aggregation : `5Minutes.timer`
+2. `10_Configuration` will contain a timer definition used to cadence the statistics aggregation.
 
+![structures](Resources/10-Configuration.png)
+
+`5Minutes.timer`
 ```
 -->> desc=Timer to launch an action every 5 minutes
 -->> every=300
+```
+
+And `database.pgsql` is declare database acces :
+```
+-- Declare the database to connect to
+-- Connection string : see PostgreSQL documentation
+-- Something like :
+--	postgresql://[user[:password]@][[host][:port][,...]][/dbname][?name=value[&...]]
+-->> pgConnectionstring=postgresql://domestik2@localhost/www
 ```
 
 ---
