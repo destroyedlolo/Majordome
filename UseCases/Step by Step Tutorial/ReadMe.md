@@ -43,6 +43,8 @@ onduleur/ups.load	35
 Create a directory dedicated to this project and copy inside `00_Majordome` from the
 examples provided in this repository. It will implemente Majordome's own log cycling.
 
+![structures](Resources/00_Majordome.png)
+
 ---
 
 ## 📡 Data gathering
