@@ -109,6 +109,32 @@ The `-->> listen=UPS` indicates which topic to listen too, here the defined prev
 
 The trailing Lua code extracts the figure name from the incoming topic, which is expected as the code's return value.
 
+> [!TIP]
+> Some of those values are only parameters and don't need to be stored.
+> Following code ignore them
+> ```lua
+> -- Extract the figure's name
+> local figure = MAJORDOME_TOPIC:match("onduleur/(.+)")
+>
+> -- list of rejected figures
+> local rejected = {
+>	["battery.charge.warning"] = true,
+>	["input.transfer.high"] = true,
+>	["input.transfer.low"] = true,
+>	["ups.realpower.nominal"] = true,
+> }
+>
+> if rejected[figure] then
+>	return false
+> end
+>
+> if MAJORDOME_VERBOSE then
+>	SelLog.Log("I", "Got figure ".. figure)
+> end
+>
+> return figure
+> ```
+
 3. 🐘 **Database storage** `UPS.namedminmax`
 
 An [aggregatedfeed](../../Documentations/Database/aggregatedfeed.md) is periodically used to store in-memory statistics to a PostgreSQL table.
