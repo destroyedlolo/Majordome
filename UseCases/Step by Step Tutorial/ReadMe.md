@@ -4,12 +4,14 @@ Step by step data complete data cycle tutorial
 In this tutorial, we'll see how to handle a complete data life cycle with Majordome unique 
 **No-Code**/**Low-Code** features.
 
-📊 Data will be ingested as **time-series** data into a PostgreSQL database, aggregated as statistics,
+![process](Resources/MajordomeOnduleur.png)
+
+📊 Data will be ingested as **time-series** data into a **PostgreSQL database**, aggregated as statistics,
 archived, and finally purged : **a total data cycle life with low efforts**.<br>
 🧾 Graphical diagrams will be generated as well to make easier documentation and understanding
 of the overall process.
 
-At user side, data will be visualized through the industries standard Grafana.
+At user side, data will be visualized through the industries standard **Grafana**.
 
 ---
 
