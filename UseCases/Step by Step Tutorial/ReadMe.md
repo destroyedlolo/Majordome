@@ -15,7 +15,7 @@ At user side, data will be visualized through the industries standard Grafana.
 
 ## Preamble
 
-As an example, we will take data issued by a UPS where data are published through MQTT.
+As an example, we will take data issued by a UPS where data are published through MQTT. A data set is published every 15 seconds.
 
 ```
 onduleur/input.transfer.low	180
@@ -68,7 +68,9 @@ And `database.pgsql` is declare database acces :
 
 ## 📡 Data gathering - 50_UPS
 
-1. Defines incoming topic : `UPS.topic`
+1. 📥 **incoming topic** : `UPS.topic`
+
+Defines were data are comming from.
 
 ```
 -->> desc=Root of the UPS topic tree
@@ -80,9 +82,11 @@ And `database.pgsql` is declare database acces :
 --->> disabled
 ```
 
-2. Defines statistics generator : `UPSGenStat.namedminmax`
+2. 🗃️ **In-Memory Aggregator** : `UPS.namedminmax`
 
-This collection will have only one key : the name of the figure to store. As a consequence, a **namedminmax** is used.
+From a business point of view, having such a data rate is useful for the real-time dashboard (*also powered by Majordome 😉*), it's not needed for medium or long term storage in the database : an aggregation on 5 minutes basis is enough.
+
+This collection will have only one key : the name of the figure to store. As a consequence, a **[namedminmax](../../Documentations/NamedMinMax.md)** is used.
 
 ```lua
 -->> desc=Collect and aggregate data
@@ -104,6 +108,9 @@ return {figure}
 The `-->> listen=UPS` indicates which topic to listen too, here the defined previously in `UPS.topic`.
 
 The trailing Lua code extracts the figure name from the incoming topic, which is expected as the code's return value.
+
+3. 🐘 **Database storage**
+
 
 ---
 
