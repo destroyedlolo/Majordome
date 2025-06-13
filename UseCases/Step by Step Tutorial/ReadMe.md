@@ -86,7 +86,7 @@ Defines were data are comming from.
 
 From a business point of view, having such a data rate is useful for the real-time dashboard (*also powered by Majordome 😉*), it's not needed for medium or long term storage in the database : an aggregation on 5 minutes basis is enough.
 
-This collection will have only one key : the name of the figure to store. As a consequence, a **[namedminmax](../../Documentations/NamedMinMax.md)** is used.
+This collection will have only one key : the name of the figure to store. As a consequence, a [namedminmax](../../Documentations/NamedMinMax.md) is used.
 
 ```lua
 -->> desc=Collect and aggregate data
@@ -109,8 +109,43 @@ The `-->> listen=UPS` indicates which topic to listen too, here the defined prev
 
 The trailing Lua code extracts the figure name from the incoming topic, which is expected as the code's return value.
 
-3. 🐘 **Database storage**
+3. 🐘 **Database storage** `UPS.namedminmax`
 
+An [aggregatedfeed](../../Documentations/Database/aggregatedfeed.md) is periodically used to store in-memory statistics to a PostgreSQL table.
+
+```
+-->> desc=Store UPS figures in the database
+-->> group=UPS
+--
+-->> when=5minutes
+--
+-->> from NamedMinMax=UPS
+-->> figure=MMA
+--
+-- Where to store
+-->> Database=domestik2
+-->> table=ups
+--
+--->> quiet
+--->> disabled
+```
+
+Where :
+- `-->> when=5minutes` is defining the timing : the data will be aggregated every 5 minutes.
+- `-->> from NamedMinMax=UPS` the data source
+- `-->> figure=MMA` aggregation kind. Here, we will store **min/Max/average** statistics.
+- `-->> Database=domestik2` and `-->> table=ups` where data will be stored.
+
+The table's definition looks like
+```sql
+CREATE TABLE :Domestik_Schema.UPS (
+	sample_time TIMESTAMP WITH TIME ZONE,
+	figure TEXT NOT NULL,
+	minimum INTEGER,
+	maximum INTEGER,
+	average FLOAT
+);
+```
 
 ---
 
