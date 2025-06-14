@@ -36,9 +36,11 @@ If not set, the same as "name" or the filename.
 > A source is **mandatory**. Only one source can be provided
 
 ##### -->> from MinMax=
-Indicate the [MinMax](../minmax.md) source.
+Indicates the [MinMax](../minmax.md) source.
 ##### -->> from NamedMinMax=
-Indicate the [NamedMinMax](../NamedMinMax.md) source.
+Indicates the [NamedMinMax](../NamedMinMax.md) source.
+##### -->> from MultiKeysMinMax=
+Indicates the [MultiKeysMinMax](../MultiKeysMinMax.md) source.
 
 #### -->> figure=
 Which field to consider. Can be
@@ -94,8 +96,24 @@ where `name` is the collection's name.<br>
 In both cases, the function has to return the modified min, max, average values.
 
 ## SQL table definition
+
+> [!TIP]
+> In case of **MMA** figure, tables will containes 3 data fields
+> ```sql
+> CREATE TABLE ntest (
+>   sample_time TIMESTAMP WITH TIME ZONE,
+>   figure TEXT NOT NULL,
+>   minimum FLOAT,
+>   maximum FLOAT,
+>   average FLOAT
+> );
+> ```
+
+> [!NOTE]
+> Data fields can be any kind of numeric values (`FLOAT`, `INTEGER`, ...)
+
 ### From MinMax
-```
+```sql
 CREATE TABLE ntest (
    sample_time TIMESTAMP WITH TIME ZONE,
    figure TEXT NOT NULL,
@@ -104,7 +122,7 @@ CREATE TABLE ntest (
 ```
 
 ### From NamedMinMax
-```
+```sql
 CREATE TABLE ntest (
    sample_time TIMESTAMP WITH TIME ZONE,
    figure TEXT NOT NULL,
@@ -112,6 +130,15 @@ CREATE TABLE ntest (
 );
 ```
 
+### From MultiKeysMinMax
+```sql
+CREATE TABLE mktest (
+	sample_time TIMESTAMP WITH TIME ZONE,
+	name TEXT NOT NULL,
+	figure TEXT NOT NULL,
+	value FLOAT
+);
+```
 ## at Lua side
 
 ### Exposed variables

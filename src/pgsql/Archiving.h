@@ -16,6 +16,7 @@ protected:
 	virtual void readConfigDirective( std::string &l );
 
 	std::string SourceName;
+	std::string SourceField;
 	std::string Aggregation;
 
 		/* Archiving kind */
