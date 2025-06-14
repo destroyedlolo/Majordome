@@ -61,6 +61,10 @@ void Archiving::readConfigDirective( std::string &l ){
 			this->kind = _kind::DELTA;
 			if(::verbose)
 				SelLog->Log('C', "\t\tKind : Delta");
+		} else if(arg == "MMA2"){
+			this->kind = _kind::MMA2;
+			if(::verbose)
+				SelLog->Log('C', "\t\tKind : MinMax square");
 		} else {
 			SelLog->Log('F', "\t\tUnknown archiving kind");
 			exit(EXIT_FAILURE);
@@ -214,6 +218,36 @@ bool Archiving::internalExec(void){
 		cmd += ") FROM ";
 		PQfreemem(t);
 
+		cmd += (t = PQescapeIdentifier(this->conn, this->SourceName.c_str(), this->SourceName.length()));
+		PQfreemem(t);
+
+		cmd += " WHERE sample_time::date < current_date - interval ";
+
+		cmd += (t = PQescapeLiteral(this->conn, this->upto.c_str(), this->upto.length()));
+		PQfreemem(t);
+
+		cmd += " GROUP BY frame";
+		for(auto &i : this->keys){
+			cmd += ", ";
+			cmd += (t = PQescapeIdentifier(this->conn, i.c_str(), i.length()));
+			PQfreemem(t);
+		}
+
+		cmd += " ON CONFLICT DO NOTHING";
+		break;
+	case _kind::MMA2 :
+		cmd += " SELECT DATE_TRUNC(";
+		cmd += (t = PQescapeLiteral(this->conn, this->Aggregation.c_str(), this->Aggregation.length()));
+		PQfreemem(t);
+		cmd += ", sample_time) AS frame";
+		for(auto &i : this->keys){
+			cmd += ", ";
+			cmd += (t = PQescapeIdentifier(this->conn, i.c_str(), i.length()));
+			PQfreemem(t);
+		}
+
+		cmd += ", MIN(minimum), MAX(maximum), AVG(average) FROM ";
+		
 		cmd += (t = PQescapeIdentifier(this->conn, this->SourceName.c_str(), this->SourceName.length()));
 		PQfreemem(t);
 
