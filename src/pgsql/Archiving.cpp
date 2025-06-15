@@ -154,7 +154,7 @@ bool Archiving::internalExec(void){
 		cmd += (t = PQescapeIdentifier(this->conn, this->SourceName.c_str(), this->SourceName.length()));
 		PQfreemem(t);
 
-		cmd += " WHERE sample_time::date < current_date - interval ";
+		cmd += " WHERE sample_time::date <= current_date - interval ";
 
 		cmd += (t = PQescapeLiteral(this->conn, this->upto.c_str(), this->upto.length()));
 		PQfreemem(t);
@@ -187,7 +187,7 @@ bool Archiving::internalExec(void){
 		cmd += (t = PQescapeIdentifier(this->conn, this->SourceName.c_str(), this->SourceName.length()));
 		PQfreemem(t);
 
-		cmd += " WHERE sample_time::date < current_date - interval ";
+		cmd += " WHERE sample_time::date <= current_date - interval ";
 
 		cmd += (t = PQescapeLiteral(this->conn, this->upto.c_str(), this->upto.length()));
 		PQfreemem(t);
@@ -221,7 +221,7 @@ bool Archiving::internalExec(void){
 		cmd += (t = PQescapeIdentifier(this->conn, this->SourceName.c_str(), this->SourceName.length()));
 		PQfreemem(t);
 
-		cmd += " WHERE sample_time::date < current_date - interval ";
+		cmd += " WHERE sample_time::date <= current_date - interval ";
 
 		cmd += (t = PQescapeLiteral(this->conn, this->upto.c_str(), this->upto.length()));
 		PQfreemem(t);
@@ -251,7 +251,7 @@ bool Archiving::internalExec(void){
 		cmd += (t = PQescapeIdentifier(this->conn, this->SourceName.c_str(), this->SourceName.length()));
 		PQfreemem(t);
 
-		cmd += " WHERE sample_time::date < current_date - interval ";
+		cmd += " WHERE sample_time::date <= current_date - interval ";
 
 		cmd += (t = PQescapeLiteral(this->conn, this->upto.c_str(), this->upto.length()));
 		PQfreemem(t);
