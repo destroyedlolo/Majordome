@@ -258,9 +258,23 @@ CREATE TABLE :Domestik_Schema.UPS_archive (
 
 ---
 
-## 🧹 Purging
+## 🧹 Purging - 60_UPSPurging
 
-Only the archived data are kept : the recent-data table is purged for obsolete data.
+As now archived, obsolete data can be purged from "live data" table `ups`.
+
+`UPS.purge`
+```
+-->> desc=Purge obsolete UPS data
+-->> group=UPS
+--
+-->> Database=database
+-->> table=ups
+-->> Keep=2 days
+--
+-->> waitfor=UPSArchivingDone
+```
+
+With the `-->> waitfor=UPSArchivingDone`, purge service will be launched as soon as the archiving one has successfully run.
 
 ---
 
