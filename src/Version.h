@@ -44,5 +44,5 @@
  *	15/06/2025 - v6.10 - LF - Add Archiving's MMA2
  */
 
-#define VERSION 6.1000
+#define VERSION 6.1001
 #define COPYRIGHT "Majordome (c) L.Faillie 2018-2025"

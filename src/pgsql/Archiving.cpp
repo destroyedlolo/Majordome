@@ -44,7 +44,7 @@ void Archiving::readConfigDirective( std::string &l ){
 		this->SourceName = arg;
 		if(::verbose)
 			SelLog->Log('C', "\t\tSource table : %s", arg.c_str());
-	} else if(!(arg = striKWcmp( l, "--> AggregateBy=" )).empty()){
+	} else if(!(arg = striKWcmp( l, "-->> AggregateBy=" )).empty()){
 		this->Aggregation = arg;
 		if(::verbose)
 			SelLog->Log('C', "\t\tAggregation : %s", arg.c_str());
