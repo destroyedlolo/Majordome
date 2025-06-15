@@ -31,8 +31,8 @@ onduleur/ups.load	35
 
 > [!TIP]
 > For devices not able to publish to MQTT,
-> my [Marcel](https://github.com/destroyedlolo/Marcel) daemon can be used as a gateway as long as
-> it is supported by NUT.
+> my [Marcel](https://github.com/destroyedlolo/Marcel) daemon can be used
+> as a gateway as long as it is supported by NUT : take a look on **mod_ups**.
 
 > [!NOTE]
 > Installation and configuration of a **MQTT broker** (Mosquitto suggested), **PostgreSQL server**,
@@ -174,6 +174,10 @@ CREATE TABLE :Domestik_Schema.UPS (
 	average FLOAT
 );
 ```
+
+Data being stored in our database, generating graphics in Grafana is now straightforward.
+
+![Grafana](Resources/GrafanaReport.png)
 
 ---
 
