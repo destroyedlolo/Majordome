@@ -278,8 +278,30 @@ With the `-->> waitfor=UPSArchivingDone`, purge service will be launched as soon
 
 ---
 
-## 📊 Reporting
+## 🔧 Corresponding diagram
+
+Majordome can create a d2 script in order to generate a hierarchical diagram.
+
+![D2](Resources/UPS.svg)
+
+Using a command like (it's only an example; you obviously have to create your own *.d2 resource files.).
+```bash
+Majordome -vtf Majordome.conf -2 t.d2 && (cat ../Majordome/diagrams/Style.d2 ressources/*.d2 t.d2 | d2 -l elk - Documentation/UPS.svg )
+```
 
 ---
 
-## 🚀 Running
+## 🚀 What next ?
+
+This tutorial covers the full data life cycle ... but does not include the exploitation part :
+
+- Stored data are explored using **Grafana** (as in the screenshot above).
+- Real-time figures are displayed on a **20x02 LCD** and a **graphical dashboard**, both managed by Majordome plugins (LCD and DRMCairo respectively).
+
+---
+
+## 📊 Source code including reporting ones
+
+**[Domestik](https://github.com/destroyedlolo/Domestik)** project contains full Majordome configurations as well as Grafana reporting I used during the development and targeting my own UPS.
+
+The customer's final version will add **Majordome*PRO*** additional features like certificate-driven communications.
