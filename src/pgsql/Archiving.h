@@ -23,7 +23,8 @@ protected:
 	enum _kind {
 		MINMAX,	// Min, Max and average
 		SUM,	// Sumarize
-		DELTA	// Delta between the first and the last value
+		DELTA,	// Delta between the first and the last value
+		MMA2	// From MMA to MMA
 	} kind;
 
 	StringVector keys;

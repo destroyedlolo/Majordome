@@ -31,8 +31,8 @@ onduleur/ups.load	35
 
 > [!TIP]
 > For devices not able to publish to MQTT,
-> my [Marcel](https://github.com/destroyedlolo/Marcel) daemon can be used as a gateway as long as
-> it is supported by NUT.
+> my [Marcel](https://github.com/destroyedlolo/Marcel) daemon can be used
+> as a gateway as long as it is supported by NUT : take a look on **mod_ups**.
 
 > [!NOTE]
 > Installation and configuration of a **MQTT broker** (Mosquitto suggested), **PostgreSQL server**,
@@ -69,6 +69,8 @@ And `database.pgsql` is declare database acces :
 ---
 
 ## 📡 Data gathering - 50_UPS
+
+![Grafana](Resources/50_UPS.png)
 
 1. 📥 **incoming topic** : `UPS.topic`
 
@@ -151,7 +153,7 @@ An [aggregatedfeed](../../Documentations/Database/aggregatedfeed.md) is periodic
 -->> figure=MMA
 --
 -- Where to store
--->> Database=domestik2
+-->> Database=database
 -->> table=ups
 --
 --->> quiet
@@ -175,22 +177,132 @@ CREATE TABLE :Domestik_Schema.UPS (
 );
 ```
 
----
+Data being stored in our database, generating graphics in Grafana is now straightforward.
 
-## 📦 Archiving
-
-Older data don't need to be so precise : they are archived to save disk space.
+![Grafana](Resources/GrafanaReport.png)
 
 ---
 
-## 🧹 Purging
+## 📦 Archiving - 50_UPSArchiving
 
-Only the archived data are kept : the recent-data table is purged for obsolete data.
+Keeping such detailed figures is generally unneeded for long-term trending studies. To save space and improve search performance, data are again aggregated with a larger timeframe.
+
+![Grafana](Resources/50_UPSArchiving.png)
+
+1. ⏰ When the purging will be done `UPSArchive.timer`
+```
+-->> desc=When UPS figures will be archived
+-->> group=UPS
+-->> at=0400
+```
+
+2. 📦 Archiving object
+
+The target table (identical to the UPS one) :
+```sql
+CREATE TABLE :Domestik_Schema.UPS_archive (
+	sample_time TIMESTAMP WITH TIME ZONE,
+	figure TEXT NOT NULL,
+	minimum INTEGER,
+	maximum INTEGER,
+	average FLOAT
+);
+```
+
+[archiving](../../Documentations/Database/archiving.md) object definition :
+
+```
+-->> desc=When UPS figures will be archived
+-->> group=UPS
+--
+-->> when=UPSArchive
+--
+--->> quiet
+--
+------------
+-- Database related
+------------
+--
+-->> Database=database
+-->> source=ups
+-->> table=ups_archive
+-->> Keys=figure
+--
+------------
+-- Data selection
+------------
+--
+-->> AggregateBy=Day
+-->> Kind=MMA2
+-->> UpTo=1 day
+--
+---------------
+-- Notification
+---------------
+--
+-->> SuccessRDV=UPSArchivingDone
+```
+
+- `-->> Keys=figure` : data are *named* by the *figure* field.
+- `-->> AggregateBy=Day` : All data will be grouped by days. Minimum, Maximum and Average values will be kept for each day.
+- `-->> Kind=MMA2` : Both source and target tables store min/max/average values. Other kinds are managing only "single" figure's table to an *min/max/average* one.
+- `UpTo=1 day` : We are considering all data older than today.
+
+3. 🔔 Notification
+
+`UPSArchivingDone.rendezvous` will be used to launch purging as explained bellow.
+```
+-->> desc=When UPS figures will be archived
+-->> group=UPS
+```
 
 ---
 
-## 📊 Reporting
+## 🧹 Purging - 60_UPSPurging
+
+As now archived, obsolete data can be purged from "live data" table `ups`.
+
+`UPS.purge`
+```
+-->> desc=Purge obsolete UPS data
+-->> group=UPS
+--
+-->> Database=database
+-->> table=ups
+-->> Keep=2 days
+--
+-->> waitfor=UPSArchivingDone
+```
+
+With the `-->> waitfor=UPSArchivingDone`, purge service will be launched as soon as the archiving one has successfully run.
 
 ---
 
-## 🚀 Running
+## 🔧 Corresponding diagram
+
+Majordome can create a d2 script in order to generate a hierarchical diagram.
+
+![D2](Resources/UPS.svg)
+
+Using a command like (it's only an example; you obviously have to create your own *.d2 resource files.).
+```bash
+Majordome -vtf Majordome.conf -2 t.d2 && (cat ../Majordome/diagrams/Style.d2 ressources/*.d2 t.d2 | d2 -l elk - Documentation/UPS.svg )
+```
+
+---
+
+## 🚀 What next ?
+
+This tutorial covers the full data life cycle ... but does not include the exploitation part :
+
+- Stored data are explored using **Grafana** (as in the screenshot above).
+- Real-time figures are displayed on a **20x02 LCD** and a **graphical dashboard**, both managed by Majordome plugins (LCD and DRMCairo respectively).
+- Majordome will send alerts at power supply fault and when the battery falls below 60% and 40%.
+
+---
+
+## 📊 Source code including reporting ones
+
+**[Domestik](https://github.com/destroyedlolo/Domestik)** project contains full Majordome configurations as well as Grafana reporting I used during the development and targeting my own UPS.
+
+The customer's final version will add **Majordome*PRO*** additional features like certificate-driven communications.
