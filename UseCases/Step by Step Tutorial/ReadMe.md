@@ -208,6 +208,46 @@ CREATE TABLE :Domestik_Schema.UPS_archive (
 [archiving](../../Documentations/Database/archiving.md) object definition :
 
 ```
+-->> desc=When UPS figures will be archived
+-->> group=UPS
+--
+-->> when=UPSArchive
+--
+--->> quiet
+--
+------------
+-- Database related
+------------
+--
+-->> Database=database
+-->> source=ups
+-->> table=ups_archive
+--
+------------
+-- Data selection
+------------
+--
+-->> AggregateBy=Day
+-->> Kind=MMA2
+-->> UpTo=1 day
+--
+---------------
+-- Notification
+---------------
+--
+-->> SuccessRDV=UPSArchivingDone
+```
+
+- `-->> AggregateBy=Day` : All data will be grouped by days. Minimum, Maximum and Average values will be kept for each day.
+- `-->> Kind=MMA2` : Both source and target tables store min/max/average values. Other kinds are managing only "single" figure's table to an *min/max/average* one.
+- `UpTo=1 day` : We are considering all data older than today.
+
+3. 🔔 Notification
+
+`UPSArchivingDone.rendezvous` will be used to launch purging as explained bellow.
+```
+-->> desc=When UPS figures will be archived
+-->> group=UPS
 ```
 
 ---
