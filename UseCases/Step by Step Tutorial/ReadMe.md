@@ -297,6 +297,7 @@ This tutorial covers the full data life cycle ... but does not include the explo
 
 - Stored data are explored using **Grafana** (as in the screenshot above).
 - Real-time figures are displayed on a **20x02 LCD** and a **graphical dashboard**, both managed by Majordome plugins (LCD and DRMCairo respectively).
+- Majordome will send alerts at power supply fault and when the battery falls below 60% and 40%.
 
 ---
 
