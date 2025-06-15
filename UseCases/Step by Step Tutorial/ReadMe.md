@@ -70,6 +70,8 @@ And `database.pgsql` is declare database acces :
 
 ## 📡 Data gathering - 50_UPS
 
+![Grafana](Resources/50_UPS.png)
+
 1. 📥 **incoming topic** : `UPS.topic`
 
 Defines were data are comming from.
@@ -151,7 +153,7 @@ An [aggregatedfeed](../../Documentations/Database/aggregatedfeed.md) is periodic
 -->> figure=MMA
 --
 -- Where to store
--->> Database=domestik2
+-->> Database=database
 -->> table=ups
 --
 --->> quiet
@@ -184,6 +186,8 @@ Data being stored in our database, generating graphics in Grafana is now straigh
 ## 📦 Archiving - 50_UPSArchiving
 
 Keeping such detailed figures is generally unneeded for long-term trending studies. To save space and improve search performance, data are again aggregated with a larger timeframe.
+
+![Grafana](Resources/50_UPSArchiving.png)
 
 1. ⏰ When the purging will be done `UPSArchive.timer`
 ```
@@ -222,6 +226,7 @@ CREATE TABLE :Domestik_Schema.UPS_archive (
 -->> Database=database
 -->> source=ups
 -->> table=ups_archive
+-->> Keys=figure
 --
 ------------
 -- Data selection
@@ -238,6 +243,7 @@ CREATE TABLE :Domestik_Schema.UPS_archive (
 -->> SuccessRDV=UPSArchivingDone
 ```
 
+- `-->> Keys=figure` : data are *named* by the *figure* field.
 - `-->> AggregateBy=Day` : All data will be grouped by days. Minimum, Maximum and Average values will be kept for each day.
 - `-->> Kind=MMA2` : Both source and target tables store min/max/average values. Other kinds are managing only "single" figure's table to an *min/max/average* one.
 - `UpTo=1 day` : We are considering all data older than today.
