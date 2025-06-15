@@ -181,9 +181,34 @@ Data being stored in our database, generating graphics in Grafana is now straigh
 
 ---
 
-## 📦 Archiving
+## 📦 Archiving - 50_UPSArchiving
 
-Older data don't need to be so precise : they are archived to save disk space.
+Keeping such detailed figures is generally unneeded for long-term trending studies. To save space and improve search performance, data are again aggregated with a larger timeframe.
+
+1. ⏰ When the purging will be done `UPSArchive.timer`
+```
+-->> desc=When UPS figures will be archived
+-->> group=UPS
+-->> at=0400
+```
+
+2. 📦 Archiving object
+
+The target table (identical to the UPS one) :
+```sql
+CREATE TABLE :Domestik_Schema.UPS_archive (
+	sample_time TIMESTAMP WITH TIME ZONE,
+	figure TEXT NOT NULL,
+	minimum INTEGER,
+	maximum INTEGER,
+	average FLOAT
+);
+```
+
+[archiving](../../Documentations/Database/archiving.md) object definition :
+
+```
+```
 
 ---
 
