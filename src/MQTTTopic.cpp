@@ -163,7 +163,22 @@ static int mtpc_find(lua_State *L){
 	}
 }
 
+static int mtpc_match(lua_State *L){
+/* Check if a topic matches a pattern.
+ * 1: The pattern
+ * 2: String to check
+ *	<- true or false
+ */
+	const char *pat = luaL_checkstring(L, 1);
+	const char *topic = luaL_checkstring(L, 2);
+
+	lua_pushboolean(L, !SelMQTT->mqtttokcmp(pat, topic));
+
+	return 1;
+}
+
 static const struct luaL_Reg MajTopicLib [] = {
+	{"match", mtpc_match},
 	{"find", mtpc_find},
 	{NULL, NULL}
 };

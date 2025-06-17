@@ -42,8 +42,8 @@ onduleur/ups.load	35
 
 ## ⚙️ Project setup
 
-1. Creates a directory dedicated to this project and copy inside `00_Majordome` from the
-examples provided in this repository. It will implemente Majordome's own log cycling.
+1. Create a directory dedicated to this project and copy inside `00_Majordome` from the
+examples provided in this repository. It will set up Majordome's log cycling.
 
 ![structures](Resources/00_Majordome.png)
 
