@@ -42,7 +42,8 @@
  *	10/06/2025 - v6.08 - LF - Add MultiKeyMinMax
  *	12/06/2025 - v6.09 - LF - Add field in archiving
  *	15/06/2025 - v6.10 - LF - Add Archiving's MMA2
+ *	15/06/2025 - v6.11 - LF - Expose MajordomeMQTTTopic.match()
  */
 
-#define VERSION 6.1002
+#define VERSION 6.1100
 #define COPYRIGHT "Majordome (c) L.Faillie 2018-2025"
