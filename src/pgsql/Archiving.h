@@ -16,13 +16,15 @@ protected:
 	virtual void readConfigDirective( std::string &l );
 
 	std::string SourceName;
+	std::string SourceField;
 	std::string Aggregation;
 
 		/* Archiving kind */
 	enum _kind {
 		MINMAX,	// Min, Max and average
 		SUM,	// Sumarize
-		DELTA	// Delta between the first and the last value
+		DELTA,	// Delta between the first and the last value
+		MMA2	// From MMA to MMA
 	} kind;
 
 	StringVector keys;

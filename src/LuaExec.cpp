@@ -176,6 +176,20 @@ void LuaExec::readConfigDirective( std::string &l ){
 			SelLog->Log('F', "\t\tnamedminmax '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
+	} else if(!(arg = striKWcmp( l, "-->> need_multikeysminmax=" )).empty()){
+		MultiKeysMinMaxCollection::iterator nminmax;
+		if( (nminmax = config.MultiKeysMinMaxList.find(arg)) != config.MultiKeysMinMaxList.end()){
+			if(::verbose)
+				SelLog->Log('C', "\t\tAdded needed namedminmax '%s'", arg.c_str());
+			this->addNeededMultiKeysMinMax( arg );
+
+			if(d2)
+				fd2 << this->getFullId() << " -- " << nminmax->second->getFullId() << ": need { class: lneed }" << std::endl;
+			return;
+		} else {
+			SelLog->Log('F', "\t\tnamedminmax '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
 	} else if(!(arg = striKWcmp( l, "-->> need_shutdown=" )).empty()){
 		ShutdownCollection::iterator shut;
 		if( (shut = config.ShutdownsList.find(arg)) != config.ShutdownsList.end()){
@@ -405,6 +419,22 @@ bool LuaExec::feedbyNeeded( lua_State *L, bool require ){
 		}
 	}
 
+	for(auto &i : this->needed_multikeysminmax){
+		try {
+			class MultiKeysMinMax *nmm = config.MultiKeysMinMaxList.at( i );
+			class MultiKeysMinMax **nminmax = (class MultiKeysMinMax **)lua_newuserdata(L, sizeof(class MultiKeysMinMax *));
+			assert(nminmax);
+
+			*nminmax = nmm;
+			luaL_getmetatable(L, "MajordomeMultiKeysMinMax");
+			lua_setmetatable(L, -2);
+
+			lua_setglobal(L, i.c_str());
+		} catch( std::out_of_range &e ){	// Not found 
+			return false;
+		}
+	}
+
 	for(auto &i : this->needed_shutdown){
 		try {
 			class Shutdown *s = config.ShutdownsList.at( i );
@@ -571,7 +601,8 @@ bool LuaExec::execSync(lua_State *L, enum boolRetCode *rc){
 		if(lua_isboolean(L, -1))
 			*rc = lua_toboolean(L, -1) ? boolRetCode::RCtrue : boolRetCode::RCfalse;
 	}
-
+	lua_pop(L, 1);	// Remove return code
+	
 	return true;
 }
 
@@ -596,8 +627,8 @@ bool LuaExec::execSync(lua_State *L, enum boolRetCode *rc, lua_Number *retn){
 		*retn = lua_tonumber(L, -1);
 	}
 
+	lua_pop(L, 1);	// Remove return code
 	return true;
-	
 }
 
 bool LuaExec::execSync(lua_State *L, std::string *rs, enum boolRetCode *rc, lua_Number *retn){
@@ -628,6 +659,7 @@ bool LuaExec::execSync(lua_State *L, std::string *rs, enum boolRetCode *rc, lua_
 		*retn = lua_tonumber(L, -1);
 	}
 
+	lua_pop(L, 2);	// Remove return code
 	return true;
 }
 
@@ -658,5 +690,62 @@ bool LuaExec::execSync(lua_State *L, enum boolRetCode *rc, lua_Number *retn, std
 		*retn = lua_tonumber(L, -1);
 	}
 
+	lua_pop(L, 1);	// Remove return code
 	return true;
 }
+
+bool LuaExec::execSync(lua_State *L, std::vector<std::string> &rs, uint8_t nk, enum boolRetCode *rc, lua_Number *retn){
+	*retn = NAN;
+	*rc = boolRetCode::RCnil;
+
+	if(!this->prepareExecSync(L))
+		return false;
+
+	if(lua_pcall(L, 0, 2, 0)){
+		SelLog->Log('E', "Can't execute task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), lua_tostring(L, -1));
+		*rc = boolRetCode::RCfalse;
+		return false;
+	}
+
+		/* -1 : numeric value if provided
+		 * -2 : array of strings or RC (false only)
+		 */
+
+	if(lua_isboolean(L, -2)){
+		*rc = lua_toboolean(L, -2) ? boolRetCode::RCtrue : boolRetCode::RCfalse;
+		if(*rc != boolRetCode::RCfalse){
+			SelLog->Log('E', "'%s' from '%s' : The return can be only a false or an array of strings, data ignored", this->getNameC(), this->getWhereC());
+			*rc = boolRetCode::RCfalse;
+		}
+	} else if(!lua_istable(L, -2)){
+		SelLog->Log('E', "'%s' from '%s' : The return can be only a false or an array of strings, data ignored", this->getNameC(), this->getWhereC());
+		*rc = boolRetCode::RCfalse;
+	} else {
+		lua_Integer len = luaL_len(L, -2);	// Read the table's length
+		if(len != nk){
+			SelLog->Log('E', "'%s' from '%s' : Expecting an array of %u strings, got %d, data ignored", this->getNameC(), this->getWhereC(), nk, len);
+			*rc = boolRetCode::RCfalse;
+		} else {
+			for(lua_Integer i = 1; i <= len; ++i){
+				lua_geti(L, -2, i);	// Push element
+				const char *s = lua_tolstring(L, -1, NULL);
+				if(!s){
+					SelLog->Log('E', "'%s' from '%s' : Expecting an array of strings, %d isn't, data ignored", this->getNameC(), this->getWhereC(), i);
+					*rc = boolRetCode::RCfalse;
+					break;
+				}
+				rs.emplace_back(s);
+				lua_pop(L, 1);
+			}
+			
+			if(*rc != boolRetCode::RCfalse && lua_isnumber(L, -1)){	// A potential forced value ?
+				*rc = boolRetCode::RCforced;
+				*retn = lua_tonumber(L, -1);
+			}
+		}
+	}
+
+	lua_pop(L, 2);	// Remove return code
+	return true;
+}
+

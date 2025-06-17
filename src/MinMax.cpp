@@ -16,8 +16,6 @@ MinMax::MinMax(const std::string &fch, std::string &where, lua_State *L) : Objec
 }
 
 void MinMax::readConfigDirective( std::string &l ){
-	std::string arg;
-
 	if(this->readConfigDirectiveData(l))
 		;
 	else 

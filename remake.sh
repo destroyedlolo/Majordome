@@ -16,7 +16,7 @@ BUILD_PGSQL='-DPGSQL -DDBASE'
 # BUILD_TOILE='-DTOILE'
 
 # Enable debugging messages
-# DEBUG='-DDEBUG'
+DEBUG='-DDEBUG'
 
 # Environment discovering
 
@@ -50,6 +50,7 @@ fi
 
 echo -n "Selene : "
 
+: <<'DEV'
 if [ -f /usr/local/lib/libSelene.so.2 ]; then
 	echo "System installation"
 	SELDIR=/usr/local
@@ -59,12 +60,13 @@ elif [ -d ~/Projets/Selene.v7 ]; then
 	SELDIR=~/Projets/Selene.v7
 	SELLIB='-l:libSelene.so.2'
 else
+DEV
 	echo "**DEV**DEV**"
 	SELDIR=~/Projets/Selene
 	SELLIB='-l:libSelene.so.2'
 	echo "Don't forget"
 	echo "export LD_LIBRARY_PATH=$SELDIR/lib:$LD_LIBRARY_PATH"
-fi
+# fi
 
 cd src
 

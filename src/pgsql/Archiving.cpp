@@ -9,7 +9,7 @@
 #include <cstring>
 #include <cassert>
 
-Archiving::Archiving(const std::string &fch, std::string &where) : Object(fch, where), Handler(fch, where), Aggregation("Day"), kind(_kind::MINMAX){
+Archiving::Archiving(const std::string &fch, std::string &where) : Object(fch, where), Handler(fch, where), SourceField("value"), Aggregation("Day"), kind(_kind::MINMAX){
 	this->loadConfigurationFile(fch, where);
 
 	if(d2)
@@ -36,11 +36,15 @@ void Archiving::readConfigDirective( std::string &l ){
 		this->TableName = arg;
 		if(::verbose)
 			SelLog->Log('C', "\t\tTarget table : %s", arg.c_str());
+	} else if(!(arg = striKWcmp( l, "-->> field=" )).empty()){
+		this->SourceField = arg;
+		if(::verbose)
+			SelLog->Log('C', "\t\tTarget table's field : %s", arg.c_str());
 	} else if(!(arg = striKWcmp( l, "-->> source=" )).empty()){
 		this->SourceName = arg;
 		if(::verbose)
 			SelLog->Log('C', "\t\tSource table : %s", arg.c_str());
-	} else if(!(arg = striKWcmp( l, "--> AggregateBy=" )).empty()){
+	} else if(!(arg = striKWcmp( l, "-->> AggregateBy=" )).empty()){
 		this->Aggregation = arg;
 		if(::verbose)
 			SelLog->Log('C', "\t\tAggregation : %s", arg.c_str());
@@ -57,6 +61,10 @@ void Archiving::readConfigDirective( std::string &l ){
 			this->kind = _kind::DELTA;
 			if(::verbose)
 				SelLog->Log('C', "\t\tKind : Delta");
+		} else if(arg == "MMA2"){
+			this->kind = _kind::MMA2;
+			if(::verbose)
+				SelLog->Log('C', "\t\tKind : MinMax square");
 		} else {
 			SelLog->Log('F', "\t\tUnknown archiving kind");
 			exit(EXIT_FAILURE);
@@ -136,12 +144,17 @@ bool Archiving::internalExec(void){
 			PQfreemem(t);
 		}
 
-		cmd += ", MIN(value), MAX(value), AVG(value) FROM ";
+		cmd += ", MIN(";
+		cmd += (t = PQescapeIdentifier(this->conn, this->SourceField.c_str(), this->SourceField.length()));
+		cmd += "), MAX("; cmd += t;
+		cmd += "), AVG("; cmd += t;
+		cmd += ") FROM ";
+		PQfreemem(t);
 
 		cmd += (t = PQescapeIdentifier(this->conn, this->SourceName.c_str(), this->SourceName.length()));
 		PQfreemem(t);
 
-		cmd += " WHERE sample_time::date < current_date - interval ";
+		cmd += " WHERE sample_time::date <= current_date - interval ";
 
 		cmd += (t = PQescapeLiteral(this->conn, this->upto.c_str(), this->upto.length()));
 		PQfreemem(t);
@@ -166,12 +179,15 @@ bool Archiving::internalExec(void){
 			PQfreemem(t);
 		}
 		
-		cmd += ", SUM(value) FROM ";
+		cmd += ", SUM(";
+		cmd += (t = PQescapeIdentifier(this->conn, this->SourceField.c_str(), this->SourceField.length()));
+		cmd += ") FROM ";
+		PQfreemem(t);
 
 		cmd += (t = PQescapeIdentifier(this->conn, this->SourceName.c_str(), this->SourceName.length()));
 		PQfreemem(t);
 
-		cmd += " WHERE sample_time::date < current_date - interval ";
+		cmd += " WHERE sample_time::date <= current_date - interval ";
 
 		cmd += (t = PQescapeLiteral(this->conn, this->upto.c_str(), this->upto.length()));
 		PQfreemem(t);
@@ -196,12 +212,46 @@ bool Archiving::internalExec(void){
 			PQfreemem(t);
 		}
 
-		cmd += ", MAX(value)-MIN(value) FROM ";
+		cmd += ", MAX(";
+		cmd += (t = PQescapeIdentifier(this->conn, this->SourceField.c_str(), this->SourceField.length()));
+		cmd += ")-MIN("; cmd += t;
+		cmd += ") FROM ";
+		PQfreemem(t);
 
 		cmd += (t = PQescapeIdentifier(this->conn, this->SourceName.c_str(), this->SourceName.length()));
 		PQfreemem(t);
 
-		cmd += " WHERE sample_time::date < current_date - interval ";
+		cmd += " WHERE sample_time::date <= current_date - interval ";
+
+		cmd += (t = PQescapeLiteral(this->conn, this->upto.c_str(), this->upto.length()));
+		PQfreemem(t);
+
+		cmd += " GROUP BY frame";
+		for(auto &i : this->keys){
+			cmd += ", ";
+			cmd += (t = PQescapeIdentifier(this->conn, i.c_str(), i.length()));
+			PQfreemem(t);
+		}
+
+		cmd += " ON CONFLICT DO NOTHING";
+		break;
+	case _kind::MMA2 :
+		cmd += " SELECT DATE_TRUNC(";
+		cmd += (t = PQescapeLiteral(this->conn, this->Aggregation.c_str(), this->Aggregation.length()));
+		PQfreemem(t);
+		cmd += ", sample_time) AS frame";
+		for(auto &i : this->keys){
+			cmd += ", ";
+			cmd += (t = PQescapeIdentifier(this->conn, i.c_str(), i.length()));
+			PQfreemem(t);
+		}
+
+		cmd += ", MIN(minimum), MAX(maximum), AVG(average) FROM ";
+		
+		cmd += (t = PQescapeIdentifier(this->conn, this->SourceName.c_str(), this->SourceName.length()));
+		PQfreemem(t);
+
+		cmd += " WHERE sample_time::date <= current_date - interval ";
 
 		cmd += (t = PQescapeLiteral(this->conn, this->upto.c_str(), this->upto.length()));
 		PQfreemem(t);

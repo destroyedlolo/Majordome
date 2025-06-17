@@ -48,7 +48,7 @@ Following variables are created :
 
 #### Who launched this task ?
 Following variables are created depending who triggering this task
-- **MAJORDOME_TOPIC_NAME**, **MAJORDOME_TOPIC** and **MAJORDOME_PAYLOAD** if the task is launched by an [MQTT topic](topic.md).
+- **MAJORDOME_TOPIC_NAME** (name of the topic that triggered), **MAJORDOME_TOPIC** (actual received topic) and **MAJORDOME_PAYLOAD** if the task is launched by an [MQTT topic](topic.md).
 - **MAJORDOME_TIMER** : name of the triggering [timer](timer.md)
 - **MAJORDOME_TRACKER** and  **MAJORDOME_TRACKER_STATUS** if the task is launched by a  tracker.
 

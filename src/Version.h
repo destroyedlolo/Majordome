@@ -38,8 +38,12 @@
  *	22/05/2025 - V6.04 - LF - Add group
  *	22/05/2025 - V6.05 - LF - Add local verbosity
  *	29/05/2025 - v6.06 - LF - Add AggregatedFeed's preprocessing function
- *	29/05/2025 - v6.07 - LF - Add MMA to AggregatedFeed
+ *	02/06/2025 - v6.07 - LF - Add MMA to AggregatedFeed
+ *	10/06/2025 - v6.08 - LF - Add MultiKeyMinMax
+ *	12/06/2025 - v6.09 - LF - Add field in archiving
+ *	15/06/2025 - v6.10 - LF - Add Archiving's MMA2
+ *	15/06/2025 - v6.11 - LF - Expose MajordomeMQTTTopic.match()
  */
 
-#define VERSION 6.0702
+#define VERSION 6.1100
 #define COPYRIGHT "Majordome (c) L.Faillie 2018-2025"

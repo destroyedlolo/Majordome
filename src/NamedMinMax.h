@@ -35,7 +35,7 @@ public:
 		/* Executable */
 	virtual bool execAsync(lua_State *L);	// Overloading to handle MinMax data feeding
 
-		/* Accessor */
+		/* Accessors */
 	std::unordered_map<std::string, bool> &getEmptyList() { return this->empty; }
 	lua_Number getMin(std::string n){ return(this->empty[n] ? 0 : this->min[n]); }
 	lua_Number getMax(std::string n){ return(this->empty[n] ? 0 : this->max[n]); }

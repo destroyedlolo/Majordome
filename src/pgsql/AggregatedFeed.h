@@ -6,10 +6,12 @@
 #include "Feed.h"
 #include "../MinMax.h"
 #include "../NamedMinMax.h"
+#include "../MultiKeysMinMax.h"
 
 class AggregatedFeed : virtual public Feed {
 	MinMax *minmax;
 	NamedMinMax *nminmax;
+	MultiKeysMinMax *mkminmax;
 
 	std::string func;
 

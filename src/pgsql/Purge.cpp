@@ -108,7 +108,7 @@ bool Purge::internalExec(void){
 	cmd += (t = PQescapeIdentifier(this->conn, this->getTableName(), strlen(this->getTableName())));
 	PQfreemem(t);
 
-	cmd += " WHERE sample_time::date < current_date - interval ";
+	cmd += " WHERE sample_time::date <= current_date - interval ";
 
 	cmd += (t = PQescapeLiteral(this->conn, this->upto.c_str(), this->upto.length()));
 	PQfreemem(t);
