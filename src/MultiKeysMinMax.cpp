@@ -7,6 +7,10 @@
 #include <cstring>
 #include <cassert>
 
+#if LUA_VERSION_NUM < 503
+#	include "compat-5.3.h"
+#endif
+
 std::size_t MKuMapH::operator()(const std::vector<std::string> &a) const {
 	std::size_t h = 0;
 

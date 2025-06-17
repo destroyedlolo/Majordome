@@ -6,6 +6,10 @@
 #include <cassert>
 #include <cmath>
 
+#if LUA_VERSION_NUM < 503
+#	include "compat-5.3.h"
+#endif
+
 LuaExec::LuaExec(const std::string &fch, std::string &where) : Object(fch, where){
 	assert( SelElasticStorage->init(&this->func) );	
 }
@@ -38,7 +42,7 @@ bool LuaExec::LoadFunc( lua_State *L, std::stringstream &buffer, const char *nam
 	}
 
 	if(lua_dump(L, SelElasticStorage->dumpwriter, this->getFunc()
-#if LUA_VERSION_NUM > 501
+#if LUA_VERSION_NUM > 501 || defined(COMPAT53_H_)
 		,1
 #endif
 	) != 0){
