@@ -8,7 +8,9 @@
 #include <cstring>
 #include <cassert>
 
-#include "compat-5.3.h"
+#if LUA_VERSION_NUM < 503
+#	include "compat-5.3.h"
+#endif
 
 AggregatedFeed::AggregatedFeed(const std::string &fch, std::string &where, lua_State *L) : Object(fch, where), Handler(fch, where), minmax(NULL), nminmax(NULL), mkminmax(NULL), figure(_which::AVG), noEmpty(false){
 	this->loadConfigurationFile(fch, where,L);
