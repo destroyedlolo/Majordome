@@ -8,6 +8,8 @@
 #include <cstring>
 #include <cassert>
 
+#include "compat-5.3.h"
+
 AggregatedFeed::AggregatedFeed(const std::string &fch, std::string &where, lua_State *L) : Object(fch, where), Handler(fch, where), minmax(NULL), nminmax(NULL), mkminmax(NULL), figure(_which::AVG), noEmpty(false){
 	this->loadConfigurationFile(fch, where,L);
 	if(d2)
