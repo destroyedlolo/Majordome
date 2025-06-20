@@ -20,6 +20,10 @@ class LuaExec : virtual public Object {
 
 	bool prepareExecSync(lua_State *L);
 
+protected:
+	void loadConfigurationFile(const std::string &fch, std::string &where);
+	void loadConfigurationFile(const std::string &fch, std::string &where, lua_State *L);
+
 public:
 	enum boolRetCode { 
 		RCnil=-1,		// no return
@@ -39,6 +43,7 @@ public:
 	StringVector needed_timer;
 	StringVector needed_minmax;
 	StringVector needed_namedminmax;
+	StringVector needed_multikeysminmax;
 	StringVector needed_shutdown;
 	StringVector needed_tracker;
 #ifdef TOILE
@@ -60,6 +65,7 @@ protected:
 	void addNeededTimer( std::string t ){ this->needed_timer.Add(t); }
 	void addNeededMinMax( std::string t ){ this->needed_minmax.Add(t); }
 	void addNeededNamedMinMax( std::string t ){ this->needed_namedminmax.Add(t); }
+	void addNeededMultiKeysMinMax( std::string t ){ this->needed_multikeysminmax.Add(t); }
 	void addNeededShutdown( std::string t ){ this->needed_shutdown.Add(t); }
 	void addNeededTracker( std::string t ){ this->needed_tracker.Add(t); }
 #ifdef TOILE
@@ -73,10 +79,14 @@ protected:
 	void addNeededNamedFeed( std::string t ){ this->needed_namedfeed.Add(t); }
 #endif
 
-	virtual void readConfigDirective( std::string &l, std::string &name, bool &nameused );
+	virtual void readConfigDirective( std::string &l );
+
+protected:
+	LuaExec() = default;
 
 public:
-	LuaExec(const std::string &fch, std::string &where, std::string &name);
+	LuaExec(const std::string &fch, std::string &where);
+
 	struct elastic_storage *getFunc( void ){ return &(this->func); }
 
 	lua_State *createLuaState(void);
@@ -125,11 +135,18 @@ public:
 		// (default as well if we don't care about the result)
 	bool execSync(lua_State *L, enum boolRetCode *rc=NULL);
 
-		// boolean or value forced
+		// boolean or value forced (numeric only)
 	bool execSync(lua_State *L, enum boolRetCode *rc, lua_Number *retn);
 
-		// name + boolean or value forced
-	bool execSync(lua_State *L, std::string *rs, enum boolRetCode *rc, lua_Number *retn);	
+		// boolean or value forced (numeric or string)
+	bool execSync(lua_State *L, enum boolRetCode *rc, lua_Number *retn, std::string *rs);
+
+		// name + boolean or value forced (numeric only)
+	bool execSync(lua_State *L, std::string *rs, enum boolRetCode *rc, lua_Number *retn);
+
+		// array of names (mandatory) + boolean or value forced (numeric only)
+	bool execSync(lua_State *L, std::vector<std::string> &rs, uint8_t, enum boolRetCode *rc, lua_Number *retn);
+
 };
 
 #endif

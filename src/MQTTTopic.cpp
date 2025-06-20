@@ -9,51 +9,15 @@
 #include <cstring>
 #include <cassert>
 
-MQTTTopic::MQTTTopic(const std::string &fch, std::string &where, std::string &name) : Object(fch, where, name), alreadydefault(false), qos(0), wildcard(false), store(false), numeric(false), ttl(0){
+MQTTTopic::MQTTTopic(const std::string &fch, std::string &where) : Object(fch, where), alreadydefault(false), qos(0), wildcard(false), store(false), numeric(false), ttl(0){
 
-	/*
-	 * Reading file's content
-	 */
-
-	std::stringstream buffer;
-	std::ifstream file;
-	file.exceptions ( std::ios::eofbit | std::ios::failbit );
-	try {
-		std::ifstream file(fch);
-		std::streampos pos;
-
-		bool nameused = false;	// if so, the name can't be changed anymore
-
-		/*
-		 * Reading header (Majordome's commands)
-		 */
-
-		do {
-			std::string l;
-			pos = file.tellg();
-
-			std::getline( file, l);
-			if( l.compare(0, 2, "--") ){	// End of comments
-				file.seekg( pos );
-				break;
-			}
-
-			this->readConfigDirective(l, name, nameused);
-		} while(true);
-
-		file.close();
-	} catch(const std::ifstream::failure &e){
-		if(!file.eof()){
-			SelLog->Log('F', "%s : %s", fch.c_str(), strerror(errno) );
-			exit(EXIT_FAILURE);
-		}
-	}
+	this->loadConfigurationFile(fch, where);
 
 	/*
 	 * Sanity checks
 	 */
 
-	if( !this->topic ){
+	if( this->topic.empty() ){
 		SelLog->Log('F', "%s : No topic defined", fch.c_str() );
 		exit(EXIT_FAILURE);
 	}
@@ -65,41 +29,44 @@ MQTTTopic::MQTTTopic(const std::string &fch, std::string &where, std::string &na
 	if( this->wildcard && debug )
 		SelLog->Log('D', "\t\tHas wildcard");
 #endif
+
+	if(d2)
+		fd2 << this->getFullId() << ".class: Topic" << std::endl;
 }
 
-void MQTTTopic::readConfigDirective( std::string &l, std::string &name, bool &nameused ){
-	MayBeEmptyString arg;
+void MQTTTopic::readConfigDirective(std::string &l){
+	std::string arg;
 
-	if( !!(arg = striKWcmp( l, "-->> topic=" ))){
+	if(!(arg = striKWcmp( l, "-->> topic=" )).empty()){
 		this->topic = std::regex_replace(arg, std::regex("%ClientID%"), MQTT_ClientID);
-		if(verbose)
+		if(::verbose)
 			SelLog->Log('C', "\t\ttopic : '%s'", this->topic.c_str());
-	} else if( !!(arg = striKWcmp( l, "-->> qos=" ))){
+	} else if(!(arg = striKWcmp( l, "-->> qos=" )).empty()){
 		if((this->qos = stoi(arg)) > 2)	// If invalid
 			this->qos = 0;
-		if(verbose)
+		if(::verbose)
 			SelLog->Log('C', "\t\tqos : '%d'", this->qos);
-	} else if( l == "-->> store" ){
-		if(verbose)
+	} else if(l == "-->> store"){
+		if(::verbose)
 			SelLog->Log('C', "\t\tStore in a SelSharedVar");
 		this->store = true;
-	} else if( l == "-->> numeric" ){
+	} else if(l == "-->> numeric"){
 		if(this->alreadydefault){
 			SelLog->Log('F',"'default' must be set after 'numeric'");
 			exit(EXIT_FAILURE);
 		}
-		if(verbose)
+		if(::verbose)
 			SelLog->Log('C', "\t\tStore as a numeric value");
 		this->numeric = true;
-	} else if( !!(arg = striKWcmp( l, "-->> ttl=" )) ){
+	} else if(!(arg = striKWcmp( l, "-->> ttl=" )).empty()){
 		if(this->alreadydefault){
 			SelLog->Log('F',"'ttl' can't be set after 'default'");
 			exit(EXIT_FAILURE);
 		}
 		this->ttl = strtoul( arg.c_str(), NULL, 0 );
-		if(verbose)
+		if(::verbose)
 			SelLog->Log('C', "\t\tTTL = %lu", this->ttl);
-	} else if( !!(arg = striKWcmp( l, "-->> default=" )) ){
+	} else if(!(arg = striKWcmp( l, "-->> default=" )).empty()){
 		this->alreadydefault = true;
 		if( !this->toBeStored() )
 			SelLog->Log('E',"Default value is only useful for a stored topic");
@@ -109,7 +76,7 @@ void MQTTTopic::readConfigDirective( std::string &l, std::string &name, bool &na
 					double val = std::stod( arg );
 					SelSharedVar->setNumber( this->getNameC(), val, this->ttl );
 
-					if(verbose)
+					if(::verbose)
 						SelLog->Log('C', "\t\tdefault = %lf", val);
 				} catch( ... ){
 					SelLog->Log('F', "Topic '%s' is expecting a number : no convertion done ", this->getNameC() );
@@ -117,12 +84,12 @@ void MQTTTopic::readConfigDirective( std::string &l, std::string &name, bool &na
 				}
 			} else {
 				SelSharedVar->setString( this->getNameC(), arg.c_str(), this->ttl );
-				if(verbose)
+				if(::verbose)
 					SelLog->Log('C', "\t\tdefault = \"%s\"", arg.c_str());
 			}
 		}
 	} else 
-		this->Object::readConfigDirective(l, name, nameused);
+		this->Object::readConfigDirective(l);
 }
 
 bool MQTTTopic::match( const char *intopic ){
@@ -134,7 +101,7 @@ bool MQTTTopic::match( const char *intopic ){
 
 void MQTTTopic::execHandlers(MQTTTopic &, const char *topic, const char *payload){
 #ifdef DEBUG
-	if(debug && !this->isQuiet())
+	if(debug && !this->isQuiet() && !hideTopicArrival)
 		SelLog->Log('D', "[%s] MQTTTopic::execHandlers() : %d handler(s) to run", this->getNameC(), this->size());
 #endif
 
@@ -196,7 +163,22 @@ static int mtpc_find(lua_State *L){
 	}
 }
 
+static int mtpc_match(lua_State *L){
+/* Check if a topic matches a pattern.
+ * 1: The pattern
+ * 2: String to check
+ *	<- true or false
+ */
+	const char *pat = luaL_checkstring(L, 1);
+	const char *topic = luaL_checkstring(L, 2);
+
+	lua_pushboolean(L, !SelMQTT->mqtttokcmp(pat, topic));
+
+	return 1;
+}
+
 static const struct luaL_Reg MajTopicLib [] = {
+	{"match", mtpc_match},
 	{"find", mtpc_find},
 	{NULL, NULL}
 };
@@ -212,7 +194,7 @@ static int mtpc_Publish(lua_State *L){
 
 	if( topic->isEnabled() )
 		SelMQTT->mqttpublish( MQTT_client, topic->getTopicC(), strlen(val), (void *)val, retain );
-	else if(verbose)
+	else if(::verbose)
 		SelLog->Log('I', "'%s' is disabled : sending ignored", topic->getTopic());
 
 	return 0;
@@ -229,7 +211,7 @@ static int mtpc_getVal( lua_State *L ){
 
 #ifdef DEBUG
 	if( !topic->toBeStored() && debug )
-		SelLog->Log('D', "Topic %s is not \"stored\" : getVal() will not works", topic->getNameC() );
+		SelLog->Log('E', "Topic %s is not \"stored\" : getVal() will not works", topic->getNameC() );
 #endif
 
 	enum SharedObjType type;

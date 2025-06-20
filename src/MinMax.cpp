@@ -8,72 +8,18 @@
 #include <cassert>
 
 
-MinMax::MinMax(const std::string &fch, std::string &where, std::string &name, lua_State *L) : Object(fch, where, name), Handler(fch, where, name), empty(true){
-	/*
-	 * Reading file's content
-	 */
+MinMax::MinMax(const std::string &fch, std::string &where, lua_State *L) : Object(fch, where), Handler(fch, where), empty(true){
+	this->loadConfigurationFile(fch, where,L);
 
-	std::stringstream buffer;
-	std::ifstream file;
-	file.exceptions ( std::ios::eofbit | std::ios::failbit );
-	try {
-		std::ifstream file(fch);
-		std::streampos pos;
-
-		bool nameused = false;	// if so, the name can't be changed anymore
-
-		/*
-		 * Reading header (Majordome's commands)
-		 */
-
-		do {
-			std::string l;
-			pos = file.tellg();
-
-			std::getline( file, l);
-			if( l.compare(0, 2, "--") ){	// End of comments
-				file.seekg( pos );
-				break;
-			}
-
-			this->readConfigDirective(l, name, nameused);
-		} while(true);
-
-
-		/*
-		 * Reading the remaining of the script and keep it as 
-		 * an Lua's script
-		 */
-
-		buffer << file.rdbuf();
-		file.close();
-	} catch(const std::ifstream::failure &e){
-		if(!file.eof()){
-			SelLog->Log('F', "%s : %s", fch.c_str(), strerror(errno) );
-			exit(EXIT_FAILURE);
-		}
-	}
-
-	if( !this->LoadFunc( L, buffer, this->name.c_str() ))
-		exit(EXIT_FAILURE);
+	if(d2)
+		fd2 << this->getFullId() << ".class: MinMax" << std::endl;
 }
 
-void MinMax::readConfigDirective( std::string &l, std::string &name, bool &nameused ){
-	MayBeEmptyString arg;
-
-	if( !!(arg = striKWcmp( l, "-->> listen=" ))){
-		TopicCollection::iterator topic;
-		if( (topic = config.TopicsList.find(arg)) != config.TopicsList.end()){
-			if(verbose)
-				SelLog->Log('C', "\t\tAdded to topic '%s'", arg.c_str());
-			topic->second->addHandler( dynamic_cast<Handler *>(this) );
-//			nameused = true;
-		} else {
-			SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
-			exit(EXIT_FAILURE);
-		}
-	} else 
-		this->LuaExec::readConfigDirective(l, name, nameused);
+void MinMax::readConfigDirective( std::string &l ){
+	if(this->readConfigDirectiveData(l))
+		;
+	else 
+		this->LuaExec::readConfigDirective(l);
 }
 
 void MinMax::feedState( lua_State *L ){
@@ -89,15 +35,26 @@ void MinMax::feedState( lua_State *L ){
 	lua_setglobal( L, "MAJORDOME_Myself" );
 }
 
-bool MinMax::execAsync(lua_State *L){
-#if 0	// Not needed as already checked within LuaExec::canRun() called by MQTTTopic::execHandlers()
-	if( !this->isEnabled() ){
-		if(verbose)
-			SelLog->Log('T', "MinMax'%s' from '%s' is disabled", this->getNameC(), this->getWhereC() );
-		return false;
-	}
-#endif
+void MinMax::push(lua_Number val){
+	if(this->empty){
+		this->empty = false;
+		this->nbre = 1;
+		this->min = this->max = this->sum = val; 
+	} else {
+		if(val < this->min)
+			this->min = val;
+		if(val > this->max)
+			this->max = val;
 
+		this->sum += val;
+		this->nbre++;
+	}
+
+	if(debug  && !this->isQuiet())
+		SelLog->Log('T', "[MinMax '%s'] accepting %.0f -> min:%.0f max:%.0f", this->getNameC(), val, this->min, this->max);
+}
+
+bool MinMax::execAsync(lua_State *L){
 	LuaExec::boolRetCode rc;
 	lua_Number val;
 
@@ -115,22 +72,7 @@ bool MinMax::execAsync(lua_State *L){
 			}
 		}
 	
-		if(this->empty){
-			this->empty = false;
-			this->nbre = 1;
-			this->min = this->max = this->sum = val; 
-		} else {
-			if(val < this->min)
-				this->min = val;
-			if(val > this->max)
-				this->max = val;
-
-			this->sum += val;
-			this->nbre++;
-		}
-
-		if(debug)
-			SelLog->Log('T', "[MinMax '%s'] accepting %.0f -> min:%.0f max:%.0f", this->getNameC(), val, this->min, this->max);
+		this->push(val);
 	} else
 		SelLog->Log('E', "[MinMax '%s'] Data rejected", this->getNameC());
 
@@ -138,6 +80,15 @@ bool MinMax::execAsync(lua_State *L){
 	return r;
 }
 
+#if DEBUG
+void MinMax::dump(){
+	std::cout << "Number of samples : " << this->getSamplesNumber() << std::endl;
+	std::cout << "Min value : " << this->getMin() << std::endl;
+	std::cout << "Max value : " << this->getMax() << std::endl;
+	std::cout << "Average value : " << this->getAverage() << std::endl;
+	std::cout << "Sum value : " << this->getSum() << std::endl;
+}
+#endif
 	/*****
 	 * Lua exposed functions
 	 *****/
@@ -231,6 +182,13 @@ static int mmm_getSamplesNumber( lua_State *L ){
 	return 1;
 }
 
+static int mmm_Push( lua_State *L ){
+	class MinMax *minmax= checkMajordomeMinMax(L);
+	lua_Number val = luaL_checknumber(L, 2);
+	minmax->push(val);
+	return 0;
+}
+
 static int mmm_Clear( lua_State *L ){
 	class MinMax *minmax= checkMajordomeMinMax(L);
 	minmax->Clear();
@@ -248,6 +206,7 @@ static const struct luaL_Reg MajMinMaxM [] = {
 	{"getAverage", mmm_getAverage},
 	{"getSum", mmm_getSum},
 	{"getSamplesNumber", mmm_getSamplesNumber},
+	{"Push", mmm_Push},
 	{"Clear", mmm_Clear},
 	{"Reset", mmm_Clear},
 	{NULL, NULL}

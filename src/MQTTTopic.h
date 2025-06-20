@@ -6,17 +6,16 @@
 #ifndef MQTTTOPIC_H
 #define MQTTTOPIC_H
 
-#include "MayBeEmptyString.h"
 #include "Event.h"
 #include "ObjCollection.h"
 
 class MQTTTopic : virtual public Object, public Event {
 	bool alreadydefault;	// true if default has been already used
 
-	void readConfigDirective( std::string &l, std::string &name, bool &nameused );
+	virtual void readConfigDirective(std::string &l);
 
 protected:
-	MayBeEmptyString topic;	// Topic to look for
+	std::string topic;	// Topic to look for
 	unsigned int qos;		// Associated QoS
 	bool wildcard;			// True if the topic contains wildcard
 	bool store;				// Keep values in a SelShared variable
@@ -29,7 +28,7 @@ public:
 	 * -> where : file's directory
 	 * <- name : this object's name
 	 */
-	MQTTTopic( const std::string &file, std::string &where, std::string &name  );
+	MQTTTopic( const std::string &file, std::string &where );
 	
 		/* Accessors */
 	std::string &getTopic( void ){ return this->topic; };
@@ -51,6 +50,9 @@ public:
 
 	/* Create Lua's object */
 	static void initLuaInterface( lua_State *L );
+
+	virtual std::string getTri(){ return MQTTTopic::trigramme(); }
+	static std::string trigramme(){ return "TPK_"; }
 };
 
 typedef ObjCollection<MQTTTopic *> TopicCollection;

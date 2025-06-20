@@ -9,11 +9,10 @@
 
 # PostgreSQL database access
 # needs postgresql-libs installed
-PGSQL='-DPGSQL -DDBASE'
+BUILD_PGSQL='-DPGSQL -DDBASE'
 
 # Graphical extension : Toile
-# Not yet !
-# TOILE='-DTOILE'
+BUILD_TOILE='-DTOILE'
 
 # Enable debugging messages
 DEBUG='-DDEBUG'
@@ -48,9 +47,14 @@ else
 	exit 1
 fi
 
+if (( $(echo "$VERLUA < 5.3" | bc -l) ))
+then
+	echo "Need compat53"
+	LUA="$LUA -Iluacompat53"
+fi
+
 echo -n "Selene : "
 
-: <<'DEV'
 if [ -f /usr/local/lib/libSelene.so.2 ]; then
 	echo "System installation"
 	SELDIR=/usr/local
@@ -60,20 +64,19 @@ elif [ -d ~/Projets/Selene.v7 ]; then
 	SELDIR=~/Projets/Selene.v7
 	SELLIB='-l:libSelene.so.2'
 else
-DEV
 	echo "**DEV**DEV**"
 	SELDIR=~/Projets/Selene
 	SELLIB='-l:libSelene.so.2'
 	echo "Don't forget"
 	echo "export LD_LIBRARY_PATH=$SELDIR/lib:$LD_LIBRARY_PATH"
-# fi
+fi
 
 cd src
 
 SOURCES='*.cpp'
 LIBS=''
 
-if [ -Z ${PGSQL+x} ]; then
+if [ -z ${BUILD_PGSQL+x} ]; then
 	echo "PostgreSQL : not compiled"
 else
 	echo "PostgreSQL : included"
@@ -81,7 +84,7 @@ else
 	LIBS+=' -lpq'
 fi
 
-if [ -Z ${TOILE+x} ]; then
+if [ -Z ${BUILD_TOILE+x} ]; then
 	echo "Toile : not compiled"
 else
 	echo "Toile : included"
@@ -92,7 +95,7 @@ echo
 echo "----------------"
 echo
 
-LFMakeMaker -v +f=Makefile -cc="g++" --opts="-Wall -O2 ${DEBUG} ${TOILE} ${PGSQL} -lpthread -lpaho-mqtt3c -ldl \
+LFMakeMaker -v +f=Makefile -cc="g++" --opts="-Wall -O2 ${DEBUG} ${BUILD_TOILE} ${BUILD_PGSQL} -lpthread -lpaho-mqtt3c -ldl \
 ${LUA} ${LUALIB} \
 ${LIBS} \
 -I$SELDIR/include -L$SELDIR/lib $SELLIB" ${SOURCES} -t=../Majordome > Makefile

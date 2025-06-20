@@ -8,133 +8,98 @@
 #include <cassert>
 #include <regex>
 
-Tracker::Tracker(const std::string &fch, std::string &where, std::string &name, lua_State *L) : Object(fch, where, name), Handler(fch, where, name){
-	/*
-	 * Reading file's content
-	 */
+Tracker::Tracker(const std::string &fch, std::string &where, lua_State *L) : Object(fch, where), Handler(fch, where){
+	this->loadConfigurationFile(fch, where,L);
 
-	std::stringstream buffer;
-	std::ifstream file;
-	file.exceptions ( std::ios::eofbit | std::ios::failbit );
-	try {
-		std::ifstream file(fch);
-		std::streampos pos;
-
-		bool nameused = false;	// if so, the name can't be changed anymore
-
-		/*
-		 * Reading header (Majordome's commands)
-		 */
-
-		do {
-			std::string l;
-			pos = file.tellg();
-
-			std::getline( file, l);
-			if( l.compare(0, 2, "--") ){	// End of comments
-				file.seekg( pos );
-				break;
-			}
-
-			this->readConfigDirective(l, name, nameused);
-		} while(true);
-
-
-		/*
-		 * Reading the remaining of the script and keep it as 
-		 * an Lua's script
-		 */
-
-		buffer << file.rdbuf();
-		file.close();
-	} catch(const std::ifstream::failure &e){
-		if(!file.eof()){
-			SelLog->Log('F', "%s : %s", fch.c_str(), strerror(errno) );
-			exit(EXIT_FAILURE);
-		}
-	}
-
-	if( !this->LoadFunc( L, buffer, this->name.c_str() ))
-		exit(EXIT_FAILURE);
+	if(d2)
+		fd2 << this->getFullId() << ".class: Tracker" << std::endl;
 }
 
-void Tracker::readConfigDirective( std::string &l, std::string &name, bool &nameused ){
-	MayBeEmptyString arg;
+void Tracker::readConfigDirective( std::string &l ){
+	std::string arg;
 
-	if( !!(arg = striKWcmp( l, "-->> listen=" ))){
-		TopicCollection::iterator topic;
-		if( (topic = config.TopicsList.find(arg)) != config.TopicsList.end()){
-			if(verbose)
-				SelLog->Log('C', "\t\tAdded to topic '%s'", arg.c_str());
-			topic->second->addHandler( dynamic_cast<Handler *>(this) );
-//			nameused = true;
-		} else {
-			SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
-			exit(EXIT_FAILURE);
-		}
-	} else if( !!(arg = striKWcmp( l, "-->> howmany=" ))){
+	if(!(arg = striKWcmp( l, "-->> howmany=" )).empty()){
 		if((this->howmany = strtoul(arg.c_str(), NULL, 0))<1)
 			this->howmany = 1;
-		if(verbose)
+		if(::verbose)
 			SelLog->Log('C', "\t\tHow many: '%d'", this->howmany);
-	} else if( !!(arg = striKWcmp( l, "-->> statustopic=" ))){
-		setStatusTopic( std::regex_replace(arg, std::regex("%ClientID%"), MQTT_ClientID) );
-		if(verbose)
+	} else if(!(arg = striKWcmp( l, "-->> statustopic=" )).empty()){
+		this->setStatusTopic( std::regex_replace(arg, std::regex("%ClientID%"), MQTT_ClientID) );
+		if(::verbose)
 			SelLog->Log('C', "\t\tStatus topic : '%s'", this->getStatusTopic().c_str());
-	} else if( !!(arg = striKWcmp( l, "-->> start=" ))){
+
+		if(d2){
+			fd2 << this->getFullId() << " -> " << this->getFullId() << "." << this->getStatusTopic() << ": statustopic { class: llink }" << std::endl;
+			fd2 << this->getFullId() << "." << this->getStatusTopic() << " {class: InternalTopic}" << std::endl;
+		}
+	} else if(!(arg = striKWcmp( l, "-->> start=" )).empty()){
 		TimerCollection::iterator timer;
 		if( (timer = config.TimersList.find(arg)) != config.TimersList.end()){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tStart timer '%s'", arg.c_str());
 			timer->second->addStartTracker( this );
-			nameused = true;
+
+			if(d2)
+				fd2 << this->getFullId() << " <- " << timer->second->getFullId() << ": start { class: llink }" << std::endl;
 		} else {
 			SelLog->Log('F', "\t\tTimer '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
-	} else if( !!(arg = striKWcmp( l, "-->> stop=" ))){
+	} else if(!(arg = striKWcmp( l, "-->> stop=" )).empty()){
 		TimerCollection::iterator timer;
 		if( (timer = config.TimersList.find(arg)) != config.TimersList.end()){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tStop timer '%s'", arg.c_str());
 			timer->second->addStopTracker( this );
-			nameused = true;
+
+			if(d2)
+				fd2 << this->getFullId() << " <- " << timer->second->getFullId() << ": stop { class: llink }" << std::endl;
 		} else {
 			SelLog->Log('F', "\t\tTimer '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
-	} else if( !!(arg = striKWcmp( l, "-->> enableRDV=" ))){
+	} else if(!(arg = striKWcmp( l, "-->> enableRDV=" )).empty()){
 		EventCollection::iterator event;
 		if( (event = config.EventsList.find(arg)) != config.EventsList.end()){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tEnabling rendez-vous '%s'", arg.c_str());
 	 		event->second->addTrackerEN( this );
+
+			if(d2)
+				fd2 << this->getFullId() << " -> " << event->second->getFullId() << ": enableRDV { class: llink }" << std::endl;
 		} else {
 			SelLog->Log('F', "\t\tRendez-vous '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
-	} else if( !!(arg = striKWcmp( l, "-->> disableRDV=" ))){
+	} else if(!(arg = striKWcmp( l, "-->> disableRDV=" )).empty()){
 		EventCollection::iterator event;
 		if( (event = config.EventsList.find(arg)) != config.EventsList.end()){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tDisabling rendez-vous '%s'", arg.c_str());
 	 		event->second->addTrackerDIS( this );
+
+			if(d2)
+				fd2 << this->getFullId() << " -> " << event->second->getFullId() << ": disableRDV { class: llink }" << std::endl;
 		} else {
 			SelLog->Log('F', "\t\tRendez-vous '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
-	} else if( l == "-->> activated" ){
-		if(verbose)
+	} else if(l == "-->> activated"){
+		if(::verbose)
 			SelLog->Log('C', "\t\tActivated at startup");
 		this->status = _status::CHECKING;
 		this->hm_counter = this->howmany;
-	} else 
-		this->LuaExec::readConfigDirective(l, name, nameused);
+	} else if(this->readConfigDirectiveNoData(l))
+		;
+	else if(this->readConfigDirectiveData(l))
+		;
+	else 
+		this->Handler::readConfigDirective(l);
 }
 
 bool Tracker::execAsync(lua_State *L){
 	if( !this->isEnabled() || this->status != _status::CHECKING ){
-		if(verbose && !this->isQuiet())
+		if(this->isVerbose())
 			SelLog->Log('T', "Tracker '%s' from '%s' is disabled or inactive", this->getNameC(), this->getWhereC() );
 		lua_close( L );
 		return false;
@@ -180,16 +145,16 @@ void Tracker::publishstatus( void ){
 
 void Tracker::notifyChanged( void ){
 	if( this->isEnabled() ){
-		for(auto &t : this->changingTasks)	// Execute attached starting tasks
+		for(auto &t : this->changingHandlers)	// Execute attached starting tasks
 			t->exec(this);
 	}
 }
 
 void Tracker::start( void ){
 	if( this->isEnabled() && this->getStatus() != _status::CHECKING ){
-		for(auto &t : this->startingTasks)	// Execute attached starting tasks
+		for(auto &t : this->startingHandlers)	// Execute attached starting tasks
 			t->exec(this);
-		if(verbose && !this->isQuiet())
+		if(this->isVerbose())
 			SelLog->Log('T', "Tracker '%s' is checking", this->getNameC() );
 		this->status = _status::CHECKING;
 		this->hm_counter = this->howmany;
@@ -200,9 +165,9 @@ void Tracker::start( void ){
 
 void Tracker::stop( void ){
 	if( this->isEnabled() && this->getStatus() != _status::WAITING ){
-		for(auto &t : this->stoppingTasks)	// Execute attached stopping tasks
+		for(auto &t : this->stoppingHandlers)	// Execute attached stopping tasks
 			t->exec(this);
-		if(verbose && !this->isQuiet())
+		if(this->isVerbose())
 			SelLog->Log('T', "Tracker '%s' is waiting", this->getNameC() );
 		this->status = _status::WAITING;
 		this->publishstatus();
@@ -214,7 +179,7 @@ void Tracker::done( void ){
 	if( this->isEnabled() && this->getStatus() == _status::CHECKING ){
 		for(auto &t : *this)	// Execute attached done tasks
 			t->exec(this);
-		if(verbose && !this->isQuiet())
+		if(this->isVerbose())
 			SelLog->Log('T', "Tracker '%s' is done", this->getNameC() );
 		this->status = _status::DONE;
 		this->publishstatus();

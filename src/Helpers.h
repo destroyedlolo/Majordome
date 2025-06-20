@@ -4,6 +4,7 @@
  *
  * 	06/07/2018 - LF - First version
  * 	25/07/2018 - LF - switch to C++
+ *	26/04/2025 - LF - Remove MayBeEmptyString
  */
 
 #ifndef HELPERS_H
@@ -12,17 +13,20 @@
 #include <MQTTClient.h> /* PAHO library needed */
 #include <lua.hpp>	/* Lua's state needed */
 
-#include "MayBeEmptyString.h"
+#include <string>
+#include <fstream>
 
 	/* ***
 	 * Configuration's
 	 * ***/
 extern bool quiet;
+extern bool hideTopicArrival;
 extern bool verbose;
 extern bool debug;
 extern bool trace;
 extern bool configtest;
-
+extern bool d2;
+extern std::ofstream fd2;
 
 	/* ***
 	 * MQTT
@@ -57,13 +61,16 @@ extern char *removeLF(char *);
  * 	- NULL if the keyword is not found
  */
 extern const char *striKWcmp( const char *s, const char *kw );
-extern MayBeEmptyString striKWcmp( const std::string s, const char *kw );
-extern MayBeEmptyString striKWcmp( const std::string s, const std::string &kw );
+extern std::string striKWcmp( const std::string s, const char *kw );
+extern std::string striKWcmp( const std::string s, const std::string &kw );
 
 /* Return the extention of a given file
  * -> filename
  * <- pointer to the last '.' or NULL if not found
  */
 extern const char *fileextention( const char *fch );
+
+/* Secure string by encoding HTML entities */
+extern std::string escapeHTML(std::string);
 
 #endif

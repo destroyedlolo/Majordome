@@ -1,0 +1,41 @@
+-- Database purging declaration
+--
+-- name of this purging
+-- if not set, takes the filename
+--->> name=toto
+--
+-- Remove some tracing messages
+--->> quiet
+--
+-- Disable this archiving
+--->> disabled
+--
+--------------------
+-- Database related
+--------------------
+--
+--- The database to connect to
+-->> Database=database
+--
+-- The table to purge
+-- if not set, the same as "name"
+--->> table=Test
+--
+--------------------
+-- Selection related
+--------------------
+--
+-- Up to when, following SQL syntax.
+-- Will be executed by an SQL sentence like this one :
+-- ... where sample_time::date > current_date - interval 'arg'
+-- Consequently, argument should be :
+-- "1 day" to ignore last 1 days (default)
+-- "3 months" to ignore 3 last months
+-->> Keep=3 months
+--
+------------
+-- Launching
+------------
+--
+-->> when=now
+

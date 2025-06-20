@@ -19,7 +19,6 @@
 #include "Version.h"
 #include "Selene.h"
 #include "Helpers.h"
-#include "MayBeEmptyString.h"
 #include "Config.h"
 
 #ifdef TOILE
@@ -49,6 +48,9 @@ bool hideTopicArrival = false;	// Silence topics arrival
 bool configtest = false;	// Only validate the configuration, then exit
 Config config;			// Application's configuration
 
+bool d2 = false;		// Generate d2 file
+std::ofstream fd2;
+
 	/* *****
 	 * local configuration
 	 * (feed with default values)
@@ -66,21 +68,21 @@ static void read_configuration(const char *fch){
 
 		file.open(fch);
 		while(std::getline( file, l)){
-			MayBeEmptyString arg;
+			std::string arg;
 
 			if( l[0]=='#' )
 				continue;
-			else if(!!(arg = striKWcmp( l, "Broker_URL=" ))){
+			else if(!(arg = striKWcmp( l, "Broker_URL=" )).empty()){
 				Broker_URL = arg.c_str();
-				if(verbose)
+				if(::verbose)
 					SelLog->Log('C', "Broker_URL : '%s'", Broker_URL.c_str());
-			} else if(!!(arg = striKWcmp( l, "ClientID=" ))){
+			} else if(!(arg = striKWcmp( l, "ClientID=" )).empty()){
 				MQTT_ClientID = arg.c_str();
-				if(verbose)
+				if(::verbose)
 					SelLog->Log('C', "Client ID : '%s'", MQTT_ClientID.c_str());
-			} else if(!!(arg = striKWcmp( l, "UserConfiguration=" )) || !!(arg = striKWcmp( l, "ApplicationDirectory=" ))){
+			} else if(!(arg = striKWcmp( l, "UserConfiguration=" )).empty() || !(arg = striKWcmp( l, "ApplicationDirectory=" )).empty()){
 				UserConfigRoot = arg.c_str();
-				if(verbose)
+				if(::verbose)
 					SelLog->Log('C', "User configuration directory : '%s'", UserConfigRoot.c_str());
 			} 
 		}
@@ -102,7 +104,7 @@ static void read_configuration(const char *fch){
 		char l[strlen(h) + 20];
 		sprintf(l, "Majordome-%s-%u", h, getpid());
 		MQTT_ClientID = l;
-		if(verbose)
+		if(::verbose)
 			SelLog->Log('C', "MQTT Client ID : '%s' (computed)", MQTT_ClientID.c_str());
 	}
 }
@@ -136,7 +138,7 @@ void threadEnvironment(lua_State *L){
 	lua_pushstring( L, config.getConfigDir().c_str() );
 	lua_setglobal( L, "MAJORDOME_CONFIGURATION_DIRECTORY" );
 
-	if(verbose){
+	if(::verbose){
 		lua_pushinteger( L, 1 );
 		lua_setglobal( L, "MAJORDOME_VERBOSE" );
 	}
@@ -159,13 +161,13 @@ void threadEnvironment(lua_State *L){
 	 */
 
 static int mjd_letsgo(lua_State *L){
-	if(debug || verbose)
+	if(debug || ::verbose)
 		SelLog->Log('D', "Late dependencies building");
 	
 	SelLua->lateBuildingDependancies(L);
 	SelLua->ApplyStartupFunc(L);
 
-	if(debug || verbose)
+	if(debug || ::verbose)
 		SelLog->Log('D', "Let's go ...");
 
 	return 0;
@@ -196,7 +198,7 @@ MQTTClient MQTT_client;
  * already running.
  */
 static int msgarrived(void *actx, char *topic, int tlen, MQTTClient_message *msg){
-	if(verbose && !hideTopicArrival)
+	if(::verbose && !hideTopicArrival)
 		SelLog->Log('T', "Receiving '%s'", topic);
 
 		// Convert the payload to a string
@@ -209,10 +211,8 @@ static int msgarrived(void *actx, char *topic, int tlen, MQTTClient_message *msg
 			if(i.second->match( topic )){
 #ifdef DEBUG
 				if( debug && !i.second->isQuiet() ){
-					if(hideTopicArrival)
+					if(!hideTopicArrival)
 						SelLog->Log('D', "'%s' accepted by topic '%s'", topic, i.second->getNameC() );
-					else
-						SelLog->Log('D', "Accepted by topic '%s'", i.second->getNameC() );
 				}
 #endif
 
@@ -276,7 +276,7 @@ int main(int ac, char **av){
 	char c;
 	const char *conf_file = DEFAULT_CONFIGURATION_FILE;
 
-	while((c = getopt(ac, av, "qvVdhrf:t")) != (char)EOF) switch(c){
+	while((c = getopt(ac, av, "qvVdhrf:t2:")) != (char)EOF) switch(c){
 	case 'h':
 		fprintf(stderr, "%s (%.04f%s)\n"
 			"A lightweight event based Automation System\n"
@@ -292,7 +292,8 @@ int main(int ac, char **av){
 #endif
 			"\t-f<file> : read <file> for configuration\n"
 			"\t\t(default is '%s')\n"
-			"\t-t : test configuration file and exit\n",
+			"\t-t : test configuration file and exit\n"
+			"\t-2<file> : generate a d2 diagram source file\n",
 			basename(av[0]), VERSION,
 #ifdef TOILE
 #define STRIFY_HELPER(s) #s
@@ -315,7 +316,7 @@ int main(int ac, char **av){
 			SelLog->Log('I', "%s v%.04f", basename(av[0]), VERSION);
 #endif
 		}
-		verbose = true;
+		::verbose = true;
 		quiet = false;
 		break;
 	case 'r':
@@ -325,7 +326,7 @@ int main(int ac, char **av){
 		hideTopicArrival = true;
 		break;
 	case 'q':
-		if(!verbose)
+		if(!::verbose)
 			quiet = true;
 		break;
 #ifdef DEBUG
@@ -336,6 +337,14 @@ int main(int ac, char **av){
 #endif
 	case 'f':
 		conf_file = optarg;
+		break;
+	case '2':
+		fd2.open(optarg);
+		if(!fd2.is_open()){
+			perror(optarg);
+			exit(EXIT_FAILURE);
+		}
+		d2 = true;
 		break;
 	default:
 		SelLog->Log('F', "Unknown option '%c'\n%s -h\n\tfor some help\n", c, av[0]);
@@ -403,9 +412,12 @@ int main(int ac, char **av){
 	config.init(UserConfigRoot, SelLua->getLuaState());	// Read user's configuration files
 	config.SanityChecks();
 
+	if(d2)
+		fd2.close();
+
 	if(configtest){
 		SelLog->Log('E', "Testing only the configuration ... leaving.");
-		exit(EXIT_FAILURE);
+		exit(EXIT_SUCCESS);
 	}
 
 		/* **
@@ -420,6 +432,7 @@ int main(int ac, char **av){
 	SelLua->AddStartupFunc(Tracker::initLuaInterface);
 	SelLua->AddStartupFunc(MinMax::initLuaInterface);
 	SelLua->AddStartupFunc(NamedMinMax::initLuaInterface);
+	SelLua->AddStartupFunc(MultiKeysMinMax::initLuaInterface);
 	SelLua->AddStartupFunc(Shutdown::initLuaInterface);
 
 #ifdef DBASE
@@ -429,6 +442,7 @@ int main(int ac, char **av){
 
 	SelLua->AddStartupFunc(Feed::initLuaInterface);
 	SelLua->AddStartupFunc(NamedFeed::initLuaInterface);
+	SelLua->AddStartupFunc(AggregatedFeed::initLuaInterface);
 #endif
 
 #ifdef TOILE

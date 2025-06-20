@@ -7,16 +7,8 @@ Define **MQTT topic**
 > As of v6.0 onward, The syntax has changed for **Topic** and is not any more compatible with previous versions.
 
 ### General directives
-#### -->> name=
-Unique name to identify the topic. If not set, uses the filename.
-```
--->> name=Toto
-```
-#### --> quiet
-Removes some trace. This option is useful to avoid logging of very noisy topics.
-
-#### -->> disabled
-Message arrival is ignored
+### Generals
+See [this page](Headers%20and%20Shared%20Directives.md#general-directives).
 
 ### Topics' owns
 #### -->> topic=
@@ -99,7 +91,7 @@ File **test.topic**
 
 ## at Lua side
 
-MQTTTopic are exposed as **MajordomeMQTTTopic** object that supports the following methods :
+MQTTTopic are exposed as **MajordomeMQTTTopic** object that supports the following object's methods :
   - `Publish(value, retain)` to publish a MQTT message with
     - `[string|number] value` value to be published
     - `Boolean retain` does the value to be retained ?
@@ -111,3 +103,14 @@ MQTTTopic are exposed as **MajordomeMQTTTopic** object that supports the followi
   - `isEnabled()` returns a boolean reflecting if the topic is enabled or not
   - `Enable()` to enable this topic
   - `Disable()` to disable this topic
+
+It exposes also following library methods :
+
+  - `find(name)` returns a declared topic with the given `name` or **nil** if it doesn't exist.
+  - `match(pattern, topic)` return **true** if the given topic matches the pattern as per MQTT wildcards
+
+Example :
+```lua
+print( MajordomeMQTTTopic.match("truc/+/bidule", "truc/gng/bidule") )
+```
+returns **true** as *gng* is matched by `+`

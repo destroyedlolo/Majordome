@@ -9,17 +9,17 @@ Store incomming data in a database associated to a name.
 - Consequently, --->> are commented out commands (notice the 3 dashes).
 
 ## Directives
+### General directives
+See [this page](../Headers%20and%20Shared%20Directives.md#general-directives).
+### Triggering
+Following directives determine what will trigger this script.<br>
+Multiple directives may be present, including those of the same kind.
+#### Launched with a data furnished
+See [this page](../Headers%20and%20Shared%20Directives.md#triggering-while-providing-data)
+#### Launched without data
+See [this page](../Headers%20and%20Shared%20Directives.md#triggering-without-data)
 
-### Generals
-
-#### -->> name=
-Unique name to identify the Feed. If not set, uses the filename.
-`-->> name=toto`
-#### -->> quiet
-Remove some trace. This option is useful to avoid logging of very noisy topics.
-
-#### -->> disabled
-This Feed starts as disabled : incoming messages are ignored.
+A Typical example of launching feeding without providing data is when the said data will be taken from another sources such [MinMax](../minmax.md).
 
 ### feed's owns
 #### -->> Database=
@@ -33,25 +33,6 @@ If not set, the same as "name" or the filename.
 > For convenience, it is preferable that the table name's is only in lower-case. Otherwise, it will have
 >  to be surrounded by double quotes in pgsql.
 
-#### -->> listen=
-Indicates [**MQTT topic**](../topic.md) to listen to : this feed will be launched when a data
-is received on this topic.
-```
--->> listen=NoStations
-```
-If a namedfeed is woken up by an MQTT topic, the following variables are created at Lua side :
-- **MAJORDOME_TOPIC_NAME**, name of the topic (in the example above `NoStations`)
-- **MAJORDOME_TOPIC**, the MQTT topic itself
-- **MAJORDOME_PAYLOAD**, message's payload.
-
-#### -->> when=
-Indicates the [**Timer**](../timer.md) to wait for : 
-this namedfeed will be triggered when this timer is exhausted.
-```
--->> when=15s
-```
-If a namedfeed is woken up by a timer, the following variables are created at Lua side.
-- **MAJORDOME_TIMER**, name of the timer (in the example above `15s`)
 
 ## SQL table definition
 
@@ -59,7 +40,7 @@ If a namedfeed is woken up by a timer, the following variables are created at Lu
 CREATE TABLE ntest (
    sample_time TIMESTAMP WITH TIME ZONE,
    figure TEXT NOT NULL,
-   value INTEGER
+   value INTEGER -- Or any numeric datatype
 );
 ```
 
@@ -100,12 +81,12 @@ Consequently :
 - **MAJORDOME_NAMEDMINMAX** - NamedMinMax's name
 
 ### Exposed objects
-Statistics sequencing and retrieving are done through the **MajordomepgSQL**'s API :
-- `getContainer()` returns the container (directory) in which this pgSQL has been defined
-- `getName()` returns pgSQL's name
-- `isEnabled()` returns a boolean reflecting if this pgSQL is enabled or not
-- `Enable()` to enable this pgSQL
-- `Disable()` to disable this pgSQL 
+Statistics sequencing and retrieving are done through the **MajordomeNamedFeed**'s API :
+- `getContainer()` returns the container (directory) in which this object has been defined
+- `getName()` returns object's name
+- `isEnabled()` returns a boolean reflecting if this object is enabled or not
+- `Enable()` to enable this object
+- `Disable()` to disable this object 
 
 Those are redundant with header declarations, but they are making life easier : all configurations are done in the header, and the code remains unchanged.
 

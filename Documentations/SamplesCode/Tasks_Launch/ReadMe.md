@@ -1,5 +1,6 @@
-Demonstrates usage of `require_topic` directives with a [task](../../Task(lua).md)
-launched by another task.
+Demonstrates usage of `require_topic` directives with a [task](../../Task(lua).md) launched by another task.
+
+![Objects in this example](Diagram.svg)
 
 - **bip.lua** is a task that `require_topic=` **Test.topic**.
 - **master.lua** will `launch()` bip task with **Test** unset then set.

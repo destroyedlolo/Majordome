@@ -17,7 +17,7 @@ class MinMax : public Handler {
 	size_t nbre;	// Number of handled values
 	lua_Number sum;
 
-	virtual void readConfigDirective( std::string &l, std::string &name, bool &nameused );
+	virtual void readConfigDirective( std::string &l );
 	virtual void feedState(lua_State *L);
 
 public:
@@ -27,7 +27,7 @@ public:
 	 * <- name : this object's name
 	 * -> L : Lua's state
 	 */
-	MinMax( const std::string &file, std::string &where, std::string &name, lua_State *L );
+	MinMax( const std::string &file, std::string &where, lua_State *L );
 
 		/* Accessors */
 	lua_Number getMin(){ return(this->empty ? 0 : this->min); }
@@ -42,8 +42,17 @@ public:
 		/* Executable */
 	virtual bool execAsync(lua_State *L);	// Overloading to handle MinMax data feeding
 
+	void push(lua_Number);	// Push a new data
+
 	/* Create Lua's object */
 	static void initLuaInterface( lua_State *L );
+
+	virtual std::string getTri(){ return MinMax::trigramme(); }
+	static std::string trigramme(){ return "MMX_"; }
+
+#if DEBUG
+	void dump();
+#endif
 };
 
 typedef ObjCollection<MinMax *> MinMaxCollection;

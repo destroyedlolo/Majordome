@@ -1,4 +1,4 @@
-#include "MinMax.h"
+#include "NamedMinMax.h"
 #include "Config.h"
 #include "Helpers.h"
 
@@ -8,72 +8,18 @@
 #include <cassert>
 
 
-NamedMinMax::NamedMinMax(const std::string &fch, std::string &where, std::string &name, lua_State *L) : Object(fch, where, name), Handler(fch, where, name){
-	/*
-	 * Reading file's content
-	 */
+NamedMinMax::NamedMinMax(const std::string &fch, std::string &where, lua_State *L) : Object(fch, where), Handler(fch, where){
+	this->loadConfigurationFile(fch, where,L);
 
-	std::stringstream buffer;
-	std::ifstream file;
-	file.exceptions ( std::ios::eofbit | std::ios::failbit );
-	try {
-		std::ifstream file(fch);
-		std::streampos pos;
-
-		bool nameused = false;	// if so, the name can't be changed anymore
-
-		/*
-		 * Reading header (Majordome's commands)
-		 */
-
-		do {
-			std::string l;
-			pos = file.tellg();
-
-			std::getline( file, l);
-			if( l.compare(0, 2, "--") ){	// End of comments
-				file.seekg( pos );
-				break;
-			}
-
-			this->readConfigDirective(l, name, nameused);
-		} while(true);
-
-
-		/*
-		 * Reading the remaining of the script and keep it as 
-		 * an Lua's script
-		 */
-
-		buffer << file.rdbuf();
-		file.close();
-	} catch(const std::ifstream::failure &e){
-		if(!file.eof()){
-			SelLog->Log('F', "%s : %s", fch.c_str(), strerror(errno) );
-			exit(EXIT_FAILURE);
-		}
-	}
-
-	if( !this->LoadFunc( L, buffer, this->name.c_str() ))
-		exit(EXIT_FAILURE);
+	if(d2)
+		fd2 << this->getFullId() << ".class: NamedMinMax" << std::endl;
 }
 
-void NamedMinMax::readConfigDirective( std::string &l, std::string &name, bool &nameused ){
-	MayBeEmptyString arg;
-
-	if( !!(arg = striKWcmp( l, "-->> listen=" ))){
-		TopicCollection::iterator topic;
-		if( (topic = config.TopicsList.find(arg)) != config.TopicsList.end()){
-			if(verbose)
-				SelLog->Log('C', "\t\tAdded to topic '%s'", arg.c_str());
-			topic->second->addHandler( dynamic_cast<Handler *>(this) );
-//			nameused = true;
-		} else {
-			SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
-			exit(EXIT_FAILURE);
-		}
-	} else 
-		this->LuaExec::readConfigDirective(l, name, nameused);
+void NamedMinMax::readConfigDirective( std::string &l ){
+	if(this->readConfigDirectiveData(l))
+		;
+	else 
+		this->LuaExec::readConfigDirective(l);
 }
 
 void NamedMinMax::feedState( lua_State *L ){
@@ -87,6 +33,28 @@ void NamedMinMax::feedState( lua_State *L ){
 	luaL_getmetatable(L, "MajordomeNamedMinMax");
 	lua_setmetatable(L, -2);
 	lua_setglobal( L, "MAJORDOME_Myself" );
+}
+
+void NamedMinMax::push(std::string rs,lua_Number val){
+	auto it = this->empty.find(rs);
+
+	if(this->empty[rs] || it == this->empty.end()){
+		this->empty[rs] = false;
+		this->nbre[rs] = 1;
+		this->min[rs] = this->max[rs] = this->sum[rs] = val; 
+	} else {
+		if(val < this->min[rs])
+			this->min[rs] = val;
+		if(val > this->max[rs])
+			this->max[rs] = val;
+
+		this->sum[rs] += val;
+		this->nbre[rs]++;
+	}
+
+	if(debug && !this->isQuiet()){
+		SelLog->Log('T', "NamedMinMax ['%s'/'%s'] n:%.0f min:%.0f max:%.0f sum:%.0f", this->getNameC(), rs.c_str(), this->getSamplesNumber(rs), this->min[rs], this->max[rs], this->sum[rs]);
+	}
 }
 
 bool NamedMinMax::execAsync(lua_State *L){
@@ -117,28 +85,25 @@ bool NamedMinMax::execAsync(lua_State *L){
 		break;
 	}
 
-	auto it = this->empty.find(rs);
-
-	if(this->empty[rs] || it == this->empty.end()){
-		this->empty[rs] = false;
-		this->nbre[rs] = 1;
-		this->min[rs] = this->max[rs] = this->sum[rs] = val; 
-	} else {
-		if(val < this->min[rs])
-			this->min[rs] = val;
-		if(val > this->max[rs])
-			this->max[rs] = val;
-
-		this->sum[rs] += val;
-		this->nbre[rs]++;
-	}
-
-	if(debug && !this->isQuiet())
-		SelLog->Log('T', "NamedMinMax ['%s'/'%s'] min:%.0f max:%.0f", this->getNameC(), rs.c_str(), this->min[rs], this->max[rs]);
+	this->push(rs, val);
 
 	lua_close(L);
 	return r;
 }
+
+#if DEBUG
+void NamedMinMax::dump(){
+	std::cout << "\n" << this->getName() << std::endl << "======="  << std::endl;
+	for(auto & it: this->empty){	// Iterating against keys
+		std::cout << "\n" << it.first << std::endl << "-------"  << std::endl;
+		std::cout << "Number of samples : " << this->getSamplesNumber(it.first) << std::endl;
+		std::cout << "Min value : " << this->getMin(it.first) << std::endl;
+		std::cout << "Max value : " << this->getMax(it.first) << std::endl;
+		std::cout << "Average value : " << this->getAverage(it.first) << std::endl;
+		std::cout << "Sum value : " << this->getSum(it.first) << std::endl;
+	}
+}
+#endif
 
 	/*****
 	 * Lua exposed functions
@@ -238,6 +203,15 @@ static int mmm_getSamplesNumber( lua_State *L ){
 	return 1;
 }
 
+static int mmm_Push( lua_State *L ){
+	class NamedMinMax *minmax= checkMajordomeNamedMinMax(L);
+	const char *n = luaL_checkstring(L, 2);
+	lua_Number val = luaL_checknumber(L, 3);
+
+	minmax->push(n, val);
+	return 0;
+}
+
 static int mmm_Clear( lua_State *L ){
 	class NamedMinMax *minmax= checkMajordomeNamedMinMax(L);
 	const char *n = luaL_checkstring(L, 2);
@@ -275,6 +249,7 @@ static const struct luaL_Reg MajNamedMinMaxM [] = {
 	{"getAverage", mmm_getAverage},
 	{"getSum", mmm_getSum},
 	{"getSamplesNumber", mmm_getSamplesNumber},
+	{"Push", mmm_Push},
 	{"Clear", mmm_Clear},
 	{"Reset", mmm_Clear},
 	{"FiguresNames", mmm_FiguresNames},

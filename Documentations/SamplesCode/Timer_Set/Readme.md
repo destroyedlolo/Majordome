@@ -1,5 +1,7 @@
 Test timer's Set() function.
 
+![Objects in this example](Diagram.svg)
+
 First, the script will synchronize with the next minute. Then display 
 the time every plain minute.
 

@@ -17,6 +17,9 @@ CREATE TABLE ntest (
 ```
 
 # Files
+
+![Objects in this example](Diagram.svg)
+
 - **Test.topic** creates a listening topic `Test` on which data will be received
 - **database.pgsql** declares the postgresql database. ***MUST BE CONFIGURED***
 - **test.namedfeed** feeds incoming data into a table name `Test`
