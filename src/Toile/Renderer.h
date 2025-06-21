@@ -25,7 +25,7 @@ class Renderer;	// Avoid nested includes
 
 #include <vector>
 
-class Renderer : public LuaExec {
+class Renderer : virtual public LuaExec {
 	struct SelGenericSurface *surface;
 	bool fatal;
 
@@ -49,6 +49,7 @@ public:
 	 * -> L : Lua's state
 	 */
 	Renderer( const std::string &file, std::string &where, lua_State *L );
+	Renderer() : surface(NULL), fatal(false){};
 	
 #ifdef DEBUG
 	void dump();
@@ -72,9 +73,9 @@ public:
 
 	/* ***
 	 * Renderer own's 
-	 */
+	 * ***/
 
-	bool exec(); 		// Run the Lua code to build the renderer
+	virtual bool exec(); 		// Run the Lua code to build the renderer
 	void refresh();			// Refresh Painting's own decoration (background)
 	void refreshChild();	// Refresh its child
 	void refreshAll();		// Refresh everything

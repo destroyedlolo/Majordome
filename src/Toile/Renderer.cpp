@@ -32,6 +32,9 @@ void Renderer::readConfigDirective( std::string &l ){
 }
 
 bool Renderer::exec(){	/* From LuaExec::execSync() */
+	if(!this->canRun())
+		return false;
+
 	if(debug)
 		SelLog->Log('D', "Renderer::exec()");
 

@@ -12,6 +12,7 @@
  *      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  *	24/11/2024 - LF - Start of development
+ *	21/06/2025 - v0.01 - LF - Introduce LCD renderer
  */
 
-#define TOILEVERSION 0.0002
+#define TOILEVERSION 0.0100
