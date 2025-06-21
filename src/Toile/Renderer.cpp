@@ -15,7 +15,7 @@
 #include <cstring>
 #include <cassert>
 
-Renderer::Renderer( const std::string &fch, std::string &where, lua_State *L ) : Object(fch, where), LuaExec(fch, where), surface(NULL), fatal(false){
+Renderer::Renderer( const std::string &fch, std::string &where, lua_State *L ) : Object(fch, where), LuaExec(fch, where), fatal(false), surface(NULL){
 	this->loadConfigurationFile(fch, where, L);
 
 	if(d2)

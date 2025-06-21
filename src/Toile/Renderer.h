@@ -26,10 +26,11 @@ class Renderer;	// Avoid nested includes
 #include <vector>
 
 class Renderer : virtual public LuaExec {
-	struct SelGenericSurface *surface;
 	bool fatal;
 
 protected:
+	struct SelGenericSurface *surface;
+
 	/* Read directives.
 	 * These directives may apply to all derivates.
 	 * Facing unknown directive, LuaExec's is called as well.
@@ -49,7 +50,7 @@ public:
 	 * -> L : Lua's state
 	 */
 	Renderer( const std::string &file, std::string &where, lua_State *L );
-	Renderer() : surface(NULL), fatal(false){};
+	Renderer() : fatal(false), surface(NULL){};
 	
 #ifdef DEBUG
 	void dump();

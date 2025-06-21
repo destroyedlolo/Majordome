@@ -34,6 +34,8 @@ public:
 	LCD( const std::string &file, std::string &where, lua_State *L );
 
 	bool exec(); 		// Run the Lua code to validate the renderer
+
+	virtual std::string getTri(){ return "LCD_"; }
 };
 
 #endif

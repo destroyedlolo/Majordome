@@ -4,6 +4,9 @@
 
 #include "LCD.h"
 
+#include <Selene/SelPlug-in/SelLCD/SelLCD.h>
+#include <Selene/SelPlug-in/SelLCD/SelLCDScreen.h>
+
 LCD::LCD( const std::string &fch, std::string &where, lua_State *L ) : Object(fch, where), LuaExec(fch, where), bus_number(1), address(0x27), twolines(false), y11(false){
 	this->loadConfigurationFile(fch, where, L);
 
@@ -58,6 +61,28 @@ bool LCD::exec(){	/* From LuaExec::execSync() */
 	if(rc == boolRetCode::RCfalse)	// Creation rejected
 		return false;
 
-puts("*** Creation");
+	uint16_t verfound;
+	struct SelLCD *SelLCD = (struct SelLCD *)SeleneCore->loadModule("SelLCD", SELLCD_VERSION, &verfound, 'F');
+	if(!SelLCD)
+		return false;
+
+		/* Can be made by a simple cast,
+		 * but these lines make the code more understandable
+		 */
+	SelLCDScreen *lcd = new SelLCDScreen;
+	this->surface = &(lcd->primary.obj);
+
+	if(!SelLCD->Init(lcd, this->bus_number, this->address, this->twolines, this->y11)){
+		SelLog->Log('E', "Can't initialise the screen '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), lua_tostring(L, -1));
+		return false;
+	}
+
+	SelLCD->Clear(lcd);
+	SelLCD->Backlight(lcd, true);	// Backlight on
+	SelLCD->DisplayCtl(lcd, true, false, false);	// On but no cursor
+
+	if(debug)
+		SelLog->Log('D', "LCD::exec() - Succeeded");
+
 	return true;
 }
