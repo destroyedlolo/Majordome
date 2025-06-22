@@ -65,6 +65,12 @@ void Field::feedState( lua_State *L ){
 }
 
 void Field::update(std::string &rs, lua_Number &rn){
+	if(!this->isEnabled()){
+		if(this->isVerbose())
+			SelLog->Log('D', "Field '%s' from '%s' is disabled", this->getNameC(), this->getWhereC());
+		return;
+	}
+
 	this->refresh();		// Refesh background
 
 	if(!rs.empty())
@@ -77,6 +83,12 @@ void Field::update(std::string &rs, lua_Number &rn){
 }
 
 bool Field::execAsync(lua_State *L){
+	if(!this->canRun()){
+		if(this->isVerbose())
+			SelLog->Log('D', "Field '%s' from '%s' is disabled", this->getNameC(), this->getWhereC());
+		return false;
+	}
+
 	LuaExec::boolRetCode rc;
 	lua_Number val;
 	std::string s;
@@ -97,11 +109,11 @@ bool Field::execAsync(lua_State *L){
 			}
 		}
 	
-		if(debug)
+		if(::debug && this->isVerbose())
 			SelLog->Log('T', "[Field '%s'] accepting %.0f", this->getNameC(), val);
 
 		this->update(s, val);
-	} else
+	} else if(this->isVerbose())
 		SelLog->Log('D', "[Field '%s'] Data rejected", this->getNameC());
 
 	lua_close(L);

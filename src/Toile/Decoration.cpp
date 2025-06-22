@@ -54,7 +54,13 @@ void Decoration::readConfigDirective( std::string &l ){
 }
 
 void Decoration::exec(struct SelGenericSurface *srf){	/* From LuaExec::execSync() */
-	if(debug)
+	if(!this->canRun()){
+		if(this->isVerbose())
+			SelLog->Log('D', "Decoration '%s' from '%s' is disabled", this->getNameC(), this->getWhereC());
+		return;
+	}
+
+	if(::debug && this->isVerbose())
 		SelLog->Log('D', "Decoration::exec(%p)", srf);
 
 		/* Put the cursor to its origin
@@ -97,7 +103,7 @@ void Decoration::exec(struct SelGenericSurface *srf){	/* From LuaExec::execSync(
 		/* cleaning */
 	lua_close(L);
 
-	if(debug)
+	if(::debug && this->isVerbose())
 		SelLog->Log('D', "Decoration::exec() - End");
 
 	return;

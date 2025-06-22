@@ -32,10 +32,13 @@ void Renderer::readConfigDirective( std::string &l ){
 }
 
 bool Renderer::exec(){	/* From LuaExec::execSync() */
-	if(!this->canRun())
+	if(!this->canRun()){
+		if(this->isVerbose())
+			SelLog->Log('D', "Renderer '%s' from '%s' is disabled", this->getNameC(), this->getWhereC());
 		return false;
+	}
 
-	if(debug)
+	if(::debug && this->isVerbose())
 		SelLog->Log('D', "Renderer::exec()");
 
 	lua_State *L = luaL_newstate();
@@ -77,7 +80,7 @@ bool Renderer::exec(){	/* From LuaExec::execSync() */
 		/* cleaning */
 	lua_close(L);
 
-	if(debug)
+	if(::debug && this->isVerbose())
 		SelLog->Log('D', "Renderer::exec() - End");
 
 	return true;

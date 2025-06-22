@@ -40,10 +40,6 @@ uint8_t Toile::objectweight( const char *ext ){
 }
 
 bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &where, std::string &ext, lua_State *L){
-/*
-	if(debug)
-		SelLog->Log('D', "Toile::readConfigToile()");
-*/
 
 	if(ext == ".Renderer"){
 		auto tsk = new Renderer( completpath, where, L );
@@ -106,10 +102,6 @@ bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &
 		return true;
 	}
 
-/*
-	if(debug)
-		SelLog->Log('D', "Toile::readConfigToile() false");
-*/
 	return false;
 }
 
