@@ -3,7 +3,7 @@ Create a **[renderer](Renderer.md)** for tiny LCD textual screens like famous **
 Renderers are links to physical devices to build user interfaces (UI) with **Majordome**.
 
 > [!NOTE]
-> Renderers are tightly linked to the underlying hardware. Some changes may be required at OS level, especially on the Raspberry.<br>
+> Renderers are tightly linked to the underlying hardware. Some changes may be required at OS level, especially on the Raspberry. This is particularly true with I2C devices like this kind of screens.<br>
 > In case of trouble, `i2cdetect` will check the screen is seen.
 
 ## Syntax
