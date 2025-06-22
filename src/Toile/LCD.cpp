@@ -7,7 +7,12 @@
 #include <Selene/SelPlug-in/SelLCD/SelLCD.h>
 #include <Selene/SelPlug-in/SelLCD/SelLCDScreen.h>
 
-LCD::LCD( const std::string &fch, std::string &where, lua_State *L ) : Object(fch, where), LuaExec(fch, where), bus_number(1), address(0x27), twolines(false), y11(false){
+#include <cassert>
+
+LCD::LCD( const std::string &fch, std::string &where, lua_State *L ) : Object(fch, where), LuaExec(fch, where),
+	bus_number(1), address(0x27), twolines(false), y11(false),
+	w(0), h(0), clock_pulse(0), clock_process(0)
+	{
 	this->loadConfigurationFile(fch, where, L);
 
 	if(d2)
@@ -33,6 +38,31 @@ void LCD::readConfigDirective( std::string &l ){
 		this->y11 = true;
 		if(::verbose)
 			SelLog->Log('C', "\t\tCharacters are 11 pixels hight");
+	} else if(!(arg = striKWcmp( l, "-->> Timing=" )).empty()){
+		std::istringstream iss(arg);
+		char sep;
+		if(!(iss >> this->clock_pulse >> sep >> this->clock_process && sep == ',' && iss.eof())){
+			SelLog->Log('F',"-->> Timing argument is not recognized");
+			exit(EXIT_FAILURE);
+		}
+		
+		if(!this->clock_pulse)
+			SelLog->Log('F',"-->> Timing's clock_pulse can't be null : IGNORING ");
+		else if(::verbose)
+			SelLog->Log('C', "\t\tTiming is set to %lu,%lu", this->clock_pulse, this->clock_process);
+	} else if(!(arg = striKWcmp( l, "-->> Size=" )).empty()){
+		std::istringstream iss(arg);
+		char sep;
+		if(!(iss >> this->w >> sep >> this->h && sep == ',' && iss.eof())){
+			SelLog->Log('F',"-->> Size argument is not recognized");
+			exit(EXIT_FAILURE);
+		}
+		
+		if(!this->w || this->w > 1024 || !this->h || this->h > 1024){
+			SelLog->Log('F',"-->> Size : invalid size : IGNORING ");
+			this->w = 0;
+		} else if(::verbose)
+			SelLog->Log('C', "\t\tSize is set to %lu,%lu", this->w, this->h);
 	} else
 		this->Renderer::readConfigDirective(l);
 }
@@ -70,11 +100,22 @@ bool LCD::exec(){	/* From LuaExec::execSync() */
 		 * but these lines make the code more understandable
 		 */
 	SelLCDScreen *lcd = new SelLCDScreen;
+	assert(lcd);
 	this->surface = &(lcd->primary.obj);
 
 	if(!SelLCD->Init(lcd, this->bus_number, this->address, this->twolines, this->y11)){
 		SelLog->Log('E', "Can't initialise the screen '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), lua_tostring(L, -1));
 		return false;
+	}
+
+	if(this->clock_pulse){
+		lcd->clock_pulse = this->clock_pulse;
+		lcd->clock_process = this->clock_process;
+	}
+
+	if(this->w){
+		lcd->primary.w = this->w;
+		lcd->primary.h = this->h;
 	}
 
 	SelLCD->Clear(lcd);

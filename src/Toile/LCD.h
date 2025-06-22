@@ -15,6 +15,10 @@ class LCD : virtual public Renderer, virtual public LuaExec {
 	bool twolines;
 	bool y11;
 
+	uint32_t w,h;	// Screen size
+	useconds_t clock_pulse;
+	useconds_t clock_process;
+
 protected:
 	/* Read directives.
 	 * These directives may apply to all derivates.
