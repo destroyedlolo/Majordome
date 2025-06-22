@@ -68,7 +68,7 @@ void LCD::readConfigDirective( std::string &l ){
 }
 
 bool LCD::exec(){	/* From LuaExec::execSync() */
-	if(debug)
+	if(::debug && this->isVerbose())
 		SelLog->Log('D', "LCD::exec()");
 
 	if(!this->canRun())
@@ -122,7 +122,7 @@ bool LCD::exec(){	/* From LuaExec::execSync() */
 	SelLCD->Backlight(lcd, true);	// Backlight on
 	SelLCD->DisplayCtl(lcd, true, false, false);	// On but no cursor
 
-	if(debug)
+	if(::debug && this->isVerbose())
 		SelLog->Log('D', "LCD::exec() - Succeeded");
 
 	return true;

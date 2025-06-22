@@ -15,4 +15,4 @@
  *	21/06/2025 - v0.01 - LF - Introduce LCD renderer
  */
 
-#define TOILEVERSION 0.0100
+#define TOILEVERSION 0.0200
