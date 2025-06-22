@@ -1,6 +1,10 @@
 # .LCD
-Create a [renderer](Renderer.md) for tiny LCD textual screens like famous **16x2**, **20x4**, ...).<br>
+Create a **[renderer](Renderer.md)** for tiny LCD textual screens like famous **16x2**, **20x4**, ...).<br>
 Renderers are links to physical devices to build user interfaces (UI) with **Majordome**.
+
+> [!NOTE]
+> Renderers are tightly linked to the underlying hardware. Some changes may be required at OS level, especially on the Raspberry.<br>
+> In case of trouble, `i2cdetect` will check the screen is seen.
 
 ## Syntax
 
@@ -17,55 +21,65 @@ See [this page](Headers%20and%20Shared%20Directives.md#general-directives).
 See [this page](Headers%20and%20Shared%20Directives.md#dependancies)
 
 ### LCD owns
+#### -->> I2CBus 
+The I2C bus the screen is connected to.<br>
+Default is `1`.
+
+#### -->> I2CAddress
+Address of the screen on the I2C bus.<br>
+Default is `0x27`
+
+#### -->> MultiLines
+Tell the screen has more than one line.
+
+#### -->> 11px
+Characters on the screen are 11 pixels high.
+
+#### -->> Timing
+LCD screens need some delay to process incoming data. The default one is very conservative but leads to a slow screen update. Playing with these parameters can improve screen refresh rate.
+
+Example:
+```
+-->> Timing=500,0
+```
+
+That will set 
+
+- **500 µSeconds** between each data sending
+- **0 µSeconds** to process the data (my screen is fast enough to process data during the next arrival)
+
+#### -->> Size
+Set the LCD's size in pixels.<br>
+```
+-->> Size=16,2
+```
+**16,2** is the default value if unset.
+
 #### -->> fatal
 If set, failure of this renderer script will crash Majordome.
 
 ## at Lua side
 ### Lua script
-The script is expected to return a Séléné renderer object. Any other return (or no return at all) is considered a script failure.
-
-> [!NOTE]
-> Renderers are tightly linked to Selene and the underlying hardware. Most of the time, it requires some customizations at the operating system level and access to Séléné administrative API.
+The optional Lua script is expected to return a false if the renderer doesn't have to be created.
 
 ## Examples
-This example of code is creating a renderer for a textual LCD 16x2 screen (well, work as well with any size).
 
 ```lua
--- LCD 1602 renderer
+-->> desc=Attach an LCD screen
 --
--- Name of this renderer
--- if not set, takes the filename
---->> name=Toto
+---------
+-- Device related
+---------
 --
--- Failure will crash Majordome
+-->> I2CBus=1
+-->> I2CAddress=0x27
+-->> MultiLines
+-->> Timing=500,0
+-->> Size=16,2
+--
 -->> Fatal
 --
--- If remove some trace
---->> quiet
-
--- We need administrative APIs to load an additional module : SelLCD.
-Selene.exposeAdminAPI()
-Selene.Use("SelLCD")
-
--- Mandatory directive to
--- - rethink Séléné late binding dependencies
--- - exposes Séléné API within this script
-Majordome.LetsGo() -- ensure late building dependencies
-
---
--- Hereafter, a typical Séléné code to link with the LCD screen.
---
-
--- Initialize the screen handle.
--- Suitable for my BananaPI under Arch/Gentoo
-local lcd = SelLCD.Init(1, 0x27, true, false)
-if not lcd then
-	lcd = SelLCD.Init(2, 0x27, true, false)
-end
-lcd:SetTiming(500, 0)
-
-return lcd
 ```
 
-> [!TIP]
-> This script is also the perfect place for one shot initialization, like characters' customization. 
+> [!CAUTION]
+> Don't forget the screen is not yet initialized when this script is called.
