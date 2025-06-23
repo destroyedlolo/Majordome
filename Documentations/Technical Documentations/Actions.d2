@@ -84,6 +84,29 @@ diagram {
 	tracker -> Database.archive : whenDone\nwhenStopped\nwhenChanged
 	Database.archive -> rendezvous : SuccessRDV\nFailRDV
 
+	Toile {
+		style {
+			border-radius: 5
+			stroke-dash: 2
+		}
+
+		Renderer {
+			class: [ TRenderer ; Lua ]
+		}
+
+		Decoration {
+			class: [ TDecoration ; Lua ]
+		}
+
+		Painting {
+			class: TPainting
+		}
+
+		Field {
+			class: [ TField ; Lua ]
+		}
+	}
+
 	(topic -> *)[*].class: Data
 	(* <- topic)[*].class: Data
 	(topic -> *.*)[*].class: Data
@@ -103,6 +126,7 @@ diagram {
 	(* <- rendezvous)[*].class: NoData
 	(rendezvous -> *.*)[*].class: NoData
 	(*.* <- rendezvous)[*].class: NoData
+
 }
 
 # """
