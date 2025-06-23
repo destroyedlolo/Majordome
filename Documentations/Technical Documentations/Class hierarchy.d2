@@ -154,19 +154,39 @@ Toile: Toile Add On {
 			class : TPainting
 		}
 	}
-	_.LuaExec -> Renderer 
+	_.LuaExec -> Renderer
+
+	LCD {
+		class: [ TLCD; Lua ]
+
+		DecorationsList {
+			style.multiple: true
+			class : TDecoration
+		}
+
+		PaintingsList {
+			style.multiple: true
+			class : TPainting
+		}
+	}
+
+	Renderer -> LCD {
+		class: inherite
+	}
 
 	Decoration {
 		class: [ TDecoration ; Lua ]
 	}
 	_.LuaExec -> Decoration 
 	Decoration -> Renderer.DecorationsList
+	Decoration -> LCD.DecorationsList
 
 	Painting {
 		class: TPainting
 	}
 	_.Object -> Painting
 	Painting -> Renderer.PaintingsList
+	Painting -> LCD.PaintingsList
 
 	Field {
 		class: [ TField ; Lua ]
