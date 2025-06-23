@@ -97,14 +97,23 @@ diagram {
 		Decoration {
 			class: [ TDecoration ; Lua ]
 		}
+		Decoration -> Renderer : ApplyOnRenderer
+		Decoration -> Painting : ApplyOn
 
 		Painting {
 			class: TPainting
 		}
+		Painting -> Renderer : Renderer Parent
 
 		Field {
 			class: [ TField ; Lua ]
 		}
+		_.topic -> Field : listen
+		_.rendezvous -> Field : waitfor
+		_.timer-> Field : when
+		_.tracker -> Field : whenDone\nwhenStopped\nwhenChanged
+		Field -> Renderer : ApplyOnRenderer
+		Field -> Painting : ApplyOn
 	}
 
 	(topic -> *)[*].class: Data
