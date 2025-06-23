@@ -98,11 +98,17 @@ void Painting::dump(){
 #endif
 
 void Painting::exec(){
-	if(debug)
+	if(!this->isEnabled()){
+		if(this->isVerbose())
+			SelLog->Log('D', "Painting '%s' from '%s' is disabled", this->getNameC(), this->getWhereC());
+		return;
+	}
+
+	if(::debug && this->isVerbose())
 		SelLog->Log('D', "Painting::exec()");
 
 	if(this->parentR){
-		if(debug)
+		if(::debug && this->isVerbose())
 			SelLog->Log('D', "[Painting \"%s\"] ParentR's type : '%s'", this->name.c_str(), this->parentR->getSurface()->cb->LuaObjectName());
 		if(!this->geometry.w || !this->geometry.h){	// size not set
 			uint32_t w,h;
@@ -134,11 +140,17 @@ void Painting::exec(){
 		exit(EXIT_FAILURE);
 	}
 
-	if(debug)
+	if(::debug && this->isVerbose())
 		SelLog->Log('D', "Painting::exec() - End");
 }
 
 void Painting::refresh(){
+	if(!this->isEnabled()){
+		if(this->isVerbose())
+			SelLog->Log('D', "Painting '%s' from '%s' is disabled", this->getNameC(), this->getWhereC());
+		return;
+	}
+
 	this->getSurface()->cb->Clear(this->getSurface());
 	for(auto &d: this->DecorationsList)
 		d->exec(*this);
@@ -153,6 +165,12 @@ void Painting::refreshChild(){
 }
 
 void Painting::refreshAll(){
+	if(!this->isEnabled()){
+		if(this->isVerbose())
+			SelLog->Log('D', "Painting '%s' from '%s' is disabled", this->getNameC(), this->getWhereC());
+		return;
+	}
+
 	this->refresh();
 	this->refreshChild();
 }

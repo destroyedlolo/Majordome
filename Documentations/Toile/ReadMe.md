@@ -5,7 +5,8 @@ Toile is an optional module to create smart dashboards based on [Séléné](http
 
 # Objects handled by Toile
 
-- **[Renderer](Renderer.md)** : Link to physical devices to build user interfaces (UI).
+- **[Renderer](Renderer.md)** : Generic link to physical devices to build user interfaces (UI).
+  - **[LCD](LCD.md)** : A renderer for tiny I2C textual LCD screen, avoiding the need of low level coding.
 - **[Painting](Painting.md)** : Subpart of a surface to paint on.
 - **[Decoration](Decoration.md)** : task to be called every time a renderer/painting needs to be refreshed.
 <!--

@@ -13,12 +13,9 @@ Consequently, `--->>` are commented out commands (notice the 3 dashes).
 ## Directives
 
 ### Generals
-
-#### -->> name=
-Unique name to identify the Renderer. If not set, uses the filename.
-`-->> name=toto`
-#### -->> quiet
-Remove some trace. This option is useful to avoid logging of very noisy topics.
+See [this page](Headers%20and%20Shared%20Directives.md#general-directives).
+### Dependancies
+See [this page](Headers%20and%20Shared%20Directives.md#dependancies)
 
 ### Renderer owns
 #### -->> fatal

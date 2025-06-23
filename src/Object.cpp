@@ -9,14 +9,15 @@
 #include <cstring>	// strerror()
 
 Object::Object(const std::string &fch, std::string &where) : disabled(false), quiet(false){
+	this->extrName( fch, this->name );
+	this->where = where;
 }
 
 void Object::loadConfigurationFile(const std::string &fch, std::string &where, std::stringstream *buffer){
 	if(::verbose)
 		SelLog->Log('L', "\t'%s'", fch.c_str());
 
-	this->extrName( fch, name );
-	this->name = name;
+	this->extrName( fch, this->name );
 	this->where = where;
 
 		/*

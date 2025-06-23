@@ -3,12 +3,13 @@
 
 #include "Toile.h"
 
-#if 0	/* TODO */
+#if 0	/* Not needed as included by Config.h */
 #include "Renderer.h"
 #include "Painting.h"
 #include "Decoration.h"
 #include "Field.h"
 #endif
+#include "LCD.h"
 
 #include "../Helpers.h"
 
@@ -24,6 +25,7 @@
  */
 static const SubConfigDir::extweight fileext[] = {
 	{ ".Renderer", 0xc0 },
+	{ ".LCD", 0xc0 },
 	{ ".Painting", 0x80 },
 	{ ".Field", 0x80 },
 	{ ".Decoration", 0x60 }
@@ -38,10 +40,6 @@ uint8_t Toile::objectweight( const char *ext ){
 }
 
 bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &where, std::string &ext, lua_State *L){
-/*
-	if(debug)
-		SelLog->Log('D', "Toile::readConfigToile()");
-*/
 
 	if(ext == ".Renderer"){
 		auto tsk = new Renderer( completpath, where, L );
@@ -54,6 +52,20 @@ bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &
 		} else
 			cfg.RendererList.insert( std::make_pair(tsk->getName(), tsk) );
 
+		return true;
+	} else if(ext == ".LCD"){
+			/* LCD is basically a renderer.
+			 * So, but the constructor, the remaining code is the same
+			 */
+		auto tsk = new LCD( completpath, where, L );
+		assert(tsk);
+	
+		RendererCollection::iterator prev;
+		if((prev = cfg.RendererList.find(tsk->getName())) != cfg.RendererList.end()){
+			SelLog->Log('F', "Renderer '%s' is defined multiple times (previous one '%s')", tsk->getName().c_str(), prev->second->getWhere().c_str());
+			exit(EXIT_FAILURE);
+		} else
+			cfg.RendererList.insert( std::make_pair(tsk->getName(), tsk) );
 		return true;
 	} else if(ext == ".Decoration"){
 		auto paint = new Decoration( completpath, where, L );
@@ -90,10 +102,6 @@ bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &
 		return true;
 	}
 
-/*
-	if(debug)
-		SelLog->Log('D', "Toile::readConfigToile() false");
-*/
 	return false;
 }
 

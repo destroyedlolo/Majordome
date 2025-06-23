@@ -15,7 +15,7 @@
 #include <cstring>
 #include <cassert>
 
-Renderer::Renderer( const std::string &fch, std::string &where, lua_State *L ) : Object(fch, where), LuaExec(fch, where), surface(NULL), fatal(false){
+Renderer::Renderer( const std::string &fch, std::string &where, lua_State *L ) : Object(fch, where), LuaExec(fch, where), fatal(false), surface(NULL){
 	this->loadConfigurationFile(fch, where, L);
 
 	if(d2)
@@ -32,7 +32,13 @@ void Renderer::readConfigDirective( std::string &l ){
 }
 
 bool Renderer::exec(){	/* From LuaExec::execSync() */
-	if(debug)
+	if(!this->canRun()){
+		if(this->isVerbose())
+			SelLog->Log('D', "Renderer '%s' from '%s' is disabled", this->getNameC(), this->getWhereC());
+		return false;
+	}
+
+	if(::debug && this->isVerbose())
 		SelLog->Log('D', "Renderer::exec()");
 
 	lua_State *L = luaL_newstate();
@@ -74,7 +80,7 @@ bool Renderer::exec(){	/* From LuaExec::execSync() */
 		/* cleaning */
 	lua_close(L);
 
-	if(debug)
+	if(::debug && this->isVerbose())
 		SelLog->Log('D', "Renderer::exec() - End");
 
 	return true;

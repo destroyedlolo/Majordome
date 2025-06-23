@@ -16,6 +16,9 @@ Shutdown::Shutdown(const std::string &fch, std::string &where, lua_State *L) : O
 }
 
 void Shutdown::exec( void ){
+	if(!this->canRun())
+		return;
+
 	lua_State *L = createLuaState();
 	if(L){
 		threadEnvironment(L);	// Feed environment with generals
