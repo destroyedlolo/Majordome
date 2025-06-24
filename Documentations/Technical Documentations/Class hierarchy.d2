@@ -142,6 +142,7 @@ Toile: Toile Add On {
 	style.stroke-dash: 6
 
 	Renderer {
+		tooltip: "Low level renderer"
 		class: [ TRenderer ; Lua ]
 
 		DecorationsList {
@@ -156,25 +157,29 @@ Toile: Toile Add On {
 	}
 	_.LuaExec -> Renderer
 
+
 	LCD {
+		tooltip: "Renderer for LCD textual screen"
 		class: [ TLCD; Lua ]
 	}
-
 	Renderer -> LCD
 
 	Decoration {
+		tooltip: "Decoration of an object"
 		class: [ TDecoration ; Lua ]
 	}
 	_.LuaExec -> Decoration 
 	Decoration -> Renderer.DecorationsList
 
 	Painting {
+		tooltip: "a.k.a subsurface"
 		class: TPainting
 	}
 	_.Object -> Painting
 	Painting -> Renderer.PaintingsList
 
 	Field {
+		tooltip: "Display information"
 		class: [ TField ; Lua ]
 		icon: https://icons.terrastruct.com/essentials/021-view.svg
 	}

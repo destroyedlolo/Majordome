@@ -91,21 +91,25 @@ diagram {
 		}
 
 		Renderer {
+			tooltip: "Low level renderer"
 			class: [ TRenderer ; Lua ]
 		}
 
 		Decoration {
+			tooltip: "Decoration of an object"
 			class: [ TDecoration ; Lua ]
 		}
 		Decoration -> Renderer : ApplyOnRenderer
 		Decoration -> Painting : ApplyOn
 
 		Painting {
+			tooltip: "a.k.a subsurface"
 			class: TPainting
 		}
 		Painting -> Renderer : Renderer Parent
 
 		Field {
+			tooltip: "Display information"
 			class: [ TField ; Lua ]
 		}
 		_.topic -> Field : listen
