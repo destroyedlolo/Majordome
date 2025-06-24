@@ -141,6 +141,10 @@ pgsql : Database Add On {
 Toile: Toile Add On {
 	style.stroke-dash: 6
 
+	ToileObject {
+		tooltip: "Toile's objects common attributes"
+	}
+
 	Renderer {
 		tooltip: "Low level renderer"
 		class: [ TRenderer ; Lua ]
@@ -156,7 +160,7 @@ Toile: Toile Add On {
 		}
 	}
 	_.LuaExec -> Renderer
-
+	ToileObject -> Renderer
 
 	LCD {
 		tooltip: "Renderer for LCD textual screen"
@@ -170,6 +174,7 @@ Toile: Toile Add On {
 	}
 	_.LuaExec -> Decoration 
 	Decoration -> Renderer.DecorationsList
+	ToileObject -> Decoration
 
 	Painting {
 		tooltip: "a.k.a subsurface"
@@ -177,6 +182,7 @@ Toile: Toile Add On {
 	}
 	_.Object -> Painting
 	Painting -> Renderer.PaintingsList
+	ToileObject -> Painting
 
 	Field {
 		tooltip: "Display information"
