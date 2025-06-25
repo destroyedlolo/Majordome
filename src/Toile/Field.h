@@ -6,10 +6,11 @@
 #ifndef FIELD_H
 #define FIELD_H
 
+#include "ToileObject.h"
 #include "Painting.h"
 #include "../Handler.h"
 
-class Field : virtual public Object, public Painting, public Handler {
+class Field : virtual public Object, public Painting, public Handler, public ToileObject {
 protected:
 	virtual void feedState(lua_State *L);
 

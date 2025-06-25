@@ -9,13 +9,14 @@
 
 class Decoration;	// Avoid nested includes
 
+#include "ToileObject.h"
 #include "../Helpers.h"
 #include "../Object.h"
 #include "../LuaExec.h"
 
 #include <Selene/SelGenericSurface.h>
 
-class Decoration : public LuaExec {
+class Decoration : public LuaExec, public ToileObject {
 public:
 	/* constructor from file
 	 * -> file : file to load
@@ -32,7 +33,7 @@ public:
 	 * -> l : directive line to parse
 	 * -> nameused : is the name already used ?
 	 */
-	void readConfigDirective( std::string &l );
+	bool readConfigDirective( std::string &l );
 
 	/* Run the Lua code to build the renderer */
 	void exec(struct SelGenericSurface *);

@@ -13,7 +13,7 @@
 #include <cstring>
 #include <cassert>
 
-Field::Field( const std::string &fch, std::string &where, lua_State *L ) : Object(fch, where), Painting(fch, where), Handler(fch, where){
+Field::Field( const std::string &fch, std::string &where, lua_State *L ) : Object(fch, where), Painting(fch, where), Handler(fch, where), ToileObject(){
 	this->loadConfigurationFile(fch, where, L);
 
 	if(d2)
