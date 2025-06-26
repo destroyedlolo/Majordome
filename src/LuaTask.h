@@ -27,7 +27,7 @@ public:
 	 */
 	LuaTask( const std::string &file, std::string &where, lua_State *L );
 
-	virtual void readConfigDirective( std::string &l );
+	virtual bool readConfigDirective( std::string &l );
 
 	void setOnce( bool v ){ this->once = v; }
 	bool getOnce( void ){ return this->once; }

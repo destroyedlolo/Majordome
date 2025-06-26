@@ -15,7 +15,7 @@ LuaTask::LuaTask( const std::string &fch, std::string &where, lua_State *L ) : O
 		fd2 << this->getFullId() << ".class: Task" << std::endl;
 }
 
-void LuaTask::readConfigDirective( std::string &l ){
+bool LuaTask::readConfigDirective( std::string &l ){
 	std::string arg;
 
 	if( l == "-->> RunAtStartup" ){
@@ -31,7 +31,9 @@ void LuaTask::readConfigDirective( std::string &l ){
 	else if(this->readConfigDirectiveNoData(l))
 		;
 	else
-		this->LuaExec::readConfigDirective(l);
+		return this->LuaExec::readConfigDirective(l);
+
+	return true;
 }
 
 	/* ***

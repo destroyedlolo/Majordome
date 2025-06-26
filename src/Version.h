@@ -45,5 +45,5 @@
  *	15/06/2025 - v6.11 - LF - Expose MajordomeMQTTTopic.match()
  */
 
-#define VERSION 6.1101
+#define VERSION 6.1102
 #define COPYRIGHT "Majordome (c) L.Faillie 2018-2025"

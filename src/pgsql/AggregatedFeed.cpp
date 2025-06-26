@@ -32,7 +32,7 @@ AggregatedFeed::AggregatedFeed(const std::string &fch, std::string &where, lua_S
 	/* We can't reuse Feed's as we are not waiting for topics,
 	 * only events.
 	 */
-void AggregatedFeed::readConfigDirective( std::string &l ){
+bool AggregatedFeed::readConfigDirective( std::string &l ){
 	std::string arg;
 
 	if(!(arg = striKWcmp( l, "-->> table=" )).empty()){
@@ -134,8 +134,9 @@ void AggregatedFeed::readConfigDirective( std::string &l ){
 	else if(this->readConfigDirectiveNoData(l))
 		;
 	else 
-		this->LuaExec::readConfigDirective(l);
+		return this->LuaExec::readConfigDirective(l);
 
+	return true;
 }
 
 void AggregatedFeed::feedState( lua_State *L ){

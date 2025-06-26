@@ -21,7 +21,7 @@ class Feed : virtual public mpgConnection, virtual public Handler {
 	bool getNumerical(void){ return this->numerical; };
 #endif
 protected:
-	void readConfigDirective( std::string &l );
+	bool readConfigDirective( std::string &l );
 
 	std::string TableName;
 protected:

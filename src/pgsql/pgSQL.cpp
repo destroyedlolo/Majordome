@@ -17,7 +17,7 @@ pgSQL::pgSQL(const std::string &fch, std::string &where) : Object(fch, where) {
 		fd2 << this->getFullId() << ".class: Database" << std::endl;
 }
 
-void pgSQL::readConfigDirective( std::string &l ){
+bool pgSQL::readConfigDirective( std::string &l ){
 	std::string arg;
 
 	if(!(arg = striKWcmp( l, "-->> pgConnectionstring=" )).empty()){
@@ -26,7 +26,9 @@ void pgSQL::readConfigDirective( std::string &l ){
 		if(::verbose)
 			SelLog->Log('C', "\t\tConnexion string : '%s'", this->conninfo.c_str());
 	} else 
-		this->Object::readConfigDirective(l);
+		return this->Object::readConfigDirective(l);
+
+	return true;
 }
 
 	/*****

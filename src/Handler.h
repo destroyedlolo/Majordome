@@ -14,7 +14,7 @@ protected :
 	Handler(const std::string &fch, std::string &where) : LuaExec(fch, where) {};
 	Handler() = default;
 
-	virtual void readConfigDirective(std::string &l);
+	virtual bool readConfigDirective(std::string &l);
 	virtual bool readConfigDirectiveNoData(std::string &l);	// Linked to events only
 	virtual bool readConfigDirectiveData(std::string &l);	// Linked to events that are providing data
 public :

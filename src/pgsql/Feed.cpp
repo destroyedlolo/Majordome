@@ -20,7 +20,7 @@ Feed::Feed(const std::string &fch, std::string &where, lua_State *L): Object(fch
 	}
 }
 
-void Feed::readConfigDirective( std::string &l ){
+bool Feed::readConfigDirective( std::string &l ){
 	std::string arg;
 
 	if(!(arg = striKWcmp( l, "-->> table=" )).empty()){
@@ -50,7 +50,9 @@ void Feed::readConfigDirective( std::string &l ){
 	else if(this->readConfigDirectiveNoData(l))
 		;
 	else 
-		this->LuaExec::readConfigDirective(l);
+		return this->LuaExec::readConfigDirective(l);
+
+	return true;
 }
 
 void Feed::feedState( lua_State *L ){

@@ -17,7 +17,7 @@ class MinMax : public Handler {
 	size_t nbre;	// Number of handled values
 	lua_Number sum;
 
-	virtual void readConfigDirective( std::string &l );
+	virtual bool readConfigDirective( std::string &l );
 	virtual void feedState(lua_State *L);
 
 public:
