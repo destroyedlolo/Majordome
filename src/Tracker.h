@@ -19,7 +19,7 @@ class Tracker : public Handler, virtual public HandlersExecutor {	// HandlersExe
 	HandlerVector stoppingHandlers;	// Handlers to launch when stopping the tracker
 	HandlerVector changingHandlers;	// Handlers to launch when the tracker's status is changing
 
-	virtual void readConfigDirective( std::string &l );
+	virtual bool readConfigDirective( std::string &l );
 
 public:
 	enum _status {

@@ -28,7 +28,7 @@ public:
 	std::unordered_map<std::vector<std::string>, lua_Number, MKuMapH> sum;
 
 private:
-	virtual void readConfigDirective( std::string &l );
+	virtual bool readConfigDirective( std::string &l );
 	virtual void feedState(lua_State *L);
 
 	bool keysSanityCheck(const std::vector<std::string> &arg){ return(arg.size() == this->nk); }

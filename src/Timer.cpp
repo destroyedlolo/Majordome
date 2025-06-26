@@ -15,7 +15,7 @@ Timer::Timer( const std::string &fch, std::string &where ) : Object(fch, where),
 		fd2 << this->getFullId() << ".class: Timer" << std::endl;
 }
 
-void Timer::readConfigDirective(std::string &l){
+bool Timer::readConfigDirective(std::string &l){
 	std::string arg;
 
 	if(!(arg = striKWcmp( l, "-->> at=" )).empty()){
@@ -37,7 +37,9 @@ void Timer::readConfigDirective(std::string &l){
 		if(::verbose)
 			SelLog->Log('C', "\t\tRun if over");
  	} else 
-		this->Event::readConfigDirective(l);
+		return this->Event::readConfigDirective(l);
+
+	return true;
 }
 
 void Timer::setEvery( unsigned long v ){

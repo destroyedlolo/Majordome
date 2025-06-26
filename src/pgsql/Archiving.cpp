@@ -16,7 +16,7 @@ Archiving::Archiving(const std::string &fch, std::string &where) : Object(fch, w
 		fd2 << this->getFullId() << ".class: Archiving" << std::endl;
 }
 
-void Archiving::readConfigDirective( std::string &l ){
+bool Archiving::readConfigDirective( std::string &l ){
 	std::string arg;
 
 	if(!(arg = striKWcmp( l, "-->> Database=" )).empty()){
@@ -119,7 +119,9 @@ void Archiving::readConfigDirective( std::string &l ){
 	} else if(this->readConfigDirectiveNoData(l))
 		;
 	else
-		this->Object::readConfigDirective(l);
+		return this->Object::readConfigDirective(l);
+
+	return true;
 }
 
 bool Archiving::internalExec(void){

@@ -31,11 +31,12 @@ protected:
 
 		/* Read configuration directive
 		 * l -> string to read
+		 * <- was the option recognized ?
 		 *
 		 * NOTEZ-BIEN : Object's one will fail if the option is not recognized.
 		 * Consequently, it has to be called lastly.
 		 */
-	virtual void readConfigDirective(std::string &l);
+	virtual bool readConfigDirective(std::string &l);
 
 	virtual std::string getTri() = 0;	// Get type's trigram (needed for d2)
 public:

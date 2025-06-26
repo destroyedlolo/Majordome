@@ -79,7 +79,7 @@ protected:
 	void addNeededNamedFeed( std::string t ){ this->needed_namedfeed.Add(t); }
 #endif
 
-	virtual void readConfigDirective( std::string &l );
+	virtual bool readConfigDirective( std::string &l );
 
 protected:
 	LuaExec() = default;

@@ -12,7 +12,7 @@ Purge::Purge(const std::string &fch, std::string &where) : Object(fch, where), H
 		fd2 << this->getFullId() << ".class: Purge" << std::endl;
 }
 
-void Purge::readConfigDirective( std::string &l ){
+bool Purge::readConfigDirective( std::string &l ){
 	std::string arg;
 
 	if(!(arg = striKWcmp( l, "-->> Database=" )).empty()){
@@ -65,7 +65,9 @@ void Purge::readConfigDirective( std::string &l ){
 	} else if(this->readConfigDirectiveNoData(l))
 		;
 	else
-		this->Object::readConfigDirective(l);
+		return this->Object::readConfigDirective(l);
+
+	return true;
 }
 
 const char *Purge::getTableName(void){

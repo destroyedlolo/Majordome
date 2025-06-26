@@ -29,9 +29,9 @@ lua_State *Handler::prepareExec(void){
 	return L;
 }
 
-void Handler::readConfigDirective(std::string &l){
+bool Handler::readConfigDirective(std::string &l){
 		/* No specific directive */
-	this->LuaExec::readConfigDirective(l);
+	return this->LuaExec::readConfigDirective(l);
 }
 
 bool Handler::readConfigDirectiveNoData(std::string &l){
