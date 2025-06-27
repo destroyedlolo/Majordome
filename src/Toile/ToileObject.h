@@ -6,9 +6,11 @@
 #ifndef TOILEOBJECT_H
 #define TOILEOBJECT_H
 
+#include "../Object.h"
+
 #include <string>
 
-class ToileObject {
+class ToileObject : virtual public Object {
 	bool visible;
 
 protected:

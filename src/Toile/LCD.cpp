@@ -19,7 +19,7 @@ LCD::LCD( const std::string &fch, std::string &where, lua_State *L ) : Object(fc
 		fd2 << this->getFullId() << ".class: LCD" << std::endl;
 }
 
-void LCD::readConfigDirective( std::string &l ){
+bool LCD::readConfigDirective( std::string &l ){
 	std::string arg;
 
 	if(!(arg = striKWcmp( l, "-->> I2CBus=" )).empty()){
@@ -64,7 +64,9 @@ void LCD::readConfigDirective( std::string &l ){
 		} else if(::verbose)
 			SelLog->Log('C', "\t\tSize is set to %lu,%lu", this->w, this->h);
 	} else
-		this->Renderer::readConfigDirective(l);
+		return this->Renderer::readConfigDirective(l);
+
+	return true;
 }
 
 bool LCD::exec(){	/* From LuaExec::execSync() */

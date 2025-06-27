@@ -18,7 +18,7 @@ bool ToileObject::readConfigDirective(std::string &l){
 	if( l == "-->> hidden" ){
 		if(::verbose)
 			SelLog->Log('C', "\t\tHidden");
-		this->visiblity = false;
+		this->visible = false;
 		return true;
 	} else
 		return false;

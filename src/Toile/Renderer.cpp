@@ -22,13 +22,15 @@ Renderer::Renderer( const std::string &fch, std::string &where, lua_State *L ) :
 		fd2 << this->getFullId() << ".class: Renderer" << std::endl;
 }
 
-void Renderer::readConfigDirective( std::string &l ){
+bool Renderer::readConfigDirective( std::string &l ){
 	if( l == "-->> Fatal" ){
 		if(::verbose)
 			SelLog->Log('C', "\t\tFailure is fatal");
 		this->fatal = true;
 	} else
-		this->LuaExec::readConfigDirective(l);
+		return this->LuaExec::readConfigDirective(l);
+	
+	return true;
 }
 
 bool Renderer::exec(){	/* From LuaExec::execSync() */

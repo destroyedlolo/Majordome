@@ -15,11 +15,6 @@
 class Config;
 class Painting;
 class Decoration;
-/*
-class Renderer;	// Avoid nested includes
-#include "Painting.h"
-#include "Decoration.h"
-*/
 
 #include <Selene/SelGenericSurface.h>
 
@@ -37,7 +32,7 @@ protected:
 	 *
 	 * -> l : directive line to parse
 	 */
-	void readConfigDirective( std::string &l );
+	bool readConfigDirective( std::string &l );
 
 public:
 	std::vector<Decoration *> DecorationsList;	// List of decorations to apply

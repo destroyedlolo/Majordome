@@ -10,7 +10,7 @@
 #include "Painting.h"
 #include "../Handler.h"
 
-class Field : virtual public Object, public Painting, public Handler, public ToileObject {
+class Field : virtual public Object, virtual public ToileObject, virtual public Painting, public Handler {
 protected:
 	virtual void feedState(lua_State *L);
 
@@ -26,7 +26,7 @@ public:
 	 * -> l : directive line to parse
 	 * -> nameused : is the name already used ?
 	 */
-	void readConfigDirective( std::string &l );
+	bool readConfigDirective( std::string &l );
 
 		/* Executable */
 	virtual bool execAsync(lua_State *L);	// Overloading to handle MinMax data feeding

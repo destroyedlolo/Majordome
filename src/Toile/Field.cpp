@@ -13,7 +13,7 @@
 #include <cstring>
 #include <cassert>
 
-Field::Field( const std::string &fch, std::string &where, lua_State *L ) : Object(fch, where), Painting(fch, where), Handler(fch, where), ToileObject(){
+Field::Field( const std::string &fch, std::string &where, lua_State *L ) : Object(fch, where), Painting(fch, where), Handler(fch, where){
 	this->loadConfigurationFile(fch, where, L);
 
 	if(d2)
@@ -35,7 +35,7 @@ Field::Field( const std::string &fch, std::string &where, lua_State *L ) : Objec
 	}
 }
 
-void Field::readConfigDirective( std::string &l ){
+bool Field::readConfigDirective( std::string &l ){
 	std::string arg;
 	if(!(arg = striKWcmp( l, "-->> Sample=" )).empty()){
 		this->geometry.w = arg.length();
@@ -48,7 +48,9 @@ void Field::readConfigDirective( std::string &l ){
 	else if(this->readConfigDirectiveNoData(l))
 		;
 	else
-		this->LuaExec::readConfigDirective(l);
+		return this->LuaExec::readConfigDirective(l);
+
+	return true;
 }
 
 void Field::feedState( lua_State *L ){
