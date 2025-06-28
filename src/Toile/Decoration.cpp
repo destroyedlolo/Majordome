@@ -49,12 +49,17 @@ bool Decoration::readConfigDirective( std::string &l ){
 			SelLog->Log('F', "\t\tPainting '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
-	} else
+	} else if(this->ToileObject::readConfigDirective(l))
+		;
+	else
 		return this->Object::readConfigDirective(l);
 	return true;
 }
 
 void Decoration::exec(struct SelGenericSurface *srf){	/* From LuaExec::execSync() */
+	if(!this->isVisible())
+		return;
+
 	if(!this->canRun()){
 		if(this->isVerbose())
 			SelLog->Log('D', "Decoration '%s' from '%s' is disabled", this->getNameC(), this->getWhereC());

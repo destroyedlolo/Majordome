@@ -67,6 +67,9 @@ void Field::feedState( lua_State *L ){
 }
 
 void Field::update(std::string &rs, lua_Number &rn){
+	if(!this->isVisible())
+		return;
+
 	if(!this->isEnabled()){
 		if(this->isVerbose())
 			SelLog->Log('D', "Field '%s' from '%s' is disabled", this->getNameC(), this->getWhereC());
