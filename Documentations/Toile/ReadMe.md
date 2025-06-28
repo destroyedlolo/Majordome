@@ -17,3 +17,9 @@ Toile is an optional module to create smart dashboards based on [Séléné](http
 > [!TIP]
 > It is possible to write on a display's primary surface (everything you write is immediately reflected on the screen) : you have to use APIs associated with the renderer.
 >  In such cases, you will lose the advanced capabilities like layering, surface disabling, ... Useful with simple interfaces.
+
+# Directive known by (almost) all Toile's object
+
+#### -->> hidden
+
+The object is not visible
