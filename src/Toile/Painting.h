@@ -9,6 +9,7 @@
 
 class Painting;	// Avoid nested includes
 
+#include "ToileObject.h"
 #include "Toile.h"
 #include "Renderer.h"
 #include "Decoration.h"
@@ -19,7 +20,7 @@ class Painting;	// Avoid nested includes
 
 #include <Selene/SelGenericSurface.h>
 
-class Painting : virtual public Object {
+class Painting : virtual public Object, virtual public ToileObject {
 protected:
 	struct SelGenericSurface *surface;
 
@@ -50,8 +51,11 @@ protected:
 	 * -> l : directive line to parse
 	 * -> nameused : is the name already used ?
 	 */
-	bool readConfigDirectiveOnly( std::string &l );	// doesn't call parent if unknown
-	void readConfigDirective( std::string &l );	// full stack : call parent if needed
+	bool readConfigDirectiveOnly( std::string &l );	// If unknown, let the
+													// inherited to call what
+													// they need
+	bool readConfigDirective( std::string &l );	// if unrecognized, call only
+												// ToileObject's and Object's
 
 public:
 #ifdef DEBUG

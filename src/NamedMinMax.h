@@ -20,7 +20,7 @@ public:	// Made public only to let Lua enumerates
 	std::unordered_map<std::string, lua_Number> sum;
 
 private:
-	virtual void readConfigDirective( std::string &l );
+	virtual bool readConfigDirective( std::string &l );
 	virtual void feedState(lua_State *L);
 
 public:

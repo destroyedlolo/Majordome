@@ -18,7 +18,7 @@ protected:
 	std::string TableName;	// Table to purge
 	std::string upto;		// Selection of data to purge
 
-	virtual void readConfigDirective( std::string &l );
+	virtual bool readConfigDirective( std::string &l );
 	void feedState(lua_State *){};
 
 		/* Executable */

@@ -26,7 +26,7 @@ protected:
 	 *
 	 * -> l : directive line to parse
 	 */
-	void readConfigDirective( std::string &l );
+	bool readConfigDirective( std::string &l );
 
 public:
 	/* constructor from file

@@ -30,9 +30,10 @@ Painting::Painting( const std::string &fch, std::string &where, lua_State *L ): 
 	}
 }
 
-void Painting::readConfigDirective( std::string &l ){
+bool Painting::readConfigDirective( std::string &l ){
 	if(!this->readConfigDirectiveOnly(l))
-		Object::readConfigDirective(l);
+		return Object::readConfigDirective(l);
+	return true;
 }
 
 bool Painting::readConfigDirectiveOnly( std::string &l ){
@@ -78,9 +79,8 @@ bool Painting::readConfigDirectiveOnly( std::string &l ){
 		if(::verbose)
 			SelLog->Log('C', "\t\tSize : %ux%u", this->geometry.w,this->geometry.h);
 		return true;
-	}
-
-	return false;
+	} else
+		return this->ToileObject::readConfigDirective(l);
 }
 
 #ifdef DEBUG

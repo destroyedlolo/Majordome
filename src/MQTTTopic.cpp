@@ -34,7 +34,7 @@ MQTTTopic::MQTTTopic(const std::string &fch, std::string &where) : Object(fch, w
 		fd2 << this->getFullId() << ".class: Topic" << std::endl;
 }
 
-void MQTTTopic::readConfigDirective(std::string &l){
+bool MQTTTopic::readConfigDirective(std::string &l){
 	std::string arg;
 
 	if(!(arg = striKWcmp( l, "-->> topic=" )).empty()){
@@ -89,7 +89,9 @@ void MQTTTopic::readConfigDirective(std::string &l){
 			}
 		}
 	} else 
-		this->Object::readConfigDirective(l);
+		return this->Object::readConfigDirective(l);
+	
+	return true;
 }
 
 bool MQTTTopic::match( const char *intopic ){

@@ -20,7 +20,7 @@ class Event : virtual public Object, virtual public HandlersExecutor {
 	TrackerVector trackersToDisable;
 
 protected:
-	virtual void readConfigDirective(std::string &l);
+	virtual bool readConfigDirective(std::string &l);
 
 public:
 	/* Constructor from a file

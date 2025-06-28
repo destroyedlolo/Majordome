@@ -93,7 +93,7 @@ std::string Object::getContainer( void ){
 #endif
 }
 
-void Object::readConfigDirective(std::string &l){
+bool Object::readConfigDirective(std::string &l){
 	std::string arg;
 
 	if(!(arg = striKWcmp( l, "-->> name=" )).empty()){
@@ -128,6 +128,8 @@ void Object::readConfigDirective(std::string &l){
 		SelLog->Log('F', "Unknown directive '%s'", l.c_str());
 		exit(EXIT_FAILURE);
 	}
+
+	return true;
 }
 
 std::string Object::getFullId( void ){

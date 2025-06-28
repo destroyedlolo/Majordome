@@ -84,6 +84,42 @@ diagram {
 	tracker -> Database.archive : whenDone\nwhenStopped\nwhenChanged
 	Database.archive -> rendezvous : SuccessRDV\nFailRDV
 
+	Toile {
+		style {
+			border-radius: 5
+			stroke-dash: 2
+		}
+
+		Renderer {
+			tooltip: "Low level renderer"
+			class: [ TRenderer ; Lua ]
+		}
+
+		Decoration {
+			tooltip: "Decoration of an object"
+			class: [ TDecoration ; Lua ]
+		}
+		Decoration -> Renderer : ApplyOnRenderer
+		Decoration -> Painting : ApplyOn
+
+		Painting {
+			tooltip: "a.k.a subsurface"
+			class: TPainting
+		}
+		Painting -> Renderer : Renderer Parent
+
+		Field {
+			tooltip: "Display information"
+			class: [ TField ; Lua ]
+		}
+		_.topic -> Field : listen
+		_.rendezvous -> Field : waitfor
+		_.timer-> Field : when
+		_.tracker -> Field : whenDone\nwhenStopped\nwhenChanged
+		Field -> Renderer : ApplyOnRenderer
+		Field -> Painting : ApplyOn
+	}
+
 	(topic -> *)[*].class: Data
 	(* <- topic)[*].class: Data
 	(topic -> *.*)[*].class: Data
@@ -103,6 +139,7 @@ diagram {
 	(* <- rendezvous)[*].class: NoData
 	(rendezvous -> *.*)[*].class: NoData
 	(*.* <- rendezvous)[*].class: NoData
+
 }
 
 # """

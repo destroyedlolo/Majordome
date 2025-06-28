@@ -12,7 +12,7 @@
 class MQTTTopic : virtual public Object, public Event {
 	bool alreadydefault;	// true if default has been already used
 
-	virtual void readConfigDirective(std::string &l);
+	virtual bool readConfigDirective(std::string &l);
 
 protected:
 	std::string topic;	// Topic to look for

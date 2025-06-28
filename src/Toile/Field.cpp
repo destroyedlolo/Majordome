@@ -35,7 +35,7 @@ Field::Field( const std::string &fch, std::string &where, lua_State *L ) : Objec
 	}
 }
 
-void Field::readConfigDirective( std::string &l ){
+bool Field::readConfigDirective( std::string &l ){
 	std::string arg;
 	if(!(arg = striKWcmp( l, "-->> Sample=" )).empty()){
 		this->geometry.w = arg.length();
@@ -48,7 +48,9 @@ void Field::readConfigDirective( std::string &l ){
 	else if(this->readConfigDirectiveNoData(l))
 		;
 	else
-		this->LuaExec::readConfigDirective(l);
+		return this->LuaExec::readConfigDirective(l);
+
+	return true;
 }
 
 void Field::feedState( lua_State *L ){
@@ -65,6 +67,9 @@ void Field::feedState( lua_State *L ){
 }
 
 void Field::update(std::string &rs, lua_Number &rn){
+	if(!this->isVisible())
+		return;
+
 	if(!this->isEnabled()){
 		if(this->isVerbose())
 			SelLog->Log('D', "Field '%s' from '%s' is disabled", this->getNameC(), this->getWhereC());

@@ -19,7 +19,7 @@ Decoration::Decoration( const std::string &fch, std::string &where, lua_State *L
 		fd2 << this->getFullId() << ".class: Decoration" << std::endl;
 }
 
-void Decoration::readConfigDirective( std::string &l ){
+bool Decoration::readConfigDirective( std::string &l ){
 	std::string arg;
 	if(!(arg = striKWcmp( l, "-->> ApplyOnRenderer=" )).empty()){
 			// Search the renderer to apply on
@@ -49,11 +49,17 @@ void Decoration::readConfigDirective( std::string &l ){
 			SelLog->Log('F', "\t\tPainting '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
-	} else
-		this->Object::readConfigDirective(l);
+	} else if(this->ToileObject::readConfigDirective(l))
+		;
+	else
+		return this->Object::readConfigDirective(l);
+	return true;
 }
 
 void Decoration::exec(struct SelGenericSurface *srf){	/* From LuaExec::execSync() */
+	if(!this->isVisible())
+		return;
+
 	if(!this->canRun()){
 		if(this->isVerbose())
 			SelLog->Log('D', "Decoration '%s' from '%s' is disabled", this->getNameC(), this->getWhereC());

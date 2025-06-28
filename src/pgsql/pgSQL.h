@@ -15,9 +15,9 @@ class lua_State;
 class pgSQL : public Object, public mpgConnection {
 	std::string conninfo;
 
-	virtual void readConfigDirective( std::string &l );
-
 protected:
+	virtual bool readConfigDirective( std::string &l );
+
 public:
 	virtual const char *getNameC(){ return(this->Object::getNameC()); };
 	bool isQuiet(){ return !this->Object::isVerbose(); };
