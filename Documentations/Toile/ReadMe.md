@@ -23,3 +23,5 @@ Toile is an optional module to create smart dashboards based on [Séléné](http
 #### -->> hidden
 
 The object is not visible
+
+Not applicable on **[Renderer](Renderer.md)** and derivated.
