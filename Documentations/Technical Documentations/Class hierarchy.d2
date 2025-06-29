@@ -182,23 +182,21 @@ Toile: Toile Add On {
 		class: [ TDecoration ; Lua ]
 	}
 	_.LuaExec -> Decoration 
-	Decoration -> Renderer.DecorationsList
+	Decoration -> ToileContainer.DecorationsList
 	ToileObject -> Decoration
 
 	Painting {
 		tooltip: "a.k.a subsurface"
 		class: TPainting
 	}
-	_.Object -> Painting
-	Painting -> Renderer.PaintingsList
-	ToileObject -> Painting
+	Painting -> ToileContainer.ContainersList
+	ToileContainer -> Painting
 
 	Field {
 		tooltip: "Display information"
 		class: [ TField ; Lua ]
 		icon: https://icons.terrastruct.com/essentials/021-view.svg
 	}
-	_.Object -> Field
 	_.Handler -> Field
 	Painting -> Field
 }
