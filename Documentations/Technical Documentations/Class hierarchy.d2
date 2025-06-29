@@ -142,25 +142,35 @@ Toile: Toile Add On {
 	style.stroke-dash: 6
 
 	ToileObject {
+		class : abstract
 		tooltip: "Toile's objects common attributes"
 	}
+	_.Object -> ToileObject
+
+	ToileContainer {
+		class : abstract
+
+		tooltip: "Abstract Toile's object containers"
+
+		DecorationsList {
+			style.multiple: true
+			class : [TDecoration; abstract]
+		}
+
+		ContainersList {
+			style.multiple: true
+			class : [TPainting; abstract]
+		}
+	}
+	_.LuaExec -> ToileContainer
+	ToileObject -> ToileContainer
 
 	Renderer {
 		tooltip: "Low level renderer"
 		class: [ TRenderer ; Lua ]
-
-		DecorationsList {
-			style.multiple: true
-			class : TDecoration
-		}
-
-		PaintingsList {
-			style.multiple: true
-			class : TPainting
-		}
 	}
-	_.LuaExec -> Renderer
-
+	ToileContainer -> Renderer
+	
 	LCD {
 		tooltip: "Renderer for LCD textual screen"
 		class: [ TLCD; Lua ]
