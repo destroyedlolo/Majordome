@@ -1,6 +1,4 @@
 #include "ToileObject.h"
-#include "Renderer.h"
-#include "Painting.h"
 #include "../Config.h"
 
 ToileObject::ToileObject() : visible(true), parentR(NULL), parentP(NULL){
@@ -17,6 +15,7 @@ bool ToileObject::isVisible(void){
 bool ToileObject::readConfigDirective(std::string &l){
 	std::string arg;
 
+#if 0	/* TODO */
 	if(!(arg = striKWcmp( l, "-->> Renderer Parent=" )).empty()){
 		if(this->parentR || this->parentP){
 			SelLog->Log('F', "\t\tA Painting can't have multiple parents");
@@ -47,6 +46,7 @@ bool ToileObject::readConfigDirective(std::string &l){
 		this->visible = false;
 	} else
 		return false;
+#endif
 
 	return true;
 }

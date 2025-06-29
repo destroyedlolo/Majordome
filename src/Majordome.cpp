@@ -456,8 +456,10 @@ int main(int ac, char **av){
 		for(auto &r : config.RendererList)
 			r.second->dump();
 
+#if 0	/* TODO */
 		for(auto &r : config.PaintingList)
 			r.second->dump();
+#endif
 	}
 #	endif
 #endif

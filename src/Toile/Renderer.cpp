@@ -3,8 +3,10 @@
  */
 
 #include "Renderer.h"
+#if 0	/* TODO */
 #include "Painting.h"
 #include "Decoration.h"
+#endif
 #include "../LuaExec.h"
 #include "../Config.h"
 
@@ -98,14 +100,18 @@ void Renderer::dump(){
 #endif
 
 void Renderer::refresh(){
+#if 0	/* TODO */
 	for(auto &d: this->DecorationsList)
 		d->exec(*this);
+#endif
 }
 
 void Renderer::refreshChild(){
 		// Refresh subsurface
+#if 0	/* TODO */
 	for(auto &paint: this->PaintingList)
 		paint->refreshAll();
+#endif
 }
 
 void Renderer::refreshAll(){

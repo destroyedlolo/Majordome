@@ -1,5 +1,7 @@
 /* Generic class for Toile's objects
  *
+ * - Handle visibility
+ *
  * 23/06/2025 - LF - First version
  */
 

@@ -44,7 +44,7 @@ bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &
 	if(ext == ".Renderer"){
 		auto tsk = new Renderer( completpath, where, L );
 		assert(tsk);
-	
+
 		RendererCollection::iterator prev;
 		if((prev = cfg.RendererList.find(tsk->getName())) != cfg.RendererList.end()){
 			SelLog->Log('F', "Renderer '%s' is defined multiple times (previous one '%s')", tsk->getName().c_str(), prev->second->getWhere().c_str());
@@ -67,6 +67,7 @@ bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &
 		} else
 			cfg.RendererList.insert( std::make_pair(tsk->getName(), tsk) );
 		return true;
+#if 0 /* TODO */
 	} else if(ext == ".Decoration"){
 		auto paint = new Decoration( completpath, where, L );
 	
@@ -100,6 +101,7 @@ bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &
 			cfg.PaintingList.insert( std::make_pair(paint->getName(), paint) );
 
 		return true;
+#endif
 	}
 
 	return false;
@@ -112,9 +114,11 @@ bool Toile::execRenderers(){
 				return false;
 		}
 
+#if 0	/* TODO */
 			// Initialize subsurfaces
 		for(auto &paint: i.second->PaintingList)
 			paint->exec();
+#endif
 	}
 
 	return true;
