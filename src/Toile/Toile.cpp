@@ -67,7 +67,6 @@ bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &
 		} else
 			cfg.RendererList.insert( std::make_pair(tsk->getName(), tsk) );
 		return true;
-#if 0 /* TODO */
 	} else if(ext == ".Decoration"){
 		auto paint = new Decoration( completpath, where, L );
 	
@@ -79,6 +78,7 @@ bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &
 			cfg.DecorationList.insert( std::make_pair(paint->getName(), paint) );
 
 		return true;
+#if 0 /* TODO painting */
 	} else if(ext == ".Painting"){
 		auto paint = new Painting( completpath, where, L );
 	
@@ -114,7 +114,7 @@ bool Toile::execRenderers(){
 				return false;
 		}
 
-#if 0	/* TODO */
+#if 0	/* TODO painting */
 			// Initialize subsurfaces
 		for(auto &paint: i.second->PaintingList)
 			paint->exec();

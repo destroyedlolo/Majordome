@@ -35,6 +35,7 @@ bool Decoration::readConfigDirective( std::string &l ){
 			SelLog->Log('F', "\t\tRenderer '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
+#if 0 /* TODO painting */
 	} else if(!(arg = striKWcmp( l, "-->> ApplyOn=" )).empty()){
 			// Search the Painting to apply on
 		PaintingCollection::iterator paint;
@@ -49,6 +50,7 @@ bool Decoration::readConfigDirective( std::string &l ){
 			SelLog->Log('F', "\t\tPainting '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
+#endif
 	} else if(this->ToileObject::readConfigDirective(l))
 		;
 	else
@@ -116,5 +118,6 @@ void Decoration::exec(struct SelGenericSurface *srf){	/* From LuaExec::execSync(
 }
 
 void Decoration::exec(Renderer &rd){ this->exec(rd.getSurface()); };
+#if 0
 void Decoration::exec(Painting &pt){ this->exec(pt.getSurface()); };
-
+#endif
