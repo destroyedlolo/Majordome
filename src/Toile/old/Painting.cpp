@@ -14,7 +14,7 @@
 #include <cstring>
 #include <cassert>
 
-Painting::Painting( const std::string &fch, std::string &where, lua_State *L ): Object(fch, where), surface(NULL), parentR(NULL), parentP(NULL){
+Painting::Painting( const std::string &fch, std::string &where, lua_State *L ): Object(fch, where), surface(NULL){
 	this->loadConfigurationFile(fch, where);
 
 	if(d2)
@@ -38,32 +38,8 @@ bool Painting::readConfigDirective( std::string &l ){
 
 bool Painting::readConfigDirectiveOnly( std::string &l ){
 	std::string arg;
-	if(!(arg = striKWcmp( l, "-->> Renderer Parent=" )).empty()){
-		if(this->parentR || this->parentP){
-			SelLog->Log('F', "\t\tA Painting can't have multiple parents");
-			exit(EXIT_FAILURE);
-		}
-	
-			// Search the parent renderer
-		RendererCollection::iterator renderer;
-		if((renderer = config.RendererList.find(arg)) != config.RendererList.end()){
-			if(::verbose)
-#ifdef DEBUG
-				SelLog->Log('C', "\t\tThe Parent is Renderer '%s' (%p)", arg.c_str(), &(renderer->second));
-#else
-				SelLog->Log('C', "\t\tThe Parent is Renderer '%s'", arg.c_str());
-#endif
-			this->parentR = renderer->second;
-			renderer->second->addPainting( this );
 
-			if(d2)
-				fd2 << renderer->second->getFullId() << " <- " << this->getFullId() << ": Renderer Parent { class: llink }" << std::endl;
-		} else {
-			SelLog->Log('F', "\t\tRenderer '%s' is not (yet ?) defined", arg.c_str());
-			exit(EXIT_FAILURE);
-		}
-		return true;
-	} else if(!(arg = striKWcmp( l, "-->> Origin=" )).empty()){
+	if(!(arg = striKWcmp( l, "-->> Origin=" )).empty()){
 		int r = sscanf(arg.c_str(), "%u,%u", &(this->geometry.x), &(this->geometry.y));
 		if(r != 2)
 			SelLog->Log('W', "Wasn't able to read Origine='s arguments");

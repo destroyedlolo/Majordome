@@ -10,10 +10,16 @@
 
 #include <string>
 
+class Renderer;
+class Painting;
+
 class ToileObject : virtual public Object {
 	bool visible;
 
 protected:
+	Renderer *parentR;	// The parent is a renderer
+	Painting *parentP;	// The parent is a painting
+
 		/* Read configuration directive shared with all Toile's objects
 		 * l -> string to read
 		 *

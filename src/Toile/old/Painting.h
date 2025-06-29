@@ -24,16 +24,13 @@ class Painting : virtual public Object, virtual public ToileObject {
 protected:
 	struct SelGenericSurface *surface;
 
-	Renderer *parentR;	// The parent is a renderer
-	Painting *parentP;	// The parent is a painting
-
 	Toile::SurfaceGeometry geometry;
 
 public:
 	std::vector<Decoration *> DecorationsList;
 
-	Painting():surface(NULL), parentR(NULL), parentP(NULL){};
-	Painting(const std::string &fch, std::string &where): Object(fch, where), surface(NULL), parentR(NULL), parentP(NULL){};
+	Painting():surface(NULL){};
+	Painting(const std::string &fch, std::string &where): Object(fch, where), surface(NULL){};
 
 	/* constructor from file
 	 * -> file : file to load
