@@ -1,7 +1,5 @@
 /* Generic class for Toile's objects
- *
- * - visibility
- * - refreshing
+ * This kind of object is able to draw something.
  *
  * 23/06/2025 - LF - First version
  */
@@ -10,18 +8,15 @@
 #define TOILEOBJECT_H
 
 #include "../Object.h"
+#include "../LuaExec.h"
 
 #include <string>
-
-class Renderer;
-class Painting;
 
 class ToileObject : virtual public Object {
 	bool visible;
 
 protected:
-	Renderer *parentR;	// The parent is a renderer
-	Painting *parentP;	// The parent is a painting
+	ToileObject *parent;	// Object's parent
 
 		/* Read configuration directive shared with all Toile's objects
 		 * l -> string to read

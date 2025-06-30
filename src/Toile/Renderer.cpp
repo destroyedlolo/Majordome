@@ -101,7 +101,7 @@ void Renderer::dump(){
 
 void Renderer::refresh(){
 	for(auto &d: this->DecorationsList)
-		d->exec(*this);
+		d->exec(this->getSurface());
 }
 
 void Renderer::refreshChild(){

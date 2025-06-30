@@ -21,7 +21,7 @@ Decoration::Decoration( const std::string &fch, std::string &where, lua_State *L
 
 bool Decoration::readConfigDirective( std::string &l ){
 	std::string arg;
-	if(!(arg = striKWcmp( l, "-->> ApplyOnRenderer=" )).empty()){
+	if(!(arg = striKWcmp( l, "-->> ApplyOn Renderer=" )).empty()){
 			// Search the renderer to apply on
 		RendererCollection::iterator renderer;
 		if((renderer = config.RendererList.find(arg)) != config.RendererList.end()){
@@ -30,7 +30,7 @@ bool Decoration::readConfigDirective( std::string &l ){
 			renderer->second->addDecoration( this );
 
 			if(d2)
-				fd2 << renderer->second->getFullId() << " <- " << this->getFullId() << ": ApplyOnRenderer { class: llink }" << std::endl;
+				fd2 << renderer->second->getFullId() << " <- " << this->getFullId() << ": ApplyOn Renderer { class: llink }" << std::endl;
 		} else {
 			SelLog->Log('F', "\t\tRenderer '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
@@ -116,8 +116,3 @@ void Decoration::exec(struct SelGenericSurface *srf){	/* From LuaExec::execSync(
 
 	return;
 }
-
-void Decoration::exec(Renderer &rd){ this->exec(rd.getSurface()); };
-#if 0
-void Decoration::exec(Painting &pt){ this->exec(pt.getSurface()); };
-#endif

@@ -16,7 +16,7 @@ class Decoration;	// Avoid nested includes
 
 #include <Selene/SelGenericSurface.h>
 
-class Decoration : public LuaExec, public ToileObject {
+class Decoration : public ToileObject, virtual public LuaExec {
 public:
 	/* constructor from file
 	 * -> file : file to load
@@ -37,8 +37,6 @@ public:
 
 	/* Run the Lua code to build the renderer */
 	void exec(struct SelGenericSurface *);
-	void exec(Renderer &rd);
-	void exec(Painting &pt);
 
 	virtual std::string getTri(){ return "DEC_"; }
 };

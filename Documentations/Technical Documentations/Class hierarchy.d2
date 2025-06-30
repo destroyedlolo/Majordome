@@ -145,7 +145,7 @@ Toile: Toile Add On {
 		class : abstract
 		tooltip: "Toile's objects common attributes"
 	}
-	_.Object -> ToileObject
+	_.LuaExec-> ToileObject
 
 	ToileContainer {
 		class : abstract
@@ -157,18 +157,18 @@ Toile: Toile Add On {
 			class : [TDecoration; abstract]
 		}
 
-		ContainersList {
+		ChildrenList {
 			style.multiple: true
 			class : [TPainting; abstract]
 		}
 	}
-	_.LuaExec -> ToileContainer
-	ToileObject -> ToileContainer
 
 	Renderer {
 		tooltip: "Low level renderer"
 		class: [ TRenderer ; Lua ]
 	}
+	_.LuaExec -> Renderer
+	ToileObject -> Renderer
 	ToileContainer -> Renderer
 	
 	LCD {
@@ -181,15 +181,15 @@ Toile: Toile Add On {
 		tooltip: "Decoration of an object"
 		class: [ TDecoration ; Lua ]
 	}
-	_.LuaExec -> Decoration 
-	Decoration -> ToileContainer.DecorationsList
+	_.LuaExec -> Decoration
 	ToileObject -> Decoration
+	Decoration -> ToileContainer.DecorationsList
 
 	Painting {
 		tooltip: "a.k.a subsurface"
 		class: TPainting
 	}
-	Painting -> ToileContainer.ContainersList
+	Painting -> ToileContainer.ChildrenList
 	ToileContainer -> Painting
 
 	Field {
@@ -199,6 +199,7 @@ Toile: Toile Add On {
 	}
 	_.Handler -> Field
 	Painting -> Field
+	Field -> ToileContainer.ChildrenList
 }
 
 # Configuration

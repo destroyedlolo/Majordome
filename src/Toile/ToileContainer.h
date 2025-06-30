@@ -1,5 +1,6 @@
 /* Class to abstract Toile's object containers.
  * Containers are objects that have child objects (like Renderer or Painting)
+ * but are not drawing anything by their own.
  *
  * 29/06/2025 - LF - Creation
  */
@@ -8,14 +9,14 @@
 #define TOILECONTAINER_H
 
 #include "ToileObject.h"
-#include "../LuaExec.h"
 
 #include <Selene/SelGenericSurface.h>
 #include <vector>
+#include <string>
 
 class Decoration;
 
-class ToileContainer : virtual public ToileObject, virtual public LuaExec {
+class ToileContainer {
 protected:
 	struct SelGenericSurface *surface;	// Selene's surface
 	virtual bool readConfigDirective(std::string &l) = 0;
@@ -28,7 +29,7 @@ protected:
 		 * Notez-bien : children are not expected to overlap.
 		 */
 	std::vector<Decoration *> DecorationsList;		// List of decorations to apply
-	std::vector<ToileContainer *> ContainersList;	// List of sub containers
+	std::vector<ToileObject *> ChildrenList;	// List of sub objects
 
 
 public:
@@ -40,7 +41,7 @@ public:
 	 * Childs' management
 	 * ***/
 	void addDecoration( Decoration *t ){ this->DecorationsList.push_back(t); }
-	void addChild( ToileContainer *p ){ this->ContainersList.push_back(p); }
+	void addChild( ToileObject *p ){ this->ChildrenList.push_back(p); }
 
 };
 #endif

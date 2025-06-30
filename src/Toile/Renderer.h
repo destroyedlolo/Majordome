@@ -8,6 +8,7 @@
 #define RENDERER_H
 
 #include "ToileContainer.h"
+#include "ToileObject.h"
 
 #include "../Helpers.h"
 #include "../Object.h"
@@ -16,7 +17,7 @@
 
 #include <vector>
 
-class Renderer : virtual public ToileContainer {
+class Renderer : virtual public ToileContainer, virtual public ToileObject, virtual public LuaExec {
 	bool fatal;
 
 protected:
