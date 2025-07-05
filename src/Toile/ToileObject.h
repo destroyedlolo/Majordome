@@ -13,12 +13,12 @@
 #include <Selene/SelGenericSurface.h>
 #include <string>
 
-class ToileContainer;
+// class ToileContainer;
 
 class ToileObject : virtual public Object {
 	bool visible;
 
-	ToileContainer *parent;
+	ToileObject *parent;
 protected:
 	struct SelGenericSurface *surface;	// Selene's surface
 
@@ -35,7 +35,7 @@ public:
 
 		/* Accessors */
 	struct SelGenericSurface *getSurface(){ return this->surface; }
-	ToileContainer *getParent(void){ return this->parent; };
+	ToileObject *getParent(void){ return this->parent; };
 
 	virtual std::string getTri() = 0;
 

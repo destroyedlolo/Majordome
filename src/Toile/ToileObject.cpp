@@ -31,7 +31,7 @@ bool ToileObject::readConfigDirective(std::string &l){
 				SelLog->Log('C', "\t\tThe Parent is Renderer '%s'", arg.c_str());
 #endif
 
-			this->parent = dynamic_cast<ToileContainer *>(renderer->second);
+			this->parent = dynamic_cast<ToileObject *>(renderer->second);
 
 			if(this->getTri() == Decoration::trigramme())
 				renderer->second->addDecoration( static_cast<Decoration *>(this) );
