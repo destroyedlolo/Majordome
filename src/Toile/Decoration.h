@@ -38,7 +38,8 @@ public:
 	/* Run the Lua code to build the renderer */
 	void exec(struct SelGenericSurface *);
 
-	virtual std::string getTri(){ return "DEC_"; }
+	virtual std::string getTri(){ return Decoration::trigramme(); }
+	static std::string trigramme(){ return "DEC_"; }
 };
 
 typedef ObjCollection<Decoration *> DecorationCollection;

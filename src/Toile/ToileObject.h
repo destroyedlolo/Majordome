@@ -12,11 +12,13 @@
 
 #include <string>
 
+class ToileContainer;
+
 class ToileObject : virtual public Object {
 	bool visible;
 
+	ToileContainer *parent;
 protected:
-	ToileObject *parent;	// Object's parent
 
 		/* Read configuration directive shared with all Toile's objects
 		 * l -> string to read
@@ -29,6 +31,11 @@ protected:
 public:
 	ToileObject();
 
+		/* Accessors */
+	ToileContainer *getParent(void){ return this->parent; };
+
+	virtual std::string getTri() = 0;
+
 		/* Object's own visibility */
 	void Visibility(bool);
 	bool getOwnVisibility(void) { return this->visible; }
@@ -36,6 +43,7 @@ public:
 		/* Cascaded visibility */
 	bool isVisible(void);
 	bool getDisplayed(void) { return this->isVisible(); }
+
 };
 
 #endif
