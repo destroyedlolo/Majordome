@@ -10,7 +10,6 @@
 
 #include "ToileObject.h"
 
-#include <Selene/SelGenericSurface.h>
 #include <vector>
 #include <string>
 
@@ -18,7 +17,6 @@ class Decoration;
 
 class ToileContainer {
 protected:
-	struct SelGenericSurface *surface;	// Selene's surface
 	virtual bool readConfigDirective(std::string &l) = 0;
 
 		/* Children
@@ -33,9 +31,6 @@ protected:
 
 
 public:
-	ToileContainer(): surface(NULL){}
-
-	struct SelGenericSurface *getSurface(){ return this->surface; }
 
 	/* ***
 	 * Childs' management

@@ -1,7 +1,7 @@
 #include "ToileObject.h"
 #include "../Config.h"
 
-ToileObject::ToileObject() : visible(true), parent(NULL){
+ToileObject::ToileObject() : visible(true), parent(NULL), surface(NULL){
 }
 
 bool ToileObject::isVisible(void){

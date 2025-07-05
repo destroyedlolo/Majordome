@@ -10,6 +10,7 @@
 #include "../Object.h"
 #include "../LuaExec.h"
 
+#include <Selene/SelGenericSurface.h>
 #include <string>
 
 class ToileContainer;
@@ -19,6 +20,7 @@ class ToileObject : virtual public Object {
 
 	ToileContainer *parent;
 protected:
+	struct SelGenericSurface *surface;	// Selene's surface
 
 		/* Read configuration directive shared with all Toile's objects
 		 * l -> string to read
@@ -32,6 +34,7 @@ public:
 	ToileObject();
 
 		/* Accessors */
+	struct SelGenericSurface *getSurface(){ return this->surface; }
 	ToileContainer *getParent(void){ return this->parent; };
 
 	virtual std::string getTri() = 0;

@@ -7,12 +7,14 @@
 #ifndef PAINTING_H
 #define PAINTING_H
 
-class Painting;	// Avoid nested includes
-
 #include "ToileObject.h"
+#include "ToileContainer.h"
+
+/*
 #include "Toile.h"
 #include "Renderer.h"
 #include "Decoration.h"
+*/
 
 #include "../Helpers.h"
 #include "../Object.h"
@@ -20,7 +22,7 @@ class Painting;	// Avoid nested includes
 
 #include <Selene/SelGenericSurface.h>
 
-class Painting : virtual public Object, virtual public ToileObject {
+class Painting : virtual public ToileContainer, virtual public ToileObject {
 protected:
 	struct SelGenericSurface *surface;
 
