@@ -14,7 +14,7 @@
 #include <cstring>
 #include <cassert>
 
-Painting::Painting( const std::string &fch, std::string &where, lua_State *L ): Object(fch, where), surface(NULL){
+Painting::Painting( const std::string &fch, std::string &where, lua_State *L ): Object(fch, where){
 	this->loadConfigurationFile(fch, where);
 
 	if(d2)
@@ -24,7 +24,7 @@ Painting::Painting( const std::string &fch, std::string &where, lua_State *L ): 
 		/* ***
 		 * Sanity checks
 		 * ***/
-	if(!this->parentR && !this->parentP){
+	if(!this->getParent()){
 		SelLog->Log('F', "[Painting \"%s\"] No parent defined", this->name.c_str());
 		exit(EXIT_FAILURE);
 	}
@@ -65,8 +65,7 @@ void Painting::dump(){
 	std::cout << "\tName : " << this->getName() << std::endl;
 	std::cout << "\tWhere : " << this->getWhere() << std::endl;
 	std::cout << "\tsurface : " << static_cast<void*>(this->surface) << std::endl;
-	std::cout << "\tparentR : " << static_cast<void*>(this->parentR) << std::endl;
-	std::cout << "\tparentP : " << static_cast<void*>(this->parentP) << std::endl;
+	std::cout << "\tparent : " << static_cast<void*>(this->getParent()) << std::endl;
 	std::cout << "\tOrigin : " << this->geometry.x << "x" << this->geometry.y << std::endl;
 	std::cout << "\tSize : " << this->geometry.w << "x" << this->geometry.h << std::endl;
 }
@@ -83,44 +82,39 @@ void Painting::exec(){
 	if(::debug && this->isVerbose())
 		SelLog->Log('D', "Painting::exec()");
 
-	if(this->parentR){
-		if(::debug && this->isVerbose())
-			SelLog->Log('D', "[Painting \"%s\"] ParentR's type : '%s'", this->name.c_str(), this->parentR->getSurface()->cb->LuaObjectName());
-		if(!this->geometry.w || !this->geometry.h){	// size not set
-			uint32_t w,h;
-			if(!this->parentR->getSurface()->cb->getSize(this->parentR->getSurface(), &w,&h)){
+	if(!this->geometry.w || !this->geometry.h){	// size not set
+		uint32_t w,h;
+		if(!this->getParent()->getSurface()->cb->getSize(this->getParent()->getSurface(), &w,&h)){
 				SelLog->Log('F', "[Painting \"%s\"] Getting the geometry from parent is not supported", this->name.c_str());
-				exit(EXIT_FAILURE);
-			} else
-				SelLog->Log('D', "[Painting \"%s\"] Get geometry from parent : %lux%lu", this->name.c_str(), w,h);
-
-			if(this->geometry.x >= w || this->geometry.y >= h){
-				SelLog->Log('W', "[Painting \"%s\"] Origin outsize its parent", this->name.c_str());
-				this->geometry.w = w;
-				this->geometry.h = h;
-			} else {
-				this->geometry.w = w - this->geometry.x;
-				this->geometry.h = h - this->geometry.y;
-			}
-
-			SelLog->Log('D', "[Painting \"%s\"] Guessed geometry : %lux%lu", this->name.c_str(), this->geometry.w,this->geometry.h);
-		}
-
-		if(!(this->surface = this->parentR->getSurface()->cb->subSurface(this->parentR->getSurface(), this->geometry.x, this->geometry.y, this->geometry.w, this->geometry.h, this->parentR->getSurface()->cb->getPrimary(this->parentR->getSurface())))){
-			SelLog->Log('F', "[Painting \"%s\"] Can't create subsurface", this->name.c_str());
 			exit(EXIT_FAILURE);
+		} else
+			SelLog->Log('D', "[Painting \"%s\"] Get geometry from parent : %lux%lu", this->name.c_str(), w,h);
+
+		if(this->geometry.x >= w || this->geometry.y >= h){
+			SelLog->Log('W', "[Painting \"%s\"] Origin outsize its parent", this->name.c_str());
+			this->geometry.w = w;
+			this->geometry.h = h;
+		} else {
+			this->geometry.w = w - this->geometry.x;
+			this->geometry.h = h - this->geometry.y;
 		}
-	} else if(this->parentP){
-	} else {
-		SelLog->Log('F', "[Painting \"%s\"] No parent defined", this->name.c_str());
+
+		SelLog->Log('D', "[Painting \"%s\"] Guessed geometry : %lux%lu", this->name.c_str(), this->geometry.w,this->geometry.h);
+	}
+
+/* ToDo
+	if(!(this->surface = this->parentR->getSurface()->cb->subSurface(this->parentR->getSurface(), this->geometry.x, this->geometry.y, this->geometry.w, this->geometry.h, this->parentR->getSurface()->cb->getPrimary(this->parentR->getSurface())))){
+		SelLog->Log('F', "[Painting \"%s\"] Can't create subsurface", this->name.c_str());
 		exit(EXIT_FAILURE);
 	}
+*/
 
 	if(::debug && this->isVerbose())
 		SelLog->Log('D', "Painting::exec() - End");
 }
 
 void Painting::refresh(){
+#if 0	/* ToDo */
 	if(!this->isEnabled()){
 		if(this->isVerbose())
 			SelLog->Log('D', "Painting '%s' from '%s' is disabled", this->getNameC(), this->getWhereC());
@@ -130,10 +124,11 @@ void Painting::refresh(){
 	this->getSurface()->cb->Clear(this->getSurface());
 	for(auto &d: this->DecorationsList)
 		d->exec(*this);
+#endif
 }
 
 void Painting::refreshChild(){
-#if 0	/* TODO */
+#if 0	/* ToDo */
 		// refresh childs
 	for(auto &paint: this->PaintingList)
 		paint->refreshAll();

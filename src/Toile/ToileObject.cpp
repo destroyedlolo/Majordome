@@ -1,7 +1,7 @@
 #include "ToileObject.h"
 #include "../Config.h"
 
-ToileObject::ToileObject() : visible(true), parent(NULL){
+ToileObject::ToileObject() : visible(true), parent(NULL), surface(NULL){
 }
 
 bool ToileObject::isVisible(void){
@@ -15,13 +15,12 @@ bool ToileObject::isVisible(void){
 bool ToileObject::readConfigDirective(std::string &l){
 	std::string arg;
 
-#if 0	/* TODO */
-	if(!(arg = striKWcmp( l, "-->> Renderer Parent=" )).empty()){
-		if(this->parentR || this->parentP){
-			SelLog->Log('F', "\t\tA Painting can't have multiple parents");
+	if(!(arg = striKWcmp( l, "-->> ApplyOn Renderer=" )).empty()){
+		if(this->parent){
+			SelLog->Log('F', "\t\tA Toile object can have only a single parent");
 			exit(EXIT_FAILURE);
 		}
-	
+
 			// Search the parent renderer
 		RendererCollection::iterator renderer;
 		if((renderer = config.RendererList.find(arg)) != config.RendererList.end()){
@@ -31,11 +30,20 @@ bool ToileObject::readConfigDirective(std::string &l){
 #else
 				SelLog->Log('C', "\t\tThe Parent is Renderer '%s'", arg.c_str());
 #endif
-			this->parentR = renderer->second;
+
+			this->parent = dynamic_cast<ToileObject *>(renderer->second);
+
+			if(this->getTri() == Decoration::trigramme())
+				renderer->second->addDecoration( static_cast<Decoration *>(this) );
+			else {
+				puts("**** Painting");
+#if 0	/* ToDo painting */
 			renderer->second->addPainting( this );
+#endif
+			}
 
 			if(d2)
-				fd2 << renderer->second->getFullId() << " <- " << this->getFullId() << ": Renderer Parent { class: llink }" << std::endl;
+				fd2 << renderer->second->getFullId() << " <- " << this->getFullId() << ": ApplyOn Renderer { class: llink }" << std::endl;
 		} else {
 			SelLog->Log('F', "\t\tRenderer '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
@@ -46,7 +54,6 @@ bool ToileObject::readConfigDirective(std::string &l){
 		this->visible = false;
 	} else
 		return false;
-#endif
 
 	return true;
 }

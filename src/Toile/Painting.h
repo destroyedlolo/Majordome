@@ -7,12 +7,14 @@
 #ifndef PAINTING_H
 #define PAINTING_H
 
-class Painting;	// Avoid nested includes
-
-#include "ToileObject.h"
 #include "Toile.h"
+#include "ToileObject.h"
+#include "ToileContainer.h"
+
+/*
 #include "Renderer.h"
 #include "Decoration.h"
+*/
 
 #include "../Helpers.h"
 #include "../Object.h"
@@ -20,17 +22,13 @@ class Painting;	// Avoid nested includes
 
 #include <Selene/SelGenericSurface.h>
 
-class Painting : virtual public Object, virtual public ToileObject {
+class Painting : virtual public ToileContainer, virtual public ToileObject {
 protected:
-	struct SelGenericSurface *surface;
-
 	Toile::SurfaceGeometry geometry;
 
 public:
-	std::vector<Decoration *> DecorationsList;
-
-	Painting():surface(NULL){};
-	Painting(const std::string &fch, std::string &where): Object(fch, where), surface(NULL){};
+//	Painting():surface(NULL){};
+//	Painting(const std::string &fch, std::string &where): Object(fch, where){};
 
 	/* constructor from file
 	 * -> file : file to load
@@ -62,14 +60,6 @@ public:
 	/* ***
 	 * Accessors
 	 * ***/
-
-	struct SelGenericSurface *getSurface(){ return this->surface; }
-
-
-	/* ***
-	 * Childs' management
-	 * ***/
-	void addDecoration(Decoration *t){ this->DecorationsList.push_back(t); }
 
 	/* ***
 	 * Renderer own's 
