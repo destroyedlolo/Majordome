@@ -143,14 +143,14 @@ Toile: Toile Add On {
 
 	ToileObject {
 		class : abstract
-		tooltip: "Toile's objects common attributes"
+		tooltip: "Toile's objects common attributes (surface, ...)"
 	}
 	_.LuaExec-> ToileObject
 
 	ToileContainer {
 		class : abstract
 
-		tooltip: "Abstract Toile's object containers"
+		tooltip: "Container that contains other objects"
 
 		DecorationsList {
 			style.multiple: true
