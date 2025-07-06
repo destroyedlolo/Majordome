@@ -35,10 +35,8 @@ bool ToileObject::readConfigDirective(std::string &l){
 
 			if(this->getTri() == Decoration::trigramme())	/* Decorations are on separate list */
 				renderer->second->addDecoration( static_cast<Decoration *>(this) );
-			else {
-				puts("**** Painting");
+			else
 				renderer->second->addChild( this );
-			}
 
 			if(d2)
 				fd2 << renderer->second->getFullId() << " <- " << this->getFullId() << ": ApplyOn Renderer { class: llink }" << std::endl;

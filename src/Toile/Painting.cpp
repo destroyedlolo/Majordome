@@ -80,7 +80,7 @@ bool Painting::init(void){
 	}
 
 	if(::debug && this->isVerbose())
-		SelLog->Log('D', "Painting::exec()");
+		SelLog->Log('D', "Painting::init()");
 
 	if(!this->geometry.w || !this->geometry.h){	// size not set
 		uint32_t w,h;
@@ -102,22 +102,18 @@ bool Painting::init(void){
 		SelLog->Log('D', "[Painting \"%s\"] Guessed geometry : %lux%lu", this->name.c_str(), this->geometry.w,this->geometry.h);
 	}
 
-printf("*** Painting::surface : %p\n", this->surface);
-/* ToDo
-	if(!(this->surface = this->parentR->getSurface()->cb->subSurface(this->parentR->getSurface(), this->geometry.x, this->geometry.y, this->geometry.w, this->geometry.h, this->parentR->getSurface()->cb->getPrimary(this->parentR->getSurface())))){
+	if(!(this->surface = this->getParent()->getSurface()->cb->subSurface( this->getParent()->getSurface(), this->geometry.x, this->geometry.y, this->geometry.w, this->geometry.h, this->getParent()->getSurface()->cb->getPrimary(this->getParent()->getSurface())))){
 		SelLog->Log('F', "[Painting \"%s\"] Can't create subsurface", this->name.c_str());
 		exit(EXIT_FAILURE);
 	}
-*/
 
 	if(::debug && this->isVerbose())
-		SelLog->Log('D', "Painting::exec() - End");
+		SelLog->Log('D', "Painting::init() - End");
 	
 	return true;
 }
 
 void Painting::refresh(){
-#if 0	/* ToDo */
 	if(!this->isEnabled()){
 		if(this->isVerbose())
 			SelLog->Log('D', "Painting '%s' from '%s' is disabled", this->getNameC(), this->getWhereC());
@@ -126,8 +122,7 @@ void Painting::refresh(){
 
 	this->getSurface()->cb->Clear(this->getSurface());
 	for(auto &d: this->DecorationsList)
-		d->exec(*this);
-#endif
+		d->exec(this->getSurface());
 }
 
 void Painting::refreshChild(){

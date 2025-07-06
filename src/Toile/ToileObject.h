@@ -13,8 +13,6 @@
 #include <Selene/SelGenericSurface.h>
 #include <string>
 
-// class ToileContainer;
-
 class ToileObject : virtual public Object {
 	bool visible;
 
