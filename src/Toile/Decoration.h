@@ -37,6 +37,7 @@ public:
 
 	/* Run the Lua code to build the renderer */
 	void exec(struct SelGenericSurface *);
+	bool init(void){ return false; };	// Nothing to initialise
 
 	virtual std::string getTri(){ return Decoration::trigramme(); }
 	static std::string trigramme(){ return "DEC_"; }

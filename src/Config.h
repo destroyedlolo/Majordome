@@ -33,8 +33,8 @@
 #ifdef TOILE
 #	include "Toile/Renderer.h"
 #	include "Toile/Decoration.h"
-#if 0 /* TODO painting field */
 #	include "Toile/Painting.h"
+#if 0 /* ToDo field */
 #	include "Toile/Field.h"
 #endif
 #endif
@@ -86,9 +86,7 @@ public:
 
 #ifdef TOILE
 	RendererCollection RendererList;
-#if 0	/* TODO painting */
 	PaintingCollection PaintingList;
-#endif
 	DecorationCollection DecorationList;
 #endif
 

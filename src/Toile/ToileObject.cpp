@@ -33,13 +33,11 @@ bool ToileObject::readConfigDirective(std::string &l){
 
 			this->parent = dynamic_cast<ToileObject *>(renderer->second);
 
-			if(this->getTri() == Decoration::trigramme())
+			if(this->getTri() == Decoration::trigramme())	/* Decorations are on separate list */
 				renderer->second->addDecoration( static_cast<Decoration *>(this) );
 			else {
 				puts("**** Painting");
-#if 0	/* ToDo painting */
-			renderer->second->addPainting( this );
-#endif
+				renderer->second->addChild( this );
 			}
 
 			if(d2)

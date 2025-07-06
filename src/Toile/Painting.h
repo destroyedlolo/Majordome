@@ -68,7 +68,7 @@ public:
 		// Try to initialize missing fields from its parent
 	 	// Then create the subsurface.
 	 	// Fails in case of error.
-	void exec();
+	bool init(void);
 
 	void refresh();			// Refresh Painting's own decoration (background)
 	void refreshChild();	// Refresh its child

@@ -33,6 +33,11 @@ protected:
 public:
 
 	/* ***
+	 * Accessors
+	 * ***/
+	std::vector<ToileObject *> &getChildren(void){ return this->ChildrenList; }
+	
+	/* ***
 	 * Childs' management
 	 * ***/
 	void addDecoration( Decoration *t ){ this->DecorationsList.push_back(t); }

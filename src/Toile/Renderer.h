@@ -53,7 +53,7 @@ public:
 	 * Renderer own's 
 	 * ***/
 
-	virtual bool exec(); 		// Run the Lua code to build the renderer
+	virtual bool init(void); 		// Run the Lua code to build the renderer
 	void refresh();			// Refresh Painting's own decoration (background)
 	void refreshChild();	// Refresh its child
 	void refreshAll();		// Refresh everything

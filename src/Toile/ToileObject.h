@@ -47,6 +47,7 @@ public:
 	bool isVisible(void);
 	bool getDisplayed(void) { return this->isVisible(); }
 
+	virtual bool init(void) = 0;	// Initialise the object
 };
 
 #endif

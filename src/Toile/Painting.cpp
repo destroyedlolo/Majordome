@@ -72,11 +72,11 @@ void Painting::dump(){
 
 #endif
 
-void Painting::exec(){
+bool Painting::init(void){
 	if(!this->isEnabled()){
 		if(this->isVerbose())
 			SelLog->Log('D', "Painting '%s' from '%s' is disabled", this->getNameC(), this->getWhereC());
-		return;
+		return false;
 	}
 
 	if(::debug && this->isVerbose())
@@ -102,6 +102,7 @@ void Painting::exec(){
 		SelLog->Log('D', "[Painting \"%s\"] Guessed geometry : %lux%lu", this->name.c_str(), this->geometry.w,this->geometry.h);
 	}
 
+printf("*** Painting::surface : %p\n", this->surface);
 /* ToDo
 	if(!(this->surface = this->parentR->getSurface()->cb->subSurface(this->parentR->getSurface(), this->geometry.x, this->geometry.y, this->geometry.w, this->geometry.h, this->parentR->getSurface()->cb->getPrimary(this->parentR->getSurface())))){
 		SelLog->Log('F', "[Painting \"%s\"] Can't create subsurface", this->name.c_str());
@@ -111,6 +112,8 @@ void Painting::exec(){
 
 	if(::debug && this->isVerbose())
 		SelLog->Log('D', "Painting::exec() - End");
+	
+	return true;
 }
 
 void Painting::refresh(){
