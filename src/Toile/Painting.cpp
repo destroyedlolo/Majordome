@@ -120,6 +120,9 @@ void Painting::refresh(){
 		return;
 	}
 
+	if(!this->isVisible())
+		return;
+
 	this->getSurface()->cb->Clear(this->getSurface());
 	for(auto &d: this->DecorationsList)
 		d->exec(this->getSurface());

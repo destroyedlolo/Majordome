@@ -6,6 +6,8 @@ ToileObject::ToileObject() : visible(true), parent(NULL), surface(NULL){
 
 bool ToileObject::isVisible(void){
 	bool ret = this->getOwnVisibility();
+
+		/* ToDo recursivity */
 	if(!ret && ::debug && this->isVerbose())
 		SelLog->Log('D', "[%s/%s] is not visible", this->getWhereC(), this->getNameC());
 
