@@ -106,10 +106,8 @@ void Renderer::refresh(){
 
 void Renderer::refreshChild(){
 		// Refresh subsurface
-#if 0	/* TODO painting */
-	for(auto &paint: this->PaintingList)
-		paint->refreshAll();
-#endif
+	for(auto &child: this->getChildren())
+		child->refreshAll();
 }
 
 void Renderer::refreshAll(){

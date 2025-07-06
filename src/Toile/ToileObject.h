@@ -46,6 +46,7 @@ public:
 	bool getDisplayed(void) { return this->isVisible(); }
 
 	virtual bool init(void) = 0;	// Initialise the object
+	virtual void refreshAll(){};
 };
 
 #endif
