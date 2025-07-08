@@ -34,9 +34,7 @@
 #	include "Toile/Renderer.h"
 #	include "Toile/Decoration.h"
 #	include "Toile/Painting.h"
-#if 0 /* ToDo field */
 #	include "Toile/Field.h"
-#endif
 #endif
 
 #include <lua.hpp>	/* Lua's state needed */

@@ -3,9 +3,6 @@
  */
 
 #include "Renderer.h"
-#if 0	/* TODO painting */
-#include "Painting.h"
-#endif
 #include "Decoration.h"
 #include "../LuaExec.h"
 #include "../Config.h"

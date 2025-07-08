@@ -89,7 +89,6 @@ bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &
 			cfg.PaintingList.insert( std::make_pair(paint->getName(), paint) );
 
 		return true;
-#if 0 /* ToDo Field */
 	} else if(ext == ".Field"){
 		auto paint = new Field( completpath, where, L );
 	
@@ -101,7 +100,6 @@ bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &
 			cfg.PaintingList.insert( std::make_pair(paint->getName(), paint) );
 
 		return true;
-#endif
 	}
 
 	return false;
