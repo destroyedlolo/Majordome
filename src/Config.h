@@ -32,8 +32,8 @@
 
 #ifdef TOILE
 #	include "Toile/Renderer.h"
-#	include "Toile/Painting.h"
 #	include "Toile/Decoration.h"
+#	include "Toile/Painting.h"
 #	include "Toile/Field.h"
 #endif
 

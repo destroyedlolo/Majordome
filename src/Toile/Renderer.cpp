@@ -3,7 +3,6 @@
  */
 
 #include "Renderer.h"
-#include "Painting.h"
 #include "Decoration.h"
 #include "../LuaExec.h"
 #include "../Config.h"
@@ -15,7 +14,7 @@
 #include <cstring>
 #include <cassert>
 
-Renderer::Renderer( const std::string &fch, std::string &where, lua_State *L ) : Object(fch, where), LuaExec(fch, where), fatal(false), surface(NULL){
+Renderer::Renderer( const std::string &fch, std::string &where, lua_State *L ) : Object(fch, where), LuaExec(fch, where), fatal(false){
 	this->loadConfigurationFile(fch, where, L);
 
 	if(d2)
@@ -33,7 +32,7 @@ bool Renderer::readConfigDirective( std::string &l ){
 	return true;
 }
 
-bool Renderer::exec(){	/* From LuaExec::execSync() */
+bool Renderer::init(void){	/* From LuaExec::execSync() */
 	if(!this->canRun()){
 		if(this->isVerbose())
 			SelLog->Log('D', "Renderer '%s' from '%s' is disabled", this->getNameC(), this->getWhereC());
@@ -41,7 +40,7 @@ bool Renderer::exec(){	/* From LuaExec::execSync() */
 	}
 
 	if(::debug && this->isVerbose())
-		SelLog->Log('D', "Renderer::exec()");
+		SelLog->Log('D', "Renderer::init()");
 
 	lua_State *L = luaL_newstate();
 	if( !L ){
@@ -83,7 +82,7 @@ bool Renderer::exec(){	/* From LuaExec::execSync() */
 	lua_close(L);
 
 	if(::debug && this->isVerbose())
-		SelLog->Log('D', "Renderer::exec() - End");
+		SelLog->Log('D', "Renderer::init() - End");
 
 	return true;
 }
@@ -99,13 +98,13 @@ void Renderer::dump(){
 
 void Renderer::refresh(){
 	for(auto &d: this->DecorationsList)
-		d->exec(*this);
+		d->exec(this->getSurface());
 }
 
 void Renderer::refreshChild(){
 		// Refresh subsurface
-	for(auto &paint: this->PaintingList)
-		paint->refreshAll();
+	for(auto &child: this->getChildren())
+		child->refreshAll();
 }
 
 void Renderer::refreshAll(){

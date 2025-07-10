@@ -69,7 +69,7 @@ bool LCD::readConfigDirective( std::string &l ){
 	return true;
 }
 
-bool LCD::exec(){	/* From LuaExec::execSync() */
+bool LCD::init(void){	/* From LuaExec::execSync() */
 	if(!this->canRun()){
 		if(this->isVerbose())
 			SelLog->Log('D', "LCD '%s' from '%s' is disabled", this->getNameC(), this->getWhereC());

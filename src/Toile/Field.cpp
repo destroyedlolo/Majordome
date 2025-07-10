@@ -23,7 +23,7 @@ Field::Field( const std::string &fch, std::string &where, lua_State *L ) : Objec
 		/* ***
 		 * Sanity checks
 		 * ***/
-	if(!this->parentR && !this->parentP){
+	if(!this->getParent()){
 		SelLog->Log('F', "[Painting \"%s\"] No parent defined", this->name.c_str());
 		exit(EXIT_FAILURE);
 	}

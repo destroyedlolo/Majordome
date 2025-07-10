@@ -1,4 +1,5 @@
 /* Generic class for Toile's objects
+ * This kind of object is able to draw something.
  *
  * 23/06/2025 - LF - First version
  */
@@ -7,13 +8,18 @@
 #define TOILEOBJECT_H
 
 #include "../Object.h"
+#include "../LuaExec.h"
 
+#include <Selene/SelGenericSurface.h>
 #include <string>
 
 class ToileObject : virtual public Object {
 	bool visible;
 
+	ToileObject *parent;
 protected:
+	struct SelGenericSurface *surface;	// Selene's surface
+
 		/* Read configuration directive shared with all Toile's objects
 		 * l -> string to read
 		 *
@@ -25,6 +31,12 @@ protected:
 public:
 	ToileObject();
 
+		/* Accessors */
+	struct SelGenericSurface *getSurface(){ return this->surface; }
+	ToileObject *getParent(void){ return this->parent; };
+
+	virtual std::string getTri() = 0;
+
 		/* Object's own visibility */
 	void Visibility(bool);
 	bool getOwnVisibility(void) { return this->visible; }
@@ -32,6 +44,9 @@ public:
 		/* Cascaded visibility */
 	bool isVisible(void);
 	bool getDisplayed(void) { return this->isVisible(); }
+
+	virtual bool init(void) = 0;	// Initialise the object
+	virtual void refreshAll(){};
 };
 
 #endif

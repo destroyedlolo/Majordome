@@ -14,6 +14,7 @@
  *	24/11/2024 - LF - Start of development
  *	21/06/2025 - v0.01 - LF - Introduce LCD renderer
  *	26/06/2025 - v0.02 - LF - Introduce ToileObject
+ *	29/06/2025 - v0.03 - LF - Redesign
  */
 
 #define TOILEVERSION 0.0300

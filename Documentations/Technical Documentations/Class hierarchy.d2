@@ -142,25 +142,35 @@ Toile: Toile Add On {
 	style.stroke-dash: 6
 
 	ToileObject {
-		tooltip: "Toile's objects common attributes"
+		class : abstract
+		tooltip: "Toile's objects common attributes (surface, ...)"
+	}
+	_.LuaExec-> ToileObject
+
+	ToileContainer {
+		class : abstract
+
+		tooltip: "Container that contains other objects"
+
+		DecorationsList {
+			style.multiple: true
+			class : [TDecoration; abstract]
+		}
+
+		ChildrenList {
+			style.multiple: true
+			class : [TPainting; abstract]
+		}
 	}
 
 	Renderer {
 		tooltip: "Low level renderer"
 		class: [ TRenderer ; Lua ]
-
-		DecorationsList {
-			style.multiple: true
-			class : TDecoration
-		}
-
-		PaintingsList {
-			style.multiple: true
-			class : TPainting
-		}
 	}
 	_.LuaExec -> Renderer
-
+	ToileObject -> Renderer
+	ToileContainer -> Renderer
+	
 	LCD {
 		tooltip: "Renderer for LCD textual screen"
 		class: [ TLCD; Lua ]
@@ -171,26 +181,25 @@ Toile: Toile Add On {
 		tooltip: "Decoration of an object"
 		class: [ TDecoration ; Lua ]
 	}
-	_.LuaExec -> Decoration 
-	Decoration -> Renderer.DecorationsList
+	_.LuaExec -> Decoration
 	ToileObject -> Decoration
+	Decoration -> ToileContainer.DecorationsList
 
 	Painting {
 		tooltip: "a.k.a subsurface"
 		class: TPainting
 	}
-	_.Object -> Painting
-	Painting -> Renderer.PaintingsList
-	ToileObject -> Painting
+	Painting -> ToileContainer.ChildrenList
+	ToileContainer -> Painting
 
 	Field {
 		tooltip: "Display information"
 		class: [ TField ; Lua ]
 		icon: https://icons.terrastruct.com/essentials/021-view.svg
 	}
-	_.Object -> Field
 	_.Handler -> Field
 	Painting -> Field
+	Field -> ToileContainer.ChildrenList
 }
 
 # Configuration

@@ -99,8 +99,8 @@ diagram {
 			tooltip: "Decoration of an object"
 			class: [ TDecoration ; Lua ]
 		}
-		Decoration -> Renderer : ApplyOnRenderer
-		Decoration -> Painting : ApplyOn
+		Decoration -> Renderer : ApplyOn Renderer
+		Decoration -> Painting : ApplyOn Painting
 
 		Painting {
 			tooltip: "a.k.a subsurface"
@@ -116,8 +116,8 @@ diagram {
 		_.rendezvous -> Field : waitfor
 		_.timer-> Field : when
 		_.tracker -> Field : whenDone\nwhenStopped\nwhenChanged
-		Field -> Renderer : ApplyOnRenderer
-		Field -> Painting : ApplyOn
+		Field -> Renderer : ApplyOn Renderer
+		Field -> Painting : ApplyOn Painting
 	}
 
 	(topic -> *)[*].class: Data

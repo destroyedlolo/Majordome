@@ -7,12 +7,14 @@
 #ifndef PAINTING_H
 #define PAINTING_H
 
-class Painting;	// Avoid nested includes
-
-#include "ToileObject.h"
 #include "Toile.h"
+#include "ToileObject.h"
+#include "ToileContainer.h"
+
+/*
 #include "Renderer.h"
 #include "Decoration.h"
+*/
 
 #include "../Helpers.h"
 #include "../Object.h"
@@ -20,20 +22,13 @@ class Painting;	// Avoid nested includes
 
 #include <Selene/SelGenericSurface.h>
 
-class Painting : virtual public Object, virtual public ToileObject {
+class Painting : virtual public ToileContainer, virtual public ToileObject {
 protected:
-	struct SelGenericSurface *surface;
-
-	Renderer *parentR;	// The parent is a renderer
-	Painting *parentP;	// The parent is a painting
-
 	Toile::SurfaceGeometry geometry;
 
 public:
-	std::vector<Decoration *> DecorationsList;
-
-	Painting():surface(NULL), parentR(NULL), parentP(NULL){};
-	Painting(const std::string &fch, std::string &where): Object(fch, where), surface(NULL), parentR(NULL), parentP(NULL){};
+//	Painting():surface(NULL){};
+	Painting(const std::string &fch, std::string &where): Object(fch, where){};
 
 	/* constructor from file
 	 * -> file : file to load
@@ -66,14 +61,6 @@ public:
 	 * Accessors
 	 * ***/
 
-	struct SelGenericSurface *getSurface(){ return this->surface; }
-
-
-	/* ***
-	 * Childs' management
-	 * ***/
-	void addDecoration(Decoration *t){ this->DecorationsList.push_back(t); }
-
 	/* ***
 	 * Renderer own's 
 	 */
@@ -81,7 +68,7 @@ public:
 		// Try to initialize missing fields from its parent
 	 	// Then create the subsurface.
 	 	// Fails in case of error.
-	void exec();
+	bool init(void);
 
 	void refresh();			// Refresh Painting's own decoration (background)
 	void refreshChild();	// Refresh its child
