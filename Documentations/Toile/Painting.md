@@ -2,7 +2,7 @@
 Subpart of a surface to paint on. 
 
 ## Renderer specifics
-## LCD
+## I2C LCD
 - The Painting is sharing the same memory as its parent. Consequently, what is behind
 is destroyed.
 - Drawing is enforced not going outside the Painting area.
@@ -18,22 +18,11 @@ Consequently, `--->>` are commented out commands (notice the 3 dashes).
 ## Directives
 
 ### Generals
+See [this page](../Headers%20and%20Shared%20Directives.md#general-directives).
+### Dependancies
+See [this page](../Headers%20and%20Shared%20Directives.md#dependancies)
 
-#### -->> name=
-Unique name to identify the Painting. If not set, uses the filename.
-`-->> name=toto`
-#### -->> quiet
-Remove some trace.
-
-### Painting owns
-#### Indicate the parent surface
-As Renderers and Paintings can share the same name even being totally distinct
-objects, we have to specify which is the kind of our parent.
-##### -->> Renderer Parent=
-Create this Painting upon a given Renderer.
-##### -->> Painting Parent=
-Create this Painting upon a given Painting.
-
+### Painting's owns
 #### -->> Origin=*x,y*
 Origin coordinate of the painting as per its parent.<br>
 If not set : `0,0`
