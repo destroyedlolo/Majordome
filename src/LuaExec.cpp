@@ -6,7 +6,11 @@
 #include <cassert>
 #include <cmath>
 
-LuaExec::LuaExec(const std::string &fch, std::string &where, std::string &name) : Object(fch, where, name) {
+#if LUA_VERSION_NUM < 503
+#	include "compat-5.3.h"
+#endif
+
+LuaExec::LuaExec(const std::string &fch, std::string &where) : Object(fch, where){
 	assert( SelElasticStorage->init(&this->func) );	
 }
 
@@ -38,7 +42,7 @@ bool LuaExec::LoadFunc( lua_State *L, std::stringstream &buffer, const char *nam
 	}
 
 	if(lua_dump(L, SelElasticStorage->dumpwriter, this->getFunc()
-#if LUA_VERSION_NUM > 501
+#if LUA_VERSION_NUM > 501 || defined(COMPAT53_H_)
 		,1
 #endif
 	) != 0){
@@ -50,154 +54,227 @@ bool LuaExec::LoadFunc( lua_State *L, std::stringstream &buffer, const char *nam
 	return true;
 }
 
-void LuaExec::readConfigDirective( std::string &l, std::string &name, bool &nameused ){
-	MayBeEmptyString arg;
+void LuaExec::loadConfigurationFile(const std::string &fch, std::string &where){
+	this->Object::loadConfigurationFile(fch, where);
+}
 
-	if(!!(arg = striKWcmp( l, "-->> need_task=" ))){
+void LuaExec::loadConfigurationFile(const std::string &fch, std::string &where, lua_State *L){
+	std::stringstream buffer;
+	this->Object::loadConfigurationFile(fch, where, &buffer);
+
+	if( !this->LoadFunc( L, buffer, this->name.c_str() ))
+		exit(EXIT_FAILURE);
+}
+
+bool LuaExec::readConfigDirective( std::string &l ){
+	std::string arg;
+
+	if(!(arg = striKWcmp( l, "-->> need_task=" )).empty()){
 			/* No way to test if the task exists or not (as it could be
 			 * defined afterward. Will be part of sanity checks
 			 */
-		if(verbose)
+		if(::verbose)
 			SelLog->Log('C', "\t\tAdded needed task '%s'", arg.c_str());
 		this->addNeededTask( arg );
-		return;
-	} else if(!!(arg = striKWcmp( l, "-->> need_rendezvous=" ))){
+
+		return true;
+	} else if(!(arg = striKWcmp( l, "-->> need_rendezvous=" )).empty()){
 		EventCollection::iterator event;
 		if( (event = config.EventsList.find(arg)) != config.EventsList.end()){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tAdded needed rendezvous '%s'", arg.c_str());
 			this->addNeededRendezVous(arg);
-			return;
+
+			if(d2)
+				fd2 << this->getFullId() << " -- " << event->second->getFullId() << ": need { class: lneed }" << std::endl;
+			return true;
 		} else {
 			SelLog->Log('F', "\t\tRendezvous '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
-	} else if(!!(arg = striKWcmp( l, "-->> need_topic=" ))){
+	} else if(!(arg = striKWcmp( l, "-->> need_topic=" )).empty()){
 		TopicCollection::iterator topic;
 		if( (topic = config.TopicsList.find(arg)) != config.TopicsList.end()){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tAdded needed topic '%s'", arg.c_str());
 			this->addNeededTopic(arg);
-			return;
+
+			if(d2)
+				fd2 << this->getFullId() << " -- " << topic->second->getFullId() << ": need { class: lneed }" << std::endl;
+			return true;
 		} else {
 			SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
-	} else if(!!(arg = striKWcmp( l, "-->> require_topic=" ))){
+	} else if(!(arg = striKWcmp( l, "-->> require_topic=" )).empty()){
 		TopicCollection::iterator topic;
 		if( (topic = config.TopicsList.find(arg)) != config.TopicsList.end()){
 			if(!topic->second->toBeStored()){
 				SelLog->Log('F', "Can't required \"%s\" topic : not stored", arg.c_str());
 				exit(EXIT_FAILURE);
 			}
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tAdded required topic '%s'", arg.c_str());
+
+			if(d2)
+				fd2 << this->getFullId() << " -- " << topic->second->getFullId() << ": require { class: lrequiere }" << std::endl;
 			this->addRequiredTopic(arg);
-			return;
+			return true;
 		} else {
 			SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
-	} else if(!!(arg = striKWcmp( l, "-->> need_timer=" ))){
+	} else if(!(arg = striKWcmp( l, "-->> need_timer=" )).empty()){
 		TimerCollection::iterator timer;
 		if( (timer = config.TimersList.find(arg)) != config.TimersList.end()){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tAdded needed timer '%s'", arg.c_str());
 			this->addNeededTimer(arg);
-			return;
+
+			if(d2)
+				fd2 << this->getFullId() << " -- " << timer->second->getFullId() << ": need { class: lneed }" << std::endl;
+			return true;
 		} else {
 			SelLog->Log('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
-	} else if(!!(arg = striKWcmp( l, "-->> need_tracker=" ))){
+	} else if(!(arg = striKWcmp( l, "-->> need_tracker=" )).empty()){
 		TrackerCollection::iterator trk;
 		if( (trk = config.TrackersList.find(arg)) != config.TrackersList.end()){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tAdded needed TrackersList '%s'", arg.c_str());
 			this->addNeededTracker(arg);
-			return;
+
+			if(d2)
+				fd2 << this->getFullId() << " -- " << trk->second->getFullId() << ": need { class: lneed }" << std::endl;
+			return true;
 		} else {
 			SelLog->Log('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
-	} else if(!!(arg = striKWcmp( l, "-->> need_minmax=" ))){
+	} else if(!(arg = striKWcmp( l, "-->> need_minmax=" )).empty()){
 		MinMaxCollection::iterator minmax;
 		if( (minmax = config.MinMaxList.find(arg)) != config.MinMaxList.end()){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tAdded needed minmax '%s'", arg.c_str());
 			this->addNeededMinMax( arg );
-			return;
+
+			if(d2)
+				fd2 << this->getFullId() << " -- " << minmax->second->getFullId() << ": need { class: lneed }" << std::endl;
+			return true;
 		} else {
 			SelLog->Log('F', "\t\tminmax '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
-	} else if(!!(arg = striKWcmp( l, "-->> need_namedminmax=" ))){
+	} else if(!(arg = striKWcmp( l, "-->> need_namedminmax=" )).empty()){
 		NamedMinMaxCollection::iterator nminmax;
 		if( (nminmax = config.NamedMinMaxList.find(arg)) != config.NamedMinMaxList.end()){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tAdded needed namedminmax '%s'", arg.c_str());
 			this->addNeededNamedMinMax( arg );
-			return;
+
+			if(d2)
+				fd2 << this->getFullId() << " -- " << nminmax->second->getFullId() << ": need { class: lneed }" << std::endl;
+			return true;
 		} else {
 			SelLog->Log('F', "\t\tnamedminmax '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
-	} else if(!!(arg = striKWcmp( l, "-->> need_shutdown=" ))){
+	} else if(!(arg = striKWcmp( l, "-->> need_multikeysminmax=" )).empty()){
+		MultiKeysMinMaxCollection::iterator nminmax;
+		if( (nminmax = config.MultiKeysMinMaxList.find(arg)) != config.MultiKeysMinMaxList.end()){
+			if(::verbose)
+				SelLog->Log('C', "\t\tAdded needed namedminmax '%s'", arg.c_str());
+			this->addNeededMultiKeysMinMax( arg );
+
+			if(d2)
+				fd2 << this->getFullId() << " -- " << nminmax->second->getFullId() << ": need { class: lneed }" << std::endl;
+			return true;
+		} else {
+			SelLog->Log('F', "\t\tnamedminmax '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
+	} else if(!(arg = striKWcmp( l, "-->> need_shutdown=" )).empty()){
 		ShutdownCollection::iterator shut;
 		if( (shut = config.ShutdownsList.find(arg)) != config.ShutdownsList.end()){
-			if(verbose)
+			if(::verbose)
 				SelLog->Log('C', "\t\tAdded needed Shutdown '%s'", arg.c_str());
 			this->addNeededShutdown( arg );
-			return;
+
+			if(d2)
+				fd2 << this->getFullId() << " -- " << shut->second->getFullId() << ": need { class: lneed }" << std::endl;
+			return true;
 		} else {
 			SelLog->Log('F', "\t\tShutdown '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
 #ifdef DBASE
 #	ifdef PGSQL
-	} else if(!!(arg = striKWcmp( l, "-->> need_pgSQL=" ))){
+	} else if(!(arg = striKWcmp( l, "-->> need_pgSQL=" )).empty()){
 		pgSQLCollection::iterator shut;
-		if( (shut = config.pgSQLsList.find(arg)) != config.pgSQLsList.end()){
-			if(verbose)
+		if( (shut = config.pgSQLsList.find(arg)) != config.pgSQLsList.end() ){
+			if(::verbose)
 				SelLog->Log('C', "\t\tAdded needed pgSQL '%s'", arg.c_str());
 			this->addNeededpgSQL( arg );
-			return;
+
+			if(d2)
+				fd2 << this->getFullId() << " -- " << shut->second->getFullId() << ": need { class: lneed }" << std::endl;
+			return true;
 		} else {
 			SelLog->Log('F', "\t\tpgSQL '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
 #	endif
-	} else if(!!(arg = striKWcmp( l, "-->> need_feed=" ))){
+	} else if(!(arg = striKWcmp( l, "-->> need_feed=" )).empty()){
 		FeedCollection::iterator shut;
-		if( (shut = config.FeedsList.find(arg)) != config.FeedsList.end()){
-			if(verbose)
+		if( (shut = config.FeedsList.find(arg)) != config.FeedsList.end() ){
+			if(::verbose)
 				SelLog->Log('C', "\t\tAdded needed Feed '%s'", arg.c_str());
 			this->addNeededFeed( arg );
-			return;
+
+			if(d2)
+				fd2 << this->getFullId() << " -- " << shut->second->getFullId() << ": need { class: lneed }" << std::endl;
+			return true;
 		} else {
 			SelLog->Log('F', "\t\tFeed '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
-	} else if(!!(arg = striKWcmp( l, "-->> need_namedfeed=" ))){
+	} else if(!(arg = striKWcmp( l, "-->> need_namedfeed=" )).empty()){
 		NamedFeedCollection::iterator shut;
-		if( (shut = config.NamedFeedsList.find(arg)) != config.NamedFeedsList.end()){
-			if(verbose)
+		if( (shut = config.NamedFeedsList.find(arg)) != config.NamedFeedsList.end() ){
+			if(::verbose)
 				SelLog->Log('C', "\t\tAdded needed NamedFeed '%s'", arg.c_str());
 			this->addNeededNamedFeed( arg );
-			return;
+
+			if(d2)
+				fd2 << this->getFullId() << " -- " << shut->second->getFullId() << ": need { class: lneed }" << std::endl;
+			return true;
 		} else {
 			SelLog->Log('F', "\t\tNamedFeed '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
 #endif
+#ifdef TOILE
+	} else if(!(arg = striKWcmp( l, "-->> need_renderer=" )).empty()){
+		RendererCollection::iterator renderer;
+		if( (renderer = config.RendererList.find(arg)) != config.RendererList.end() ){
+			if(::verbose)
+				SelLog->Log('C', "\t\tAdded needed renderer '%s'", arg.c_str());
+			this->addNeededRenderer( arg );
+			return true;
+		} else {
+			SelLog->Log('F', "\t\tRenderer '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
+#endif
 	}
 
-	return this->Object::readConfigDirective(l, name, nameused);
+	return this->Object::readConfigDirective(l);
 }
 
 bool LuaExec::canRun( void ){
 	if( !this->isEnabled() ){
-		if(verbose && !this->isQuiet())
+		if(!this->isVerbose())
 			SelLog->Log('T', "Task '%s' from '%s' is disabled", this->getNameC(), this->getWhereC() );
 		return false;
 	}
@@ -346,6 +423,22 @@ bool LuaExec::feedbyNeeded( lua_State *L, bool require ){
 		}
 	}
 
+	for(auto &i : this->needed_multikeysminmax){
+		try {
+			class MultiKeysMinMax *nmm = config.MultiKeysMinMaxList.at( i );
+			class MultiKeysMinMax **nminmax = (class MultiKeysMinMax **)lua_newuserdata(L, sizeof(class MultiKeysMinMax *));
+			assert(nminmax);
+
+			*nminmax = nmm;
+			luaL_getmetatable(L, "MajordomeMultiKeysMinMax");
+			lua_setmetatable(L, -2);
+
+			lua_setglobal(L, i.c_str());
+		} catch( std::out_of_range &e ){	// Not found 
+			return false;
+		}
+	}
+
 	for(auto &i : this->needed_shutdown){
 		try {
 			class Shutdown *s = config.ShutdownsList.at( i );
@@ -415,6 +508,24 @@ bool LuaExec::feedbyNeeded( lua_State *L, bool require ){
 	}
 #endif
 
+#ifdef TOILE
+	for(auto &i : this->needed_renderer){
+		try {
+			class Renderer *rd = config.RendererList.at( i );
+			class SelGenericSurfaceLua *renderer = (class SelGenericSurfaceLua *)lua_newuserdata(L, sizeof(class SelGenericSurfaceLua));
+			assert(renderer);
+
+			renderer->storage = rd->getSurface();
+			luaL_getmetatable(L, rd->getSurface()->cb->LuaObjectName() );
+			lua_setmetatable(L, -2);
+
+			lua_setglobal(L, i.c_str());
+		} catch( std::out_of_range &e ){	// Not found 
+			return false;
+		}
+	}
+#endif
+
 	return true;
 }
 
@@ -450,7 +561,7 @@ bool LuaExec::execAsync( lua_State *L ){
 		return false;
 	}
 
-	if(verbose && !this->isQuiet())
+	if(this->isVerbose())
 		SelLog->Log('T', "Async running Task '%s' from '%s'", this->getNameC(), this->getWhereC() );
 
 	pthread_t tid;	// No need to be kept
@@ -473,7 +584,7 @@ bool LuaExec::prepareExecSync(lua_State *L){
 		return false;
 	}
 
-	if(verbose && !this->isQuiet())
+	if(this->isVerbose())
 		SelLog->Log('T', "Sync running Task '%s' from '%s'", this->getNameC(), this->getWhereC() );
 
 	return true;
@@ -483,15 +594,19 @@ bool LuaExec::execSync(lua_State *L, enum boolRetCode *rc){
 	if(!this->prepareExecSync(L))
 		return false;
 
-	if(lua_pcall( L, 0, 1, 0))
+	if(lua_pcall( L, 0, 1, 0)){
 		SelLog->Log('E', "Can't execute task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), lua_tostring(L, -1));
+		*rc = boolRetCode::RCfalse;
+		return false;
+	}
 
 	if(rc){
 		*rc = boolRetCode::RCnil;
 		if(lua_isboolean(L, -1))
 			*rc = lua_toboolean(L, -1) ? boolRetCode::RCtrue : boolRetCode::RCfalse;
 	}
-
+	lua_pop(L, 1);	// Remove return code
+	
 	return true;
 }
 
@@ -502,8 +617,11 @@ bool LuaExec::execSync(lua_State *L, enum boolRetCode *rc, lua_Number *retn){
 	if(!this->prepareExecSync(L))
 		return false;
 
-	if(lua_pcall(L, 0, 1, 0))
+	if(lua_pcall(L, 0, 1, 0)){
 		SelLog->Log('E', "Can't execute task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), lua_tostring(L, -1));
+		*rc = boolRetCode::RCfalse;
+		return false;
+	}
 
 	if(lua_isboolean(L, -1))
 		*rc = lua_toboolean(L, -1) ? boolRetCode::RCtrue : boolRetCode::RCfalse;
@@ -513,19 +631,22 @@ bool LuaExec::execSync(lua_State *L, enum boolRetCode *rc, lua_Number *retn){
 		*retn = lua_tonumber(L, -1);
 	}
 
+	lua_pop(L, 1);	// Remove return code
 	return true;
-	
 }
 
 bool LuaExec::execSync(lua_State *L, std::string *rs, enum boolRetCode *rc, lua_Number *retn){
-	*rc = boolRetCode::RCnil;
 	*retn = NAN;
+	*rc = boolRetCode::RCnil;
 
 	if(!this->prepareExecSync(L))
 		return false;
 
-	if(lua_pcall(L, 0, 2, 0))
+	if(lua_pcall(L, 0, 2, 0)){
 		SelLog->Log('E', "Can't execute task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), lua_tostring(L, -1));
+		*rc = boolRetCode::RCfalse;
+		return false;
+	}
 
 		/* -1 : numeric value if provided
 		 * -2 : string value or RC
@@ -542,5 +663,93 @@ bool LuaExec::execSync(lua_State *L, std::string *rs, enum boolRetCode *rc, lua_
 		*retn = lua_tonumber(L, -1);
 	}
 
+	lua_pop(L, 2);	// Remove return code
 	return true;
 }
+
+bool LuaExec::execSync(lua_State *L, enum boolRetCode *rc, lua_Number *retn, std::string *rs){
+	if(retn)
+		*retn = NAN;
+	*rc = boolRetCode::RCnil;
+
+	if(!this->prepareExecSync(L))
+		return false;
+
+	if(lua_pcall(L, 0, 1, 0)){
+		SelLog->Log('E', "Can't execute task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), lua_tostring(L, -1));
+		*rc = boolRetCode::RCfalse;
+		return false;
+	}
+
+	if(lua_isboolean(L, -1))
+		*rc = lua_toboolean(L, -1) ? boolRetCode::RCtrue : boolRetCode::RCfalse;
+
+	if(lua_isstring(L, -1) && rs){
+		*rc = boolRetCode::RCforced;
+		*rs = lua_tostring(L, -1);
+	}
+
+	if(lua_isnumber(L, -1) && retn){
+		*rc = boolRetCode::RCforced;
+		*retn = lua_tonumber(L, -1);
+	}
+
+	lua_pop(L, 1);	// Remove return code
+	return true;
+}
+
+bool LuaExec::execSync(lua_State *L, std::vector<std::string> &rs, uint8_t nk, enum boolRetCode *rc, lua_Number *retn){
+	*retn = NAN;
+	*rc = boolRetCode::RCnil;
+
+	if(!this->prepareExecSync(L))
+		return false;
+
+	if(lua_pcall(L, 0, 2, 0)){
+		SelLog->Log('E', "Can't execute task '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), lua_tostring(L, -1));
+		*rc = boolRetCode::RCfalse;
+		return false;
+	}
+
+		/* -1 : numeric value if provided
+		 * -2 : array of strings or RC (false only)
+		 */
+
+	if(lua_isboolean(L, -2)){
+		*rc = lua_toboolean(L, -2) ? boolRetCode::RCtrue : boolRetCode::RCfalse;
+		if(*rc != boolRetCode::RCfalse){
+			SelLog->Log('E', "'%s' from '%s' : The return can be only a false or an array of strings, data ignored", this->getNameC(), this->getWhereC());
+			*rc = boolRetCode::RCfalse;
+		}
+	} else if(!lua_istable(L, -2)){
+		SelLog->Log('E', "'%s' from '%s' : The return can be only a false or an array of strings, data ignored", this->getNameC(), this->getWhereC());
+		*rc = boolRetCode::RCfalse;
+	} else {
+		lua_Integer len = luaL_len(L, -2);	// Read the table's length
+		if(len != nk){
+			SelLog->Log('E', "'%s' from '%s' : Expecting an array of %u strings, got %d, data ignored", this->getNameC(), this->getWhereC(), nk, len);
+			*rc = boolRetCode::RCfalse;
+		} else {
+			for(lua_Integer i = 1; i <= len; ++i){
+				lua_geti(L, -2, i);	// Push element
+				const char *s = lua_tolstring(L, -1, NULL);
+				if(!s){
+					SelLog->Log('E', "'%s' from '%s' : Expecting an array of strings, %d isn't, data ignored", this->getNameC(), this->getWhereC(), i);
+					*rc = boolRetCode::RCfalse;
+					break;
+				}
+				rs.emplace_back(s);
+				lua_pop(L, 1);
+			}
+			
+			if(*rc != boolRetCode::RCfalse && lua_isnumber(L, -1)){	// A potential forced value ?
+				*rc = boolRetCode::RCforced;
+				*retn = lua_tonumber(L, -1);
+			}
+		}
+	}
+
+	lua_pop(L, 2);	// Remove return code
+	return true;
+}
+

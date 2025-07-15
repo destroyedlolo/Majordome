@@ -37,10 +37,9 @@
 -->> need_tracker=Tracker
 --
 -- Wait for a rendez-vous (a.k.a event)
---->> waitfor=exemple
+--->> waitfor=example
 --
--- Create this rendez-vous object
--->> need_rendezvous=exemple
+-->> need_rendezvous=example
 --
 -- If set, only one instance is allowed to run
 --->> once
@@ -56,7 +55,7 @@
 -->> RunAtStartup
 
 -- Test if the rendez-vous has been created
-print( exemple )
+print( example )
 
 -- Test if the tracker has been created
 print( Tracker )

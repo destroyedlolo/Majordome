@@ -95,8 +95,37 @@ void Config::SanityChecks( void ){
 				SelLog->Log('F', "Task \"%s\" needed by \"%s\" doesn't exist", j.c_str(), i.second->getNameC());
 				exit(EXIT_FAILURE);
 			}
+	
+			if(d2)
+				fd2 << i.second->getFullId() << " -- " << task->second->getFullId() << ": need { class: lneed }" << std::endl;
 		}
 	}
+
+#ifdef DBASE
+		/* Verify a database is specified */
+	for(auto &i : this->FeedsList)
+		if(!i.second->getDatabase()){
+			SelLog->Log('F', "Feed \"%s\" is not associated to a database",  i.second->getNameC());
+			exit(EXIT_FAILURE);
+		}
+
+	for(auto &i : this->NamedFeedsList)
+		if(!i.second->getDatabase()){
+			SelLog->Log('F', "NamedFeed \"%s\" is not associated to a database",  i.second->getNameC());
+			exit(EXIT_FAILURE);
+		}
+
+	for(auto &i : this->ArchivingsList){
+		if(!i.second->getDatabase()){
+			SelLog->Log('F', "Archiving \"%s\" is not associated to a database",  i.second->getNameC());
+			exit(EXIT_FAILURE);
+		}
+		if(!i.second->hasSource()){
+			SelLog->Log('F', "Archiving \"%s\" has no associated source",  i.second->getNameC());
+			exit(EXIT_FAILURE);
+		}
+	}
+#endif
 }
 
 void Config::SubscribeTopics( void ){
@@ -113,7 +142,7 @@ void Config::SubscribeTopics( void ){
 		qoss[nbre++] = i.second->getQOS();
 	}
 #ifdef DEBUG
-	if(verbose)
+	if(::verbose)
 		SelLog->Log('C', "Subscribing to %ld topics", nbre);
 #endif
 
@@ -152,3 +181,15 @@ void Config::RunShutdowns( void ){
 	for(auto &i : this->ShutdownsList)
 		i.second->exec();
 }
+
+#ifdef DEBUG
+void Config::dump(void){
+	std::cout << "Task\n------" << std::endl;
+	for(auto &i : this->TasksList)
+		std::cout << "x:" << i.first << std::endl;
+
+	std::cout << "Tracker\n------" << std::endl;
+	for(auto &i : this->TrackersList)
+		std::cout << "x:" << i.first << std::endl;
+}
+#endif

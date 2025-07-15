@@ -1,5 +1,7 @@
 Simple usage of a recurrent **timer**.
 
+![Objects in this example](Diagram.svg)
+
 To test it, create a config file like this
 
 	# URL to reach the broker

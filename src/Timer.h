@@ -34,10 +34,10 @@ public:
 	 * -> where : file's directory
 	 * <- name : this object's name
 	 */
-	Timer( const std::string &file, std::string &where, std::string &name  );
+	Timer( const std::string &file, std::string &where );
 	virtual ~Timer() = default;	// Just to make this class polymorphic
 
-	void readConfigDirective( std::string &l, std::string &name, bool &nameused );
+	virtual bool readConfigDirective(std::string &l);
 
 	/* Timers are handled through a dedicated thread ...
 	 * A pointer to this object is passed to it.
@@ -55,7 +55,7 @@ public:
 	 * Accessors
 	 */
 	unsigned long getEvery( void ){ return this->every; }
-	void setEvery( unsigned long v ){ this->every = v; }
+	void setEvery( unsigned long v );
 
 		/* Notez-bien :
 		 * 	- To avoid race condition, protect these function within
@@ -107,6 +107,9 @@ public:
 
 	/* Create Lua's object */
 	static void initLuaInterface(lua_State *L);
+
+	virtual std::string getTri(){ return Timer::trigramme(); }
+	static std::string trigramme(){ return "TMR_"; }
 };
 
 typedef ObjCollection<Timer *> TimerCollection;

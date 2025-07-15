@@ -1,5 +1,7 @@
 **Tracker** example.
 
+![Objects in this example](Diagram.svg)
+
 In this exemple, `TestTracker` will be started every `15s` and stopped every `25s`.<br>
 It is listening for `Test` topic and will goes **Done** if received value is higher than 10.
 

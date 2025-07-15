@@ -1,14 +1,14 @@
 This is an example of usage of **howmany** : the tracker will wait for *how many* positive checks before becoming DONE.
 
+![Objects in this example](Diagram.svg)
+
 Following objects are created :
-- `TestHM.topic` - subscribes to a topic **Test** to receive data
+- `Test.topic` - subscribes to a topic **Test** to receive data
 - `TestTrackerHM.tracker` - A tracker waiting for 3 incoming data > 10
 
-<!---
-- `ControlHM.topic` - subscribes to a topic **ControlHM** to send command to the tracker. Recognized commands are :
+- `ControlHM.topic` - subscribes to a topic **ControlHM** to send command to the tracker. Recognized command is :
 
   * **STATUS** : displays the tracker status
-  * **CHECKING** or **START** : Force the status of the tracker for testing purposes
 --->
 
 ---

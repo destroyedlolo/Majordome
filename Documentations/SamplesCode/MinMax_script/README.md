@@ -1,6 +1,7 @@
 This example demonstrates how **MinMax**'s validation script can reject or modify incoming data.
 
 ---
+![Objects in this example](Diagram.svg)
 
 * `Test.topic` : data source
 * `TestMinMax.minmax` : validation script inside minmax object definition

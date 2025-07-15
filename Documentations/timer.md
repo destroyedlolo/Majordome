@@ -8,16 +8,8 @@ Its target can be an absolute time or a recurring interval.
 > As of v6.0 onward, The syntax has changed for **timers** and is not any more compatible with previous versions.
 
 ### General directives
-#### -->> name=
-Unique name to identify the topic. If not set, uses the filename.
-```
--->> name=name=toto
-```
-#### --> quiet
-Removes some trace.
-
-#### -->> disabled
-This script won't run.
+### Generals
+See [this page](Headers%20and%20Shared%20Directives.md#general-directives).
 
 ### Timer's
 #### -->> every=

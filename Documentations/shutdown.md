@@ -15,35 +15,12 @@ Consequently, `--->>` are commented out commands (notice the 3 dashes).
 
 ## Directives
 ### General directives
-#### -->> name=
-Unique name to identify the topic. If not set, uses the filename.
-```
--->> name=Toto
-```
-
-#### --> quiet
-Removes some trace.
-
-#### -->> disabled
-This script won't run.
-
+### Generals
+See [this page](Headers%20and%20Shared%20Directives.md#general-directives).
 ### Dependancies
-Those directives expose them at Lua level without having to manually `find()` them.
-
-#### -->> need_topic=
-Creates an object if a value has been received and its value hasn't expired. Otherwise, the object remains unset.
-
-#### -->> require_topic=
-Prevents the script to be launched if corresponding value is not valid.<br>
-
-#### -->> need_rendezvous=, -->> need_tracker=, -->> need_timer=, -->> need_task=, -->> need_minmax
-Create corresponding object.
-
-#### -->> need_renderer
-Only **Toile** plug-in has been compiled
+See [this page](Headers%20and%20Shared%20Directives.md#dependancies)
 
 ## at Lua side
-
 ### Exposed objects
 Statistics sequencing and retrieving are done through the **MajordomeNamedMinMax**'s API :
 - `getContainer()` returns the container (directory) in which this Shutdown has been defined

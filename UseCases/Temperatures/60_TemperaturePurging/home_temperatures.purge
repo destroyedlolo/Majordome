@@ -1,0 +1,22 @@
+-->> desc=Purge older hot data
+-->> ecom=keep a week
+--
+--------------------
+-- Database related
+--------------------
+--
+--- The database to connect to
+-->> Database=domestik2
+--
+--------------------
+-- Selection related
+--------------------
+--
+-- data to keep
+-->> Keep=7 days
+--
+------------
+-- Launching
+------------
+--
+-->> waitfor=ht_archiving_Done

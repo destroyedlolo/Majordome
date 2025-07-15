@@ -8,7 +8,16 @@
 #include <cstring>
 #include <cassert>
 
-NamedFeed::NamedFeed(const std::string &fch, std::string &where, std::string &name, lua_State *L) : Object(fch, where, name), Handler(fch, where, name), Feed(fch, where, name, L){
+NamedFeed::NamedFeed(const std::string &fch, std::string &where, lua_State *L) : Object(fch, where), Handler(fch, where){
+	this->loadConfigurationFile(fch, where,L);
+	if(d2)
+		fd2 << this->getFullId() << ".class: NamedFeed" << std::endl;
+
+		/* Sanity checks */
+	if(!this->db){
+		SelLog->Log('F', "[%s] No database defined", this->getNameC());
+		exit(EXIT_FAILURE);
+	}
 }
 
 void NamedFeed::feedState( lua_State *L ){

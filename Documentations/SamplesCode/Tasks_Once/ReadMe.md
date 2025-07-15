@@ -1,5 +1,7 @@
 Demonstrates usage of `Once` directives with [tasks](../../Task(lua).md).
 
+![Objects in this example](Diagram.svg)
+
 The task is triggered every 15s, but, thanks to **Once** directive, 
 it can't be relaunched until the 20s waiting time is over. Consequently, only one instance 
 of *RunFor20s* can run at once.

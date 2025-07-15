@@ -37,17 +37,11 @@ Consequently, `--->>` are commented out commands (notice the 3 dashes).
 ## Directives
 
 ### Generals
-
-#### -->> name=
-Unique name to identify the tracker. If not set, uses the filename.
-```
--->> name=toto
-```
-#### -->> quiet
-Remove some trace. This option is useful to avoid logging of very noisy topics.
-
-#### -->> disabled
-This tracker starts as disabled : stats change and incoming messages are ignored.
+See [this page](Headers%20and%20Shared%20Directives.md#general-directives).
+### Data arrival
+See [this page](Headers%20and%20Shared%20Directives.md#triggering-while-providing-data)
+### Dependancies
+See [this page](Headers%20and%20Shared%20Directives.md#dependancies).
 
 ### Tracker owns
 
@@ -70,30 +64,11 @@ Timer indicating when the tracker will switch to **CHECKING** mode
 #### -->> stop=
 Timer indicating when the tracker will be reseted to **WAITING** mode
 
-### MQTT topics
-
-#### -->> listen=
-Indicates which [Topic](topic.md) to follow to take a decision.<br>
-(more than one "listen" can be present)
+### additional MQTT topics
 
 #### -->> statustopic=
 Report status change to the given topic.
 Notez-bien : it's not a [Majordome topic](topic.md) but a simple string where `%ClientID%` will be replaced by Majordome's MQTT client ID.
-
-### Dependancies
-Tasks usually depends on Majordome's objects ; those directives expose them at Lua level without having to manually `find()` them.
-
-> [!WARNING]
-> Only `store`d topic can be  needed or required.
-
-#### -->> need_topic=
-Creates an object if a value has been received and its value hasn't expired. Otherwise, the object remains unset.
-
-#### -->> require_topic=
-Prevents the script to be launched if corresponding value is not valid.<br>
-
-#### -->> need_rendezvous=, -->> need_tracker=, -->> need_timer=, -->> need_task=
-Create corresponding object.
 
 ## at Lua side
 ### Exposed variables

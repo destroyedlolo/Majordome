@@ -11,15 +11,11 @@ Consequently, `--->>` are commented out commands (notice the 3 dashes).
 ## Directives
 
 ### Generals
-
-#### -->> name=
-Unique name to identify the NamedMinMax. If not set, uses the filename.
-`-->> name=toto`
-#### -->> quiet
-Remove some trace. This option is useful to avoid logging of very noisy topics.
-
-#### -->> disabled
-This NamedMinMax starts as disabled : stats change and incoming messages are ignored.
+See [this page](Headers%20and%20Shared%20Directives.md#general-directives).
+### Data arrival
+See [this page](Headers%20and%20Shared%20Directives.md#triggering-while-providing-data)
+### Dependancies
+See [this page](Headers%20and%20Shared%20Directives.md#dependancies)
 
 ### NamedMinMax owns
 None

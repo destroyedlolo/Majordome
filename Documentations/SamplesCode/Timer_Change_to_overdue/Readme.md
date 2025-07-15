@@ -1,5 +1,7 @@
 Test runifover feature. Will log a `bip` if running after 00:05
 
+![Objects in this example](Diagram.svg)
+
 To test it, create a config file like this
 
 	# URL to reach the broker

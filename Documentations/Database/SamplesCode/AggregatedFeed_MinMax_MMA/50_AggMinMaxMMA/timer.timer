@@ -1,0 +1,6 @@
+-- Timer to launch an action every 20 seconds
+-->> every=10
+--
+--->> immediate
+--->> disabled
+-->> quiet

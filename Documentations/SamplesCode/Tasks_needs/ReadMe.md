@@ -1,7 +1,9 @@
 Demonstrates usage of `need_*` directives with [tasks](../../Task(lua).md) and how to use created objects.
 
+![Objects in this example](Diagram.svg)
+
 > [!TIP] 
-> It can be applies to trakers as well.
+> It can be applies to other object.
 
 ---
 

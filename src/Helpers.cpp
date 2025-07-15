@@ -5,7 +5,6 @@
 
 #include <cstring>
 #include <cstdarg>
-#include <cstdio>
 
 char *removeLF(char *s){
 	size_t l=strlen(s);
@@ -22,21 +21,44 @@ const char *striKWcmp(const char *s, const char *kw){
 		return s+klen;
 }
 
-MayBeEmptyString striKWcmp(const std::string s, const char *kw){
+std::string striKWcmp(const std::string s, const char *kw){
 	size_t l = strlen( kw );
 
 	if(!s.compare(0, l, kw))
-		return MayBeEmptyString( s.substr(l) );
-	return MayBeEmptyString();
+		return std::string( s.substr(l) );
+	return std::string();
 }
 
-MayBeEmptyString striKWcmp(const std::string &s, const std::string &kw ){
+std::string striKWcmp(const std::string &s, const std::string &kw ){
 	if(!s.compare(0, kw.size(), kw))
-		return MayBeEmptyString( s.substr(kw.size()) );
-	return MayBeEmptyString();
+		return std::string( s.substr(kw.size()) );
+	return std::string();
 }
 
 const char *fileextention( const char *fch ){
 	return strrchr(fch, '.');
+}
+
+std::string escapeHTML(std::string data) {
+	std::string buffer;
+	buffer.reserve(data.size());
+	for(size_t pos = 0; pos != data.size(); ++pos) {
+		switch(data[pos]) {
+		case '&':
+			buffer.append("&amp;"); break;
+		case '\"':
+			buffer.append("&quot;"); break;
+		case '\'':
+			buffer.append("&apos;"); break;
+		case '<':
+			buffer.append("&lt;"); break;
+		case '>':
+			buffer.append("&gt;"); break;
+		default:
+			buffer.append(&data[pos], 1); break;
+		}
+	}
+
+	return buffer;
 }
 

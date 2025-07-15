@@ -1,6 +1,8 @@
-This example demonstrates how **MinMax**'s validation script can reject or modify incoming data.
+This example demonstrates how **NamedMinMax**'s validation script can reject or modify incoming data.
 
 # Files
+
+![Objects in this example](Diagram.svg)
 
 * `Test.topic` : data source
 * `TestMinMax.namedminmax` : validation script inside namedminmax object definition

@@ -1,0 +1,36 @@
+-->> desc=Aggregate values to save disc space.
+--
+-->> listen=HomeTemperatures
+-->> need_topic=HomeTemperatures
+-->> quiet
+
+-- Extract probe name
+local _, nlevel=HomeTemperatures:getTopic():gsub("/","")	-- amount of level
+
+MAJORDOME_TOPIC = MAJORDOME_TOPIC ..'/'
+local tbl =  {MAJORDOME_TOPIC:match((MAJORDOME_TOPIC:gsub("[^/]*/", "([^/]*)/")))}
+local name = tbl[nlevel+1]
+
+-- Transcode of some probe's names
+-- If the value is nul, the topic is ignored
+
+local transco =  {
+	["GarageP"] = "Porte Garage",
+	["Congelateur"] = 0
+}
+
+if transco[name] == 0 then
+	return false
+elseif transco[name] then
+	name = transco[name]
+end
+
+
+-- ignore deeper level
+-- (usually, I publish the raw/uncorrected value)
+
+if not tbl[nlevel+2] then
+	return name
+else
+	return false	-- Brut value, ignored
+end

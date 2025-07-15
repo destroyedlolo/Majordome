@@ -1,0 +1,9 @@
+-- Timer to launch tasks every 10 secondes
+--
+-- repeating delay (in seconds)
+--ignored if null
+-->> every=600
+--
+--->> immediate
+--->> runifover
+--->> disabled

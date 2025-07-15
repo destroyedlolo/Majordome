@@ -1,0 +1,18 @@
+-->> desc=Store home temperatures
+--
+-- Samples periode
+-->> when=Periode
+--
+-- Where data come
+-->> from NamedMinMax=home_temperatures
+--
+-- The figure to store
+-- can be 'Average' (default), 'Min', 'Max' or 'Sum'
+-->> figure=Average
+--
+-- Where to store
+-->> Database=domestik2
+--->> table=ntest
+--
+--->> quiet
+--->> disabled
