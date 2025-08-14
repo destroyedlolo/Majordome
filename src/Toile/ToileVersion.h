@@ -16,6 +16,7 @@
  *	26/06/2025 - v0.02 - LF - Introduce ToileObject
  *	29/06/2025 - v0.03 - LF - Redesign
  *	13/08/2025 - v0.04 - LF - Add assertSanity()
+ *	14/08/2025 - v0.05 - LF - Change Field priority
  */
 
-#define TOILEVERSION 0.0400
+#define TOILEVERSION 0.0500

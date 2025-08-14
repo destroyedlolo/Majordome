@@ -27,7 +27,7 @@ static const SubConfigDir::extweight fileext[] = {
 	{ ".Renderer", 0xc0 },
 	{ ".LCD", 0xc0 },
 	{ ".Painting", 0x80 },
-	{ ".Field", 0x80 },
+	{ ".Field", 0x70 },
 	{ ".Decoration", 0x60 }
 };
 
