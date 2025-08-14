@@ -28,6 +28,11 @@ protected:
 		 */
 	virtual bool readConfigDirective(std::string &l);
 
+		/* Check if the configuration is complete.
+		 * Will crash if something is missing.
+		 */
+	virtual void assertSanity(void);
+
 public:
 	ToileObject();
 

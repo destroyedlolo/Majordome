@@ -84,3 +84,11 @@ bool ToileObject::readConfigDirective(std::string &l){
 
 	return true;
 }
+
+void ToileObject::assertSanity(void){
+		/* Ensure a parent is defined */
+	if(!this->getParent()){
+		SelLog->Log('F', "[\"%s\"] No parent defined", this->getNameC());
+		exit(EXIT_FAILURE);
+	}
+}

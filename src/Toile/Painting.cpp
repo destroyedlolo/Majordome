@@ -16,18 +16,10 @@
 
 Painting::Painting( const std::string &fch, std::string &where, lua_State *L ): Object(fch, where){
 	this->loadConfigurationFile(fch, where);
+	this->assertSanity();
 
 	if(d2)
 		fd2 << this->getFullId() << ".class: Painting" << std::endl;
-
-
-		/* ***
-		 * Sanity checks
-		 * ***/
-	if(!this->getParent()){
-		SelLog->Log('F', "[Painting \"%s\"] No parent defined", this->name.c_str());
-		exit(EXIT_FAILURE);
-	}
 }
 
 bool Painting::readConfigDirective( std::string &l ){
@@ -80,7 +72,7 @@ bool Painting::init(void){
 	}
 
 	if(::debug && this->isVerbose())
-		SelLog->Log('D', "Painting::init()");
+		SelLog->Log('D', "[%s] Painting::init()", this->getNameC());
 
 	if(!this->geometry.w || !this->geometry.h){	// size not set
 		uint32_t w,h;
@@ -107,8 +99,14 @@ bool Painting::init(void){
 		exit(EXIT_FAILURE);
 	}
 
+			// Initialize subsurfaces
 	if(::debug && this->isVerbose())
-		SelLog->Log('D', "Painting::init() - End");
+		SelLog->Log('D', "[%s] Painting::init() - Children", this->getNameC());
+	for(auto &child: this->getChildren())
+		child->init();
+	
+	if(::debug && this->isVerbose())
+		SelLog->Log('D', "[%s] Painting::init() - End", this->getNameC());
 	
 	return true;
 }

@@ -14,6 +14,7 @@
 
 Decoration::Decoration( const std::string &fch, std::string &where, lua_State *L ) : Object(fch, where), LuaExec(fch, where){
 	this->loadConfigurationFile(fch, where, L);
+	this->assertSanity();
 
 	if(d2)
 		fd2 << this->getFullId() << ".class: Decoration" << std::endl;

@@ -23,10 +23,7 @@ Field::Field( const std::string &fch, std::string &where, lua_State *L ) : Objec
 		/* ***
 		 * Sanity checks
 		 * ***/
-	if(!this->getParent()){
-		SelLog->Log('F', "[Painting \"%s\"] No parent defined", this->name.c_str());
-		exit(EXIT_FAILURE);
-	}
+	this->assertSanity();
 
 	if(!this->geometry.h){
 		this->geometry.h = 1;
@@ -84,6 +81,7 @@ void Field::update(std::string &rs, lua_Number &rn){
 		std::string t = std::to_string(rn);
 		this->getSurface()->cb->WriteString(this->getSurface(), t.c_str());
 	}
+
 	this->refreshChild();	// Refresh forground
 }
 

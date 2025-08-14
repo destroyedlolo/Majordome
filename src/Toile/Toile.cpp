@@ -83,7 +83,7 @@ bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &
 	
 		PaintingCollection::iterator prev;
 		if((prev = cfg.PaintingList.find(paint->getName())) != cfg.PaintingList.end()){
-			SelLog->Log('F', "Painting '%s' is defined multiple times (previous one '%s')", paint->getName().c_str(), prev->second->getWhere().c_str());
+			SelLog->Log('F', "Painting/Field '%s' is defined multiple times (previous one '%s')", paint->getName().c_str(), prev->second->getWhere().c_str());
 			exit(EXIT_FAILURE);
 		} else
 			cfg.PaintingList.insert( std::make_pair(paint->getName(), paint) );
@@ -94,7 +94,7 @@ bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &
 	
 		PaintingCollection::iterator prev;
 		if((prev = cfg.PaintingList.find(paint->getName())) != cfg.PaintingList.end()){
-			SelLog->Log('F', "Field '%s' is defined multiple times (previous one '%s')", paint->getName().c_str(), prev->second->getWhere().c_str());
+			SelLog->Log('F', "Field/Painting '%s' is defined multiple times (previous one '%s')", paint->getName().c_str(), prev->second->getWhere().c_str());
 			exit(EXIT_FAILURE);
 		} else
 			cfg.PaintingList.insert( std::make_pair(paint->getName(), paint) );
