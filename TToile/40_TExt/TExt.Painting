@@ -1,0 +1,4 @@
+-->> desc=External temperature
+-->> ApplyOn Renderer=LCD
+-->> Origin=9,0
+-->> Size=6x1

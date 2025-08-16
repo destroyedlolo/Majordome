@@ -1,0 +1,12 @@
+-->> desc=Display the unit
+--
+-- On which object this decoration will be applied ?
+-- On a Surface object
+-->> ApplyOn Painting=Piscine
+-- On a Renderer
+--->> ApplyOn Renderer=LCD
+
+-- The surface to apply on is embodied as MAJORDOME_PAINTING
+
+MAJORDOME_PAINTING:SetCursor(4,0)
+MAJORDOME_PAINTING:WriteString(string.char(6))

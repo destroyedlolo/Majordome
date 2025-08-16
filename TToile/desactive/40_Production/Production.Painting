@@ -1,0 +1,5 @@
+-->> desc=Electricite container
+-->> group=Electicite
+-->> ApplyOn Renderer=LCD
+-->> Origin=8,1
+-->> Size=7x1

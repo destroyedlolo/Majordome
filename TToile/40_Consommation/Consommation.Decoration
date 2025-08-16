@@ -1,0 +1,12 @@
+-->> desc=Affiche l'icone et l'unitée
+-->> group=Electicite
+--
+-->> ApplyOn Painting=Consommation
+
+-- The surface to apply on is embodied as MAJORDOME_PAINTING
+
+MAJORDOME_PAINTING:Home()
+MAJORDOME_PAINTING:WriteString(string.char(4))
+
+MAJORDOME_PAINTING:SetCursor(6,0)
+MAJORDOME_PAINTING:WriteString(string.char(6))
