@@ -43,7 +43,8 @@
  *	12/06/2025 - v6.09 - LF - Add field in archiving
  *	15/06/2025 - v6.10 - LF - Add Archiving's MMA2
  *	15/06/2025 - v6.11 - LF - Expose MajordomeMQTTTopic.match()
+ *	17/08/2025 - v6.12 - LF - Add %Hostname% in topic parsing
  */
 
-#define VERSION 6.1102
+#define VERSION 6.1200
 #define COPYRIGHT "Majordome (c) L.Faillie 2018-2025"

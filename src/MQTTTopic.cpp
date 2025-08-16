@@ -7,6 +7,7 @@
 #include <regex>
 
 #include <cstring>
+#include <unistd.h>
 #include <cassert>
 
 MQTTTopic::MQTTTopic(const std::string &fch, std::string &where) : Object(fch, where), alreadydefault(false), qos(0), wildcard(false), store(false), numeric(false), ttl(0){
@@ -39,6 +40,13 @@ bool MQTTTopic::readConfigDirective(std::string &l){
 
 	if(!(arg = striKWcmp( l, "-->> topic=" )).empty()){
 		this->topic = std::regex_replace(arg, std::regex("%ClientID%"), MQTT_ClientID);
+
+		char hn[HOST_NAME_MAX];
+		if(!gethostname(hn, HOST_NAME_MAX)){
+			hn[HOST_NAME_MAX-1] = 0;		/* as gethostname() is not guaranteed to provide \0 string */
+			this->topic = std::regex_replace(this->topic, std::regex("%Hostname%"), hn);
+		}
+
 		if(::verbose)
 			SelLog->Log('C', "\t\ttopic : '%s'", this->topic.c_str());
 	} else if(!(arg = striKWcmp( l, "-->> qos=" )).empty()){
