@@ -1,4 +1,4 @@
--->> desc=Electricite container
+-->> desc=Conteneur production
 -->> group=Electicite
 -->> ApplyOn Renderer=LCD
 -->> Origin=9,1

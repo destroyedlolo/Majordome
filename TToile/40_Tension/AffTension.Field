@@ -1,4 +1,4 @@
--->> desc=Affiche la production
+-->> desc=Affiche la Tension
 -->> group=Electicite
 --
 --->> disabled
@@ -10,15 +10,15 @@
 --
 -- Parent of this Painting
 -- Only one can be present
--->> ApplyOn Painting=Production
+-->> ApplyOn Painting=Tension
 --
 -- Origin of the surface
 -- 0,0 by default
--->> Origin=1,0
+-->> Origin=0,0
 --
 -- Size of the surface
 -- If not set, trying to get it from parent
--->> Size=4x1
+-->> Size=3x1
 -- Notez-Bien :
 --	- set to the size of the parent if the origin is outsize parent surface
 --
@@ -27,8 +27,8 @@
 ----------------
 --
 --	Guess the length as per sample value
---->> Sample=1430
+--->> Sample=240
 --
--->> listen=Production
+-->> listen=Tension
 
-return string.format("%5.f", MAJORDOME_PAYLOAD)
+return string.format("%3.f", MAJORDOME_PAYLOAD)
