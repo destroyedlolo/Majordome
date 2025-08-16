@@ -1,0 +1,4 @@
+-->> desc=Charge CPU 10 minutes
+-->> group=CPU
+--
+-->> topic=Machines/%Hostname%/Load/10

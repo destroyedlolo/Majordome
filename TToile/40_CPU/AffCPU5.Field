@@ -1,0 +1,8 @@
+-->> desc=Affiche la charge CPU à 5 minutes
+-->> group=CPU
+-->> ApplyOn Painting=CPU
+-->> Origin=10,0
+-->> Sample=xx.xx
+-->> listen=CPU5
+
+return string.format("%2.2f", MAJORDOME_PAYLOAD);
