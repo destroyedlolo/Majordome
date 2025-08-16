@@ -5,4 +5,4 @@
 -->> Sample=xx.xx
 -->> listen=CPU10
 
-return string.format("%2.2f", MAJORDOME_PAYLOAD);
+return string.format("%1.2f", MAJORDOME_PAYLOAD);
