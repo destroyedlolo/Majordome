@@ -20,15 +20,21 @@ class Semaphore {
 public:
 	explicit Semaphore(uint8_t max) : counter(max) {}
 
-	void acquire() {
-		std::unique_lock<std::mutex> lock(this->mutex);
+	void acquire(){
+		std::unique_lock<std::mutex> lock(this->mutex);	// the Mutex will be automatically released when lock will be destroyed, at the end of this block
 		this->cond.wait(lock, [this]() { return this->counter > 0; });
         --this->counter;
     }
 
-	void release() {
-		std::lock_guard<std::mutex> lock(this->mutex);
-		++this->counter;
+	void release(){
+		{
+			// the Mutex will be automatically released when lock will be
+			// destroyed, at the end of this block.
+			// Here in a sub block as it as to be released before the
+			// notifications.
+			std::lock_guard<std::mutex> lock(this->mutex);
+			++this->counter;
+		}
 		this->cond.notify_one();
     }
 
