@@ -7,11 +7,34 @@
 #ifndef RESOURCE_H
 #define RESOURCE_H
 
+#include "Object.h"
+#include "ObjCollection.h"
+
 #include <mutex>
 #include <condition_variable>
 
 #include <cstdint>
 
+class Resource : virtual public Object {
+	uint8_t limit;	// Maximum number of concurrent access
+
+protected:
+	virtual bool readConfigDirective(std::string &l);
+
+public:
+	/* Constructor from a file
+	 * -> file : file to load
+	 * -> where : file's directory
+	 * <- name : this object's name
+	 */
+	Resource( const std::string &file, std::string &where );
+
+	virtual std::string getTri(){ return Resource::trigramme(); }
+	static std::string trigramme(){ return "RST_"; }
+};
+typedef ObjCollection<Resource *> ResourceCollection;
+
+#if 0
 class Semaphore {
 	std::mutex mutex;				// Avoid concurrent connection
 	std::condition_variable cond;	// Condition
@@ -39,5 +62,6 @@ public:
     }
 
 };
+#endif
 
 #endif
