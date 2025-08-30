@@ -10,5 +10,22 @@ Resource::Resource( const std::string &file, std::string &where ){
 }
 
 bool Resource::readConfigDirective(std::string &l){
-	return this->Object::readConfigDirective(l);
+	std::string arg;
+
+	if(!(arg = striKWcmp( l, "-->> limit=" )).empty()){
+		auto t = stoi(arg);
+		if(t <= 0){
+			SelLog->Log('F', "Resource's limit can't be negative or nul");
+			exit(EXIT_FAILURE);
+		} else if(t > 254){
+			SelLog->Log('F', "Resource's limit can't be greater than 255");
+			t = 255;
+		}
+		this->limit = t;
+		if(::verbose)
+			SelLog->Log('C', "\t\tlimit : '%d'", this->limit);
+	} else
+		return this->Object::readConfigDirective(l);
+
+	return true;
 }
