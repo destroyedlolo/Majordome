@@ -18,7 +18,7 @@ classes: {
 	}
 
 	Event:{
-		shape: diamond
+		shape: person
 		style.stroke-width: 6
 		style.fill: aqua
 	}
@@ -50,6 +50,11 @@ classes: {
 	Shutdown:{
 		shape: step
 		style.stroke: red
+	}
+
+	Resource:{
+		shape: hexagon
+		style.fill: Crimson
 	}
 
 	Handler:{
@@ -85,6 +90,16 @@ classes: {
 			animated: true
 		}
 		target-arrowhead {
+			shape: diamond
+		}
+	}
+
+	Lresource: {
+		style {
+			stroke: Crimson
+			animated: true
+		}
+		target-arrowhead: {
 			shape: diamond
 		}
 	}
