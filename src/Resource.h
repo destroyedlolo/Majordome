@@ -25,11 +25,6 @@ class Resource : virtual public Object {
 protected:
 	virtual bool readConfigDirective(std::string &l);
 
-		// By default, wait until the task can run. Return true when ok
-		// if wait == false, return false if no resource available
-	bool acquire(bool wait = true);
-	void release(void);
-
 public:
 	/* Constructor from a file
 	 * -> file : file to load
@@ -37,6 +32,11 @@ public:
 	 * <- name : this object's name
 	 */
 	Resource( const std::string &file, std::string &where );
+
+		// By default, wait until the task can run. Return true when ok
+		// if wait == false, return false if no resource available
+	bool acquire(bool wait = true);
+	void release(void);
 
 	virtual std::string getTri(){ return Resource::trigramme(); }
 	static std::string trigramme(){ return "RST_"; }
