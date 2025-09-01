@@ -40,7 +40,7 @@ diagram {
 	rendezvous -> Tasks : waitfor
 	timer-> Tasks : when
 	tracker -> tasks : whenDone\nwhenStopped\nwhenChanged
-	resource <- tasks
+	resource <-> tasks
 
 	MinMax : "*minmax" {
 		class : MinMax
@@ -79,17 +79,17 @@ diagram {
 	Database.feed <- timer : when
 	rendezvous -> Database.feed : waitfor
 	tracker -> Database.feed : whenDone\nwhenStopped\nwhenChanged
-	resource <- Database.feed
+	resource <-> Database.feed
 
 	Database.purge <- timer : when
 	tracker -> Database.purge : whenDone\nwhenStopped\nwhenChanged
 	Database.purge -> rendezvous : SuccessRDV\nFailRDV
-	resource <- Database.purge
+	resource <-> Database.purge
 
 	Database.archive <- timer : when
 	tracker -> Database.archive : whenDone\nwhenStopped\nwhenChanged
 	Database.archive -> rendezvous : SuccessRDV\nFailRDV
-	resource <- Database.archive
+	resource <-> Database.archive
 
 	(topic -> *)[*].class: Data
 	(* <- topic)[*].class: Data
@@ -111,10 +111,10 @@ diagram {
 	(rendezvous -> *.*)[*].class: NoData
 	(*.* <- rendezvous)[*].class: NoData
 
-	(resource <- *)[*].class: Lresource
-	(* -> resource )[*].class: Lresource
-	(resource <- *.*)[*].class: Lresource
-	(*.* <- resource)[*].class: Lresource
+	(resource <-> *)[*].class: Lresource
+	(* <-> resource )[*].class: Lresource
+	(resource <-> *.*)[*].class: Lresource
+	(*.* <-> resource)[*].class: Lresource
 }
 
 # """

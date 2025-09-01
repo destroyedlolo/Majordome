@@ -95,12 +95,17 @@ classes: {
 	}
 
 	Lresource: {
-		label : consume
+		label : "consumeWait/consumeFail"
 		style {
 			stroke: Crimson
 			animated: true
+			fill: plum
 		}
 		source-arrowhead: {
+			shape: diamond
+			style.filled: true
+		}
+		target-arrowhead: {
     		shape: circle
   		}
 	}
@@ -147,7 +152,7 @@ classes: {
 classes {
 	NoData {
 		style.stroke: steelblue
-		style.fill : lightblue
+		style.fill: lightblue
 	}
 
 	Data {
