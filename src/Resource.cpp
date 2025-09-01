@@ -29,3 +29,26 @@ bool Resource::readConfigDirective(std::string &l){
 
 	return true;
 }
+
+bool Resource::acquire(bool w){
+	// the Mutex will be automatically released when lock will be destroyed,
+	// at the end of this block
+	std::unique_lock<std::mutex> lock(this->mutex);
+
+	if(w)	// wait until the resource is available
+		this->cond.wait(lock, [this]() { return this->counter > 0; });
+	 else 	// Fail if the resource is not available
+		if(this->counter <= 0)
+			return false;
+
+	--this->counter;
+	return true;
+}
+
+void Resource::release(void){
+	{		// In a block to release the lock before the notification
+		std::lock_guard<std::mutex> lock(this->mutex);
+		++this->counter;
+	}
+	this->cond.notify_one();
+}

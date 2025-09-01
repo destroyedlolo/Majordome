@@ -16,10 +16,19 @@
 #include <cstdint>
 
 class Resource : virtual public Object {
-	uint8_t limit;	// Maximum number of concurrent access
+	uint8_t limit;		// Maximum number of concurrent access
+	uint8_t counter;	// Counter of running tasks
+
+	std::mutex mutex;				// Avoid concurrent querying
+	std::condition_variable cond;	// Condition
 
 protected:
 	virtual bool readConfigDirective(std::string &l);
+
+		// By default, wait until the task can run. Return true when ok
+		// if wait == false, return false if no resource available
+	bool acquire(bool wait = true);
+	void release(void);
 
 public:
 	/* Constructor from a file
@@ -34,34 +43,5 @@ public:
 };
 typedef ObjCollection<Resource *> ResourceCollection;
 
-#if 0
-class Semaphore {
-	std::mutex mutex;				// Avoid concurrent connection
-	std::condition_variable cond;	// Condition
-	uint8_t counter;				// Counter of running tasks
-
-public:
-	explicit Semaphore(uint8_t max) : counter(max) {}
-
-	void acquire(){
-		std::unique_lock<std::mutex> lock(this->mutex);	// the Mutex will be automatically released when lock will be destroyed, at the end of this block
-		this->cond.wait(lock, [this]() { return this->counter > 0; });
-        --this->counter;
-    }
-
-	void release(){
-		{
-			// the Mutex will be automatically released when lock will be
-			// destroyed, at the end of this block.
-			// Here in a sub block as it as to be released before the
-			// notifications.
-			std::lock_guard<std::mutex> lock(this->mutex);
-			++this->counter;
-		}
-		this->cond.notify_one();
-    }
-
-};
-#endif
 
 #endif
