@@ -17,6 +17,7 @@ protected:
 	Constraint() : res(NULL) {};
 
 	virtual bool readConfigDirective(std::string &l);
+	virtual std::string getFullId( void ) = 0;
 
 public:
 	bool tryToAcquireResource(void);	// False if the resource if no resources available
