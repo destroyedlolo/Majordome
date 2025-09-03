@@ -16,7 +16,6 @@
 #include <cstdint>
 
 class Resource : virtual public Object {
-	uint8_t limit;		// Maximum number of concurrent access
 	uint8_t counter;	// Counter of running tasks
 
 	std::mutex mutex;				// Avoid concurrent querying

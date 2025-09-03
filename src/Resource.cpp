@@ -1,7 +1,7 @@
 #include "Resource.h"
 #include "Config.h"
 
-Resource::Resource( const std::string &file, std::string &where ){
+Resource::Resource( const std::string &file, std::string &where ) : counter(1){
 	this->loadConfigurationFile(file, where);
 
 	if(d2)
@@ -21,9 +21,9 @@ bool Resource::readConfigDirective(std::string &l){
 			SelLog->Log('F', "Resource's limit can't be greater than 255");
 			t = 255;
 		}
-		this->limit = t;
+		this->counter = t;
 		if(::verbose)
-			SelLog->Log('C', "\t\tlimit : '%d'", this->limit);
+			SelLog->Log('C', "\t\tlimit : '%d'", this->counter);
 	} else
 		return this->Object::readConfigDirective(l);
 

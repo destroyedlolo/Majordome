@@ -33,6 +33,7 @@ static const SubConfigDir::extweight fileext[] = {
 	{ ".archiving", 0x70 },
 	{ ".purge", 0x70 },
 #endif
+	{ ".resource", 0xd0 },
 	{ ".topic", 0xc0 },
 	{ ".timer", 0xc0 },
 	{ ".rendezvous", 0xc0 },
@@ -42,7 +43,6 @@ static const SubConfigDir::extweight fileext[] = {
 	{ ".tracker", 0x80 },
 	{ ".shutdown", 0x70 },
 	{ ".lua", 0x50 },
-	{ ".resource", 0x40 },
 	{ ".md", 0x01 }	// ignored, documentation only
 };
 

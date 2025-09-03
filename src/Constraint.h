@@ -8,8 +8,9 @@
 #define CONSTRAINT_H
 
 #include "Resource.h"
+#include "Object.h"
 
-class Constraint {
+class Constraint : virtual public Object {
 	Resource *res;
 	bool haveToWait;
 
@@ -17,11 +18,10 @@ protected:
 	Constraint() : res(NULL) {};
 
 	virtual bool readConfigDirective(std::string &l);
-	virtual std::string getFullId( void ) = 0;
 
 public:
 	bool tryToAcquireResource(void);	// False if the resource if no resources available
-	 bool waitForResource(void);	// Wait until the resource is available
+	bool waitForResource(void);	// Wait until the resource is available
 	void release(void);
 };
 

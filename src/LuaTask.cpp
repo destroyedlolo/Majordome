@@ -8,11 +8,11 @@
 #include <cstring>
 #include <cassert>
 
-LuaTask::LuaTask( const std::string &fch, std::string &where, lua_State *L ) : Object(fch, where), Handler(fch, where), once(false), running_access(PTHREAD_MUTEX_INITIALIZER), running(false), runatstartup(false){
+LuaTask::LuaTask( const std::string &fch, std::string &where, lua_State *L ) : Object(fch, where), Constraint(), Handler(fch, where), once(false), running_access(PTHREAD_MUTEX_INITIALIZER), running(false), runatstartup(false){
 	this->loadConfigurationFile(fch, where,L);
 
 	if(d2)
-		fd2 << this->getFullId() << ".class: Task" << std::endl;
+		fd2 << this->Object::getFullId() << ".class: Task" << std::endl;
 }
 
 bool LuaTask::readConfigDirective( std::string &l ){
@@ -26,7 +26,9 @@ bool LuaTask::readConfigDirective( std::string &l ){
 		if(::verbose)
 			SelLog->Log('C', "\t\tOnly one instance is allowed to run (once)");
 		this->setOnce( true );
-	} else if(this->readConfigDirectiveData(l))
+	} else if(this->Constraint::readConfigDirective(l))
+		; 
+	else if(this->readConfigDirectiveData(l))
 		;
 	else if(this->readConfigDirectiveNoData(l))
 		;
@@ -42,6 +44,9 @@ bool LuaTask::readConfigDirective( std::string &l ){
 
 bool LuaTask::canRun( void ){
 	if(!this->LuaExec::canRun())
+		return false;
+
+	if(!this->waitForResource())	// Check for resource
 		return false;
 
 	if( !this->once )	// Nothing else can prevent it to run
@@ -61,6 +66,8 @@ bool LuaTask::canRun( void ){
 }
 
 void LuaTask::finished( void ){
+	this->release();
+
 	if( this->once ){
 		pthread_mutex_lock( &this->running_access );
 		this->running = false;
