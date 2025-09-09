@@ -17,7 +17,7 @@ class Constraint : virtual public Object {
 protected:
 	Constraint() : res(NULL) {};
 
-	virtual bool readConfigDirective(std::string &l);
+	virtual bool readConfigDirective(std::string &l) override;
 
 public:
 	bool tryToAcquireResource(void);	// False if the resource if no resources available

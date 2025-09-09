@@ -20,7 +20,7 @@ class Event : virtual public Object, virtual public HandlersExecutor {
 	TrackerVector trackersToDisable;
 
 protected:
-	virtual bool readConfigDirective(std::string &l);
+	virtual bool readConfigDirective(std::string &l) override;
 
 public:
 	/* Constructor from a file
@@ -46,7 +46,7 @@ public:
 	/* Create Lua's object */
 	static void initLuaInterface(lua_State *L);
 
-	virtual std::string getTri(){ return Event::trigramme(); }
+	virtual std::string getTri() override { return Event::trigramme(); }
 	static std::string trigramme(){ return "EVT_"; }
 };
 

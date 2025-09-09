@@ -62,7 +62,9 @@ bool Purge::readConfigDirective( std::string &l ){
 			SelLog->Log('F', "\t\tRendezvous '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
-	} else if(this->readConfigDirectiveNoData(l))
+	} else if(this->Constraint::readConfigDirective(l))
+		; 
+	else if(this->readConfigDirectiveNoData(l))
 		;
 	else
 		return this->Object::readConfigDirective(l);

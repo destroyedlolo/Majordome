@@ -22,7 +22,7 @@ class Resource : virtual public Object {
 	std::condition_variable cond;	// Condition
 
 protected:
-	virtual bool readConfigDirective(std::string &l);
+	virtual bool readConfigDirective(std::string &l) override;
 
 public:
 	/* Constructor from a file
