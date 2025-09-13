@@ -24,7 +24,7 @@ protected:
 
 		/* Executable */
 	virtual bool execAsync(lua_State *L);	// Overloading to handle data acceptation
-	virtual bool internalExec(void);
+	virtual bool internalExec(void);	// Actually do the purging
 
 	Purge() = default;
 

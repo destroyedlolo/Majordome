@@ -106,6 +106,9 @@ bool Purge::internalExec(void){
 	if(!this->connect())
 		return false;
 
+	if(!this->waitForResource())	// Check for resource
+		return false;
+
 	char *t;
 	std::string cmd("DELETE FROM ");
 
@@ -120,8 +123,10 @@ bool Purge::internalExec(void){
 	if(!this->doSQL(cmd.c_str())){
 		SelLog->Log('E', "['%s'] %s", this->getNameC(), this->lastError());
 		this->disconnect();
+		this->release();	// Release the resource
 		return false;
 	}
 
+	this->release();	// Release the resource
 	return true;
 }
