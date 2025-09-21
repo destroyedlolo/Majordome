@@ -127,8 +127,13 @@ bool Archiving::readConfigDirective( std::string &l ){
 }
 
 bool Archiving::internalExec(void){
-	if(!this->connect())
+	if(!this->waitForResource())	// Check for resource
 		return false;
+
+	if(!this->connect()){
+		this->release();	// Release the resource
+		return false;
+	}
 
 	char *t;
 	std::string cmd("INSERT INTO ");
@@ -278,6 +283,7 @@ bool Archiving::internalExec(void){
 	}
 
 	this->disconnect();
+	this->release();	// Release the resource
 	return true;
 }
 
