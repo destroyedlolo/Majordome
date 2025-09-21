@@ -47,5 +47,5 @@
  *	17/08/2025 - v6.13 - LF - Add Resources
  */
 
-#define VERSION 6.1300
+#define VERSION 6.1301
 #define COPYRIGHT "Majordome (c) L.Faillie 2018-2025"

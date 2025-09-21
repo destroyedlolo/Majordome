@@ -95,19 +95,14 @@ bool Purge::execAsync(lua_State *){
 	return ret;
 }
 
-/*
- * select * from test where sample_time::date < current_date - interval '3 months';
- *
- * 1517857
- *
- */
-
 bool Purge::internalExec(void){
-	if(!this->connect())
-		return false;
-
 	if(!this->waitForResource())	// Check for resource
 		return false;
+
+	if(!this->connect()){
+		this->release();	// Release the resource
+		return false;
+	}
 
 	char *t;
 	std::string cmd("DELETE FROM ");
@@ -127,6 +122,7 @@ bool Purge::internalExec(void){
 		return false;
 	}
 
+	this->disconnect();
 	this->release();	// Release the resource
 	return true;
 }
