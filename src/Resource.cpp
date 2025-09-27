@@ -35,12 +35,18 @@ bool Resource::acquire(bool w){
 	// at the end of this block
 	std::unique_lock<std::mutex> lock(this->mutex);
 
+	if(debug)
+		SelLog->Log('D', "Resource::acquire()");
+		
 	if(w)	// wait until the resource is available
 		this->cond.wait(lock, [this]() { return this->counter > 0; });
 	 else 	// Fail if the resource is not available
 		if(this->counter <= 0)
 			return false;
 
+	if(debug)
+		SelLog->Log('D', "Resource acquired");
+		
 	--this->counter;
 	return true;
 }
@@ -50,5 +56,9 @@ void Resource::release(void){
 		std::lock_guard<std::mutex> lock(this->mutex);
 		++this->counter;
 	}
+
+	if(debug)
+		SelLog->Log('D', "Resource released");
+		
 	this->cond.notify_one();
 }

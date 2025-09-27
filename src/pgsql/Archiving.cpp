@@ -279,6 +279,7 @@ bool Archiving::internalExec(void){
 	if(!this->doSQL(cmd.c_str())){
 		SelLog->Log('E', "['%s'] %s", this->getNameC(), this->lastError());
 		this->disconnect();
+		this->release();	// Release the resource
 		return false;
 	}
 
