@@ -79,7 +79,7 @@ diagram {
 	Database.feed <- timer : when
 	rendezvous -> Database.feed : waitfor
 	tracker -> Database.feed : whenDone\nwhenStopped\nwhenChanged
-	resource <-> Database.feed
+#	resource <-> Database.feed
 
 	Database.purge <- timer : when
 	tracker -> Database.purge : whenDone\nwhenStopped\nwhenChanged
