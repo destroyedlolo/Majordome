@@ -52,7 +52,7 @@ File **once.resource**
 
 ## Objects that can be limited
 
-Only a subset of Majordome's objects can be limited (it's a design choice to avoid data loss). Eligible ones are :
+Only a subset of Majordome's objects can be limited by resources (*it's a design choice to avoid data loss*). Eligible ones are :
 - [Tasks](Task(lua).md)
 - Database's :
   - [archiving](Database/archiving.md)
