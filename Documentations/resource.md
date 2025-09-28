@@ -18,7 +18,7 @@ Specify the number of instances allowed : accepted values are between 1 and 254.
 ```
 
 ## Example
-File **test.topic**
+File **once.resource**
 ```
 -->> desc=Allow only 1 task at a time
 --
@@ -49,6 +49,24 @@ File **test.topic**
 -- Default is 1.
 -->> limit=1
 ```
+
+## Objects that can be limited
+
+Only a subset of Majordome's objects can be limited (it's a design choice to avoid data loss). Eligible ones are :
+- [Tasks](Task(lua).md)
+- Database's :
+  - [archiving](Database/archiving.md)
+  - [purge](Database/purge.md)
+
+They can use following directives :
+
+#### -->> resourceWait=
+
+Wait for the resource to be available.
+
+#### -->> resourceFail=
+
+Don't execute the action if the resource is not available.
 
 ## at Lua side
 
