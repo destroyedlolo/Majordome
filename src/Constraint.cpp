@@ -16,7 +16,7 @@ bool Constraint::readConfigDirective(std::string &l){
 				SelLog->Log('C', "\t\tWill wait for resource '%s'", arg.c_str());
 
 			if(d2)
-				fd2 << this->getFullId() << " -- " << resource->second->getFullId() << ": need { class: lwaitresource }" << std::endl;
+				fd2 << this->getFullId() << " -- " << resource->second->getFullId() << ": resourceWait { class: lwaitresource }" << std::endl;
 			return true;
 		} else {
 			SelLog->Log('F', "\t\tResource '%s' is not (yet ?) defined", arg.c_str());
@@ -33,7 +33,7 @@ bool Constraint::readConfigDirective(std::string &l){
 				SelLog->Log('C', "\t\tWill try to acquire resource '%s'", arg.c_str());
 
 			if(d2)
-				fd2 << this->getFullId() << " -- " << resource->second->getFullId() << ": need { class: ltryresource }" << std::endl;
+				fd2 << this->getFullId() << " -- " << resource->second->getFullId() << ": resourceFail { class: lfailresource }" << std::endl;
 			return true;
 		} else {
 			SelLog->Log('F', "\t\tResource '%s' is not (yet ?) defined", arg.c_str());
