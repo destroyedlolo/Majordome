@@ -5,7 +5,7 @@ Resource::Resource( const std::string &file, std::string &where ) : counter(1){
 	this->loadConfigurationFile(file, where);
 
 	if(d2)
-		fd2 << this->getFullId() << ".class: Topic" << std::endl;
+		fd2 << this->getFullId() << ".class: Resource" << std::endl;
 
 }
 
