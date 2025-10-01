@@ -1,4 +1,4 @@
--->> desc=Task having long tun
+-->> desc=Task having long run
 -->> resourceWait=once
 -->> RunAtStartup
 

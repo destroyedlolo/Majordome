@@ -20,8 +20,7 @@ protected:
 	virtual bool readConfigDirective(std::string &l) override;
 
 public:
-	bool tryToAcquireResource(void);	// False if the resource if no resources available
-	bool waitForResource(void);	// Wait until the resource is available
+	bool acquireResource(void);	// Try to get the resource
 	void release(void);
 };
 

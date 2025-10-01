@@ -27,7 +27,7 @@ bool Constraint::readConfigDirective(std::string &l){
 
 		if( (resource = config.ResourcesList.find(arg)) != config.ResourcesList.end()){
 			this->res = resource->second;
-			this->haveToWait = true;
+			this->haveToWait = false;
 
 			if(::verbose)
 				SelLog->Log('C', "\t\tWill try to acquire resource '%s'", arg.c_str());
@@ -44,16 +44,9 @@ bool Constraint::readConfigDirective(std::string &l){
 	return false;
 }
 
-bool Constraint::tryToAcquireResource(void){
+bool Constraint::acquireResource(void){
 	if(this->res)
-		return res->acquire(false);
-	else
-		return true;	// We can run if no resource attached
-}
-
-bool Constraint::waitForResource(void){
-	if(this->res)
-		return res->acquire();
+		return res->acquire(this->haveToWait);
 	else
 		return true;
 }

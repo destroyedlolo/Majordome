@@ -46,7 +46,7 @@ bool LuaTask::canRun( void ){
 	if(!this->LuaExec::canRun())
 		return false;
 
-	if(!this->waitForResource())	// Check for resource
+	if(!this->acquireResource())	// Check for resource
 		return false;
 
 	if( !this->once )	// Nothing else can prevent it to run

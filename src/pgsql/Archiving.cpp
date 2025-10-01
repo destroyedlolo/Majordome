@@ -127,7 +127,7 @@ bool Archiving::readConfigDirective( std::string &l ){
 }
 
 bool Archiving::internalExec(void){
-	if(!this->waitForResource())	// Check for resource
+	if(!this->acquireResource())	// Check for resource
 		return false;
 
 	if(!this->connect()){

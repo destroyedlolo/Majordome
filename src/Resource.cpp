@@ -41,8 +41,11 @@ bool Resource::acquire(bool w){
 	if(w)	// wait until the resource is available
 		this->cond.wait(lock, [this]() { return this->counter > 0; });
 	 else 	// Fail if the resource is not available
-		if(this->counter <= 0)
+		if(this->counter <= 0){
+			if(debug)
+				SelLog->Log('D', "Resource : Not available, rejecting");
 			return false;
+		}
 
 	if(debug)
 		SelLog->Log('D', "Resource acquired");

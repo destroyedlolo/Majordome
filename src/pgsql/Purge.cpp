@@ -96,7 +96,7 @@ bool Purge::execAsync(lua_State *){
 }
 
 bool Purge::internalExec(void){
-	if(!this->waitForResource())	// Check for resource
+	if(!this->acquireResource())	// Check for resource
 		return false;
 
 	if(!this->connect()){
