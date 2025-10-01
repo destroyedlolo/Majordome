@@ -66,6 +66,11 @@ classes: {
 		shape: hexagon
 	}
 
+	Resource:{
+		shape: parallelogram
+		style.fill: Crimson
+	}
+
 	Database:{
 		icon: https://icons.terrastruct.com/dev/postgresql.svg
 		shape: cylinder
@@ -132,6 +137,19 @@ classes: {
 			stroke-width: 4
 			stroke: red
 		}
+	}
+
+	lwaitresource: {
+		style {
+			stroke: Crimson
+		}
+		source-arrowhead: {
+			shape: diamond
+			style.filled: true
+		}
+		target-arrowhead: {
+    		shape: circle
+  		}
 	}
 
 	ldatabase: {
