@@ -45,20 +45,20 @@ bool Constraint::readConfigDirective(std::string &l){
 }
 
 bool Constraint::tryToAcquireResource(void){
-	if(res)
+	if(this->res)
 		return res->acquire(false);
 	else
 		return true;	// We can run if no resource attached
 }
 
 bool Constraint::waitForResource(void){
-	if(res)
+	if(this->res)
 		return res->acquire();
 	else
 		return true;
 }
 
 void Constraint::release(void){
-	if(res)
+	if(this->res)
 		res->release();
 }
