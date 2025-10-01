@@ -1,6 +1,6 @@
 -->> desc=Task having long tun
 -->> resourceWait=once
--->> RunAtStartup
+-->> when=now
 
 SelLog.Log("2", "2nd task starting")
 os.execute("sleep 3")
