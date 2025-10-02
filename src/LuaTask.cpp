@@ -46,8 +46,11 @@ bool LuaTask::canRun( void ){
 	if(!this->LuaExec::canRun())
 		return false;
 
-	if(!this->acquireResource())	// Check for resource
+	if(!this->acquireResource()){	// Check for resource
+		if(this->isVerbose())
+			SelLog->Log('T', "Task '%s' from '%s' prevented to run by a busy resource", this->getNameC(), this->getWhereC() );		
 		return false;
+	}
 
 	if( !this->once )	// Nothing else can prevent it to run
 		return true;

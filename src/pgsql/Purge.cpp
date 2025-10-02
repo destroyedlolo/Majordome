@@ -96,8 +96,11 @@ bool Purge::execAsync(lua_State *){
 }
 
 bool Purge::internalExec(void){
-	if(!this->acquireResource())	// Check for resource
+	if(!this->acquireResource()){	// Check for resource
+		if(this->isVerbose())
+			SelLog->Log('T', "Purge '%s' from '%s' prevented to run by a busy resource", this->getNameC(), this->getWhereC() );		
 		return false;
+	}
 
 	if(!this->connect()){
 		this->release();	// Release the resource

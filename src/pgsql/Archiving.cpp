@@ -127,8 +127,12 @@ bool Archiving::readConfigDirective( std::string &l ){
 }
 
 bool Archiving::internalExec(void){
-	if(!this->acquireResource())	// Check for resource
+	if(!this->acquireResource()){	// Check for resource
+		if(this->isVerbose())
+			SelLog->Log('T', "Task '%s' from '%s' prevented to run by a busy resource", this->getNameC(), this->getWhereC() );		
+
 		return false;
+	}
 
 	if(!this->connect()){
 		this->release();	// Release the resource
