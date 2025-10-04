@@ -1,4 +1,5 @@
--->> desc=Task having long tun
+-->> desc=Task prevented to run when the resource is busy
+-->> group=Tasks related
 -->> resourceFail=once
 -->> when=now
 

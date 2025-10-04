@@ -1,4 +1,5 @@
--- PostgreSQL database access definition
+-->> desc=PostgreSQL database access definition
+-->> group=database related
 --
 -- name of the database declaration
 -- if not set, takes the filename

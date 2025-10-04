@@ -1,4 +1,5 @@
 -->> desc=Task having long tun
+-->> group=Tasks related
 -->> resourceWait=once
 -->> when=now
 

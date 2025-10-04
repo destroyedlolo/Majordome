@@ -1,4 +1,6 @@
--- Archive temperatures
+-->> desc=Archive Test table
+-->> group=database related
+--
 --	Notez-bien : this object aims to handle day based windows.
 -- If you need to archive on plain month basis, write a custom SQL instead.
 --

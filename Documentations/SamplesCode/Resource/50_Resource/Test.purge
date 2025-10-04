@@ -1,4 +1,5 @@
--- Database purging declaration
+-->> desc=Database purging declaration
+-->> group=database related
 --
 -- name of this purging
 -- if not set, takes the filename
