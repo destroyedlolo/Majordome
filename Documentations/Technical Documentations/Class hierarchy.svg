@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?xml version="1.0" encoding="utf-8"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" data-d2-version="0.7.1" preserveAspectRatio="xMinYMin meet" viewBox="0 0 3525 4106"><svg class="d2-2599994032 d2-svg" width="3525" height="4106" viewBox="-91 -89 3525 4106"><rect x="-91.000000" y="-89.000000" width="3525.000000" height="4106.000000" rx="0.000000" fill="#FFFFFF" class=" fill-N7" stroke-width="0" /><style type="text/css"><![CDATA[
 .d2-2599994032 .text {
 	font-family: "d2-2599994032-font-regular";
@@ -197,3 +198,5 @@
 <rect x="-91" y="-89" width="3525" height="4106" fill="white"></rect>
 
 </mask></svg></svg>
+=======
+>>>>>>> e106952 (Merge branch 'Dev' into v6)
