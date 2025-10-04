@@ -96,6 +96,25 @@ Tracker {
 Handler -> Tracker
 HandlersExecutor -> Tracker
 
+Resource {
+	class: Resource
+}
+
+'Constraint' {
+	class: Resource
+
+	res {
+		class: Resource
+		style.stroke-width: 6
+	}
+}
+
+Object -> 'Constraint'
+'Constraint' -> LuaTask
+
+Resource -> 'Constraint'.res 
+
+
 pgsql : Database Add On {
 	style.stroke-dash: 6
 
@@ -115,6 +134,7 @@ pgsql : Database Add On {
 	}
 	mpgConnection -> Feed
 	_.Handler -> Feed
+#	_.'Constraint' -> Feed
 
 	NamedFeed {
 		class: [Sql ; Lua]
@@ -131,6 +151,7 @@ pgsql : Database Add On {
 	}
 	mpgConnection -> Purge
 	_.Handler -> Purge
+	_.'Constraint' -> Purge
 
 	Archiving {
 		class: Sql
@@ -237,6 +258,11 @@ Config: {
 		class: Shutdown
 	}
 
+	ResourcesList{
+		style.multiple: true
+		class: Resource
+	}
+
 	FeedsList {
 		class: Sql
 	}
@@ -265,6 +291,7 @@ Timer -> Config.TimersList
 MinMax -> Config.MinMaxList
 NamedMinMax -> Config.NamedMinMaxList
 Tracker -> Config.TrackersList
+Resource -> Config.ResourcesList
 
 pgsql.mpgConnection -> Config.pgSQLsList
 pgsql.Feed -> Config.FeedsList

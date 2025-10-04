@@ -1,4 +1,4 @@
-Demonstrate useage of rendez-vous.
+Demonstrate usage of rendez-vous.
 
 ![Objects in this example](Diagram.svg)
 

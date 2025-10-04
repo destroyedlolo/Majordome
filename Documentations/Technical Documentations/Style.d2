@@ -18,8 +18,8 @@ classes: {
 	}
 
 	Event:{
-		shape: diamond
-		style.stroke-width: 6
+		shape: person
+		
 		style.fill: aqua
 	}
 
@@ -50,6 +50,11 @@ classes: {
 	Shutdown:{
 		shape: step
 		style.stroke: red
+	}
+
+	Resource:{
+		shape: parallelogram
+		style.fill: Crimson
 	}
 
 	Handler:{
@@ -87,6 +92,22 @@ classes: {
 		target-arrowhead {
 			shape: diamond
 		}
+	}
+
+	Lresource: {
+		label : "resourceWait/resourceFail"
+		style {
+			stroke: Crimson
+			animated: true
+			fill: plum
+		}
+		source-arrowhead: {
+			shape: diamond
+			style.filled: true
+		}
+		target-arrowhead: {
+    		shape: circle
+  		}
 	}
 
 	TRenderer {
@@ -131,7 +152,7 @@ classes: {
 classes {
 	NoData {
 		style.stroke: steelblue
-		style.fill : lightblue
+		style.fill: lightblue
 	}
 
 	Data {
