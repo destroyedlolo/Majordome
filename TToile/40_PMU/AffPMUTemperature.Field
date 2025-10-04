@@ -1,0 +1,8 @@
+-->> desc=Affiche la temperature du PMic
+-->> group=PMU
+-->> ApplyOn Painting=PMU
+-->> Origin=15,0
+-->> Sample=xx.xx
+-->> listen=PMUTemperature
+
+return string.format("%2.1f", MAJORDOME_PAYLOAD):gsub("%.", string.char(0xdf));

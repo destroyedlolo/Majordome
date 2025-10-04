@@ -2,3 +2,4 @@
 -->> group=CPU
 --
 -->> topic=Machines/%Hostname%/Load/1
+-->> quiet

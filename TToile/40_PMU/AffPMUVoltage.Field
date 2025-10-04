@@ -5,4 +5,4 @@
 -->> Sample=x.xx
 -->> listen=PMUVoltage
 
-return string.format("%1.2f", MAJORDOME_PAYLOAD);
+return string.format("%1.2f", MAJORDOME_PAYLOAD):gsub("%.", "v");

@@ -2,9 +2,3 @@
 -->> ApplyOn Painting=PMU
 
 MAJORDOME_PAINTING:WriteString("PMU:")
-
-MAJORDOME_PAINTING:SetCursor(9,0)
-MAJORDOME_PAINTING:WriteString("v")
-
-MAJORDOME_PAINTING:SetCursor(14,0)
-MAJORDOME_PAINTING:WriteString("w")

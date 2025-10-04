@@ -6,4 +6,4 @@
 -- The surface to apply on is embodied as MAJORDOME_PAINTING
 
 MAJORDOME_PAINTING:SetCursor(3,0)
-MAJORDOME_PAINTING:WriteString('V')
+MAJORDOME_PAINTING:WriteString('v')
