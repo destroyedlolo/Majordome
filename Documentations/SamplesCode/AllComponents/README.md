@@ -1,4 +1,4 @@
-This directory contains a dummy examples involving all Majordome components.
+This directory contains a dummy examples involving most of Majordome's components (at the time of writing).
 
 ---
 
