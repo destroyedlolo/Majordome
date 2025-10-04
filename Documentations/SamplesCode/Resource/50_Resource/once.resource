@@ -1,0 +1,28 @@
+-->> desc=Allow only 1 task at a time
+--
+--========
+-- General
+--========
+--
+-- Specify the name
+-- if not set, takes the filename
+--->> name=
+--
+-- Be verbose
+--->> verbose
+--
+-- Remove noise
+--->> quiet
+--
+-- This resource is disabled
+-- New tasks can't be launched but, obviously, existing can finish :)
+--->> disabled
+--
+--===========
+-- Resource's
+--===========
+--
+-- Specify the number of tasks allowed
+-- Between 1 and 254. 255 means unlimited.
+-- Default is 1.
+-->> limit=1

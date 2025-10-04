@@ -116,7 +116,9 @@ bool Archiving::readConfigDirective( std::string &l ){
 			SelLog->Log('F', "\t\tRendezvous '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
-	} else if(this->readConfigDirectiveNoData(l))
+	} else if(this->Constraint::readConfigDirective(l))
+		; 
+	else if(this->readConfigDirectiveNoData(l))
 		;
 	else
 		return this->Object::readConfigDirective(l);
@@ -125,8 +127,17 @@ bool Archiving::readConfigDirective( std::string &l ){
 }
 
 bool Archiving::internalExec(void){
-	if(!this->connect())
+	if(!this->acquireResource()){	// Check for resource
+		if(this->isVerbose())
+			SelLog->Log('T', "Task '%s' from '%s' prevented to run by a busy resource", this->getNameC(), this->getWhereC() );		
+
 		return false;
+	}
+
+	if(!this->connect()){
+		this->release();	// Release the resource
+		return false;
+	}
 
 	char *t;
 	std::string cmd("INSERT INTO ");
@@ -272,10 +283,12 @@ bool Archiving::internalExec(void){
 	if(!this->doSQL(cmd.c_str())){
 		SelLog->Log('E', "['%s'] %s", this->getNameC(), this->lastError());
 		this->disconnect();
+		this->release();	// Release the resource
 		return false;
 	}
 
 	this->disconnect();
+	this->release();	// Release the resource
 	return true;
 }
 

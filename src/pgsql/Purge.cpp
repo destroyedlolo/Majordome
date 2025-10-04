@@ -62,7 +62,9 @@ bool Purge::readConfigDirective( std::string &l ){
 			SelLog->Log('F', "\t\tRendezvous '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
-	} else if(this->readConfigDirectiveNoData(l))
+	} else if(this->Constraint::readConfigDirective(l))
+		; 
+	else if(this->readConfigDirectiveNoData(l))
 		;
 	else
 		return this->Object::readConfigDirective(l);
@@ -93,16 +95,17 @@ bool Purge::execAsync(lua_State *){
 	return ret;
 }
 
-/*
- * select * from test where sample_time::date < current_date - interval '3 months';
- *
- * 1517857
- *
- */
-
 bool Purge::internalExec(void){
-	if(!this->connect())
+	if(!this->acquireResource()){	// Check for resource
+		if(this->isVerbose())
+			SelLog->Log('T', "Purge '%s' from '%s' prevented to run by a busy resource", this->getNameC(), this->getWhereC() );		
 		return false;
+	}
+
+	if(!this->connect()){
+		this->release();	// Release the resource
+		return false;
+	}
 
 	char *t;
 	std::string cmd("DELETE FROM ");
@@ -118,8 +121,11 @@ bool Purge::internalExec(void){
 	if(!this->doSQL(cmd.c_str())){
 		SelLog->Log('E', "['%s'] %s", this->getNameC(), this->lastError());
 		this->disconnect();
+		this->release();	// Release the resource
 		return false;
 	}
 
+	this->disconnect();
+	this->release();	// Release the resource
 	return true;
 }

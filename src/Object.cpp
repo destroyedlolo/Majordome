@@ -125,7 +125,7 @@ bool Object::readConfigDirective(std::string &l){
 		if(::verbose)
 			SelLog->Log('C', "\t\tBelong to group : %s", group.c_str());
 	} else if(!striKWcmp( l, "-->> ").empty()){
-		SelLog->Log('F', "Unknown directive '%s'", l.c_str());
+		SelLog->Log('F', "Unknown directive (or missing argument) '%s'", l.c_str());
 		exit(EXIT_FAILURE);
 	}
 

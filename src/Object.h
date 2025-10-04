@@ -62,7 +62,7 @@ public:
 	std::string &getWhere( void ){ return this->where; }; // Object's container (it's father directory)
 	const char *getWhereC( void ){ return this->where.c_str(); };
 	std::string getContainer( void );
-	std::string getFullId( void );
+	virtual std::string getFullId( void );
 
 	/*
 	 * determine the name from the filename

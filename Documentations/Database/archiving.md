@@ -17,6 +17,9 @@ See [this page](../Headers%20and%20Shared%20Directives.md#general-directives).
 
 See [this page](../Headers%20and%20Shared%20Directives.md#triggering-without-data).
 
+#### Can be limited by resources
+See [this documentation](../resource.md#objects-that-can-be-limited)
+
 ### Database related
 #### -->> Database=
 Which database to use.
