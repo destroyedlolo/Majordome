@@ -1,0 +1,5 @@
+-->> desc=Conteneur pour la charge CPU
+-->> group=CPU
+-->> ApplyOn Renderer=LCD
+-->> Origin=0,2
+-->> Size=20x1

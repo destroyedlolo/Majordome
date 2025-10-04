@@ -1,0 +1,34 @@
+-->> desc=Affiche la Tension
+-->> group=Electicite
+--
+--->> disabled
+--->> quiet
+--
+-------------------
+-- Painting related
+-------------------
+--
+-- Parent of this Painting
+-- Only one can be present
+-->> ApplyOn Painting=Tension
+--
+-- Origin of the surface
+-- 0,0 by default
+-->> Origin=0,0
+--
+-- Size of the surface
+-- If not set, trying to get it from parent
+-->> Size=3x1
+-- Notez-Bien :
+--	- set to the size of the parent if the origin is outsize parent surface
+--
+----------------
+-- Field related
+----------------
+--
+--	Guess the length as per sample value
+--->> Sample=240
+--
+-->> listen=Tension
+
+return string.format("%3.f", MAJORDOME_PAYLOAD)
