@@ -30,7 +30,7 @@ class AggregatedFeed : virtual public Feed {
 	virtual bool execAsync(lua_State *L);	// Overloading to handle data acceptation 
 
 protected:
-	void readConfigDirective( std::string &l );
+	bool readConfigDirective( std::string &l );
 
 public:
 	AggregatedFeed(const std::string &, std::string &, lua_State *);

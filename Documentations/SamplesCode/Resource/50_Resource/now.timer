@@ -1,0 +1,4 @@
+-- Immediately launch the timer
+--
+-->> at=0000
+-->> runifover

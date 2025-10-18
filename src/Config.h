@@ -20,6 +20,7 @@
 #include "MultiKeysMinMax.h"
 #include "Tracker.h"
 #include "Shutdown.h"
+#include "Resource.h"
 
 #ifdef PGSQL
 #	include "pgsql/pgSQL.h"
@@ -32,8 +33,8 @@
 
 #ifdef TOILE
 #	include "Toile/Renderer.h"
-#	include "Toile/Painting.h"
 #	include "Toile/Decoration.h"
+#	include "Toile/Painting.h"
 #	include "Toile/Field.h"
 #endif
 
@@ -69,6 +70,7 @@ public:
 	MultiKeysMinMaxCollection MultiKeysMinMaxList;
 	TrackerCollection TrackersList;
 	ShutdownCollection ShutdownsList;
+	ResourceCollection ResourcesList;
 
 #ifdef DBASE
 #	ifdef PGSQL

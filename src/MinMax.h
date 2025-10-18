@@ -17,7 +17,7 @@ class MinMax : public Handler {
 	size_t nbre;	// Number of handled values
 	lua_Number sum;
 
-	virtual void readConfigDirective( std::string &l );
+	virtual bool readConfigDirective( std::string &l ) override;
 	virtual void feedState(lua_State *L);
 
 public:
@@ -47,7 +47,7 @@ public:
 	/* Create Lua's object */
 	static void initLuaInterface( lua_State *L );
 
-	virtual std::string getTri(){ return MinMax::trigramme(); }
+	virtual std::string getTri() override { return MinMax::trigramme(); }
 	static std::string trigramme(){ return "MMX_"; }
 
 #if DEBUG

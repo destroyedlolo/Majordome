@@ -1,0 +1,8 @@
+-->> desc=Affiche la tension d'alimentation du PMic
+-->> group=PMU
+-->> ApplyOn Painting=PMU
+-->> Origin=5,0
+-->> Sample=x.xx
+-->> listen=PMUVoltage
+
+return string.format("%1.2f", MAJORDOME_PAYLOAD);

@@ -7,10 +7,11 @@
 #define TASK_H
 
 #include "LuaExec.h"
+#include "Constraint.h"
 #include "Handler.h"
 #include "ObjCollection.h"
 
-class LuaTask : public Handler {
+class LuaTask : public Handler, virtual public Constraint {
 	bool once;	// can run only once
 
 	pthread_mutex_t running_access;	// we want an access to "running"
@@ -27,7 +28,7 @@ public:
 	 */
 	LuaTask( const std::string &file, std::string &where, lua_State *L );
 
-	virtual void readConfigDirective( std::string &l );
+	virtual bool readConfigDirective( std::string &l ) override;
 
 	void setOnce( bool v ){ this->once = v; }
 	bool getOnce( void ){ return this->once; }

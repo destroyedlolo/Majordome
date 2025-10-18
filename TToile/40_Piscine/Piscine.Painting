@@ -1,0 +1,4 @@
+-->> desc=Pump consumption
+-->> ApplyOn Renderer=LCD
+-->> Origin=2,0
+-->> Size=6x1

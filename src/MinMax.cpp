@@ -15,11 +15,11 @@ MinMax::MinMax(const std::string &fch, std::string &where, lua_State *L) : Objec
 		fd2 << this->getFullId() << ".class: MinMax" << std::endl;
 }
 
-void MinMax::readConfigDirective( std::string &l ){
+bool MinMax::readConfigDirective( std::string &l ){
 	if(this->readConfigDirectiveData(l))
-		;
+		return true;
 	else 
-		this->LuaExec::readConfigDirective(l);
+		return this->LuaExec::readConfigDirective(l);
 }
 
 void MinMax::feedState( lua_State *L ){

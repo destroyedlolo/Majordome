@@ -19,7 +19,7 @@ class Tracker : public Handler, virtual public HandlersExecutor {	// HandlersExe
 	HandlerVector stoppingHandlers;	// Handlers to launch when stopping the tracker
 	HandlerVector changingHandlers;	// Handlers to launch when the tracker's status is changing
 
-	virtual void readConfigDirective( std::string &l );
+	virtual bool readConfigDirective( std::string &l ) override;
 
 public:
 	enum _status {
@@ -74,7 +74,7 @@ public:
 	/* Create Lua's object */
 	static void initLuaInterface( lua_State *L );
 
-	virtual std::string getTri(){ return Tracker::trigramme(); }
+	virtual std::string getTri() override { return Tracker::trigramme(); }
 	static std::string trigramme(){ return "TRK_"; }
 };
 

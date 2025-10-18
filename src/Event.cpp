@@ -15,9 +15,9 @@ Event::Event(const std::string &fch, std::string &where) : Object(fch, where){
 		fd2 << this->getFullId() << ".class: Event" << std::endl;
 }
 
-void Event::readConfigDirective(std::string &l){
+bool Event::readConfigDirective(std::string &l){
 		/* No specific directive */
-	this->Object::readConfigDirective(l);
+	return this->Object::readConfigDirective(l);
 }
 
 void Event::execHandlers(lua_State *L){

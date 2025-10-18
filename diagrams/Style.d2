@@ -66,6 +66,11 @@ classes: {
 		shape: hexagon
 	}
 
+	Resource:{
+		shape: parallelogram
+		style.fill: Crimson
+	}
+
 	Database:{
 		icon: https://icons.terrastruct.com/dev/postgresql.svg
 		shape: cylinder
@@ -111,6 +116,31 @@ classes: {
 		}
 	}
 
+	Renderer {
+		icon: https://icons.terrastruct.com/essentials/144-television.svg
+#		style.fill: transparent
+#		style.stroke: transparent
+	}
+
+	Decoration {
+		icon: https://icons.terrastruct.com/essentials/004-picture.svg
+		style.fill: transparent
+		style.stroke: transparent
+	}
+
+	Painting {
+		icon: https://icons.terrastruct.com/essentials/006-window.svg
+		style.fill: transparent
+		style.stroke: transparent
+	}
+
+	Field {
+		icon: https://icons.terrastruct.com/essentials/021-view.svg
+		shape: person
+		style.fill: pink
+#		style.stroke: transparent
+	}
+
 # Links
 	# let the default settings
 
@@ -132,6 +162,19 @@ classes: {
 			stroke-width: 4
 			stroke: red
 		}
+	}
+
+	lwaitresource: {
+		style {
+			stroke: Crimson
+		}
+		source-arrowhead: {
+			shape: diamond
+			style.filled: true
+		}
+		target-arrowhead: {
+    		shape: circle
+  		}
 	}
 
 	ldatabase: {

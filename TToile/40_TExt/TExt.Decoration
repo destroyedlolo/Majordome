@@ -1,0 +1,9 @@
+-->> desc=Display the unit
+--
+-- On which object this decoration will be applied ?
+-->> ApplyOn Painting=TExt
+
+-- The surface to apply on is embodied as MAJORDOME_PAINTING
+
+MAJORDOME_PAINTING:SetCursor(5,0)
+MAJORDOME_PAINTING:WriteString(string.char(0xdf))

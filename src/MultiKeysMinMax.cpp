@@ -31,7 +31,7 @@ MultiKeysMinMax::MultiKeysMinMax(const std::string &fch, std::string &where, lua
 		fd2 << this->getFullId() << ".class: MultiKeysMinMax" << std::endl;
 }
 
-void MultiKeysMinMax::readConfigDirective( std::string &l ){
+bool MultiKeysMinMax::readConfigDirective( std::string &l ){
 	std::string arg;
 
 	if(!(arg = striKWcmp( l, "-->> NumberOfKeys=" )).empty()){
@@ -45,7 +45,9 @@ void MultiKeysMinMax::readConfigDirective( std::string &l ){
 	} else if(this->readConfigDirectiveData(l))
 		;
 	else 
-		this->LuaExec::readConfigDirective(l);
+		return this->LuaExec::readConfigDirective(l);
+
+	return true;
 }
 
 void MultiKeysMinMax::feedState( lua_State *L ){

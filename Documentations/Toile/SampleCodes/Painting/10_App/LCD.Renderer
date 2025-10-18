@@ -1,0 +1,58 @@
+-- This is an example of Renderer script
+--
+-- Renderer aims to link physical device to Majordome
+-- (typical example : screen).
+--
+-- In the header of the script (comment bloc at the very beginning of
+-- the script), each line starting with -->> are Majordome's commands.
+-- Consequently, '--->>' are commented out commands.
+--
+-- Name of this script
+-- if not set, takes the filename
+--->> name=Toto
+--
+-- Failure will crash Majordome
+-->> Fatal
+--
+-- remove some trace
+-- This option is useful to avoid logging of very noisy topics
+--->> quiet
+
+-- This example defines a 2004 i2c screen
+
+-- We need administrative API to load additional modules
+Selene.exposeAdminAPI()
+
+-- Include Séléné 3rd parties modules
+Selene.Use("SelLCD")
+Majordome.LetsGo() -- ensure late building dependencies
+
+	-- Init the screen handle
+	-- Suitable for my BananaPI under Arch/Gentoo
+local lcd = SelLCD.Init(1, 0x27, true, false)
+if not lcd then
+	lcd = SelLCD.Init(2, 0x27, true, false)
+end
+lcd:SetTiming(500, 0)
+lcd:SetSize(20,4)	-- it's a 20x4 display
+
+	-- Turn on a clean display
+lcd:Clear()
+lcd:Backlight(true)
+lcd:DisplayCtl(true, false, false)	-- On, but no cursor
+
+--[[
+	-- put some stuffs on the display
+	-- testing purposes
+lcd:WriteString("Majordome : ".. string.format("%.4f", MAJORDOME_VERSION))
+
+lcd:SetCursor(0,2)
+lcd:WriteString("Bla bla")
+
+lcd:SetCursor(0,3)
+for c=33,52 do
+	lcd:WriteString(string.char(c))
+end
+--]]
+
+return lcd

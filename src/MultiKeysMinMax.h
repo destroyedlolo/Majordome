@@ -28,7 +28,7 @@ public:
 	std::unordered_map<std::vector<std::string>, lua_Number, MKuMapH> sum;
 
 private:
-	virtual void readConfigDirective( std::string &l );
+	virtual bool readConfigDirective( std::string &l ) override;
 	virtual void feedState(lua_State *L);
 
 	bool keysSanityCheck(const std::vector<std::string> &arg){ return(arg.size() == this->nk); }
@@ -64,7 +64,7 @@ public:
 	/* Create Lua's object */
 	static void initLuaInterface( lua_State *L );
 
-	virtual std::string getTri(){ return MultiKeysMinMax::trigramme(); }
+	virtual std::string getTri() override { return MultiKeysMinMax::trigramme(); }
 	static std::string trigramme(){ return "MKM_"; }
 
 	void dump();
