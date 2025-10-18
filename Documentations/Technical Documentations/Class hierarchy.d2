@@ -96,6 +96,25 @@ Tracker {
 Handler -> Tracker
 HandlersExecutor -> Tracker
 
+Resource {
+	class: Resource
+}
+
+'Constraint' {
+	class: Resource
+
+	res {
+		class: Resource
+		style.stroke-width: 6
+	}
+}
+
+Object -> 'Constraint'
+'Constraint' -> LuaTask
+
+Resource -> 'Constraint'.res 
+
+
 pgsql : Database Add On {
 	style.stroke-dash: 6
 
@@ -115,6 +134,7 @@ pgsql : Database Add On {
 	}
 	mpgConnection -> Feed
 	_.Handler -> Feed
+#	_.'Constraint' -> Feed
 
 	NamedFeed {
 		class: [Sql ; Lua]
@@ -131,11 +151,76 @@ pgsql : Database Add On {
 	}
 	mpgConnection -> Purge
 	_.Handler -> Purge
+	_.'Constraint' -> Purge
 
 	Archiving {
 		class: Sql
 	}
 	Purge -> Archiving
+}
+
+Toile: Toile Add On {
+	style.stroke-dash: 6
+
+	ToileObject {
+		class : abstract
+		tooltip: "Toile's objects common attributes (surface, ...)"
+	}
+	_.LuaExec-> ToileObject
+
+	ToileContainer {
+		class : abstract
+
+		tooltip: "Container that contains other objects"
+
+		DecorationsList {
+			style.multiple: true
+			class : [TDecoration; abstract]
+		}
+
+		ChildrenList {
+			style.multiple: true
+			class : [TPainting; abstract]
+		}
+	}
+
+	Renderer {
+		tooltip: "Low level renderer"
+		class: [ TRenderer ; Lua ]
+	}
+	_.LuaExec -> Renderer
+	ToileObject -> Renderer
+	ToileContainer -> Renderer
+	
+	LCD {
+		tooltip: "Renderer for LCD textual screen"
+		class: [ TLCD; Lua ]
+	}
+	Renderer -> LCD
+
+	Decoration {
+		tooltip: "Decoration of an object"
+		class: [ TDecoration ; Lua ]
+	}
+	_.LuaExec -> Decoration
+	ToileObject -> Decoration
+	Decoration -> ToileContainer.DecorationsList
+
+	Painting {
+		tooltip: "a.k.a subsurface"
+		class: TPainting
+	}
+	Painting -> ToileContainer.ChildrenList
+	ToileContainer -> Painting
+
+	Field {
+		tooltip: "Display information"
+		class: [ TField ; Lua ]
+		icon: https://icons.terrastruct.com/essentials/021-view.svg
+	}
+	_.Handler -> Field
+	Painting -> Field
+	Field -> ToileContainer.ChildrenList
 }
 
 # Configuration
@@ -146,47 +231,43 @@ Config: {
 	}
 
 	EventsList {
-		style.multiple: true
 		class: Event
 	}
 
 	TimersList {
-		style.multiple: true
 		class: Timer
 	}
 
 	TrackersList {
-		style.multiple: true
 		class: Tracker
 	}
 
 	MinMaxList {
-		style.multiple: true
 		class: MinMax
 	}
 
 	NamedMinMaxList {
-		style.multiple: true
 		class: MinMax
 	}
 
 	TasksList {
-		style.multiple: true
 		class: Task
 	}
 
 	ShutdownsList {
-		style.multiple: true
 		class: Shutdown
 	}
 
-	FeedsList {
+	ResourcesList{
 		style.multiple: true
+		class: Resource
+	}
+
+	FeedsList {
 		class: Sql
 	}
 
 	NamedFeedsList {
-		style.multiple: true
 		class: Sql
 	}
 
@@ -196,7 +277,6 @@ Config: {
 	}
 
 	pgSQLsList {
-		style.multiple: true
 		class: Database
 	}
 }
@@ -211,6 +291,7 @@ Timer -> Config.TimersList
 MinMax -> Config.MinMaxList
 NamedMinMax -> Config.NamedMinMaxList
 Tracker -> Config.TrackersList
+Resource -> Config.ResourcesList
 
 pgsql.mpgConnection -> Config.pgSQLsList
 pgsql.Feed -> Config.FeedsList

@@ -66,7 +66,7 @@ void LuaExec::loadConfigurationFile(const std::string &fch, std::string &where, 
 		exit(EXIT_FAILURE);
 }
 
-void LuaExec::readConfigDirective( std::string &l ){
+bool LuaExec::readConfigDirective( std::string &l ){
 	std::string arg;
 
 	if(!(arg = striKWcmp( l, "-->> need_task=" )).empty()){
@@ -77,7 +77,7 @@ void LuaExec::readConfigDirective( std::string &l ){
 			SelLog->Log('C', "\t\tAdded needed task '%s'", arg.c_str());
 		this->addNeededTask( arg );
 
-		return;
+		return true;
 	} else if(!(arg = striKWcmp( l, "-->> need_rendezvous=" )).empty()){
 		EventCollection::iterator event;
 		if( (event = config.EventsList.find(arg)) != config.EventsList.end()){
@@ -87,7 +87,7 @@ void LuaExec::readConfigDirective( std::string &l ){
 
 			if(d2)
 				fd2 << this->getFullId() << " -- " << event->second->getFullId() << ": need { class: lneed }" << std::endl;
-			return;
+			return true;
 		} else {
 			SelLog->Log('F', "\t\tRendezvous '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
@@ -101,7 +101,7 @@ void LuaExec::readConfigDirective( std::string &l ){
 
 			if(d2)
 				fd2 << this->getFullId() << " -- " << topic->second->getFullId() << ": need { class: lneed }" << std::endl;
-			return;
+			return true;
 		} else {
 			SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
@@ -119,7 +119,7 @@ void LuaExec::readConfigDirective( std::string &l ){
 			if(d2)
 				fd2 << this->getFullId() << " -- " << topic->second->getFullId() << ": require { class: lrequiere }" << std::endl;
 			this->addRequiredTopic(arg);
-			return;
+			return true;
 		} else {
 			SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
@@ -133,7 +133,7 @@ void LuaExec::readConfigDirective( std::string &l ){
 
 			if(d2)
 				fd2 << this->getFullId() << " -- " << timer->second->getFullId() << ": need { class: lneed }" << std::endl;
-			return;
+			return true;
 		} else {
 			SelLog->Log('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
@@ -147,7 +147,7 @@ void LuaExec::readConfigDirective( std::string &l ){
 
 			if(d2)
 				fd2 << this->getFullId() << " -- " << trk->second->getFullId() << ": need { class: lneed }" << std::endl;
-			return;
+			return true;
 		} else {
 			SelLog->Log('F', "\t\ttimer '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
@@ -161,7 +161,7 @@ void LuaExec::readConfigDirective( std::string &l ){
 
 			if(d2)
 				fd2 << this->getFullId() << " -- " << minmax->second->getFullId() << ": need { class: lneed }" << std::endl;
-			return;
+			return true;
 		} else {
 			SelLog->Log('F', "\t\tminmax '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
@@ -175,7 +175,7 @@ void LuaExec::readConfigDirective( std::string &l ){
 
 			if(d2)
 				fd2 << this->getFullId() << " -- " << nminmax->second->getFullId() << ": need { class: lneed }" << std::endl;
-			return;
+			return true;
 		} else {
 			SelLog->Log('F', "\t\tnamedminmax '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
@@ -189,7 +189,7 @@ void LuaExec::readConfigDirective( std::string &l ){
 
 			if(d2)
 				fd2 << this->getFullId() << " -- " << nminmax->second->getFullId() << ": need { class: lneed }" << std::endl;
-			return;
+			return true;
 		} else {
 			SelLog->Log('F', "\t\tnamedminmax '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
@@ -203,7 +203,7 @@ void LuaExec::readConfigDirective( std::string &l ){
 
 			if(d2)
 				fd2 << this->getFullId() << " -- " << shut->second->getFullId() << ": need { class: lneed }" << std::endl;
-			return;
+			return true;
 		} else {
 			SelLog->Log('F', "\t\tShutdown '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
@@ -219,7 +219,7 @@ void LuaExec::readConfigDirective( std::string &l ){
 
 			if(d2)
 				fd2 << this->getFullId() << " -- " << shut->second->getFullId() << ": need { class: lneed }" << std::endl;
-			return;
+			return true;
 		} else {
 			SelLog->Log('F', "\t\tpgSQL '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
@@ -234,7 +234,7 @@ void LuaExec::readConfigDirective( std::string &l ){
 
 			if(d2)
 				fd2 << this->getFullId() << " -- " << shut->second->getFullId() << ": need { class: lneed }" << std::endl;
-			return;
+			return true;
 		} else {
 			SelLog->Log('F', "\t\tFeed '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
@@ -248,7 +248,7 @@ void LuaExec::readConfigDirective( std::string &l ){
 
 			if(d2)
 				fd2 << this->getFullId() << " -- " << shut->second->getFullId() << ": need { class: lneed }" << std::endl;
-			return;
+			return true;
 		} else {
 			SelLog->Log('F', "\t\tNamedFeed '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
@@ -261,7 +261,7 @@ void LuaExec::readConfigDirective( std::string &l ){
 			if(::verbose)
 				SelLog->Log('C', "\t\tAdded needed renderer '%s'", arg.c_str());
 			this->addNeededRenderer( arg );
-			return;
+			return true;
 		} else {
 			SelLog->Log('F', "\t\tRenderer '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);

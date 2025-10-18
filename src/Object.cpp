@@ -9,14 +9,15 @@
 #include <cstring>	// strerror()
 
 Object::Object(const std::string &fch, std::string &where) : disabled(false), quiet(false){
+	this->extrName( fch, this->name );
+	this->where = where;
 }
 
 void Object::loadConfigurationFile(const std::string &fch, std::string &where, std::stringstream *buffer){
 	if(::verbose)
 		SelLog->Log('L', "\t'%s'", fch.c_str());
 
-	this->extrName( fch, name );
-	this->name = name;
+	this->extrName( fch, this->name );
 	this->where = where;
 
 		/*
@@ -92,7 +93,7 @@ std::string Object::getContainer( void ){
 #endif
 }
 
-void Object::readConfigDirective(std::string &l){
+bool Object::readConfigDirective(std::string &l){
 	std::string arg;
 
 	if(!(arg = striKWcmp( l, "-->> name=" )).empty()){
@@ -124,9 +125,11 @@ void Object::readConfigDirective(std::string &l){
 		if(::verbose)
 			SelLog->Log('C', "\t\tBelong to group : %s", group.c_str());
 	} else if(!striKWcmp( l, "-->> ").empty()){
-		SelLog->Log('F', "Unknown directive '%s'", l.c_str());
+		SelLog->Log('F', "Unknown directive (or missing argument) '%s'", l.c_str());
 		exit(EXIT_FAILURE);
 	}
+
+	return true;
 }
 
 std::string Object::getFullId( void ){

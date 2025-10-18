@@ -15,7 +15,7 @@ Tracker::Tracker(const std::string &fch, std::string &where, lua_State *L) : Obj
 		fd2 << this->getFullId() << ".class: Tracker" << std::endl;
 }
 
-void Tracker::readConfigDirective( std::string &l ){
+bool Tracker::readConfigDirective( std::string &l ){
 	std::string arg;
 
 	if(!(arg = striKWcmp( l, "-->> howmany=" )).empty()){
@@ -94,7 +94,9 @@ void Tracker::readConfigDirective( std::string &l ){
 	else if(this->readConfigDirectiveData(l))
 		;
 	else 
-		this->Handler::readConfigDirective(l);
+		return this->Handler::readConfigDirective(l);
+
+	return true;
 }
 
 bool Tracker::execAsync(lua_State *L){

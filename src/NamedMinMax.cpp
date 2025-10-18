@@ -15,11 +15,13 @@ NamedMinMax::NamedMinMax(const std::string &fch, std::string &where, lua_State *
 		fd2 << this->getFullId() << ".class: NamedMinMax" << std::endl;
 }
 
-void NamedMinMax::readConfigDirective( std::string &l ){
+bool NamedMinMax::readConfigDirective( std::string &l ){
 	if(this->readConfigDirectiveData(l))
 		;
 	else 
-		this->LuaExec::readConfigDirective(l);
+		return this->LuaExec::readConfigDirective(l);
+
+	return true;
 }
 
 void NamedMinMax::feedState( lua_State *L ){

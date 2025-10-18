@@ -13,7 +13,7 @@
 
 class Archiving : virtual public Purge {
 protected:
-	virtual void readConfigDirective( std::string &l );
+	virtual bool readConfigDirective( std::string &l );
 
 	std::string SourceName;
 	std::string SourceField;

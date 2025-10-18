@@ -12,7 +12,7 @@
 class MQTTTopic : virtual public Object, public Event {
 	bool alreadydefault;	// true if default has been already used
 
-	virtual void readConfigDirective(std::string &l);
+	virtual bool readConfigDirective(std::string &l) override;
 
 protected:
 	std::string topic;	// Topic to look for
@@ -51,7 +51,7 @@ public:
 	/* Create Lua's object */
 	static void initLuaInterface( lua_State *L );
 
-	virtual std::string getTri(){ return MQTTTopic::trigramme(); }
+	virtual std::string getTri() override { return MQTTTopic::trigramme(); }
 	static std::string trigramme(){ return "TPK_"; }
 };
 

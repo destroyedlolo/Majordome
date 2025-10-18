@@ -1,0 +1,35 @@
+-- Fill the primary background
+--
+-- Decoration paints a surface.
+--
+-- In the header of the script (comment bloc at the very beginning of
+-- the script), each line starting with -->> are Majordome's commands.
+-- Consequently, '--->>' are commented out commands.
+--
+-- Name of this script
+-- if not set, takes the filename
+--->> name=LCD
+--
+-- On which object this decoration will be applied ?
+-- On a Surface object
+--->> ApplyOn=
+-- On a Renderer
+-->> ApplyOnRenderer=LCD
+--
+-- remove some trace
+-- This option is useful to avoid logging of very noisy topics
+--->> quiet
+--
+-- Disable this decoration
+--->> disabled
+
+-- The surface to apply on is embodied as MAJORDOME_PAINTING
+
+local w,h = MAJORDOME_PAINTING:GetSize()
+
+for j = 1,h do
+	MAJORDOME_PAINTING:SetCursor(0,j-1)
+	for i = 0,w do
+		MAJORDOME_PAINTING:WriteString( string.char(255) )
+	end
+end

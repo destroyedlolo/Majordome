@@ -37,7 +37,7 @@ public:
 	Timer( const std::string &file, std::string &where );
 	virtual ~Timer() = default;	// Just to make this class polymorphic
 
-	virtual void readConfigDirective(std::string &l);
+	virtual bool readConfigDirective(std::string &l) override;
 
 	/* Timers are handled through a dedicated thread ...
 	 * A pointer to this object is passed to it.
@@ -108,7 +108,7 @@ public:
 	/* Create Lua's object */
 	static void initLuaInterface(lua_State *L);
 
-	virtual std::string getTri(){ return Timer::trigramme(); }
+	virtual std::string getTri() override { return Timer::trigramme(); }
 	static std::string trigramme(){ return "TMR_"; }
 };
 

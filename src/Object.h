@@ -31,11 +31,12 @@ protected:
 
 		/* Read configuration directive
 		 * l -> string to read
+		 * <- was the option recognized ?
 		 *
 		 * NOTEZ-BIEN : Object's one will fail if the option is not recognized.
 		 * Consequently, it has to be called lastly.
 		 */
-	virtual void readConfigDirective(std::string &l);
+	virtual bool readConfigDirective(std::string &l);
 
 	virtual std::string getTri() = 0;	// Get type's trigram (needed for d2)
 public:
@@ -61,7 +62,7 @@ public:
 	std::string &getWhere( void ){ return this->where; }; // Object's container (it's father directory)
 	const char *getWhereC( void ){ return this->where.c_str(); };
 	std::string getContainer( void );
-	std::string getFullId( void );
+	virtual std::string getFullId( void );
 
 	/*
 	 * determine the name from the filename

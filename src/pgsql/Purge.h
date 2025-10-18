@@ -9,8 +9,9 @@
 #include "../ObjCollection.h"
 #include "../StringVector.h"
 #include "../Event.h"
+#include "../Constraint.h"
 
-class Purge : virtual public mpgConnection, virtual public Handler {
+class Purge : virtual public mpgConnection, virtual public Handler, virtual public Constraint {
 protected:
 	EventVector EventSuccessList;
 	EventVector EventFailList;
@@ -18,12 +19,12 @@ protected:
 	std::string TableName;	// Table to purge
 	std::string upto;		// Selection of data to purge
 
-	virtual void readConfigDirective( std::string &l );
+	virtual bool readConfigDirective( std::string &l ) override;
 	void feedState(lua_State *){};
 
 		/* Executable */
 	virtual bool execAsync(lua_State *L);	// Overloading to handle data acceptation
-	virtual bool internalExec(void);
+	virtual bool internalExec(void);	// Actually do the purging
 
 	Purge() = default;
 
@@ -36,7 +37,7 @@ public:
 	virtual const char *getNameC(){ return(this->Object::getNameC()); };
 	bool isQuiet(){ return !this->Object::isVerbose(); };
 
-	virtual std::string getTri(){ return "PRG_"; }
+	virtual std::string getTri() override { return "PRG_"; }
 };
 
 typedef ObjCollection<Purge *> PurgeCollection;

@@ -15,7 +15,7 @@ At user side, data will be visualized through the industries standard **Grafana*
 
 ---
 
-## Preamble
+## 📜 Preamble
 
 As an example, we will take data issued by a UPS where data are published through MQTT. A data set is published every 15 seconds.
 
@@ -37,6 +37,37 @@ onduleur/ups.load	35
 > [!NOTE]
 > Installation and configuration of a **MQTT broker** (Mosquitto suggested), **PostgreSQL server**,
 > and **Majordome** itself are definitively out of the scope of this tutorial.
+
+---
+
+## 🔧 Majordome's configuration file
+
+Majordome's configuration file is a text file like this one 
+
+```
+# UPS.conf
+#    Majordome's configuration for UPS data gathering
+
+# Global settings
+# URL to reach the broker
+Broker_URL=tcp://actif.chez.moi:1883
+
+# ClientID to connect to the broker
+# In case you have more than one Majordome instance connected to a single broker,
+# you MUST set an unique ID per instance.
+# If not set, the Client ID will be Majordome-<Hostname>-<pid>
+# ClientID=UPS
+
+# Where to find user configuration
+# default : /usr/local/etc/Majordome/
+UserConfiguration=UPS
+```
+
+Where
+
+- `Broker_URL=` URL to use to connect to your broker. Only Majordome Pro supports TLS connections.
+- `ClientID=` to force new MQTT ClientID
+- `UserConfiguration=` path to the directory holding the application as described below.
 
 ---
 

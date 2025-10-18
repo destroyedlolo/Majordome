@@ -1,0 +1,4 @@
+-->> desc=Tension d'alimentation du PMic
+-->> group=PMU
+--
+-->> topic=Machines/%Hostname%/PMU/ac/power

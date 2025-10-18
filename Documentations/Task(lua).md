@@ -2,7 +2,7 @@
 **Tasks** are Lua scripts that are triggered by external events (timer, rendezvous, topic ...). They are the core of the automation in Majordome.
 
 > [!CAUTION]
-> ⚠️ Notez-bien ⚠️ : each task is running is a **dedicated context** (i.e, different Lua state) and, consequently, are **strongly stateless**.<br>
+> ⚠️ Notez-bien ⚠️ : each task is running in a **dedicated context** (i.e, different Lua state) and, consequently, are **strongly stateless**.<br>
 > You should assume that the environment exists only for a single invocation and will disappear as soon as the task is finished. The script should initialize any needed objects when it is starting and should commit any permanent data changes before exiting to a durable store such Séléné's shared (`SelSharedVar`, `SelSharedFunction`, Collections, ...) or publish them to the MQTT network. Variables/functions/whatever can't be shared among scripts. Again, Séléné is providing some sharing mechanisms if needed.
 
 > [!TIP]
@@ -20,9 +20,12 @@ Multiple directives may be present, including those of the same kind.
 See [this page](Headers%20and%20Shared%20Directives.md#triggering-while-providing-data)
 #### Launched without data
 See [this page](Headers%20and%20Shared%20Directives.md#triggering-without-data)
+#### Can be limited by resources
+See [this documentation](resource.md#objects-that-can-be-limited)
 ### Task's
 #### -->> once
-Only one instance is allowed to run at the same time : no concurrency.
+Only one instance is allowed to run at the same time : no concurrency.<br>
+If another instance is already running, the newer attempt is ignored. If you want to wait for the previous one to be completed, [resources](resource.md) are the way to go.
 
 #### -->> RunAtStartup
 Run when Majordome starts.
