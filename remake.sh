@@ -48,12 +48,6 @@ else
 	exit 1
 fi
 
-if (( $(echo "$VERLUA < 5.3" | bc -l) ))
-then
-	echo "Need compat53"
-	LUA="$LUA -Iluacompat53"
-fi
-
 echo -n "Selene : "
 
 : <<'DEV'
@@ -92,6 +86,13 @@ if [ -Z ${BUILD_TOILE+x} ]; then
 else
 	echo "Toile : included"
 	SOURCES+=' Toile/*.cpp'
+fi
+
+if (( $(echo "$VERLUA < 5.3" | bc -l) ))
+then
+	echo "Need compat53"
+	LUA="$LUA -DCOMPAT53_PREFIX=Com53 -Iluacompat53"
+	SOURCES+=' luacompat53/*.c'
 fi
 
 echo
