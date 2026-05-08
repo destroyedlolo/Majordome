@@ -74,10 +74,17 @@ void Decoration::exec(struct SelGenericSurface *srf){	/* From LuaExec::execSync(
 	if(this->isVerbose())
 		SelLog->Log('T', "Running Decoration '%s' from '%s'", this->getNameC(), this->getWhereC() );
 
-	if(lua_pcall( L, 0, 0, 0)){
+	if(lua_pcall( L, 0, 1, 0)){
 		SelLog->Log('E', "Can't execute Decoration '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), lua_tostring(L, -1));
+		lua_close(L);
 		return;
 	}
+
+	if(lua_toboolean(L, -1)){
+		puts("*** Refresh()");
+		srf->cb->Refresh(srf);
+	}
+
 		/* cleaning */
 	lua_close(L);
 
