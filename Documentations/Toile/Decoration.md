@@ -24,6 +24,15 @@ Remove some trace.
 ### Exported object
 The surface to apply on is embodied as **MAJORDOME_PAINTING**
 
+### Return value
+
+A screen refresh is triggered at the end of execution for any return value 
+other than `false` or `nil`. Missing return values are treated as nil and will not trigger a refresh.
+
+> [!WARNING]
+> Since v5, root surface rendering is always immediate. Developers are advised to return `true` to
+>  guarantee this behavior in future updates, as the default rendering logic may evolve.
+
 ## Examples
 Displays some messages on an LCD 2004 screen.
 
@@ -59,4 +68,7 @@ MAJORDOME_PAINTING:SetCursor(0,3)
 for c=33,52 do
 	MAJORDOME_PAINTING:WriteString(string.char(c))
 end
+
+-- Refresh() immediately.
+return true
 ```
