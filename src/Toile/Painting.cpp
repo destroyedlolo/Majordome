@@ -124,7 +124,7 @@ void Painting::refresh(){
 	this->getSurface()->cb->Refresh(this->getSurface());
 }
 
-void Painting::refreshBackground(){
+void Painting::updateBackground(){
 	if(!this->isEnabled()){
 		if(this->isVerbose())
 			SelLog->Log('D', "Painting '%s' from '%s' is disabled", this->getNameC(), this->getWhereC());
@@ -139,7 +139,7 @@ void Painting::refreshBackground(){
 		d->exec(this->getSurface());
 }
 
-void Painting::refreshChild(){
+void Painting::updateChild(){
 #if 0	/* ToDo */
 		// refresh childs
 	for(auto &paint: this->PaintingList)
@@ -147,14 +147,15 @@ void Painting::refreshChild(){
 #endif
 }
 
-void Painting::refreshAll(){
+void Painting::updateAll(){
 	if(!this->isEnabled()){
 		if(this->isVerbose())
 			SelLog->Log('D', "Painting '%s' from '%s' is disabled", this->getNameC(), this->getWhereC());
 		return;
 	}
 
-	this->refreshBackground();
+	this->updateBackground();
+	this->updateChild();
+
 	this->refresh();
-	this->refreshChild();
 }

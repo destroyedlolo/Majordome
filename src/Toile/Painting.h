@@ -71,10 +71,13 @@ public:
 	 	// Fails in case of error.
 	bool init(void);
 
+		// Update buffers
+	void updateBackground();	// Refresh Painting's own decoration (background)
+	void updateChild();	// Refresh its child
+	void updateAll();		// Refresh everything
+
+		// Refresh to the physical layer
 	void refresh();			// Refresh ourself
-	void refreshBackground();	// Refresh Painting's own decoration (background)
-	void refreshChild();	// Refresh its child
-	void refreshAll();		// Refresh everything
 
 	virtual std::string getTri(){ return "PNT_"; }
 };
