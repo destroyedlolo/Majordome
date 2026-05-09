@@ -73,7 +73,7 @@ void Field::update(std::string &rs, lua_Number &rn){
 		return;
 	}
 
-	this->refresh();		// Refesh background
+	this->refreshBackground();		// Refesh background
 
 	if(!rs.empty())
 		this->getSurface()->cb->WriteString(this->getSurface(), rs.c_str());

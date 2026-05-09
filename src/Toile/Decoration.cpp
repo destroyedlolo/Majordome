@@ -80,10 +80,8 @@ void Decoration::exec(struct SelGenericSurface *srf){	/* From LuaExec::execSync(
 		return;
 	}
 
-	if(lua_toboolean(L, -1)){
-		puts("*** Refresh()");
+	if(lua_toboolean(L, -1))
 		srf->cb->Refresh(srf);
-	}
 
 		/* cleaning */
 	lua_close(L);

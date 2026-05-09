@@ -111,7 +111,7 @@ bool Painting::init(void){
 	return true;
 }
 
-void Painting::refresh(){
+void Painting::refreshBackground(){
 	if(!this->isEnabled()){
 		if(this->isVerbose())
 			SelLog->Log('D', "Painting '%s' from '%s' is disabled", this->getNameC(), this->getWhereC());
@@ -141,6 +141,6 @@ void Painting::refreshAll(){
 		return;
 	}
 
-	this->refresh();
+	this->refreshBackground();
 	this->refreshChild();
 }
