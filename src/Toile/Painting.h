@@ -71,7 +71,8 @@ public:
 	 	// Fails in case of error.
 	bool init(void);
 
-	void refreshBackground();			// Refresh Painting's own decoration (background)
+	void refresh();			// Refresh ourself
+	void refreshBackground();	// Refresh Painting's own decoration (background)
 	void refreshChild();	// Refresh its child
 	void refreshAll();		// Refresh everything
 

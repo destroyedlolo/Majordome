@@ -83,6 +83,8 @@ void Field::update(std::string &rs, lua_Number &rn){
 	}
 
 	this->refreshChild();	// Refresh forground
+
+	this->refresh();
 }
 
 bool Field::execAsync(lua_State *L){
