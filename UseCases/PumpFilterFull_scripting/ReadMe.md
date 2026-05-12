@@ -7,9 +7,9 @@ This use case shows the "manual way" to do some automation using Majordome.
 - ...
 
 > [!TIP]
-> Such *low-level* Lua scripting can be useful to make automation too complex
-> for Majordome's own objects. But using diretly Séléné's Collection directly
-> exhibits generally bad application design.
+> Majordome’s built‑in objects are designed to cover the majority of use cases. However, there are situations where the decision mechanism reaches
+> the limits of what is available out of the box. In those cases, low‑level Lua scripting can come into play.
+> That said, directly relying on Séléné’s collections generally leads to poor application design and should be avoided.
 
 # Goal
 
