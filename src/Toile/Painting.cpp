@@ -134,6 +134,9 @@ void Painting::updateBackground(){
 	if(!this->isVisible())
 		return;
 
+	if(::debug && this->isVerbose())
+		SelLog->Log('D', "[%s] Painting::updateBackground()", this->getNameC());
+
 	this->getSurface()->cb->Clear(this->getSurface());
 	for(auto &d: this->DecorationsList)
 		d->exec(this->getSurface());

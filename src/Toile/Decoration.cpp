@@ -39,7 +39,7 @@ void Decoration::exec(struct SelGenericSurface *srf){	/* From LuaExec::execSync(
 	}
 
 	if(::debug && this->isVerbose())
-		SelLog->Log('D', "Decoration::exec(%p)", srf);
+		SelLog->Log('D', "[%s] Decoration::exec(%p)", this->getNameC(), srf);
 
 		/* Put the cursor to its origin
 		 * The surface is not cleared : if needed it has to be done
@@ -87,7 +87,7 @@ void Decoration::exec(struct SelGenericSurface *srf){	/* From LuaExec::execSync(
 	lua_close(L);
 
 	if(::debug && this->isVerbose())
-		SelLog->Log('D', "Decoration::exec() - End");
+		SelLog->Log('D', "[%s] Decoration::exec() - End", this->getNameC());
 
 	return;
 }

@@ -106,6 +106,9 @@ bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &
 }
 
 bool Toile::execRenderers(){
+	if(::debug)
+		SelLog->Log('D', "Toile::execRenderers()");
+
 	for(auto &i: config.RendererList){
 		if(!i.second->init()){
 			if(i.second->getFatal())
@@ -117,10 +120,19 @@ bool Toile::execRenderers(){
 			child->init();
 	}
 
+	if(::debug)
+		SelLog->Log('D', "Toile::execRenderers() - End");
+
 	return true;
 }
 
 void Toile::RefreshRenderers(){
+	if(::debug)
+		SelLog->Log('D', "Toile::RefreshRenderers()");
+
 	for(auto &r: config.RendererList)
 		r.second->refreshAll();
+
+	if(::debug)
+		SelLog->Log('D', "Toile::RefreshRenderers() - End");
 }
