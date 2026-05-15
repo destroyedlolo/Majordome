@@ -104,10 +104,10 @@ bool Painting::init(void){
 		SelLog->Log('D', "[%s] Painting::init() - Children", this->getNameC());
 	for(auto &child: this->getChildren())
 		child->init();
-	
+
 	if(::debug && this->isVerbose())
 		SelLog->Log('D', "[%s] Painting::init() - End", this->getNameC());
-	
+
 	return true;
 }
 
@@ -120,8 +120,6 @@ void Painting::refresh(){
 
 	if(!this->isVisible())
 		return;
-
-	this->getSurface()->cb->Refresh(this->getSurface());
 }
 
 void Painting::refreshBackground(){

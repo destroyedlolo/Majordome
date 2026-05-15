@@ -110,4 +110,7 @@ void Renderer::refreshChild(){
 void Renderer::refreshAll(){
 	this->refresh();
 	this->refreshChild();
+
+		// Physically refresh the screen
+	this->getSurface()->cb->Refresh(this->getSurface());
 }

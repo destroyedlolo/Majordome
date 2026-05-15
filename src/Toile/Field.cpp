@@ -82,9 +82,10 @@ void Field::update(std::string &rs, lua_Number &rn){
 		this->getSurface()->cb->WriteString(this->getSurface(), t.c_str());
 	}
 
+	this->refresh();		// Refresh own's
 	this->refreshChild();	// Refresh forground
 
-	this->refresh();
+	this->getSurface()->cb->Refresh(this->getSurface());	// Physically refresh the screen
 }
 
 bool Field::execAsync(lua_State *L){
