@@ -85,6 +85,8 @@ void Field::update(std::string &rs, lua_Number &rn){
 	this->refresh();		// Refresh own's
 	this->refreshChild();	// Refresh forground
 
+	if(::debug && this->isVerbose())
+		this->getSurface()->cb->Dump(this->getSurface());
 	this->getSurface()->cb->Refresh(this->getSurface());	// Physically refresh the screen
 }
 
