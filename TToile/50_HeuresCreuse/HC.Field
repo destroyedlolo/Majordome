@@ -16,3 +16,4 @@ if HC:getVal() == 'HC..' then
 else
 	return ' '
 end
+

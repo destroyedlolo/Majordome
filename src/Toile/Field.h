@@ -29,7 +29,7 @@ public:
 	bool readConfigDirective( std::string &l );
 
 		/* Executable */
-	virtual bool execAsync(lua_State *L);	// Overloading to handle MinMax data feeding
+	virtual bool execAsync(lua_State *L);	// Overloading to handle data arrival
 
 	virtual std::string getTri(){ return "FLD_"; }
 };
