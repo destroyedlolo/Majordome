@@ -4,7 +4,7 @@
 #include "pgSQL.h"
 
 mpgConnection::~mpgConnection(){
-	this->disconnect();
+	this->disconnect(true);
 }
 
 bool mpgConnection::connect(void){
@@ -28,15 +28,15 @@ bool mpgConnection::connect(void){
 		return false;
 	}
 
-	if(debug && !this->isQuiet())
+	if(debug)
 		SelLog->Log('T', "[%s] Connected", this->db->getNameC());
 
 	return true;
 }
 
-void mpgConnection::disconnect(void){
+void mpgConnection::disconnect(bool fromdestructor){
 	if(this->conn){
-		if(debug && !this->isQuiet())
+		if(debug && (fromdestructor || !this->isQuiet()))
 			SelLog->Log('T', "[%s] Disconnect", this->db->getNameC());
 
 		PQfinish(this->conn);
