@@ -110,4 +110,9 @@ void Renderer::refreshChild(){
 void Renderer::refreshAll(){
 	this->refresh();
 	this->refreshChild();
+
+		// Physically refresh the screen
+	if(::debug && this->isVerbose())
+		this->getSurface()->cb->Dump(this->getSurface());
+	this->getSurface()->cb->Refresh(this->getSurface());
 }

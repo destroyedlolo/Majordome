@@ -118,10 +118,8 @@ bool LCD::init(void){	/* From LuaExec::execSync() */
 		lcd->clock_process = this->clock_process;
 	}
 
-	if(this->w){
-		lcd->primary.w = this->w;
-		lcd->primary.h = this->h;
-	}
+	if(this->w)
+		SelLCD->SetSize(lcd, this->w, this->h);
 
 	SelLCD->Clear(lcd);
 	SelLCD->Backlight(lcd, true);	// Backlight on

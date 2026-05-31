@@ -23,10 +23,7 @@ Field::Field( const std::string &fch, std::string &where, lua_State *L ) : Objec
 		/* ***
 		 * Sanity checks
 		 * ***/
-	if(!this->getParent()){
-		SelLog->Log('F', "[Painting \"%s\"] No parent defined", this->name.c_str());
-		exit(EXIT_FAILURE);
-	}
+	this->assertSanity();
 
 	if(!this->geometry.h){
 		this->geometry.h = 1;
@@ -76,7 +73,7 @@ void Field::update(std::string &rs, lua_Number &rn){
 		return;
 	}
 
-	this->refresh();		// Refesh background
+	this->refreshBackground();		// Refesh background
 
 	if(!rs.empty())
 		this->getSurface()->cb->WriteString(this->getSurface(), rs.c_str());
@@ -84,7 +81,13 @@ void Field::update(std::string &rs, lua_Number &rn){
 		std::string t = std::to_string(rn);
 		this->getSurface()->cb->WriteString(this->getSurface(), t.c_str());
 	}
+
+	this->refresh();		// Refresh own's
 	this->refreshChild();	// Refresh forground
+
+	if(::debug && this->isVerbose())
+		this->getSurface()->cb->Dump(this->getSurface());
+	this->getSurface()->cb->Refresh(this->getSurface());	// Physically refresh the screen
 }
 
 bool Field::execAsync(lua_State *L){

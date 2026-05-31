@@ -14,7 +14,7 @@ namespace Toile {
 	uint8_t objectweight( const char *ext );
 	bool readConfigToile(Config &cfg, std::string &completpath, std::string &where, std::string &ext, lua_State *L);
 
-	bool execRenderers();		// Exec Renderers own code
+	bool execRenderers();		// Exec Renderers own init() code
 	void RefreshRenderers();	// Exec Renderers' Decoration
 
 	struct Coordinates {

@@ -1,0 +1,9 @@
+-->> desc=Affiche l'unitée
+-->> group=Electicite
+--
+-->> ApplyOn Painting=Tension
+
+-- The surface to apply on is embodied as MAJORDOME_PAINTING
+
+MAJORDOME_PAINTING:SetCursor(3,0)
+MAJORDOME_PAINTING:WriteString('v')

@@ -17,7 +17,8 @@ Topic to listen / publish too. **This field is mandatory.**
 -->> topic=Temperature/Pool
 ```
 > [!TIP]  
-> **%ClientID%** will be replaced by its value.
+> - **%ClientID%** will be replaced by the MQTT's client ID
+> - **%Hostname%** will be replaced by the host's name
 
 #### -->> qos=
 Quality of service for this topic between **0** and **2**. If outside this range, forced to **0** (which is the default value)

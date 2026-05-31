@@ -1,0 +1,5 @@
+-->> desc=Conteneur tension
+-->> group=Electicite
+-->> ApplyOn Renderer=LCD
+-->> Origin=16,1
+-->> Size=4x1

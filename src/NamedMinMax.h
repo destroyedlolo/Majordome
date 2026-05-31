@@ -20,7 +20,7 @@ public:	// Made public only to let Lua enumerates
 	std::unordered_map<std::string, lua_Number> sum;
 
 private:
-	virtual bool readConfigDirective( std::string &l );
+	virtual bool readConfigDirective( std::string &l ) override;
 	virtual void feedState(lua_State *L);
 
 public:
@@ -51,7 +51,7 @@ public:
 	/* Create Lua's object */
 	static void initLuaInterface( lua_State *L );
 
-	virtual std::string getTri(){ return NamedMinMax::trigramme(); }
+	virtual std::string getTri() override { return NamedMinMax::trigramme(); }
 	static std::string trigramme(){ return "NMX_"; }
 
 #if DEBUG

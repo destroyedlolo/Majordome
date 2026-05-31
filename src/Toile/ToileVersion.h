@@ -1,5 +1,5 @@
 /* Toile extension verison
- * Copyright 2018-2024 Laurent Faillie
+ * Copyright 2018-2025 Laurent Faillie
  *
  * 		Majordome is covered by
  *		Creative Commons Attribution-NonCommercial 3.0 License
@@ -15,6 +15,8 @@
  *	21/06/2025 - v0.01 - LF - Introduce LCD renderer
  *	26/06/2025 - v0.02 - LF - Introduce ToileObject
  *	29/06/2025 - v0.03 - LF - Redesign
+ *	13/08/2025 - v0.04 - LF - Add assertSanity()
+ *	14/08/2025 - v0.05 - LF - Change Field priority
  */
 
-#define TOILEVERSION 0.0300
+#define TOILEVERSION 0.0500

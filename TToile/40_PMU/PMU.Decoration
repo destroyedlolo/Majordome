@@ -1,0 +1,4 @@
+-->> group=PMU
+-->> ApplyOn Painting=PMU
+
+MAJORDOME_PAINTING:WriteString("PMU:")

@@ -5,6 +5,8 @@
  * 16/03/2019 - LF - Add .tracker
  * 20/05/2024 - LF - Migrate to v4
  * 20/01/2025 - LF - Migrate to v6
+ *
+ * Note : new() will crash by themselves if running out of resources
  */
 
 #include "Selene.h"
@@ -17,7 +19,6 @@
 
 #include <algorithm>
 #include <cstring>
-#include <cassert>
 
 /* Determine object weight based on its file extension 
  * Some space are left for modules extensions (like Toile's)
@@ -33,6 +34,7 @@ static const SubConfigDir::extweight fileext[] = {
 	{ ".archiving", 0x70 },
 	{ ".purge", 0x70 },
 #endif
+	{ ".resource", 0xd0 },
 	{ ".topic", 0xc0 },
 	{ ".timer", 0xc0 },
 	{ ".rendezvous", 0xc0 },
@@ -40,8 +42,8 @@ static const SubConfigDir::extweight fileext[] = {
 	{ ".namedminmax", 0x80 },
 	{ ".multikeysminmax", 0x80 },
 	{ ".tracker", 0x80 },
-	{ ".shutdown", 0x50 },
-	{ ".lua", 0x40 },
+	{ ".shutdown", 0x70 },
+	{ ".lua", 0x50 },
 	{ ".md", 0x01 }	// ignored, documentation only
 };
 
@@ -105,9 +107,17 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 				lua_pop(L, 1);  /* pop error message from the stack */
 				exit(EXIT_FAILURE);
 			}
+		} else if(ext == ".resource"){
+			auto resource = new Resource( completpath, where );
+
+			ResourceCollection::iterator prev;
+			if((prev = cfg.ResourcesList.find(resource->getName())) != cfg.ResourcesList.end()){
+				SelLog->Log('F', "Resource '%s' is defined multiple times (previous one '%s')", resource->getNameC(), prev->second->getWhere().c_str());
+				exit(EXIT_FAILURE);
+			} else
+				cfg.ResourcesList.insert( std::make_pair(resource->getName(), resource) );
 		} else if(ext == ".lua"){
 			auto tsk = new LuaTask( completpath, where, L );
-			assert(tsk);
 	
 			TaskCollection::iterator prev;
 			if((prev = cfg.TasksList.find(tsk->getName())) != cfg.TasksList.end()){
@@ -117,7 +127,6 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 				cfg.TasksList.insert( std::make_pair(tsk->getName(), tsk) );
 		} else if(ext == ".shutdown"){
 			auto tsk = new Shutdown( completpath, where, L );
-			assert(tsk);
 	
 			ShutdownCollection::iterator prev;
 			if((prev = cfg.ShutdownsList.find(tsk->getName())) != cfg.ShutdownsList.end()){

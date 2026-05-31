@@ -33,7 +33,7 @@ public:
 	virtual ~mpgConnection();
 
 	bool connect(void);
-	void disconnect(void);
+	void disconnect(bool fromdestructor = false);
 	bool isConnected(void){ return !!this->conn; };
 
 	/* Accessors */

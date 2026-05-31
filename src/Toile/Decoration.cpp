@@ -14,6 +14,7 @@
 
 Decoration::Decoration( const std::string &fch, std::string &where, lua_State *L ) : Object(fch, where), LuaExec(fch, where){
 	this->loadConfigurationFile(fch, where, L);
+	this->assertSanity();
 
 	if(d2)
 		fd2 << this->getFullId() << ".class: Decoration" << std::endl;
@@ -38,7 +39,7 @@ void Decoration::exec(struct SelGenericSurface *srf){	/* From LuaExec::execSync(
 	}
 
 	if(::debug && this->isVerbose())
-		SelLog->Log('D', "Decoration::exec(%p)", srf);
+		SelLog->Log('D', "[%s] Decoration::exec(%p)", this->getNameC(), srf);
 
 		/* Put the cursor to its origin
 		 * The surface is not cleared : if needed it has to be done
@@ -73,15 +74,23 @@ void Decoration::exec(struct SelGenericSurface *srf){	/* From LuaExec::execSync(
 	if(this->isVerbose())
 		SelLog->Log('T', "Running Decoration '%s' from '%s'", this->getNameC(), this->getWhereC() );
 
-	if(lua_pcall( L, 0, 0, 0)){
+	if(lua_pcall( L, 0, 1, 0)){
 		SelLog->Log('E', "Can't execute Decoration '%s' from '%s' : %s", this->getNameC(), this->getWhereC(), lua_tostring(L, -1));
+		lua_close(L);
 		return;
 	}
+
+	if(lua_toboolean(L, -1)){
+		if(::debug && this->isVerbose())
+			this->getSurface()->cb->Dump(this->getSurface());
+		srf->cb->Refresh(srf);
+	}
+
 		/* cleaning */
 	lua_close(L);
 
 	if(::debug && this->isVerbose())
-		SelLog->Log('D', "Decoration::exec() - End");
+		SelLog->Log('D', "[%s] Decoration::exec() - End", this->getNameC());
 
 	return;
 }

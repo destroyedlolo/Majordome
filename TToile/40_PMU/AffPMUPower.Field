@@ -1,0 +1,8 @@
+-->> desc=Affiche la puissance du PMic
+-->> group=PMU
+-->> ApplyOn Painting=PMU
+-->> Origin=10,0
+-->> Sample=x.xx
+-->> listen=PMUPower
+
+return string.format("%1.2f", MAJORDOME_PAYLOAD):gsub("%.", "w");

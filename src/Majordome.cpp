@@ -483,5 +483,6 @@ int main(int ac, char **av){
 	config.RunImmediates();	// Run immediate & overdue timers tasks
 
 	config.SubscribeTopics();	// MQTT : activate topics receiving
+
 	pause();	// Waiting for events, nothing else to do
 }

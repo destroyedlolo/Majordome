@@ -24,7 +24,7 @@ public:
 	/* Create Lua's object */
 	static void initLuaInterface( lua_State *L );
 
-	virtual std::string getTri(){ return Shutdown::trigramme(); }
+	virtual std::string getTri() override { return Shutdown::trigramme(); }
 	static std::string trigramme(){ return "SHT_"; }
 };
 

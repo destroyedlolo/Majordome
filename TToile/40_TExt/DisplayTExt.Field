@@ -1,0 +1,37 @@
+-->> desc=Display external temperature
+--
+-- In the header of the script (comment bloc at the very beginning of
+-- the script), each line starting with -->> are Majordome's commands.
+-- Consequently, '--->>' are commented out commands.
+--
+-- Disable this painting
+--->> disabled
+--
+-------------------
+-- Painting related
+-------------------
+--
+-- Parent of this Field
+-- Only one can be present
+-->> ApplyOn Painting=TExt
+--
+-- Origin of the surface
+-- 0,0 by default
+--->> Origin=0,0
+--
+-- Size of the surface
+-- If not set, trying to get it from parent
+-->> Size=5x1
+-- Notez-Bien :
+--	- set to the size of the parent if the origin is outsize parent surface
+--
+----------------
+-- Field related
+----------------
+--
+--	Guess the length as per sample value
+--->> Sample=-15.5
+--
+-->> listen=TExt
+
+return string.format("% 3.1f", MAJORDOME_PAYLOAD);

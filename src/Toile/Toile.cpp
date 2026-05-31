@@ -27,7 +27,7 @@ static const SubConfigDir::extweight fileext[] = {
 	{ ".Renderer", 0xc0 },
 	{ ".LCD", 0xc0 },
 	{ ".Painting", 0x80 },
-	{ ".Field", 0x80 },
+	{ ".Field", 0x70 },
 	{ ".Decoration", 0x60 }
 };
 
@@ -83,7 +83,7 @@ bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &
 	
 		PaintingCollection::iterator prev;
 		if((prev = cfg.PaintingList.find(paint->getName())) != cfg.PaintingList.end()){
-			SelLog->Log('F', "Painting '%s' is defined multiple times (previous one '%s')", paint->getName().c_str(), prev->second->getWhere().c_str());
+			SelLog->Log('F', "Painting/Field '%s' is defined multiple times (previous one '%s')", paint->getName().c_str(), prev->second->getWhere().c_str());
 			exit(EXIT_FAILURE);
 		} else
 			cfg.PaintingList.insert( std::make_pair(paint->getName(), paint) );
@@ -94,7 +94,7 @@ bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &
 	
 		PaintingCollection::iterator prev;
 		if((prev = cfg.PaintingList.find(paint->getName())) != cfg.PaintingList.end()){
-			SelLog->Log('F', "Field '%s' is defined multiple times (previous one '%s')", paint->getName().c_str(), prev->second->getWhere().c_str());
+			SelLog->Log('F', "Field/Painting '%s' is defined multiple times (previous one '%s')", paint->getName().c_str(), prev->second->getWhere().c_str());
 			exit(EXIT_FAILURE);
 		} else
 			cfg.PaintingList.insert( std::make_pair(paint->getName(), paint) );
@@ -106,6 +106,9 @@ bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &
 }
 
 bool Toile::execRenderers(){
+	if(::debug)
+		SelLog->Log('D', "Toile::execRenderers()");
+
 	for(auto &i: config.RendererList){
 		if(!i.second->init()){
 			if(i.second->getFatal())
@@ -117,10 +120,19 @@ bool Toile::execRenderers(){
 			child->init();
 	}
 
+	if(::debug)
+		SelLog->Log('D', "Toile::execRenderers() - End");
+
 	return true;
 }
 
 void Toile::RefreshRenderers(){
+	if(::debug)
+		SelLog->Log('D', "Toile::RefreshRenderers()");
+
 	for(auto &r: config.RendererList)
 		r.second->refreshAll();
+
+	if(::debug)
+		SelLog->Log('D', "Toile::RefreshRenderers() - End");
 }

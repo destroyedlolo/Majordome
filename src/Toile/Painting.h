@@ -2,6 +2,7 @@
  * 	Surface to paint on.
  *
  * 	01/01/2025 - First version
+ *	09/05/2026 - Separate refresh and refreshBackground
  */
 
 #ifndef PAINTING_H
@@ -70,9 +71,13 @@ public:
 	 	// Fails in case of error.
 	bool init(void);
 
-	void refresh();			// Refresh Painting's own decoration (background)
+		// Update buffers
+	void refreshBackground();	// Refresh Painting's own decoration (background)
 	void refreshChild();	// Refresh its child
 	void refreshAll();		// Refresh everything
+
+		// Refresh to the physical layer
+	void refresh();			// Refresh ourself
 
 	virtual std::string getTri(){ return "PNT_"; }
 };

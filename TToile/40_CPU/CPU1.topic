@@ -1,0 +1,5 @@
+-->> desc=Charge CPU 1 minute
+-->> group=CPU
+--
+-->> topic=Machines/%Hostname%/Load/1
+-->> quiet
