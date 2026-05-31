@@ -108,7 +108,6 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 			}
 		} else if(ext == ".resource"){
 			auto resource = new Resource( completpath, where );
-			assert(resource);
 
 			ResourceCollection::iterator prev;
 			if((prev = cfg.ResourcesList.find(resource->getName())) != cfg.ResourcesList.end()){
@@ -118,7 +117,6 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 				cfg.ResourcesList.insert( std::make_pair(resource->getName(), resource) );
 		} else if(ext == ".lua"){
 			auto tsk = new LuaTask( completpath, where, L );
-			assert(tsk);
 	
 			TaskCollection::iterator prev;
 			if((prev = cfg.TasksList.find(tsk->getName())) != cfg.TasksList.end()){
@@ -128,7 +126,6 @@ SubConfigDir::SubConfigDir(Config &cfg, std::string &where, lua_State *L){
 				cfg.TasksList.insert( std::make_pair(tsk->getName(), tsk) );
 		} else if(ext == ".shutdown"){
 			auto tsk = new Shutdown( completpath, where, L );
-			assert(tsk);
 	
 			ShutdownCollection::iterator prev;
 			if((prev = cfg.ShutdownsList.find(tsk->getName())) != cfg.ShutdownsList.end()){

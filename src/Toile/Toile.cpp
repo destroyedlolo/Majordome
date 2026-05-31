@@ -1,4 +1,7 @@
-/* Some Toile's helpers */
+/* Some Toile's helpers
+ *
+ *	Note : we let new() crashing by themselves in case of shortage
+ */
 
 
 #include "Toile.h"
@@ -43,7 +46,6 @@ bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &
 
 	if(ext == ".Renderer"){
 		auto tsk = new Renderer( completpath, where, L );
-		assert(tsk);
 
 		RendererCollection::iterator prev;
 		if((prev = cfg.RendererList.find(tsk->getName())) != cfg.RendererList.end()){
@@ -58,7 +60,6 @@ bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &
 			 * So, but the constructor, the remaining code is the same
 			 */
 		auto tsk = new LCD( completpath, where, L );
-		assert(tsk);
 	
 		RendererCollection::iterator prev;
 		if((prev = cfg.RendererList.find(tsk->getName())) != cfg.RendererList.end()){
