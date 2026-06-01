@@ -1,4 +1,4 @@
--->> desc=Display external temperature
+-->> desc=Display office temperature
 --
 -- In the header of the script (comment bloc at the very beginning of
 -- the script), each line starting with -->> are Majordome's commands.
@@ -13,11 +13,11 @@
 --
 -- Parent of this Field
 -- Only one can be present
--->> ApplyOn Painting=TExt
+-->> ApplyOn Renderer=LCD
 --
 -- Origin of the surface
 -- 0,0 by default
--->> Origin=1,0
+--->> Origin=0,0
 --
 -- Size of the surface
 -- If not set, trying to get it from parent
@@ -32,6 +32,6 @@
 --	Guess the length as per sample value
 -->> Sample=-15.5
 --
--->> listen=TExt
+-->> listen=TBureau
 
-return string.format("%-5.1f", MAJORDOME_PAYLOAD):gsub("%.", string.char(0xdf))
+return string.format("% 5.1f", MAJORDOME_PAYLOAD):gsub("%.", string.char(0xdf))

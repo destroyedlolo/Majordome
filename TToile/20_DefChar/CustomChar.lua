@@ -53,3 +53,14 @@ LCD:SetChar(6, {
 	"x   x"
 })
 
+-- 7: Text
+LCD:SetChar(7, {
+	"xxx  ",
+	" x   ",
+	" x   ",
+	"     ",
+	"  xx ",
+	" xxxx",
+	" x   ",
+	"  xx "
+})

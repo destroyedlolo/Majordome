@@ -2,7 +2,7 @@
 -->> group=PMU
 -->> ApplyOn Painting=PMU
 -->> Origin=15,0
--->> Sample=xx.xx
+-->> Sample=xxx.x
 -->> listen=PMUTemperature
 
-return string.format("%2.1f", MAJORDOME_PAYLOAD):gsub("%.", string.char(0xdf));
+return string.format("%4.1f", MAJORDOME_PAYLOAD):gsub("%.", string.char(0xdf));

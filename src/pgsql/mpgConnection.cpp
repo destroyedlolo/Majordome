@@ -36,7 +36,7 @@ bool mpgConnection::connect(void){
 
 void mpgConnection::disconnect(bool fromdestructor){
 	if(this->conn){
-		if(debug && (!fromdestructor || this->isQuiet()))
+		if(debug && (fromdestructor || !this->isQuiet()))
 			SelLog->Log('T', "[%s] Disconnect", this->db->getNameC());
 
 		PQfinish(this->conn);

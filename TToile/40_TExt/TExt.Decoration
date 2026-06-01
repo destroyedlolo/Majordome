@@ -5,5 +5,5 @@
 
 -- The surface to apply on is embodied as MAJORDOME_PAINTING
 
-MAJORDOME_PAINTING:SetCursor(5,0)
-MAJORDOME_PAINTING:WriteString(string.char(0xdf))
+MAJORDOME_PAINTING:Home()
+MAJORDOME_PAINTING:WriteString(string.char(0x07))
