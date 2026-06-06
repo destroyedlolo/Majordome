@@ -48,6 +48,7 @@ public:
 	StringVector needed_tracker;
 #ifdef TOILE
 	StringVector needed_renderer;
+	StringVector needed_painting;
 #endif
 #ifdef DBASE
 #	ifdef PGSQL
@@ -70,6 +71,7 @@ protected:
 	void addNeededTracker( std::string t ){ this->needed_tracker.Add(t); }
 #ifdef TOILE
 	void addNeededRenderer( std::string t ){ this->needed_renderer.Add(t); }
+	void addNeededPainting( std::string t ){ this->needed_painting.Add(t); }
 #endif
 #ifdef DBASE
 #	ifdef PGSQL

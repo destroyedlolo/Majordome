@@ -82,7 +82,7 @@ void Decoration::exec(struct SelGenericSurface *srf){	/* From LuaExec::execSync(
 
 	if(lua_toboolean(L, -1)){
 		if(::debug && this->isVerbose())
-			this->getSurface()->cb->Dump(this->getSurface());
+			srf->cb->Dump(srf);
 		srf->cb->Refresh(srf);
 	}
 

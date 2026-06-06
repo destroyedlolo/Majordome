@@ -1,0 +1,25 @@
+-->> desc=Clear the screen before doing per field decoration
+--
+-- In the header of the script (comment bloc at the very beginning of
+-- the script), each line starting with -->> are Majordome's commands.
+-- Consequently, '--->>' are commented out commands.
+--
+-- On which object this decoration will be applied ?
+-- On a Surface object
+-->> ApplyOn Painting=SubSurface
+-- On a Renderer
+--->> ApplyOn Renderer=
+
+-- The surface to apply on is embodied as MAJORDOME_PAINTING
+
+MAJORDOME_PAINTING:Clear()
+local w,h = MAJORDOME_PAINTING:GetSize()
+
+for j=1,h do
+	MAJORDOME_PAINTING:SetCursor(0,j-1)
+	for i=1,w do
+		MAJORDOME_PAINTING:WriteString('*')
+	end
+end
+
+return true
