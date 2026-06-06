@@ -43,12 +43,12 @@ public:
 	virtual std::string getTri() = 0;
 
 		/* Object's own visibility */
-	void Visibility(bool);
+	void setVisibility(bool);
 	bool getOwnVisibility(void) { return this->visible; }
 
 		/* Cascaded visibility */
 	bool isVisible(void);
-	bool getDisplayed(void) { return this->isVisible(); }
+/*	bool getDisplayed(void) { return this->isVisible(); }	*/
 
 	virtual bool init(void) = 0;	// Initialise the object
 	virtual void refreshAll(){};
