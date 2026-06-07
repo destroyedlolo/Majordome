@@ -538,12 +538,12 @@ bool LuaExec::feedbyNeeded( lua_State *L, bool require ){
 
 	for(auto &i : this->needed_painting){
 		try {
-			class Painting *paint = config.PaintingList.at( i );
-			class SelGenericSurfaceLua *renderer = (class SelGenericSurfaceLua *)lua_newuserdata(L, sizeof(class SelGenericSurfaceLua));
-			assert(renderer);
+			class Painting *pt = config.PaintingList.at( i );
+			class Painting **paint = (class Painting **)lua_newuserdata(L, sizeof(class Painting));
+			assert(paint);
 
-			renderer->storage = rd->getSurface();
-			luaL_getmetatable(L, rd->getSurface()->cb->LuaObjectName() );
+			*paint = pt;
+			luaL_getmetatable(L, "MajordomePainting");
 			lua_setmetatable(L, -2);
 
 			lua_setglobal(L, i.c_str());

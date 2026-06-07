@@ -15,6 +15,12 @@
 #include <sstream>	// stringstream
 #include <lua.hpp>	/* Lua's state needed */
 
+	/* As lua_insert() is deprecated */
+#if LUA_VERSION_NUM >= 503
+#undef lua_insert
+#define lua_insert(L, idx) lua_rotate(L, (idx), 1)
+#endif
+
 class LuaExec : virtual public Object {
 	struct elastic_storage func;	// Storage for the function to execute
 

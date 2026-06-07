@@ -460,6 +460,8 @@ int main(int ac, char **av){
 			r.second->dump();
 	}
 #	endif
+
+	SelLua->AddStartupFunc(Painting::initLuaInterface);
 #endif
 
 		/* **

@@ -79,6 +79,9 @@ public:
 		// Refresh to the physical layer
 	void refresh();			// Refresh ourself
 
+	/* Create Lua's object */
+	static void initLuaInterface( lua_State *L );
+
 	virtual std::string getTri(){ return "PNT_"; }
 };
 

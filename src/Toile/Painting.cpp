@@ -160,3 +160,65 @@ void Painting::refreshAll(){
 
 	this->refresh();
 }
+
+	/*****
+	 * Lua exposed functions
+	 *****/
+
+static class Painting *checkMajordomePainting(lua_State *L){
+	class Painting **r = (class Painting **)SelLua->testudata(L, 1, "MajordomePainting");
+	luaL_argcheck(L, r != NULL, 1, "'MajordomePainting' expected");
+	return *r;
+}
+
+static int ltp_getContainer(lua_State *L){
+	class Painting *painting= checkMajordomePainting(L);
+	lua_pushstring( L, painting->getWhereC() );
+	return 1;
+}
+
+static int ltp_getName(lua_State *L){
+	class Painting *painting= checkMajordomePainting(L);
+	lua_pushstring( L, painting->getName().c_str() );
+	return 1;
+}
+
+static int ltp_isEnabled( lua_State *L ){
+	class Painting *painting= checkMajordomePainting(L);
+	lua_pushboolean( L, painting->isEnabled() );
+	return 1;
+}
+
+static int ltp_enabled( lua_State *L ){
+	class Painting *painting= checkMajordomePainting(L);
+	painting->enable();
+	return 0;
+}
+
+static int ltp_disable( lua_State *L ){
+	class Painting *painting= checkMajordomePainting(L);
+	painting->disable();
+	return 0;
+}
+
+static int ltp_isVisible( lua_State *L ){
+	class Painting *painting= checkMajordomePainting(L);
+	lua_pushboolean( L, painting->isVisible() );
+	lua_pushboolean( L, painting->getOwnVisibility() );
+	return 2;
+}
+
+static const struct luaL_Reg MajTPaintM [] = {
+	{"getContainer", ltp_getContainer},
+ 	{"getName", ltp_getName},
+	{"isEnabled", ltp_isEnabled},
+	{"Enable", ltp_enabled},
+	{"Disable", ltp_disable},
+	{"isVisible", ltp_isVisible},
+	{NULL, NULL}
+};
+
+void Painting::initLuaInterface( lua_State *L ){
+	SelLua->objFuncs( L, "MajordomePainting", MajTPaintM );
+//	SelLua->libCreateOrAddFuncs( L, "MajordomeFeed", MajFeedLib );
+}
