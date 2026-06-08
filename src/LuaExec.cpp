@@ -523,11 +523,11 @@ bool LuaExec::feedbyNeeded( lua_State *L, bool require ){
 	for(auto &i : this->needed_renderer){
 		try {
 			class Renderer *rd = config.RendererList.at( i );
-			class SelGenericSurfaceLua *renderer = (class SelGenericSurfaceLua *)lua_newuserdata(L, sizeof(class SelGenericSurfaceLua));
+			class Renderer **renderer = (class Renderer **)lua_newuserdata(L, sizeof(class Renderer));
 			assert(renderer);
 
-			renderer->storage = rd->getSurface();
-			luaL_getmetatable(L, rd->getSurface()->cb->LuaObjectName() );
+			*renderer = rd;
+			luaL_getmetatable(L, "MajordomeRenderer");
 			lua_setmetatable(L, -2);
 
 			lua_setglobal(L, i.c_str());

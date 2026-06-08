@@ -58,6 +58,9 @@ public:
 	void refreshChild();	// Refresh its child
 	void refreshAll();		// Refresh everything
 
+	/* Create Lua's object */
+	static void initLuaInterface( lua_State *L );
+
 	virtual std::string getTri(){ return "RDR_"; }
 };
 
