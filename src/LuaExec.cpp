@@ -266,6 +266,17 @@ bool LuaExec::readConfigDirective( std::string &l ){
 			SelLog->Log('F', "\t\tRenderer '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
+	} else if(!(arg = striKWcmp( l, "-->> need_painting=" )).empty()){
+		PaintingCollection::iterator painting;
+		if( (painting = config.PaintingList.find(arg)) != config.PaintingList.end() ){
+			if(::verbose)
+				SelLog->Log('C', "\t\tAdded needed painting '%s'", arg.c_str());
+			this->addNeededPainting( arg );
+			return true;
+		} else {
+			SelLog->Log('F', "\t\tPainting '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
 #endif
 	}
 
@@ -512,11 +523,27 @@ bool LuaExec::feedbyNeeded( lua_State *L, bool require ){
 	for(auto &i : this->needed_renderer){
 		try {
 			class Renderer *rd = config.RendererList.at( i );
-			class SelGenericSurfaceLua *renderer = (class SelGenericSurfaceLua *)lua_newuserdata(L, sizeof(class SelGenericSurfaceLua));
+			class Renderer **renderer = (class Renderer **)lua_newuserdata(L, sizeof(class Renderer));
 			assert(renderer);
 
-			renderer->storage = rd->getSurface();
-			luaL_getmetatable(L, rd->getSurface()->cb->LuaObjectName() );
+			*renderer = rd;
+			luaL_getmetatable(L, "MajordomeRenderer");
+			lua_setmetatable(L, -2);
+
+			lua_setglobal(L, i.c_str());
+		} catch( std::out_of_range &e ){	// Not found 
+			return false;
+		}
+	}
+
+	for(auto &i : this->needed_painting){
+		try {
+			class Painting *pt = config.PaintingList.at( i );
+			class Painting **paint = (class Painting **)lua_newuserdata(L, sizeof(class Painting));
+			assert(paint);
+
+			*paint = pt;
+			luaL_getmetatable(L, "MajordomePainting");
 			lua_setmetatable(L, -2);
 
 			lua_setglobal(L, i.c_str());

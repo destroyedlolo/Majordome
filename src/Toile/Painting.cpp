@@ -160,3 +160,132 @@ void Painting::refreshAll(){
 
 	this->refresh();
 }
+
+	/*****
+	 * Lua exposed functions
+	 *****/
+
+static class Painting *checkMajordomePainting(lua_State *L){
+	class Painting **r = (class Painting **)SelLua->testudata(L, 1, "MajordomePainting");
+	luaL_argcheck(L, r != NULL, 1, "'MajordomePainting' expected");
+	return *r;
+}
+
+static int ltp_getContainer(lua_State *L){
+	class Painting *painting= checkMajordomePainting(L);
+	lua_pushstring( L, painting->getWhereC() );
+	return 1;
+}
+
+static int ltp_getName(lua_State *L){
+	class Painting *painting= checkMajordomePainting(L);
+	lua_pushstring( L, painting->getName().c_str() );
+	return 1;
+}
+
+static int ltp_isEnabled( lua_State *L ){
+	class Painting *painting= checkMajordomePainting(L);
+	lua_pushboolean( L, painting->isEnabled() );
+	return 1;
+}
+
+static int ltp_enabled( lua_State *L ){
+	class Painting *painting= checkMajordomePainting(L);
+	painting->enable();
+	return 0;
+}
+
+static int ltp_disable( lua_State *L ){
+	class Painting *painting= checkMajordomePainting(L);
+	painting->disable();
+	return 0;
+}
+
+static int ltp_isVisible( lua_State *L ){
+	class Painting *painting= checkMajordomePainting(L);
+	lua_pushboolean( L, painting->isVisible() );
+	lua_pushboolean( L, painting->getOwnVisibility() );
+	return 2;
+}
+
+static const struct luaL_Reg MajTPaintM [] = {
+	{"getContainer", ltp_getContainer},
+ 	{"getName", ltp_getName},
+	{"isEnabled", ltp_isEnabled},
+	{"Enable", ltp_enabled},
+	{"Disable", ltp_disable},
+	{"isVisible", ltp_isVisible},
+	{NULL, NULL}
+};
+
+		/* ***
+		 * Painting -> SelGenericSurface wrapper
+		 * ***/
+
+static int Selene_wrapper(lua_State *L){
+	class Painting *painting = checkMajordomePainting(L);
+	
+	class SelGenericSurfaceLua *srf = (class SelGenericSurfaceLua *)lua_newuserdata(L, sizeof(class SelGenericSurfaceLua));
+	assert(srf);
+
+	srf->storage = painting->getSurface();
+	luaL_getmetatable(L, painting->getSurface()->cb->LuaObjectName() );
+	lua_setmetatable(L, -2);
+
+	lua_replace(L, 1);	// swap the initial object (#1) by the surface one.
+
+	lua_pushvalue(L, lua_upvalueindex(1));	// Get the methods
+	lua_insert(L, 1);	// put it before the 1st argument
+
+	lua_call(L, lua_gettop(L) - 1, LUA_MULTRET);
+
+	return lua_gettop(L);
+}
+
+static int painting_custom_index(lua_State *L){
+	// input stack : 1: Painting, 2: method
+	class Painting *painting = checkMajordomePainting(L);
+
+		/* Search in painting */
+	luaL_getmetatable(L, "MajordomePainting");	// is in Painting ?
+	lua_pushvalue(L, 2);
+	lua_rawget(L, -2);
+	if(!lua_isnil(L, -1))	// ok, return it
+		return 1;
+
+	lua_pop(L, 2);	// clean 'nil' and the metatable
+
+		/* Search in Séléné */
+	luaL_getmetatable(L, painting->getSurface()->cb->LuaObjectName());
+	if(lua_isnil(L, -1)){
+		SelLog->Log('E', "Can't find %s's meta", painting->getSurface()->cb->LuaObjectName());
+		lua_pop(L, 1);
+		return 0;
+	}
+	
+	lua_pushvalue(L, 2);
+	lua_gettable(L, -2);	// Lookup in Séléné methods
+
+	if(lua_isfunction(L, -1)){	// Found it as a function, use the wrapper
+		lua_pushcclosure(L, Selene_wrapper, 1);
+		return 1;
+	}
+
+		// not found or not a function : return what we got
+	return 1;
+}
+
+void Painting::initLuaInterface( lua_State *L ){
+	SelLua->objFuncs( L, "MajordomePainting", MajTPaintM );
+//	SelLua->libCreateOrAddFuncs( L, "MajordomeFeed", MajFeedLib );
+
+		/* Activate the wrapper */
+	luaL_getmetatable(L, "MajordomePainting");
+	if(!lua_isnil(L, -1)){
+		lua_pushstring(L, "__index");
+		lua_pushcfunction(L, painting_custom_index);
+		lua_settable(L, -3); // metatable.__index = painting_custom_index
+	} else
+		SelLog->Log('E', "Can't find MajordomePainting's meta");
+	lua_pop(L, 1);		// Cleaning getmetatable()
+}

@@ -116,3 +116,133 @@ void Renderer::refreshAll(){
 		this->getSurface()->cb->Dump(this->getSurface());
 	this->getSurface()->cb->Refresh(this->getSurface());
 }
+
+
+	/*****
+	 * Lua exposed functions
+	 *****/
+
+static class Renderer *checkMajordomeRenderer(lua_State *L){
+	class Renderer **r = (class Renderer **)SelLua->testudata(L, 1, "MajordomeRenderer");
+	luaL_argcheck(L, r != NULL, 1, "'MajordomeRenderer' expected");
+	return *r;
+}
+
+static int ltr_getContainer(lua_State *L){
+	class Renderer *renderer= checkMajordomeRenderer(L);
+	lua_pushstring( L, renderer->getWhereC() );
+	return 1;
+}
+
+static int ltr_getName(lua_State *L){
+	class Renderer *renderer= checkMajordomeRenderer(L);
+	lua_pushstring( L, renderer->getName().c_str() );
+	return 1;
+}
+
+static int ltr_isEnabled( lua_State *L ){
+	class Renderer *renderer= checkMajordomeRenderer(L);
+	lua_pushboolean( L, renderer->isEnabled() );
+	return 1;
+}
+
+static int ltr_enabled( lua_State *L ){
+	class Renderer *renderer= checkMajordomeRenderer(L);
+	renderer->enable();
+	return 0;
+}
+
+static int ltr_disable( lua_State *L ){
+	class Renderer *renderer= checkMajordomeRenderer(L);
+	renderer->disable();
+	return 0;
+}
+
+static int ltr_isVisible( lua_State *L ){
+	class Renderer *renderer= checkMajordomeRenderer(L);
+	lua_pushboolean( L, renderer->isVisible() );
+	lua_pushboolean( L, renderer->getOwnVisibility() );
+	return 2;
+}
+
+static const struct luaL_Reg MajTPaintM [] = {
+	{"getContainer", ltr_getContainer},
+ 	{"getName", ltr_getName},
+	{"isEnabled", ltr_isEnabled},
+	{"Enable", ltr_enabled},
+	{"Disable", ltr_disable},
+	{"isVisible", ltr_isVisible},
+	{NULL, NULL}
+};
+
+		/* ***
+		 * Renderer -> SelGenericSurface wrapper
+		 * ***/
+
+static int Selene_wrapper(lua_State *L){
+	class Renderer *renderer = checkMajordomeRenderer(L);
+	
+	class SelGenericSurfaceLua *srf = (class SelGenericSurfaceLua *)lua_newuserdata(L, sizeof(class SelGenericSurfaceLua));
+	assert(srf);
+
+	srf->storage = renderer->getSurface();
+	luaL_getmetatable(L, renderer->getSurface()->cb->LuaObjectName() );
+	lua_setmetatable(L, -2);
+
+	lua_replace(L, 1);	// swap the initial object (#1) by the surface one.
+
+	lua_pushvalue(L, lua_upvalueindex(1));	// Get the methods
+	lua_insert(L, 1);	// put it before the 1st argument
+
+	lua_call(L, lua_gettop(L) - 1, LUA_MULTRET);
+
+	return lua_gettop(L);
+}
+
+static int renderer_custom_index(lua_State *L){
+	// input stack : 1: Renderer, 2: method
+	class Renderer *renderer = checkMajordomeRenderer(L);
+
+		/* Search in renderer */
+	luaL_getmetatable(L, "MajordomeRenderer");	// is in Renderer ?
+	lua_pushvalue(L, 2);
+	lua_rawget(L, -2);
+	if(!lua_isnil(L, -1))	// ok, return it
+		return 1;
+
+	lua_pop(L, 2);	// clean 'nil' and the metatable
+
+		/* Search in Séléné */
+	luaL_getmetatable(L, renderer->getSurface()->cb->LuaObjectName());
+	if(lua_isnil(L, -1)){
+		SelLog->Log('E', "Can't find %s's meta", renderer->getSurface()->cb->LuaObjectName());
+		lua_pop(L, 1);
+		return 0;
+	}
+	
+	lua_pushvalue(L, 2);
+	lua_gettable(L, -2);	// Lookup in Séléné methods
+
+	if(lua_isfunction(L, -1)){	// Found it as a function, use the wrapper
+		lua_pushcclosure(L, Selene_wrapper, 1);
+		return 1;
+	}
+
+		// not found or not a function : return what we got
+	return 1;
+}
+
+void Renderer::initLuaInterface( lua_State *L ){
+	SelLua->objFuncs( L, "MajordomeRenderer", MajTPaintM );
+//	SelLua->libCreateOrAddFuncs( L, "MajordomeFeed", MajFeedLib );
+
+		/* Activate the wrapper */
+	luaL_getmetatable(L, "MajordomeRenderer");
+	if(!lua_isnil(L, -1)){
+		lua_pushstring(L, "__index");
+		lua_pushcfunction(L, renderer_custom_index);
+		lua_settable(L, -3); // metatable.__index = renderer_custom_index
+	} else
+		SelLog->Log('E', "Can't find MajordomeRenderer's meta");
+	lua_pop(L, 1);		// Cleaning getmetatable()
+}
