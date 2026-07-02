@@ -161,8 +161,7 @@ static int ltr_disable( lua_State *L ){
 static int ltr_isVisible( lua_State *L ){
 	class Renderer *renderer= checkMajordomeRenderer(L);
 	lua_pushboolean( L, renderer->isVisible() );
-	lua_pushboolean( L, renderer->getOwnVisibility() );
-	return 2;
+	return 1;
 }
 
 static const struct luaL_Reg MajTPaintM [] = {

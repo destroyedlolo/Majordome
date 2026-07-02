@@ -204,8 +204,7 @@ static int ltp_disable( lua_State *L ){
 static int ltp_isVisible( lua_State *L ){
 	class Painting *painting= checkMajordomePainting(L);
 	lua_pushboolean( L, painting->isVisible() );
-	lua_pushboolean( L, painting->getOwnVisibility() );
-	return 2;
+	return 1;
 }
 
 static const struct luaL_Reg MajTPaintM [] = {

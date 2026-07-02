@@ -14,11 +14,10 @@
 #include <string>
 
 class ToileObject : virtual public Object {
-	bool visible;
-
 	ToileObject *parent;
 protected:
 	struct SelGenericSurface *surface;	// Selene's surface
+	bool startedvisible;	// Visibility from the configuration
 
 		/* Read configuration directive shared with all Toile's objects
 		 * l -> string to read
@@ -39,16 +38,9 @@ public:
 		/* Accessors */
 	struct SelGenericSurface *getSurface(){ return this->surface; }
 	ToileObject *getParent(void){ return this->parent; };
+	bool isVisible(void){ return(this->getSurface() && this->getSurface()->cb->getVisibility(this->getSurface())); };
 
 	virtual std::string getTri() = 0;
-
-		/* Object's own visibility */
-	void setVisibility(bool);
-	bool getOwnVisibility(void) { return this->visible; }
-
-		/* Cascaded visibility */
-	bool isVisible(void);
-/*	bool getDisplayed(void) { return this->isVisible(); }	*/
 
 	virtual bool init(void) = 0;	// Initialise the object
 	virtual void refreshAll(){};
