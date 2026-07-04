@@ -16,4 +16,4 @@ print(LCD:getContainer(), LCD:getName(), LCD:isEnabled() )
 print(LCD:isVisible())
 
 LCD:Clear()
-SubSurface:Dump()	-- not exposed to the renderer
+LCD:Dump()	-- not exposed to the renderer

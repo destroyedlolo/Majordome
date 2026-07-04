@@ -14,7 +14,7 @@
 #include <cstring>
 #include <cassert>
 
-Painting::Painting( const std::string &fch, std::string &where, lua_State *L ): Object(fch, where){
+Painting::Painting( const std::string &fch, std::string &where, lua_State *L ): Object(fch, where), persistent(false){
 	this->loadConfigurationFile(fch, where);
 	this->assertSanity();
 
@@ -46,6 +46,11 @@ bool Painting::readConfigDirectiveOnly( std::string &l ){
 
 		if(::verbose)
 			SelLog->Log('C', "\t\tSize : %ux%u", this->geometry.w,this->geometry.h);
+		return true;
+	} else if(l == "-->> Persistent"){
+		this->persistent = true;
+		if(::verbose)
+			SelLog->Log('C', "\t\tPersistent");
 		return true;
 	} else
 		return this->ToileObject::readConfigDirective(l);
@@ -94,7 +99,9 @@ bool Painting::init(void){
 		SelLog->Log('D', "[Painting \"%s\"] Guessed geometry : %lux%lu", this->name.c_str(), this->geometry.w,this->geometry.h);
 	}
 
-	if(!(this->surface = this->getParent()->getSurface()->cb->subSurface( this->getParent()->getSurface(), this->geometry.x, this->geometry.y, this->geometry.w, this->geometry.h, this->getParent()->getSurface()->cb->getPrimary(this->getParent()->getSurface())))){
+	struct SelGenericSurface *(*srfFunc)(struct SelGenericSurface *, uint32_t,  uint32_t,  uint32_t,  uint32_t, void *) = this->isPersistent() ? this->getParent()->getSurface()->cb->Surface : this->getParent()->getSurface()->cb->subSurface;
+
+	if(!(this->surface = srfFunc( this->getParent()->getSurface(), this->geometry.x, this->geometry.y, this->geometry.w, this->geometry.h, this->getParent()->getSurface()->cb->getPrimary(this->getParent()->getSurface())))){
 		SelLog->Log('F', "[Painting \"%s\"] Can't create subsurface", this->name.c_str());
 		exit(EXIT_FAILURE);
 	}

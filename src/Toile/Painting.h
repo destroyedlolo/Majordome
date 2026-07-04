@@ -27,6 +27,9 @@ class Painting : virtual public ToileContainer, virtual public ToileObject {
 protected:
 	Toile::SurfaceGeometry geometry;
 
+		/* Surface's content is stored if the surface is made invisible */
+	bool persistent;
+
 public:
 //	Painting():surface(NULL){};
 	Painting(const std::string &fch, std::string &where): Object(fch, where){};
@@ -61,6 +64,7 @@ public:
 	/* ***
 	 * Accessors
 	 * ***/
+	bool isPersistent(){ return this->persistent; }
 
 	/* ***
 	 * Renderer own's 
