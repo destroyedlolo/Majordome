@@ -26,9 +26,12 @@
 class Painting : virtual public ToileContainer, virtual public ToileObject {
 protected:
 	Toile::SurfaceGeometry geometry;
+	bool startedvisible;	// Visibility from the configuration
 
 		/* Surface's content is stored if the surface is made invisible */
 	bool persistent;
+
+	virtual void assertSanity(void);
 
 public:
 //	Painting():surface(NULL){};

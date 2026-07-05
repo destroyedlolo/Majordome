@@ -17,7 +17,6 @@ class ToileObject : virtual public Object {
 	ToileObject *parent;
 protected:
 	struct SelGenericSurface *surface;	// Selene's surface
-	bool startedvisible;	// Visibility from the configuration
 
 		/* Read configuration directive shared with all Toile's objects
 		 * l -> string to read

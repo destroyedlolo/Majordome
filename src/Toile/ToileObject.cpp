@@ -1,7 +1,7 @@
 #include "ToileObject.h"
 #include "../Config.h"
 
-ToileObject::ToileObject() : parent(NULL), surface(NULL), startedvisible(true) {
+ToileObject::ToileObject() : parent(NULL), surface(NULL) {
 }
 
 bool ToileObject::readConfigDirective(std::string &l){
@@ -65,10 +65,6 @@ bool ToileObject::readConfigDirective(std::string &l){
 			SelLog->Log('F', "\t\tPainting '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
-	} else if( l == "-->> hidden" ){
-		if(::verbose)
-			SelLog->Log('C', "\t\tHidden");
-		this->startedvisible = false;
 	} else
 		return false;
 

@@ -14,12 +14,20 @@
 #include <cstring>
 #include <cassert>
 
-Painting::Painting( const std::string &fch, std::string &where, lua_State *L ): Object(fch, where), persistent(false){
+Painting::Painting( const std::string &fch, std::string &where, lua_State *L ): Object(fch, where), startedvisible(true), persistent(false){
 	this->loadConfigurationFile(fch, where);
 	this->assertSanity();
 
 	if(d2)
 		fd2 << this->getFullId() << ".class: Painting" << std::endl;
+}
+
+void Painting::assertSanity(void){
+	if(!this->isPersistent() && !this->startedvisible){
+		SelLog->Log('F', "[\"%s\"] Only a persistent surface can be hidden", this->getNameC());
+		exit(EXIT_FAILURE);
+	}
+	this->ToileObject::assertSanity();
 }
 
 bool Painting::readConfigDirective( std::string &l ){
@@ -46,6 +54,12 @@ bool Painting::readConfigDirectiveOnly( std::string &l ){
 
 		if(::verbose)
 			SelLog->Log('C', "\t\tSize : %ux%u", this->geometry.w,this->geometry.h);
+		return true;
+	} else if( l == "-->> hidden" ){
+		if(::verbose)
+			SelLog->Log('C', "\t\tHidden");
+		this->startedvisible = false;
+
 		return true;
 	} else if(l == "-->> Persistent"){
 		this->persistent = true;
@@ -220,6 +234,9 @@ static int ltp_isVisible( lua_State *L ){
 static int ltp_setVisibility( lua_State *L ){
 	class Painting *painting= checkMajordomePainting(L);
 	bool v = lua_toboolean(L, 2);
+
+	if((::debug || painting->isVerbose()) && !painting->isPersistent())
+		SelLog->Log('W', "[%s] The visibility can be changed only on Persistent Painting", painting->getNameC());
 
 	painting->getSurface()->cb->setVisibility(painting->getSurface(), v);
 
