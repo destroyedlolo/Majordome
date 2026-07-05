@@ -66,6 +66,10 @@ public:
 	 * ***/
 	bool isPersistent(){ return this->persistent; }
 
+		// in case of persistant storage, we have to refresh the buffer
+		// The real visibility is managed at Toile level
+	virtual bool isVisible(void){ return(this->ToileObject::isVisible() || this->isPersistent()); }
+
 	/* ***
 	 * Renderer own's 
 	 */

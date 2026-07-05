@@ -40,7 +40,7 @@ public:
 	ToileObject *getParent(void){ return this->parent; };
 
 		// Visibility is assumed for object without surfaces (like decoration)
-	bool isVisible(void){ return(!this->getSurface() || (this->getSurface() && this->getSurface()->cb->getVisibility(this->getSurface())) ); };
+	virtual bool isVisible(void){ return(!this->getSurface() || (this->getSurface() && this->getSurface()->cb->getVisibility(this->getSurface())) ); };
 
 	virtual std::string getTri() = 0;
 

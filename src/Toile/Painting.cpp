@@ -106,6 +106,9 @@ bool Painting::init(void){
 		exit(EXIT_FAILURE);
 	}
 
+	if(!this->startedvisible)
+		this->getSurface()->cb->setVisibility(this->getSurface(), false);
+
 			// Initialize subsurfaces
 	if(::debug && this->isVerbose())
 		SelLog->Log('D', "[%s] Painting::init() - Children", this->getNameC());
@@ -210,8 +213,17 @@ static int ltp_disable( lua_State *L ){
 
 static int ltp_isVisible( lua_State *L ){
 	class Painting *painting= checkMajordomePainting(L);
-	lua_pushboolean( L, painting->isVisible() );
+	lua_pushboolean( L, painting->ToileObject::isVisible() );	//bypass local status for persistant surfaces
 	return 1;
+}
+
+static int ltp_setVisibility( lua_State *L ){
+	class Painting *painting= checkMajordomePainting(L);
+	bool v = lua_toboolean(L, 2);
+
+	painting->getSurface()->cb->setVisibility(painting->getSurface(), v);
+
+	return 0;
 }
 
 static const struct luaL_Reg MajTPaintM [] = {
@@ -221,6 +233,7 @@ static const struct luaL_Reg MajTPaintM [] = {
 	{"Enable", ltp_enabled},
 	{"Disable", ltp_disable},
 	{"isVisible", ltp_isVisible},
+	{"setVisibility", ltp_setVisibility},
 	{NULL, NULL}
 };
 
