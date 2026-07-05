@@ -38,7 +38,9 @@ public:
 		/* Accessors */
 	struct SelGenericSurface *getSurface(){ return this->surface; }
 	ToileObject *getParent(void){ return this->parent; };
-	bool isVisible(void){ return(this->getSurface() && this->getSurface()->cb->getVisibility(this->getSurface())); };
+
+		// Visibility is assumed for object without surfaces (like decoration)
+	bool isVisible(void){ return(!this->getSurface() || (this->getSurface() && this->getSurface()->cb->getVisibility(this->getSurface())) ); };
 
 	virtual std::string getTri() = 0;
 
