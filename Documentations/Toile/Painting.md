@@ -34,7 +34,7 @@ If not set : guessed from parent's size
 #### -->> Persistent
 This object caches its content, ensuring data is retained even when hidden.
 
-#### -->> hidden
+#### -->> Hidden
 This object is hidden by default at launch.  
 This property only applies to persistent paintings
 

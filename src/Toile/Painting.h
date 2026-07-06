@@ -35,7 +35,7 @@ protected:
 
 public:
 //	Painting():surface(NULL){};
-	Painting(const std::string &fch, std::string &where): Object(fch, where){};
+	Painting(const std::string &fch, std::string &where): Object(fch, where), startedvisible(true), persistent(false){};
 
 	/* constructor from file
 	 * -> file : file to load

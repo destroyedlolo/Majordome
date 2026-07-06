@@ -23,8 +23,6 @@ Field::Field( const std::string &fch, std::string &where, lua_State *L ) : Objec
 		/* ***
 		 * Sanity checks
 		 * ***/
-	this->assertSanity();
-
 	if(!this->geometry.h){
 		this->geometry.h = 1;
 		if(::verbose)

@@ -16,7 +16,6 @@
 
 Painting::Painting( const std::string &fch, std::string &where, lua_State *L ): Object(fch, where), startedvisible(true), persistent(false){
 	this->loadConfigurationFile(fch, where);
-	this->assertSanity();
 
 	if(d2)
 		fd2 << this->getFullId() << ".class: Painting" << std::endl;
@@ -55,7 +54,7 @@ bool Painting::readConfigDirectiveOnly( std::string &l ){
 		if(::verbose)
 			SelLog->Log('C', "\t\tSize : %ux%u", this->geometry.w,this->geometry.h);
 		return true;
-	} else if( l == "-->> hidden" ){
+	} else if( l == "-->> Hidden" ){
 		if(::verbose)
 			SelLog->Log('C', "\t\tHidden");
 		this->startedvisible = false;
@@ -84,6 +83,8 @@ void Painting::dump(){
 #endif
 
 bool Painting::init(void){
+	this->assertSanity();
+
 	if(!this->isEnabled()){
 		if(this->isVerbose())
 			SelLog->Log('D', "Painting '%s' from '%s' is disabled", this->getNameC(), this->getWhereC());
