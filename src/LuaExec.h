@@ -55,6 +55,7 @@ public:
 #ifdef TOILE
 	StringVector needed_renderer;
 	StringVector needed_painting;
+	StringVector needed_carousel;
 #endif
 #ifdef DBASE
 #	ifdef PGSQL
@@ -78,6 +79,7 @@ protected:
 #ifdef TOILE
 	void addNeededRenderer( std::string t ){ this->needed_renderer.Add(t); }
 	void addNeededPainting( std::string t ){ this->needed_painting.Add(t); }
+	void addNeededCarousel( std::string t ){ this->needed_carousel.Add(t); }
 #endif
 #ifdef DBASE
 #	ifdef PGSQL

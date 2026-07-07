@@ -36,6 +36,7 @@
 #	include "Toile/Decoration.h"
 #	include "Toile/Painting.h"
 #	include "Toile/Field.h"
+#	include "Toile/Carousel.h"
 #endif
 
 #include <lua.hpp>	/* Lua's state needed */

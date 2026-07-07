@@ -18,6 +18,7 @@
  *	13/08/2025 - v0.04 - LF - Add assertSanity()
  *	14/08/2025 - v0.05 - LF - Change Field priority
  *	05/07/2026 - v0.06 - LF - Add Painting's visibility
+ *	08/07/2026 - v0.07 - LF - Add Carousel
  */
 
-#define TOILEVERSION 0.0600
+#define TOILEVERSION 0.0700
