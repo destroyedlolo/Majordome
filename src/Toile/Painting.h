@@ -26,10 +26,16 @@
 class Painting : virtual public ToileContainer, virtual public ToileObject {
 protected:
 	Toile::SurfaceGeometry geometry;
+	bool startedvisible;	// Visibility from the configuration
+
+		/* Surface's content is stored if the surface is made invisible */
+	bool persistent;
+
+	virtual void assertSanity(void);
 
 public:
 //	Painting():surface(NULL){};
-	Painting(const std::string &fch, std::string &where): Object(fch, where){};
+	Painting(const std::string &fch, std::string &where): Object(fch, where), startedvisible(true), persistent(false){};
 
 	/* constructor from file
 	 * -> file : file to load
@@ -61,6 +67,11 @@ public:
 	/* ***
 	 * Accessors
 	 * ***/
+	bool isPersistent(){ return this->persistent; }
+
+		// in case of persistant storage, we have to refresh the buffer
+		// The real visibility is managed at Toile level
+	virtual bool isVisible(void){ return(this->ToileObject::isVisible() || this->isPersistent()); }
 
 	/* ***
 	 * Renderer own's 

@@ -1,3 +1,9 @@
 -->> ApplyOn Renderer=LCD
 -->> Origin=5,1
 -->> Size=8x2
+--
+-- This Painting has his own cache
+-->> Persistent
+--
+-- This Painting is not visible at first
+-->> hidden

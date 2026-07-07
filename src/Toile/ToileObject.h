@@ -14,8 +14,6 @@
 #include <string>
 
 class ToileObject : virtual public Object {
-	bool visible;
-
 	ToileObject *parent;
 protected:
 	struct SelGenericSurface *surface;	// Selene's surface
@@ -40,15 +38,10 @@ public:
 	struct SelGenericSurface *getSurface(){ return this->surface; }
 	ToileObject *getParent(void){ return this->parent; };
 
+		// Visibility is assumed for object without surfaces (like decoration)
+	virtual bool isVisible(void){ return(!this->getSurface() || (this->getSurface() && this->getSurface()->cb->getVisibility(this->getSurface())) ); };
+
 	virtual std::string getTri() = 0;
-
-		/* Object's own visibility */
-	void setVisibility(bool);
-	bool getOwnVisibility(void) { return this->visible; }
-
-		/* Cascaded visibility */
-	bool isVisible(void);
-/*	bool getDisplayed(void) { return this->isVisible(); }	*/
 
 	virtual bool init(void) = 0;	// Initialise the object
 	virtual void refreshAll(){};

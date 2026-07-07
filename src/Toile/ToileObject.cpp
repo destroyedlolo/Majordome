@@ -1,20 +1,7 @@
 #include "ToileObject.h"
 #include "../Config.h"
 
-ToileObject::ToileObject() : visible(true), parent(NULL), surface(NULL){
-}
-
-bool ToileObject::isVisible(void){
-	bool ret = this->getOwnVisibility();
-
-		/* recursivity */
-	for(auto p = this->getParent(); ret && p; p = p->getParent())
-		ret &= this->getOwnVisibility();
-
-	if(!ret && ::debug && this->isVerbose())
-		SelLog->Log('D', "[%s/%s] is not visible", this->getWhereC(), this->getNameC());
-
-	return ret;
+ToileObject::ToileObject() : parent(NULL), surface(NULL) {
 }
 
 bool ToileObject::readConfigDirective(std::string &l){
@@ -78,10 +65,6 @@ bool ToileObject::readConfigDirective(std::string &l){
 			SelLog->Log('F', "\t\tPainting '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
-	} else if( l == "-->> hidden" ){
-		if(::verbose)
-			SelLog->Log('C', "\t\tHidden");
-		this->visible = false;
 	} else
 		return false;
 

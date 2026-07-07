@@ -23,10 +23,6 @@ Toile is an optional module to create smart dashboards based on [Séléné](http
 
 Indicate the **[Renderer](Renderer.md)** or the **[Painting](Painting.md)** this object bellong to.
 
-#### -->> hidden
-
-The object is not visible at launch time.
-
 <!--
 ## Management
 - **Series** : list of paintings to be displayed.

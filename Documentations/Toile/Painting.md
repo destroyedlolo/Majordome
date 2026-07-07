@@ -31,7 +31,25 @@ If not set : `0,0`
 Size of the surface.<br>
 If not set : guessed from parent's size
 
+#### -->> Persistent
+This object caches its content, ensuring data is retained even when hidden.
+
+#### -->> Hidden
+This object is hidden by default at launch.  
+This property only applies to persistent paintings
+
 ## at Lua side
 ### Exported object
 The surface to apply on is embodied as **MAJORDOME_PAINTING**
 
+### Exposed Methods
+
+- `getContainer()` returns the container (directory) in which this Painting has been defined
+- `getName()` returns Painting's name
+- `isEnabled()` returns a boolean reflecting if this Painting is enabled or not
+- `Enable()` to enable this Painting
+- `Disable()` to disable this Painting
+- `isVisible()` retuns a boolean reflecting if this Painting is visible or not
+- `setVisibility(boolean)` changes Painting visibilities
+
+Additionally, all Seléné methods applicable to Surface and SubSurface can be used.

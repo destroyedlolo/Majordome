@@ -2,18 +2,30 @@
 -->> need_renderer=LCD
 -->> need_painting=SubSurface
 
+
+print("-------------")
+print("  Subsurface")
+print("-------------")
+
 print(SubSurface:getContainer(), SubSurface:getName(), SubSurface:isEnabled() )
 print(SubSurface:isVisible())
 
-SubSurface:Clear()
 SubSurface:Dump()
 
-print("----------")
+print("-------------")
 print("  Renderer")
-print("----------")
+print("-------------")
 
 print(LCD:getContainer(), LCD:getName(), LCD:isEnabled() )
 print(LCD:isVisible())
 
-LCD:Clear()
-SubSurface:Dump()	-- not exposed to the renderer
+LCD:Dump()	-- not exposed to the renderer
+
+print("---------------------------------")
+print("  Now the surface is visible")
+print("---------------------------------")
+
+SubSurface:setVisibility(true)
+
+LCD:Dump()	-- not exposed to the renderer
+
