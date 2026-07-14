@@ -89,6 +89,7 @@ public:
 	RendererCollection RendererList;
 	PaintingCollection PaintingList;
 	DecorationCollection DecorationList;
+	CarouselCollection CarouselList;
 #endif
 
 		/* Topics' */

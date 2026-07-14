@@ -41,6 +41,13 @@ protected:
 	bool readConfigDirective( std::string &l );	// if unrecognized, call only
 												// ToileObject's and Object's
 
+public:
+#ifdef DEBUG
+	void dump();
+#endif
+
+		// Try to initialize missing fields from its parent.
+	bool init(void);
 
 	virtual std::string getTri(){ return "CAR_"; }
 };

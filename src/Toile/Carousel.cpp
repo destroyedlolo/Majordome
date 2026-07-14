@@ -44,4 +44,52 @@ bool Carousel::readConfigDirective( std::string &l ){
 		return this->ToileObject::readConfigDirective(l);
 }
 
+#ifdef DEBUG
+void Carousel::dump(){
+	std::cout << "Painting::dump() of " << static_cast<void*>(this) << std::endl;
+	std::cout << "\tName : " << this->getName() << std::endl;
+	std::cout << "\tWhere : " << this->getWhere() << std::endl;
+	std::cout << "\tsurface : " << static_cast<void*>(this->surface) << std::endl;
+	std::cout << "\tparent : " << static_cast<void*>(this->getParent()) << std::endl;
+	std::cout << "\tOrigin : " << this->geometry.x << "x" << this->geometry.y << std::endl;
+	std::cout << "\tSize : " << this->geometry.w << "x" << this->geometry.h << std::endl;
+}
+#endif
 
+bool Carousel::init(void){
+	this->assertSanity();
+
+	if(!this->isEnabled()){
+		if(this->isVerbose())
+			SelLog->Log('D', "Carousel '%s' from '%s' is disabled", this->getNameC(), this->getWhereC());
+		return false;
+	}
+
+	if(::debug && this->isVerbose())
+		SelLog->Log('D', "[%s] Carousel::init()", this->getNameC());
+
+	if(!this->geometry.w || !this->geometry.h){	// size not set
+		uint32_t w,h;
+		if(!this->getParent()->getSurface()->cb->getSize(this->getParent()->getSurface(), &w,&h)){
+				SelLog->Log('F', "[Painting \"%s\"] Getting the geometry from parent is not supported", this->name.c_str());
+			exit(EXIT_FAILURE);
+		} else
+			SelLog->Log('D', "[Painting \"%s\"] Get geometry from parent : %lux%lu", this->name.c_str(), w,h);
+
+		if(this->geometry.x >= w || this->geometry.y >= h){
+			SelLog->Log('W', "[Painting \"%s\"] Origin outsize its parent", this->name.c_str());
+			this->geometry.w = w;
+			this->geometry.h = h;
+		} else {
+			this->geometry.w = w - this->geometry.x;
+			this->geometry.h = h - this->geometry.y;
+		}
+
+		SelLog->Log('D', "[Painting \"%s\"] Guessed geometry : %lux%lu", this->name.c_str(), this->geometry.w,this->geometry.h);
+	}
+
+	if(::debug && this->isVerbose())
+		SelLog->Log('D', "[%s] Carousel::init() - End", this->getNameC());
+
+	return true;
+}
