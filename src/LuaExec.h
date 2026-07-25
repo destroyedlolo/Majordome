@@ -42,6 +42,7 @@ public:
 		 * Lists of needed
 		 * ***/
 
+	StringVector required_shared;
 	StringVector needed_topic;
 	StringVector required_topic;
 	StringVector needed_task;
@@ -66,6 +67,7 @@ public:
 #endif
 
 protected:
+	void addRequiredShared( std::string t ){ this->required_shared.Add(t); }
 	void addNeededTopic( std::string t ){ this->needed_topic.Add(t); }
 	void addRequiredTopic( std::string t ){ this->required_topic.Add(t); }
 	void addNeededTask( std::string t ){ this->needed_task.Add(t); }
