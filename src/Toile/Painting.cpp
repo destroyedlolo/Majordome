@@ -65,6 +65,33 @@ bool Painting::readConfigDirectiveOnly( std::string &l ){
 		if(::verbose)
 			SelLog->Log('C', "\t\tPersistent");
 		return true;
+	} else if(l == "-->> ApplyOn Carousel="){	// Only Painting can apply on carousel
+		if(this->parent){
+			SelLog->Log('F', "\t\tA Painting can have only a single parent");
+			exit(EXIT_FAILURE);
+		}
+
+			// Search the parent carousel
+		CarouselCollection::iterator carousel;
+		if((carousel = config.CarouselList.find(arg)) != config.CarouselList.end()){
+			if(::verbose)
+#ifdef DEBUG
+				SelLog->Log('C', "\t\tThe Parent is Carousel '%s' (%p)", arg.c_str(), &(carousel->second));
+#else
+				SelLog->Log('C', "\t\tThe Parent is Carousel '%s'", arg.c_str());
+#endif
+
+			this->parent = dynamic_cast<ToileObject *>(carousel->second);
+			carousel->second->addChild( this );
+
+			if(d2)
+				fd2 << carousel->second->getFullId() << " <- " << this->getFullId() << ": ApplyOn Carousel { class: llink }" << std::endl;
+		} else {
+			SelLog->Log('F', "\t\tCarousel '%s' is not (yet ?) defined", arg.c_str());
+			exit(EXIT_FAILURE);
+		}
+
+		return true;
 	} else
 		return this->ToileObject::readConfigDirective(l);
 }

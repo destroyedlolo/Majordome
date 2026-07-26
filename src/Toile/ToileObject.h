@@ -14,8 +14,9 @@
 #include <string>
 
 class ToileObject : virtual public Object {
-	ToileObject *parent;
 protected:
+	ToileObject *parent;
+
 	struct SelGenericSurface *surface;	// Selene's surface
 
 		/* Read configuration directive shared with all Toile's objects
