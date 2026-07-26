@@ -52,7 +52,10 @@ public:
 		// Try to initialize missing fields from its parent.
 	bool init(void);
 
-	virtual std::string getTri(){ return Decoration::trigramme(); }
+		/* Create Lua's object */
+	static void initLuaInterface( lua_State *L );
+	
+	virtual std::string getTri(){ return Carousel::trigramme(); }
 	static std::string trigramme(){ return "CAR_"; }
 };
 

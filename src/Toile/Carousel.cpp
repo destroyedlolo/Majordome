@@ -88,8 +88,26 @@ bool Carousel::init(void){
 		SelLog->Log('D', "[Carousel \"%s\"] Guessed geometry : %lux%lu", this->name.c_str(), this->geometry.w,this->geometry.h);
 	}
 
+/*
+	struct SelGenericSurface *(*srfFunc)(struct SelGenericSurface *, uint32_t,  uint32_t,  uint32_t,  uint32_t, void *) = this->isPersistent() ? this->getParent()->getSurface()->cb->Surface : this->getParent()->getSurface()->cb->subSurface;*/
+
+	if(!(this->surface = this->getParent()->getSurface()->cb->Surface( this->getParent()->getSurface(), this->geometry.x, this->geometry.y, this->geometry.w, this->geometry.h, this->getParent()->getSurface()->cb->getPrimary(this->getParent()->getSurface())))){
+		SelLog->Log('F', "[Painting \"%s\"] Can't create carousel", this->name.c_str());
+		exit(EXIT_FAILURE);
+	}
+
+			// Initialize subsurfaces
+	if(::debug && this->isVerbose())
+		SelLog->Log('D', "[%s] Painting::init() - Children", this->getNameC());
+	for(auto &child: this->getChildren())
+		child->init();
+
+
 	if(::debug && this->isVerbose())
 		SelLog->Log('D', "[%s] Carousel::init() - End", this->getNameC());
 
 	return true;
+}
+
+void Carousel::initLuaInterface( lua_State *L ){
 }

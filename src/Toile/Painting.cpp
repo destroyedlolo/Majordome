@@ -110,7 +110,6 @@ void Painting::dump(){
 #endif
 
 bool Painting::init(void){
-printf("******************* %s \n", this->getNameC());
 	this->assertSanity();
 
 	if(!this->isEnabled()){
@@ -127,7 +126,7 @@ printf("******************* %s \n", this->getNameC());
 		 * as it's parent, to be persistant and started hidden
 		 */
 		if(this->geometry.w || this->geometry.h || this->geometry.x || this->geometry.y)
-			SelLog->Log('F', "[Painting \"%s\"] Getting the geometry from parent is not supported", this->name.c_str());
+			SelLog->Log('F', "[Painting \"%s\"] Setting the geometry is not supported", this->name.c_str());
 
 		auto parent = dynamic_cast<Carousel *>(this->getParent());
 		this->geometry = parent->getGeometry();
@@ -323,6 +322,7 @@ static int Selene_wrapper(lua_State *L){
 
 static int painting_custom_index(lua_State *L){
 	// input stack : 1: Painting, 2: method
+
 	class Painting *painting = checkMajordomePainting(L);
 
 		/* Search in painting */

@@ -456,6 +456,9 @@ int main(int ac, char **av){
 		for(auto &r : config.RendererList)
 			r.second->dump();
 
+		for(auto &r : config.CarouselList)
+			r.second->dump();
+
 		for(auto &r : config.PaintingList)
 			r.second->dump();
 	}
@@ -463,6 +466,7 @@ int main(int ac, char **av){
 
 	SelLua->AddStartupFunc(Renderer::initLuaInterface);
 	SelLua->AddStartupFunc(Painting::initLuaInterface);
+	SelLua->AddStartupFunc(Carousel::initLuaInterface);
 #endif
 
 		/* **
