@@ -65,7 +65,7 @@ bool Painting::readConfigDirectiveOnly( std::string &l ){
 		if(::verbose)
 			SelLog->Log('C', "\t\tPersistent");
 		return true;
-	} else if(l == "-->> ApplyOn Carousel="){	// Only Painting can apply on carousel
+	} else if(!(arg = striKWcmp( l, "-->> ApplyOn Carousel=" )).empty()){	// Only Painting can apply on carousel
 		if(this->parent){
 			SelLog->Log('F', "\t\tA Painting can have only a single parent");
 			exit(EXIT_FAILURE);
@@ -110,6 +110,7 @@ void Painting::dump(){
 #endif
 
 bool Painting::init(void){
+printf("******************* %s \n", this->getNameC());
 	this->assertSanity();
 
 	if(!this->isEnabled()){
@@ -121,7 +122,21 @@ bool Painting::init(void){
 	if(::debug && this->isVerbose())
 		SelLog->Log('D', "[%s] Painting::init()", this->getNameC());
 
-	if(!this->geometry.w || !this->geometry.h){	// size not set
+	if(this->getParent()->getTri() == Carousel::trigramme()){
+		/* As part of a Carousel, the geometry is forced to be the same
+		 * as it's parent, to be persistant and started hidden
+		 */
+		if(this->geometry.w || this->geometry.h || this->geometry.x || this->geometry.y)
+			SelLog->Log('F', "[Painting \"%s\"] Getting the geometry from parent is not supported", this->name.c_str());
+
+		auto parent = dynamic_cast<Carousel *>(this->getParent());
+		this->geometry = parent->getGeometry();
+
+			// Carousel surface's are hidden and persistant
+		this->startedvisible = false;
+		this->persistent = true;
+
+	} else if(!this->geometry.w || !this->geometry.h){	// size not set
 		uint32_t w,h;
 		if(!this->getParent()->getSurface()->cb->getSize(this->getParent()->getSurface(), &w,&h)){
 				SelLog->Log('F', "[Painting \"%s\"] Getting the geometry from parent is not supported", this->name.c_str());

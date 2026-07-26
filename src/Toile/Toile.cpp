@@ -26,6 +26,7 @@
 static const SubConfigDir::extweight fileext[] = {
 	{ ".Renderer", 0xc0 },
 	{ ".LCD", 0xc0 },
+	{ ".Carousel", 0xa0 },
 	{ ".Painting", 0x80 },
 	{ ".Field", 0x70 },
 	{ ".Decoration", 0x60 }
@@ -76,6 +77,17 @@ bool Toile::readConfigToile(Config &cfg, std::string &completpath, std::string &
 			exit(EXIT_FAILURE);
 		} else
 			cfg.DecorationList.insert( std::make_pair(paint->getName(), paint) );
+
+		return true;
+	} else if(ext == ".Carousel"){
+		auto carousel = new Carousel( completpath, where, L );
+
+		CarouselCollection::iterator prev;
+		if((prev = cfg.CarouselList.find(carousel->getName())) != cfg.CarouselList.end()){
+			SelLog->Log('F', "Carousel '%s' is defined multiple times (previous one '%s')", carousel->getName().c_str(), prev->second->getWhere().c_str());
+			exit(EXIT_FAILURE);
+		} else
+			cfg.CarouselList.insert( std::make_pair(carousel->getName(), carousel) );
 
 		return true;
 	} else if(ext == ".Painting"){

@@ -30,6 +30,9 @@ public:
 	 */
 	Carousel( const std::string &file, std::string &where, lua_State *L );
 
+		/* Accessors */
+	Toile::SurfaceGeometry &getGeometry(){ return this->geometry; }
+
 protected:
 	/* Read directives.
 	 * These directives may apply to all derivates.
@@ -49,7 +52,8 @@ public:
 		// Try to initialize missing fields from its parent.
 	bool init(void);
 
-	virtual std::string getTri(){ return "CAR_"; }
+	virtual std::string getTri(){ return Decoration::trigramme(); }
+	static std::string trigramme(){ return "CAR_"; }
 };
 
 typedef ObjCollection<Carousel *> CarouselCollection;
