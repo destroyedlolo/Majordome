@@ -18,6 +18,7 @@ class Carousel : virtual public ToileContainer, virtual public ToileObject {
 protected:
 	Toile::SurfaceGeometry geometry;
 
+	virtual void assertSanity(void);
 public:
 //	Carousel():surface(NULL){};
 	Carousel(const std::string &fch, std::string &where): Object(fch, where){};

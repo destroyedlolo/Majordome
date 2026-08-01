@@ -56,6 +56,14 @@ void Carousel::dump(){
 }
 #endif
 
+void Carousel::assertSanity(void){
+	if(!this->getChildren().size()){
+		SelLog->Log('F', "[\"%s\"] Carousels are useless without attached painting", this->getNameC());
+		exit(EXIT_FAILURE);
+	}
+	this->ToileObject::assertSanity();
+}
+
 bool Carousel::init(void){
 	this->assertSanity();
 
@@ -99,15 +107,19 @@ bool Carousel::init(void){
 			// Initialize subsurfaces
 	if(::debug && this->isVerbose())
 		SelLog->Log('D', "[%s] Painting::init() - Children", this->getNameC());
+
 	for(auto &child: this->getChildren())
 		child->init();
 
+		// makes the 1set child visible
+	this->getChildren().front()->getSurface()->cb->setVisibility(this->getChildren().front()->getSurface(), true);
 
 	if(::debug && this->isVerbose())
 		SelLog->Log('D', "[%s] Carousel::init() - End", this->getNameC());
 
 	return true;
 }
+
 
 void Carousel::refreshAll(){
 	if(!this->isEnabled() || !this->isVisible())
