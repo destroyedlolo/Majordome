@@ -52,6 +52,9 @@ public:
 		// Try to initialize missing fields from its parent.
 	bool init(void);
 
+		// No refreshChild() as we have only children to refresh
+	virtual void refreshAll();
+
 		/* Create Lua's object */
 	static void initLuaInterface( lua_State *L );
 	

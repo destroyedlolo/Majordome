@@ -109,5 +109,15 @@ bool Carousel::init(void){
 	return true;
 }
 
+void Carousel::refreshAll(){
+	if(!this->isEnabled() || !this->isVisible())
+		return;
+
+	for(auto &child : this->getChildren()){
+		// As all children need to be persistent, no need to check if it is visible or not
+		child->refreshAll();
+	}
+}
+
 void Carousel::initLuaInterface( lua_State *L ){
 }

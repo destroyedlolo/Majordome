@@ -126,7 +126,7 @@ bool Painting::init(void){
 		 * as it's parent, to be persistant and started hidden
 		 */
 		if(this->geometry.w || this->geometry.h || this->geometry.x || this->geometry.y)
-			SelLog->Log('F', "[Painting \"%s\"] Setting the geometry is not supported", this->name.c_str());
+			SelLog->Log('E', "[Painting \"%s\"] Setting the geometry is not supported when applying to a carousel", this->name.c_str());
 
 		auto parent = dynamic_cast<Carousel *>(this->getParent());
 		this->geometry = parent->getGeometry();
