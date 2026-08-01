@@ -7,8 +7,11 @@ print("-------------")
 print("  Subsurface")
 print("-------------")
 
-print(SubSurface:getContainer(), SubSurface:getName(), SubSurface:isEnabled() )
-print(SubSurface:isVisible())
+print(SubSurface:getContainer(), 
+	SubSurface:getName(),
+	"Enable: ".. tostring(SubSurface:isEnabled()),
+	"Visible: ".. tostring(SubSurface:isVisible())
+)
 
 SubSurface:Dump()
 
@@ -16,11 +19,15 @@ print("-------------")
 print("  Renderer")
 print("-------------")
 
-print(LCD:getContainer(), LCD:getName(), LCD:isEnabled() )
-print(LCD:isVisible())
+print(LCD:getContainer(), 
+	LCD:getName(),
+	"Enable: ".. tostring(LCD:isEnabled()),
+	"Visible: ".. tostring(LCD:isVisible())
+)
 
 LCD:Dump()	-- not exposed to the renderer
 
+--[[
 print("---------------------------------")
 print("  Now the surface is visible")
 print("---------------------------------")
@@ -28,4 +35,4 @@ print("---------------------------------")
 SubSurface:setVisibility(true)
 
 LCD:Dump()	-- not exposed to the renderer
-
+--]]
