@@ -183,11 +183,12 @@ Create corresponding object (Only Toile plug-in has been compiled).
 A handler will be triggered **only** if all these require are assumed.<br>
 As an example, `-->> require_topic=Test` imply a message has been received and it hasn't been discarded by a timeout.
 
-Supported are : **-->> require_topic=**, **-->> require_shared=**
-
 #### Topics
 > [!WARNING]
 > Only `store`d topic can be  needed or required.
 
 ##### -->> require_topic=
 Prevents the script to be launched if corresponding value is not valid.
+
+##### -->> require_shared=
+Prevents the script to be launched if corresponding shared variable is not valid.
