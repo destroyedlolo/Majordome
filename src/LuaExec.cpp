@@ -124,6 +124,14 @@ bool LuaExec::readConfigDirective( std::string &l ){
 			SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
+	} else if(!(arg = striKWcmp( l, "-->> require_shared=" )).empty()){
+		if(::verbose)
+			SelLog->Log('C', "\t\tAdded required shared variable '%s'", arg.c_str());
+
+		if(d2)
+			fd2 << this->getFullId() << " -- " << arg << ": require { class: lrequiere }" << std::endl;
+		this->addRequiredShared(arg);
+		return true;
 	} else if(!(arg = striKWcmp( l, "-->> need_timer=" )).empty()){
 		TimerCollection::iterator timer;
 		if( (timer = config.TimersList.find(arg)) != config.TimersList.end()){
@@ -305,6 +313,14 @@ bool LuaExec::feedbyNeeded( lua_State *L, bool require ){
 
 				lua_setglobal(L, i.c_str());
 			} catch( std::out_of_range &e ){	// Not found
+				return false;
+			}
+		}
+
+		for(auto &i :  this->required_shared){
+			if(SelSharedVar->getType(i.c_str()) == SharedObjType::SOT_UNKNOWN){
+				if(debug && !this->isQuiet())
+					SelLog->Log('D', "[%s] Required shared variable \"%s\" not set : task/trigger will not be launched", this->getNameC(), i.c_str());
 				return false;
 			}
 		}
