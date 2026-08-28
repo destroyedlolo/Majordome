@@ -45,8 +45,8 @@
  *	15/06/2025 - v6.11 - LF - Expose MajordomeMQTTTopic.match()
  *	17/08/2025 - v6.12 - LF - Add %Hostname% in topic parsing
  *	17/08/2025 - v6.13 - LF - Add Resources
- *	17/08/2025 - v6.14 - LF - Add requiere_shared
+ *	17/08/2025 - v6.14 - LF - Add require_shared
  */
 
-#define VERSION 6.1400
+#define VERSION 6.1401
 #define COPYRIGHT "Majordome (c) L.Faillie 2018-2025"
