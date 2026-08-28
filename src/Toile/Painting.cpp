@@ -130,6 +130,8 @@ bool Painting::init(void){
 
 		auto parent = dynamic_cast<Carousel *>(this->getParent());
 		this->geometry = parent->getGeometry();
+		this->geometry.x = 0;	// Force origine
+		this->geometry.y = 0;
 
 			// Carousel surface's are hidden and persistant
 		this->startedvisible = false;
