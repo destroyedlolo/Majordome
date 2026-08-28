@@ -190,5 +190,8 @@ As an example, `-->> require_topic=Test` imply a message has been received and i
 ##### -->> require_topic=
 Prevents the script to be launched if corresponding value is not valid.
 
-##### -->> require_shared=
-Prevents the script to be launched if corresponding shared variable is not valid.
+#### Shared Variables
+
+##### -->> require_sharedvariable=
+Prevents the script to be launched if corresponding SharedVariable is not valid.  
+At Lua side, a global variable with the same name is created.
