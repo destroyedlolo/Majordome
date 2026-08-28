@@ -192,6 +192,6 @@ Prevents the script to be launched if corresponding value is not valid.
 
 #### Shared Variables
 
-##### -->> require_sharedvariable=
+##### -->> require_shared=
 Prevents the script to be launched if corresponding SharedVariable is not valid.  
 At Lua side, a global variable with the same name is created.
