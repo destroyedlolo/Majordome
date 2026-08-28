@@ -1,0 +1,7 @@
+-->> desc=Production topic
+--
+-->> topic=TeleInfo/LinkyProduction/SINSTI
+--
+-- disable this topic
+--->> disabled
+-->> quiet

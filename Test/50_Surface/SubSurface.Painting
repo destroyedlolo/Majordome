@@ -1,0 +1,10 @@
+-->> ApplyOn Carousel=Flip
+--->> ApplyOn Renderer=LCD
+-->> Origin=3,1
+-->> Size=9x2
+--
+-- This Painting has his own cache
+--->> Persistent
+--
+-- This Painting is not visible at first
+--->> Hidden

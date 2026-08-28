@@ -1,0 +1,185 @@
+-->> desc=Display the current time
+--
+--->> disabled
+--->> quiet
+--
+-->> ApplyOn Renderer=LCD
+-->> Origin=17,0
+-->> Size=3x1
+--
+-->> when=Clock
+-->> need_timer=Clock
+-->> need_renderer=LCD
+
+local t = os.date('*t')
+
+-- Calculate the delay to the next plain minute
+local delay = 60-t.sec
+if delay == 0 then	-- Ensure to wait to the next minute
+	delay = 60
+end
+
+if MAJORDOME_DEBUG then
+	SelLog.Log('D', "Delay before refreshing the clock : ".. 60-t.sec)
+end
+
+Clock:setEvery(delay)
+
+-------
+-- Updating
+-------
+
+local function setChar( num, val, min)
+-- Redefine a char as per value
+-- num : number of the char
+-- val : value 1-12
+-- min : if true, add ':' behind
+
+	local dt = {
+		{
+			"    ",
+			"  x ",
+			" x x",
+			" x x",
+			" x x",
+			" x x",
+			"  x ",
+			"     "
+		}, {
+			"    ",
+			"  x ",
+			" xx ",
+			"  x ",
+			"  x ",
+			"  x ",
+			" xxx",
+			"     "
+		}, {
+			"    ",
+			" xxx",
+			"   x",
+			" xxx",
+			" x  ",
+			" x  ",
+			" xxx",
+			"     "
+		}, {
+			"    ",
+			" xxx",
+			"   x",
+			"  xx",
+			"   x",
+			"   x",
+			" xxx",
+			"     "
+		}, {
+			"    ",
+			" x x",
+			" x x",
+			"  xx",
+			"   x",
+			"   x",
+			"   x",
+			"     "
+		}, {
+			"    ",
+			" xxx",
+			" x  ",
+			" xxx",
+			"   x",
+			"   x",
+			" xxx",
+			"    "
+		}, {
+			"    ",
+			" xx ",
+			" x  ",
+			" xxx",
+			" x x",
+			" x x",
+			" xxx",
+			"    "
+		}, {
+			"    ",
+			" xxx",
+			"   x",
+			"   x",
+			"   x",
+			"   x",
+			"   x",
+			"    "
+		}, {
+			"    ",
+			" xxx",
+			" x x",
+			" xxx",
+			" x x",
+			" x x",
+			" xxx",
+			"    "
+		}, {
+			"    ",
+			" xxx",
+			" x x",
+			" xxx",
+			"   x",
+			"   x",
+			" xxx",
+			"     "
+		}, {
+			"     ",
+			"x  x ",
+			"x x x",
+			"x x x",
+			"x x x",
+			"x x x",
+			"x  x ",
+			"     "
+		}, {
+			"     ",
+			" x  x",
+			"xx xx",
+			" x  x",
+			" x  x",
+			" x  x",
+			" x  x",
+			"     "
+		}, {
+			"     ",
+			"x xxx",
+			"x   x",
+			"x xxx",
+			"x x  ",
+			"x x  ",
+			"x xxx",
+			"     "
+		}
+	}
+
+	local t = dt[val]
+	if min then
+		for i=1,8 do
+			if (i%3) == 0 then
+				t[i] = 'X' .. t[i]
+			else
+				t[i] = ' ' .. t[i]
+			end
+		end
+	end
+
+	LCD:SetChar(num, t)
+end
+
+if t.hour ~= 12 then
+	t.hour = t.hour%12
+end
+
+setChar(0, t.hour +1, false)
+setChar(1, math.floor(t.min/10) +1, true)
+setChar(2, t.min%10 +1, false)
+
+if MAJORDOME_DEBUG then
+	SelLog.Log('I', "It's ".. t.hour ..':'.. math.floor(t.min/10) .. t.min%10)
+end
+
+return(string.char(0x08)..string.char(0x09)..string.char(0x0a))

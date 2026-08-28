@@ -1,0 +1,7 @@
+-- Consuption topic
+--
+-->> topic=TeleInfo/PompePiscine/values/PAPP
+--
+-- disable this topic
+--->> disabled
+-->> quiet

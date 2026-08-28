@@ -1,0 +1,8 @@
+-->> desc=Affiche la charge CPU à 1 minute
+-->> group=CPU
+-->> ApplyOn Painting=CPU
+-->> Origin=5,0
+-->> Sample=xx.xx
+-->> listen=CPU1
+
+return string.format("%1.2f", MAJORDOME_PAYLOAD);

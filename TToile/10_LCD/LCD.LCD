@@ -1,0 +1,14 @@
+-->> desc=Attach an 20x4 LCD screen
+--
+---------
+-- Device related
+---------
+--
+-->> I2CBus=1
+-->> I2CAddress=0x27
+-->> MultiLines
+-->> Timing=500,0
+-->> Size=20,4
+--
+-->> Fatal
+

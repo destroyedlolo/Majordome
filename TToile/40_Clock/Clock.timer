@@ -1,0 +1,5 @@
+-->> desc=Timer to display the current time
+--
+-->> immediate
+-->> every=60
+--->> disabled

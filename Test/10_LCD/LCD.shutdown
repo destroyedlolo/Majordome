@@ -1,0 +1,10 @@
+-->> desc=Turn off the I2C LCD screen.
+--
+-- In the header of the script (comment bloc at the very beginning of
+-- the script), each line starting with -->> are Majordome's commands.
+-- Consequently, '--->>' are commented out commands.
+--
+-->> need_renderer=LCD
+
+LCD:Backlight(false)
+LCD:Shutdown()

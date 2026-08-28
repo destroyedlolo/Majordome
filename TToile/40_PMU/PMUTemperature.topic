@@ -1,0 +1,4 @@
+-->> desc=Temperature du PMic
+-->> group=PMU
+--
+-->> topic=Machines/%Hostname%/PMU/temperature

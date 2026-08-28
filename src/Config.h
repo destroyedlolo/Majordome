@@ -33,9 +33,10 @@
 
 #ifdef TOILE
 #	include "Toile/Renderer.h"
-#	include "Toile/Painting.h"
 #	include "Toile/Decoration.h"
+#	include "Toile/Painting.h"
 #	include "Toile/Field.h"
+#	include "Toile/Carousel.h"
 #endif
 
 #include <lua.hpp>	/* Lua's state needed */
@@ -88,6 +89,7 @@ public:
 	RendererCollection RendererList;
 	PaintingCollection PaintingList;
 	DecorationCollection DecorationList;
+	CarouselCollection CarouselList;
 #endif
 
 		/* Topics' */

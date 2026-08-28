@@ -1,0 +1,6 @@
+-- Consuption topic
+--
+-->> topic=maison/Temperature/Dehors
+--
+-- disable this topic
+--->> disabled

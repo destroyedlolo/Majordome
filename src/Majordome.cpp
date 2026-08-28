@@ -456,10 +456,17 @@ int main(int ac, char **av){
 		for(auto &r : config.RendererList)
 			r.second->dump();
 
+		for(auto &r : config.CarouselList)
+			r.second->dump();
+
 		for(auto &r : config.PaintingList)
 			r.second->dump();
 	}
 #	endif
+
+	SelLua->AddStartupFunc(Renderer::initLuaInterface);
+	SelLua->AddStartupFunc(Painting::initLuaInterface);
+	SelLua->AddStartupFunc(Carousel::initLuaInterface);
 #endif
 
 		/* **
@@ -483,5 +490,6 @@ int main(int ac, char **av){
 	config.RunImmediates();	// Run immediate & overdue timers tasks
 
 	config.SubscribeTopics();	// MQTT : activate topics receiving
+
 	pause();	// Waiting for events, nothing else to do
 }

@@ -1,0 +1,6 @@
+-- Office temperature topic
+--
+-->> topic=maison/Temperature/Bureau
+--
+-- disable this topic
+--->> disabled

@@ -1,0 +1,4 @@
+-->> group=CPU
+-->> ApplyOn Painting=CPU
+
+MAJORDOME_PAINTING:WriteString("CPU:")

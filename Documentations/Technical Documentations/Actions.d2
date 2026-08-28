@@ -91,6 +91,42 @@ diagram {
 	Database.archive -> rendezvous : SuccessRDV\nFailRDV
 	resource <-> Database.archive
 
+	Toile {
+		style {
+			border-radius: 5
+			stroke-dash: 2
+		}
+
+		Renderer {
+			tooltip: "Low level renderer"
+			class: [ TRenderer ; Lua ]
+		}
+
+		Decoration {
+			tooltip: "Decoration of an object"
+			class: [ TDecoration ; Lua ]
+		}
+		Decoration -> Renderer : ApplyOn Renderer
+		Decoration -> Painting : ApplyOn Painting
+
+		Painting {
+			tooltip: "a.k.a subsurface"
+			class: TPainting
+		}
+		Painting -> Renderer : Renderer Parent
+
+		Field {
+			tooltip: "Display information"
+			class: [ TField ; Lua ]
+		}
+		_.topic -> Field : listen
+		_.rendezvous -> Field : waitfor
+		_.timer-> Field : when
+		_.tracker -> Field : whenDone\nwhenStopped\nwhenChanged
+		Field -> Renderer : ApplyOn Renderer
+		Field -> Painting : ApplyOn Painting
+	}
+
 	(topic -> *)[*].class: Data
 	(* <- topic)[*].class: Data
 	(topic -> *.*)[*].class: Data
