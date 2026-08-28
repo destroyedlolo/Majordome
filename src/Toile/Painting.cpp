@@ -105,6 +105,9 @@ void Painting::dump(){
 	std::cout << "\tparent : " << static_cast<void*>(this->getParent()) << std::endl;
 	std::cout << "\tOrigin : " << this->geometry.x << "x" << this->geometry.y << std::endl;
 	std::cout << "\tSize : " << this->geometry.w << "x" << this->geometry.h << std::endl;
+	std::cout << "\t" << (this->persistent ? "Persitent" : "volatile") << ' '
+		<< (this->isVisible() ? "Visible" : "Hidden")
+		<< std::endl;
 }
 
 #endif
