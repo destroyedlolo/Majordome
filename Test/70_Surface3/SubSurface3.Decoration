@@ -6,9 +6,7 @@
 --
 -- On which object this decoration will be applied ?
 -- On a Surface object
--->> ApplyOn Painting=SubSurface
--- On a Renderer
---->> ApplyOn Renderer=
+-->> ApplyOn Painting=SubSurface3
 
 -- The surface to apply on is embodied as MAJORDOME_PAINTING
 
@@ -18,7 +16,7 @@ local w,h = MAJORDOME_PAINTING:GetSize()
 for j=1,h do
 	MAJORDOME_PAINTING:SetCursor(0,j-1)
 	for i=1,w do
-		MAJORDOME_PAINTING:WriteString('1')
+		MAJORDOME_PAINTING:WriteString('3')
 	end
 end
 

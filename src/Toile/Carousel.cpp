@@ -100,13 +100,13 @@ bool Carousel::init(void){
 	struct SelGenericSurface *(*srfFunc)(struct SelGenericSurface *, uint32_t,  uint32_t,  uint32_t,  uint32_t, void *) = this->isPersistent() ? this->getParent()->getSurface()->cb->Surface : this->getParent()->getSurface()->cb->subSurface;*/
 
 	if(!(this->surface = this->getParent()->getSurface()->cb->Surface( this->getParent()->getSurface(), this->geometry.x, this->geometry.y, this->geometry.w, this->geometry.h, this->getParent()->getSurface()->cb->getPrimary(this->getParent()->getSurface())))){
-		SelLog->Log('F', "[Painting \"%s\"] Can't create carousel", this->name.c_str());
+		SelLog->Log('F', "[Carousel \"%s\"] Can't create carousel", this->name.c_str());
 		exit(EXIT_FAILURE);
 	}
 
 			// Initialize subsurfaces
 	if(::debug && this->isVerbose())
-		SelLog->Log('D', "[%s] Painting::init() - Children", this->getNameC());
+		SelLog->Log('D', "[%s] Painting::Carousel() - Children", this->getNameC());
 
 	for(auto &child: this->getChildren())
 		child->init();

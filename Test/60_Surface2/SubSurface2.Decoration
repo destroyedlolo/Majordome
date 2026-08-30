@@ -16,7 +16,7 @@ local w,h = MAJORDOME_PAINTING:GetSize()
 for j=1,h do
 	MAJORDOME_PAINTING:SetCursor(0,j-1)
 	for i=1,w do
-		MAJORDOME_PAINTING:WriteString('%')
+		MAJORDOME_PAINTING:WriteString('2')
 	end
 end
 
