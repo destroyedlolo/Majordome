@@ -21,4 +21,4 @@
  *	08/07/2026 - v0.07 - LF - Add Carousel
  */
 
-#define TOILEVERSION 0.0700
+#define TOILEVERSION 0.0701

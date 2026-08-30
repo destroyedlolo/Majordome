@@ -42,12 +42,10 @@ print(LCD:getContainer(),
 
 LCD:Dump()	-- not exposed to the renderer
 
---[[
 print("---------------------------------")
-print("  Now the surface is visible")
+print("  Now the surface3 is visible")
 print("---------------------------------")
 
-SubSurface:setVisibility(true)
+SubSurface3:setVisibility(true)
 
 LCD:Dump()	-- not exposed to the renderer
---]]

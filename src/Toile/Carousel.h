@@ -61,6 +61,11 @@ public:
 	
 	virtual std::string getTri(){ return Carousel::trigramme(); }
 	static std::string trigramme(){ return "CAR_"; }
+
+	/* Cycling.
+	 * Made public as needed from Lua functions
+	 */
+	void hideActif();	// Find out and setVisibility(false) the current active child
 };
 
 typedef ObjCollection<Carousel *> CarouselCollection;

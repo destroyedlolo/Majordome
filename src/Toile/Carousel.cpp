@@ -64,6 +64,15 @@ void Carousel::assertSanity(void){
 	this->ToileObject::assertSanity();
 }
 
+void Carousel::hideActif(){
+	for(auto &child: this->getChildren()){
+		if(child->isVisible()){
+			child->getSurface()->cb->setVisibility(child->getSurface(), false);
+			return;
+		}
+	}
+}
+
 bool Carousel::init(void){
 	this->assertSanity();
 
