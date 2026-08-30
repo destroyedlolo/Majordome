@@ -48,4 +48,9 @@ print("---------------------------------")
 
 SubSurface3:setVisibility(true)
 
+-- Physically refresh the screen
+-- Normally, it has to be done at Carousel level but
+-- not implemented at the moment of writing
+LCD:Refresh()
+
 LCD:Dump()	-- not exposed to the renderer

@@ -36,14 +36,13 @@ public:
 	void setRunAtStartup( bool v ){ this->runatstartup = v; }
 	bool getRunAtStartup( void ){ return this->runatstartup; }
 
-	/* Create Lua's object */
+	/* Lua's related */
 	static void initLuaInterface( lua_State *L );
+	virtual void feedState(lua_State *L);
 
 	/* Execution */
 	virtual bool canRun( void );	// Check if this task can run
 	void finished( void );			// tell this task finished
-
-	virtual void feedState(lua_State *L);
 
 	virtual std::string getTri(){ return LuaTask::trigramme(); }
 	static std::string trigramme(){ return "TSK_"; }

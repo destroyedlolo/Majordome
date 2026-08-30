@@ -14,7 +14,7 @@
 #include <cstring>
 #include <cassert>
 
-Carousel::Carousel( const std::string &fch, std::string &where, lua_State *L ): Object(fch, where){
+Carousel::Carousel( const std::string &fch, std::string &where, lua_State *L ): Object(fch, where), Handler(fch, where){
 	this->loadConfigurationFile(fch, where);
 
 	if(d2)
@@ -141,4 +141,7 @@ void Carousel::refreshAll(){
 }
 
 void Carousel::initLuaInterface( lua_State *L ){
+}
+
+void Carousel::feedState(lua_State *L){
 }

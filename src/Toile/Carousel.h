@@ -13,8 +13,9 @@
 #include "../Helpers.h"
 #include "../Object.h"
 #include "../ObjCollection.h"
+#include "../Handler.h"
 
-class Carousel : virtual public ToileContainer, virtual public ToileObject {
+class Carousel : public Handler, virtual public ToileContainer, virtual public ToileObject {
 protected:
 	Toile::SurfaceGeometry geometry;
 
@@ -56,9 +57,10 @@ public:
 		// No refreshChild() as we have only children to refresh
 	virtual void refreshAll();
 
-		/* Create Lua's object */
+		/* Lua's related */
 	static void initLuaInterface( lua_State *L );
-	
+	virtual void feedState(lua_State *L);
+
 	virtual std::string getTri(){ return Carousel::trigramme(); }
 	static std::string trigramme(){ return "CAR_"; }
 
