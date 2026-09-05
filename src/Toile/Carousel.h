@@ -71,6 +71,7 @@ public:
 	 * Made public as needed from Lua functions
 	 */
 	auto hideActif();	// Find out and setVisibility(false) the current active child (only one is expected)
+	void Cycle();
 };
 
 typedef ObjCollection<Carousel *> CarouselCollection;
