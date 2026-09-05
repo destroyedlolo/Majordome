@@ -10,6 +10,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>	// stringstream
+#include <algorithm>	// std::find
 
 #include <cstring>
 #include <cassert>
@@ -72,13 +73,17 @@ void Carousel::assertSanity(void){
 	this->ToileObject::assertSanity();
 }
 
-void Carousel::hideActif(){
-	for(auto &child: this->getChildren()){
-		if(child->isVisible()){
-			child->getSurface()->cb->setVisibility(child->getSurface(), false);
-			return;
-		}
-	}
+auto Carousel::hideActif(){
+	auto& children = this->getChildren();
+
+	auto it = std::find_if(children.begin(), children.end(), [](const auto& child) {
+		return child->isVisible();
+	});
+
+	if(it != children.end())
+		(*it)->getSurface()->cb->setVisibility((*it)->getSurface(), false);
+
+	return it;
 }
 
 bool Carousel::init(void){
