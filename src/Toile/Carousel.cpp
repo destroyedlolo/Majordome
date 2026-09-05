@@ -40,8 +40,16 @@ bool Carousel::readConfigDirective( std::string &l ){
 		if(::verbose)
 			SelLog->Log('C', "\t\tSize : %ux%u", this->geometry.w,this->geometry.h);
 		return true;
-	} else
-		return this->ToileObject::readConfigDirective(l);
+	} else if( this->ToileObject::readConfigDirective(l) )
+		;
+	else if(this->readConfigDirectiveData(l))
+		;
+	else if(this->readConfigDirectiveNoData(l))
+		;
+	else
+		return this->LuaExec::readConfigDirective(l);
+
+	return true;
 }
 
 #ifdef DEBUG
@@ -138,6 +146,21 @@ void Carousel::refreshAll(){
 		// As all children need to be persistent, no need to check if it is visible or not
 		child->refreshAll();
 	}
+}
+
+bool Carousel::execAsync(lua_State *L){
+	LuaExec::boolRetCode rc;
+	lua_Number val;
+
+	bool r = this->LuaExec::execSync(L, &rc, &val);
+
+	if( rc != LuaExec::boolRetCode::RCfalse ){	// data not rejected
+		SelLog->Log('D', "[Carousel '%s'] cycling", this->getNameC());
+	} else
+		SelLog->Log('D', "[Carousel '%s'] Rejecting cycling", this->getNameC());
+
+	lua_close(L);
+	return r;
 }
 
 void Carousel::initLuaInterface( lua_State *L ){

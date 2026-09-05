@@ -64,6 +64,9 @@ public:
 	virtual std::string getTri(){ return Carousel::trigramme(); }
 	static std::string trigramme(){ return "CAR_"; }
 
+	/* Execute */
+	virtual bool execAsync(lua_State *L);	// Cycle if the return is not false
+
 	/* Cycling.
 	 * Made public as needed from Lua functions
 	 */
