@@ -48,6 +48,12 @@ print("---------------------------------")
 
 SubSurface3:setVisibility(true)
 
+print(SubSurface:getContainer(), 
+	SubSurface:getName(),
+	"Enable: ".. tostring(SubSurface:isEnabled()),
+	"Visible: ".. tostring(SubSurface:isVisible())
+)
+
 -- Physically refresh the screen
 -- Normally, it has to be done at Carousel level but
 -- not implemented at the moment of writing

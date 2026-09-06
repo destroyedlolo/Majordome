@@ -77,23 +77,35 @@ auto Carousel::hideActif(){
 	auto& children = this->getChildren();
 
 	auto it = std::find_if(children.begin(), children.end(), [](const auto& child) {
-		return child->isVisible();
+		return child->ToileObject::isVisible();
 	});
 
 	if(it != children.end()){
-SelLog->Log('D', "Visible : %s", (*it)->getNameC());
+// SelLog->Log('D', "Found Visible : %s (%c)",
+//	(*it)->getNameC(),
+//	(*it)->ToileObject::isVisible() ? 't':'f'
+// );
 		(*it)->getSurface()->cb->setVisibility((*it)->getSurface(), false);
+// SelLog->Log('D', "After : %s (%c)",
+//	(*it)->getNameC(),
+//	(*it)->ToileObject::isVisible() ? 't':'f'
+// );
 	}
 
 	return it;
 }
 
 void Carousel::Cycle(){
+	/* Notez-bien : this->isVisible() is overloaded to force resfresh
+	 * if a painting is persistent. But here, we need the real visibility
+	 * to find out which child is really visible. So, it's why we're using
+	 * ToileObject's
+	 */
 	auto& children = this->getChildren();
 
 		// Find out the current active one
 	auto currentIt = std::find_if(children.begin(), children.end(), [](const auto& child) {
-		return child->isVisible();
+		return child->ToileObject::isVisible();
 	});
 
 	if(currentIt == children.end())		// No visible element
@@ -102,18 +114,18 @@ void Carousel::Cycle(){
 	size_t startIndex = std::distance(children.begin(), currentIt);
 	size_t total = children.size();
 	size_t nextIndex = (startIndex + 1) % total;
-SelLog->Log('D', "current : %s (%d)", (*currentIt)->getNameC(), startIndex);
+// SelLog->Log('D', "current : %s (%d)", (*currentIt)->getNameC(), startIndex);
 
 	while(nextIndex != startIndex && !children[nextIndex]->isEnabled())
 		nextIndex = (nextIndex + 1) % total;
-SelLog->Log('D', "Next : %s (%d)", children[nextIndex]->getNameC(), nextIndex);
+// SelLog->Log('D', "Next : %s (%d)", children[nextIndex]->getNameC(), nextIndex);
 
 		// Find a new one
 	if(nextIndex != startIndex && children[nextIndex]->isEnabled()){
 		this->hideActif();
-		children[nextIndex]->getSurface()->cb->setVisibility(surface, true);
+		children[nextIndex]->getSurface()->cb->setVisibility(children[nextIndex]->getSurface(), true);
 
-		SelLog->Log('D', "Carousel '%s' from '%s' cycling to '%s'", this->getNameC(), this->getWhereC(), children[nextIndex]->getNameC());
+		SelLog->Log('D', "[Carousel '%s'] cycling to '%s'", this->getNameC(), children[nextIndex]->getNameC());
 
 	}
 		// else, nothing to do, smae object
@@ -193,7 +205,6 @@ bool Carousel::execAsync(lua_State *L){
 	bool r = this->LuaExec::execSync(L, &rc, &val);
 
 	if( rc != LuaExec::boolRetCode::RCfalse ){	// data not rejected
-		SelLog->Log('D', "[Carousel '%s'] cycling", this->getNameC());
 		this->Cycle();
 		this->refreshAll();
 	} else
