@@ -52,7 +52,9 @@ Which field to consider. Can be
 
 #### -->> ignore empty
 
-Ignore collections with no entry.
+Ignore collections with no entry.  
+If left unset, empty collections trigger SQL errors for AVG and MMA types.
+These are harmless, but they will produce log entries.
 
 
 #### preprocess=
