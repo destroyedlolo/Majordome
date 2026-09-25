@@ -152,7 +152,7 @@ CREATE TABLE mktest (
 
 The script can return :
 - `true` the content is accepted (the default value)
-- `false` the content is rejectedbaignade
+- `false` the content is rejected
 - a numeric value : force this value to be injected instead of source's content (MinMax only).
 
 > [!TIP]  
