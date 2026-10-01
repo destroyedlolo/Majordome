@@ -55,7 +55,7 @@ Set the LCD's size in pixels.<br>
 ```
 **16,2** is the default value if unset.
 
-> ![CAUTION]
+> [!CAUTION]
 > There is strictly no way for Majordome (or underlying Séléné) of knowing the geometry of an I2C LCD display. Furthermore, it is easy (and forseen) to fool Majordome: you just need to provide correct code, otherwise, the display will be corrupted.
 
 #### -->> fatal
