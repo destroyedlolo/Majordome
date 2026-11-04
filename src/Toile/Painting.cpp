@@ -286,7 +286,6 @@ static int ltp_setVisibility( lua_State *L ){
 		SelLog->Log('W', "[%s] The visibility can be changed only on Persistent Painting", painting->getNameC());
 
 	if(painting->getParent()->getTri() == Carousel::trigramme()){
-puts("carrousel");
 		dynamic_cast<Carousel *>(painting->getParent())->hideActif();
 	}
 	painting->getSurface()->cb->setVisibility(painting->getSurface(), v);

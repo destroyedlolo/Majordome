@@ -1,0 +1,9 @@
+-->> desc=Affiche l'unitée
+-->> group=Electicite
+--
+-->> ApplyOn Painting=AutoConso
+
+-- The surface to apply on is embodied as MAJORDOME_PAINTING
+
+MAJORDOME_PAINTING:SetCursor(4,0)
+MAJORDOME_PAINTING:WriteString(string.char(6))

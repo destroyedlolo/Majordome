@@ -2,3 +2,4 @@
 -->> group=Electricite
 --
 -->> topic=onduleur/input.voltage
+-->> disabled

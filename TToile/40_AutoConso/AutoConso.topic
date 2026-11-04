@@ -1,0 +1,7 @@
+-->> desc=Production topic
+--
+-->> topic=TeleInfo/AutoConso/PAPP
+--
+-- disable this topic
+--->> disabled
+-->> quiet

@@ -1,0 +1,6 @@
+-->> desc=Conteneur AutoConso
+-->> group=Electicite
+-->> ApplyOn Renderer=LCD
+-->> Origin=15,1
+-->> Size=5x1
+--->> disabled

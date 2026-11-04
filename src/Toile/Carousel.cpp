@@ -73,7 +73,7 @@ void Carousel::assertSanity(void){
 	this->ToileObject::assertSanity();
 }
 
-auto Carousel::hideActif(){
+void Carousel::hideActif(){
 	auto& children = this->getChildren();
 
 	auto it = std::find_if(children.begin(), children.end(), [](const auto& child) {
@@ -91,8 +91,6 @@ auto Carousel::hideActif(){
 //	(*it)->ToileObject::isVisible() ? 't':'f'
 // );
 	}
-
-	return it;
 }
 
 void Carousel::Cycle(){
