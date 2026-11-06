@@ -123,10 +123,11 @@ void Carousel::Cycle(){
 		this->hideActif();
 		children[nextIndex]->getSurface()->cb->setVisibility(children[nextIndex]->getSurface(), true);
 
-		SelLog->Log('D', "[Carousel '%s'] cycling to '%s'", this->getNameC(), children[nextIndex]->getNameC());
+		if(::debug)
+			SelLog->Log('D', "[Carousel '%s'] cycling to '%s'", this->getNameC(), children[nextIndex]->getNameC());
 
 	}
-		// else, nothing to do, smae object
+		// else, nothing to do, same object
 }
 
 bool Carousel::init(void){
