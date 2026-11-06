@@ -1,5 +1,5 @@
 -->> desc=Conteneur le PMic
 -->> group=PMU
--->> ApplyOn Renderer=LCD
--->> Origin=0,3
--->> Size=20x1
+-->> ApplyOn Carousel=Host
+--->> Origin=0,3
+--->> Size=20x1
