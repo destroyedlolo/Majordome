@@ -205,7 +205,7 @@ bool Carousel::execAsync(lua_State *L){
 
 	if( rc != LuaExec::boolRetCode::RCfalse ){	// data not rejected
 		this->Cycle();
-		this->refreshAll();
+//		this->refreshAll();
 	} else
 		SelLog->Log('D', "[Carousel '%s'] Rejecting cycling", this->getNameC());
 

@@ -26,7 +26,8 @@
 class Painting : virtual public ToileContainer, virtual public ToileObject {
 protected:
 	Toile::SurfaceGeometry geometry;
-	bool startedvisible;	// Visibility from the configuration
+	bool startedVisible;	// Visibility from the configuration
+	bool mustBeVisible;		// if part of a Carousel, it must be visible to update its parent
 
 		/* Surface's content is stored if the surface is made invisible */
 	bool persistent;
@@ -35,7 +36,7 @@ protected:
 
 public:
 //	Painting():surface(NULL){};
-	Painting(const std::string &fch, std::string &where): Object(fch, where), startedvisible(true), persistent(false){};
+	Painting(const std::string &fch, std::string &where): Object(fch, where), startedVisible(true), mustBeVisible(false), persistent(false){};
 
 	/* constructor from file
 	 * -> file : file to load

@@ -14,7 +14,7 @@
 #include <cstring>
 #include <cassert>
 
-Painting::Painting( const std::string &fch, std::string &where, lua_State *L ): Object(fch, where), startedvisible(true), persistent(false){
+Painting::Painting( const std::string &fch, std::string &where, lua_State *L ): Object(fch, where), startedVisible(true), persistent(false){
 	this->loadConfigurationFile(fch, where);
 
 	if(d2)
@@ -22,7 +22,7 @@ Painting::Painting( const std::string &fch, std::string &where, lua_State *L ): 
 }
 
 void Painting::assertSanity(void){
-	if(!this->isPersistent() && !this->startedvisible){
+	if(!this->isPersistent() && !this->startedVisible){
 		SelLog->Log('F', "[\"%s\"] Only a persistent surface can be hidden", this->getNameC());
 		exit(EXIT_FAILURE);
 	}
@@ -57,7 +57,7 @@ bool Painting::readConfigDirectiveOnly( std::string &l ){
 	} else if( l == "-->> Hidden" ){
 		if(::verbose)
 			SelLog->Log('C', "\t\tHidden");
-		this->startedvisible = false;
+		this->startedVisible = false;
 
 		return true;
 	} else if(l == "-->> Persistent"){
@@ -137,7 +137,7 @@ bool Painting::init(void){
 		this->geometry.y = 0;
 
 			// Carousel surface's are hidden and persistant
-		this->startedvisible = false;
+		this->startedVisible = false;
 		this->persistent = true;
 
 	} else if(!this->geometry.w || !this->geometry.h){	// size not set
@@ -167,7 +167,7 @@ bool Painting::init(void){
 		exit(EXIT_FAILURE);
 	}
 
-	if(!this->startedvisible)
+	if(!this->startedVisible)
 		this->getSurface()->cb->setVisibility(this->getSurface(), false);
 
 			// Initialize subsurfaces
@@ -191,6 +191,8 @@ void Painting::refresh(){
 
 	if(!this->isVisible())
 		return;
+
+	this->getSurface()->cb->Refresh(this->getSurface());
 }
 
 void Painting::refreshBackground(){
@@ -229,7 +231,14 @@ void Painting::refreshAll(){
 	this->refreshBackground();
 	this->refreshChild();
 
+/* Not needed as the background and child themselve already refreshed the
+ * screen.
+ * As an improvement, should be wise to add an argument to refreshBackground()
+ * and refreshChild() to refresh only if they are not a child of a persistent
+ * parent. In this case, the parent will refresh() everything.
+
 	this->refresh();
+ */
 }
 
 	/*****

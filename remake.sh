@@ -78,7 +78,7 @@ else
 	LIBS+=' -lpq'
 fi
 
-if [ -Z ${BUILD_TOILE+x} ]; then
+if [ -z ${BUILD_TOILE+x} ]; then
 	echo "Toile : not compiled"
 else
 	echo "Toile : included"
