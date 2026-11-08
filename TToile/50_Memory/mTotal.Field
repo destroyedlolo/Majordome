@@ -1,0 +1,8 @@
+-->> desc=Affiche l'utilisation mémoire totale
+-->> group=Memoire
+-->> ApplyOn Painting=Memory
+-->> Origin=12,0
+-->> Sample=xx
+-->> listen=mTotal
+
+return string.format("%2d", math.floor(MAJORDOME_PAYLOAD + 0.5));

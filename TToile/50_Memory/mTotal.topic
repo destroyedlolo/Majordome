@@ -1,0 +1,5 @@
+-->> desc=Utilisation mémoire totale
+-->> group=Memoire
+--
+-->> topic=Machines/%Hostname%/memoryPRC
+-->> quiet

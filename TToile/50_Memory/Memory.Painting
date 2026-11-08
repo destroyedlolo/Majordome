@@ -1,0 +1,6 @@
+-->> desc=Conteneur memoire
+-->> group=Memoire
+-->> ApplyOn Carousel=Host
+-->> Origin=0,2
+-->> Size=20x1
+--->> disabled

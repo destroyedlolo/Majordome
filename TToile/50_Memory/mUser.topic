@@ -1,0 +1,5 @@
+-->> desc=Utilisation mémoire utilisateur
+-->> group=Memoire
+--
+-->> topic=Machines/%Hostname%/userPRC
+-->> quiet

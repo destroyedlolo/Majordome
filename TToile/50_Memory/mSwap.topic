@@ -1,0 +1,5 @@
+-->> desc=Utilisation mémoire swap
+-->> group=Memoire
+--
+-->> topic=Machines/%Hostname%/swapPRC
+-->> quiet

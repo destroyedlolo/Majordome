@@ -1,0 +1,12 @@
+-->> group=Memoire
+-->> ApplyOn Painting=Memory
+
+--								   01234567890123456789
+-- MAJORDOME_PAINTING:WriteString("Mem% u:__ t:__ s:__")
+
+MAJORDOME_PAINTING:Home()
+MAJORDOME_PAINTING:WriteString("Mem% u:")
+MAJORDOME_PAINTING:SetCursor(10,0)
+MAJORDOME_PAINTING:WriteString("t:")
+MAJORDOME_PAINTING:SetCursor(15,0)
+MAJORDOME_PAINTING:WriteString("s:")
