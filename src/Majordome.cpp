@@ -207,7 +207,7 @@ static int msgarrived(void *actx, char *topic, int tlen, MQTTClient_message *msg
 	cpayload[msg->payloadlen] = 0;
 
 	for(auto &i : config.TopicsList){
-		if(i.second->isEnabled()){
+		if(i.second->isEnabled() && !i.second->getPubOnly()){
 			if(i.second->match( topic )){
 #ifdef DEBUG
 				if( debug && !i.second->isQuiet() ){

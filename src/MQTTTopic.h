@@ -17,10 +17,11 @@ class MQTTTopic : virtual public Object, public Event {
 protected:
 	std::string topic;	// Topic to look for
 	unsigned int qos;		// Associated QoS
+	unsigned long int ttl;	// time to live
 	bool wildcard;			// True if the topic contains wildcard
 	bool store;				// Keep values in a SelShared variable
 	bool numeric;			// it's a numeric value
-	unsigned long int ttl;	// time to live
+	bool pubOnly;			// Will not be subscribed (publish-only)
 
 public:
 	/* Constructor from a file
@@ -38,6 +39,7 @@ public:
 	bool toBeStored( void ){ return this->store; };
 	bool isNumeric( void ){ return this->numeric; };
 	unsigned long int getTTL( void ){ return this->ttl; };
+	bool getPubOnly( void ){ return this->pubOnly; };
 
 	/* check if an incoming topic matches this one
 	 * -> intopic : incoming topic

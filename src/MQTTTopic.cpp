@@ -10,7 +10,7 @@
 #include <unistd.h>
 #include <cassert>
 
-MQTTTopic::MQTTTopic(const std::string &fch, std::string &where) : Object(fch, where), alreadydefault(false), qos(0), wildcard(false), store(false), numeric(false), ttl(0){
+MQTTTopic::MQTTTopic(const std::string &fch, std::string &where) : Object(fch, where), alreadydefault(false), qos(0), ttl(0), wildcard(false), store(false), numeric(false), pubOnly(false){
 
 	this->loadConfigurationFile(fch, where);
 
@@ -66,6 +66,10 @@ bool MQTTTopic::readConfigDirective(std::string &l){
 		if(::verbose)
 			SelLog->Log('C', "\t\tStore as a numeric value");
 		this->numeric = true;
+	} else if(l == "-->> pubOnly"){
+		if(::verbose)
+			SelLog->Log('C', "\t\tPublish-only");
+		this->pubOnly = true;
 	} else if(!(arg = striKWcmp( l, "-->> ttl=" )).empty()){
 		if(this->alreadydefault){
 			SelLog->Log('F',"'ttl' can't be set after 'default'");
