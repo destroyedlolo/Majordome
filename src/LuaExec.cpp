@@ -117,7 +117,7 @@ bool LuaExec::readConfigDirective( std::string &l ){
 				SelLog->Log('C', "\t\tAdded required topic '%s'", arg.c_str());
 
 			if(d2)
-				fd2 << this->getFullId() << " -- " << topic->second->getFullId() << ": require { class: lrequiere }" << std::endl;
+				fd2 << this->getFullId() << " -- " << topic->second->getFullId() << ": require { class: lrequire }" << std::endl;
 			this->addRequiredTopic(arg);
 			return true;
 		} else {
@@ -129,7 +129,7 @@ bool LuaExec::readConfigDirective( std::string &l ){
 			SelLog->Log('C', "\t\tAdded required shared variable '%s'", arg.c_str());
 
 		if(d2)
-			fd2 << this->getFullId() << " -- " << arg << ": require { class: lrequiere }" << std::endl;
+			fd2 << this->getFullId() << " -- " << arg << ": require { class: lrequire }" << std::endl;
 		this->addRequiredShared(arg);
 		return true;
 	} else if(!(arg = striKWcmp( l, "-->> need_timer=" )).empty()){

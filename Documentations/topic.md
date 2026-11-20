@@ -49,7 +49,8 @@ Set the default value for this topic. This field must be defined after **name**,
 ```
 -->> default=3.14
 ```
-
+#### -->> pubOnly
+This topic will not be subscribed to; it is used mostly for publishing only topics
 
 ## Example
 File **test.topic**

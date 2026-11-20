@@ -138,15 +138,17 @@ void Config::SubscribeTopics( void ){
 		 */
 	nbre = 0;
 	for(auto &i : this->TopicsList){
-		topics[nbre] = i.second->getTopicC();
-		qoss[nbre++] = i.second->getQOS();
+		if(!i.second->getPubOnly()){
+			topics[nbre] = i.second->getTopicC();
+			qoss[nbre++] = i.second->getQOS();
+		}
 	}
 #ifdef DEBUG
 	if(::verbose)
 		SelLog->Log('C', "Subscribing to %ld topics", nbre);
 #endif
 
-	if( nbre ){
+	if(nbre){
 		int err;
 		if( (err = MQTTClient_subscribeMany(
 			MQTT_client,
