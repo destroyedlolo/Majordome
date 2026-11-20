@@ -132,6 +132,11 @@ bool Handler::readConfigDirectiveData(std::string &l){
 	if(!(arg = striKWcmp( l, "-->> listen=" )).empty()){
 		TopicCollection::iterator topic;
 		if( (topic = config.TopicsList.find(arg)) != config.TopicsList.end()){
+			if(topic->second->getPubOnly()){
+				SelLog->Log('F', "\t\tCan't add handler to publish only topic '%s'", arg.c_str());
+				exit(EXIT_FAILURE);
+			}
+
 			if(::verbose)
 				SelLog->Log('C', "\t\tAdded to topic '%s'", arg.c_str());
 			topic->second->addHandler( dynamic_cast<Handler *>(this) );

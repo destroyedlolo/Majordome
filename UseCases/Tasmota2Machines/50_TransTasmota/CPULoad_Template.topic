@@ -1,0 +1,6 @@
+-->> desc=Template for CPU Load
+--
+-->> topic=Machines/%Machine%/Load/1
+--
+-- Used only to publish
+-->> pubOnly
