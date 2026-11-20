@@ -124,7 +124,7 @@ bool LuaExec::readConfigDirective( std::string &l ){
 			SelLog->Log('F', "\t\tTopic '%s' is not (yet ?) defined", arg.c_str());
 			exit(EXIT_FAILURE);
 		}
-	} else if(!(arg = striKWcmp( l, "-->> require_shared=" )).empty()){
+	} else if(!(arg = striKWcmp( l, "-->> require_sharedvariable=" )).empty()){
 		if(::verbose)
 			SelLog->Log('C', "\t\tAdded required shared variable '%s'", arg.c_str());
 
@@ -296,9 +296,7 @@ bool LuaExec::feedbyNeeded( lua_State *L, bool require ){
 			try {
 				class MQTTTopic *tpc = config.TopicsList.at( i );
 
-				enum SharedObjType type;
-				SelSharedVar->getValue( tpc->getNameC(), &type, false );
-				if(type == SOT_UNKNOWN){
+				if( SelSharedVar->getType( tpc->getNameC() ) == SOT_UNKNOWN){
 					if(debug && !this->isQuiet())
 						SelLog->Log('D', "[%s] Required topic \"%s\" not set : task/trigger will not be launched", this->getNameC(), tpc->getNameC());
 					return false;
@@ -318,11 +316,23 @@ bool LuaExec::feedbyNeeded( lua_State *L, bool require ){
 		}
 
 		for(auto &i :  this->required_shared){
-			if(SelSharedVar->getType(i.c_str()) == SharedObjType::SOT_UNKNOWN){
+			enum SharedObjType type;
+			union SelSharedVarContent var = SelSharedVar->getValue( i.c_str(), &type, false );
+			switch( SelSharedVar->getType(i.c_str()) ){
+			case SharedObjType::SOT_NUMBER :
+				lua_pushnumber(L, var.num);
+				break;
+			case SharedObjType::SOT_STRING :
+			case SharedObjType::SOT_XSTRING :
+				lua_pushstring(L, var.str);
+				break;
+			default : /* SharedObjType::SOT_UNKNOWN :	// unset or unsupported */
 				if(debug && !this->isQuiet())
 					SelLog->Log('D', "[%s] Required shared variable \"%s\" not set : task/trigger will not be launched", this->getNameC(), i.c_str());
 				return false;
 			}
+
+			lua_setglobal(L, i.c_str());
 		}
 	}
 

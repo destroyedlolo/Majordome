@@ -48,5 +48,5 @@
  *	17/08/2025 - v6.14 - LF - Add requiere_shared
  */
 
-#define VERSION 6.1400
+#define VERSION 6.1401
 #define COPYRIGHT "Majordome (c) L.Faillie 2018-2025"
